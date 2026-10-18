@@ -1,5 +1,5 @@
 /* The umber stage, scene "plate:umber": a dark warm room drawn by one full-screen shader (no textures).
-   It sits under VII · Results' counters and VIII · Directors.
+   It is VIII · Directors' room: the Results painting dissolves into it at the chapter's top.
    - a soft warm pool of light on ink, with a little plaster in the dark;
    - slow dust motes, three depths of them (two on tier 1), brightest where they cross the pool, rising slowly
      and drifting with scroll (nearer motes travel further, so the room has depth);
