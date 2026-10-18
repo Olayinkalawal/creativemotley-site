@@ -1,5 +1,4 @@
-/* IV · Method: the opener over frame 1, then (with a WebGL tier) the long run that scrubs the film.
-   Without the stage (no JS, ?tier=0, reduced motion) the run is gone: the chapter is the opener over the still. */
+/* IV · Method: the opener over the painted alcove room (plate:method). */
 
 /* the opener's type passes over the lit stone table on its way up: an ink veil travels with it (out under the rail) */
 .mt-open::before {
@@ -10,17 +9,3 @@
   .mt-open::before { background: radial-gradient(70% 34% at 34% 52%, rgba(11, 8, 5, 0.6), rgba(11, 8, 5, 0.38) 52%, rgba(11, 8, 5, 0) 100%); }
 }
 @media (min-width: 1024px) { .mt-open::before { left: calc(-1 * var(--rail-w)); } }
-.mt-run { display: none; }
-.mt-on .mt-run {
-  display: block; position: relative; pointer-events: none;
-  height: 380svh; margin-top: -70svh;           /* starts under the opener's tail: the film begins as the dek leaves */
-}
-.mt-pin { position: sticky; top: 0; height: 100svh; }
-
-/* a quiet progress hairline at the foot of the column */
-.mt-bar { position: absolute; left: auto; right: 0; bottom: clamp(18px, 3.4svh, 30px); opacity: 0; }
-.mt-bar__line { position: relative; display: block; height: 1px; background: rgba(244, 237, 223, 0.2); overflow: hidden; }
-.mt-bar__fill {
-  position: absolute; inset: 0; background: var(--gold);
-  transform-origin: 0 50%; transform: scaleX(0); will-change: transform;
-}

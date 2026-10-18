@@ -46,9 +46,12 @@ export class Stage {
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); document.documentElement.classList.remove('gl-ready'); });
   }
   makeRT() { return new THREE.WebGLRenderTarget(1, 1, { depthBuffer: true, stencilBuffer: false, type: THREE.UnsignedByteType }); }
-  add(scene) { scene.loaded = false; scene.loading = null; this.scenes.set(scene.id, scene); scene.resize?.(this.ctx.w, this.ctx.h, this.ctx.dpr); }
+  add(scene) { scene.loaded = false; scene.loading = null; this.scenes.set(scene.id, scene); scene.resize?.(this.ctx.w, this.ctx.h, this.ctx.dpr); this.collect(); }
   collect() {
-    this.segs = [...document.querySelectorAll('[data-scene]')].map((el) => ({ el, id: el.dataset.scene }));
+    // only regions whose scene is registered and that have height: an empty or unbuilt slot must not turn a dissolve into hold-then-cut
+    this.segs = [...document.querySelectorAll('[data-scene]')]
+      .filter((el) => this.scenes.has(el.dataset.scene) && el.getBoundingClientRect().height > 0)
+      .map((el) => ({ el, id: el.dataset.scene, dissolve: parseFloat(el.dataset.dissolve) || 0 }));
     this.opaque = [...document.querySelectorAll('[data-opaque]')];
   }
   resize() {
@@ -95,11 +98,12 @@ export class Stage {
     const c = y + vh * 0.5, W = vh * 0.4;
     let i = 0;
     for (let j = 0; j < this.segs.length; j++) if (geo(this.segs[j].el).top <= c) i = j;
-    let A = this.segs[i], B = null, mix = 0, best = W;
+    let A = this.segs[i], B = null, mix = 0, best = Infinity;
     for (let j = 1; j < this.segs.length; j++) {
       if (this.segs[j].id === this.segs[j - 1].id) continue;
+      const w = this.segs[j].dissolve ? vh * this.segs[j].dissolve : W;
       const d = c - geo(this.segs[j].el).top;
-      if (Math.abs(d) < best) { best = Math.abs(d); A = this.segs[j - 1]; B = this.segs[j]; mix = clamp(0.5 + d / (2 * W)); }
+      if (Math.abs(d) < w && Math.abs(d) < best) { best = Math.abs(d); A = this.segs[j - 1]; B = this.segs[j]; mix = clamp(0.5 + d / (2 * w)); }
     }
     const sa = this.scenes.get(A.id), sb = B ? this.scenes.get(B.id) : null;
     const okA = sa && sa.loaded, okB = sb && sb.loaded;
