@@ -13,6 +13,7 @@ export class FrameStream {
     this.blobs = new Array(count);
     this.requested = new Set();
     this.inflight = 0;
+    this.fetched = 0;
     this.bitmaps = new Map();      // i -> ImageBitmap
     this.decoding = new Set();
     this.target = 0;
@@ -22,6 +23,8 @@ export class FrameStream {
     this.ready = false;
     this._onFirst = null;
   }
+  /* every frame fetched (compressed, in the blob cache) */
+  get complete() { return this.fetched >= this.count; }
   url(i) { return `${this.dir}/${this.name(i)}?v=${this.rev}`; }
   first() { return new Promise((r) => { this._onFirst = r; this.seek(0); }); }
   /* set the playhead (float frame index); call every frame */
@@ -47,7 +50,7 @@ export class FrameStream {
       this.requested.add(i); this.inflight++;
       fetch(this.url(i), { priority: Math.abs(i - this.target) < 8 ? 'high' : 'low' })
         .then((r) => (r.ok ? r.blob() : null))
-        .then((b) => { this.blobs[i] = b; })
+        .then((b) => { this.blobs[i] = b; if (b) this.fetched++; })
         .catch(() => { this.requested.delete(i); })
         .finally(() => { this.inflight--; this.pump(); this.decodeNear(); });
     }
@@ -78,6 +81,12 @@ export class FrameStream {
       if (i === this.shown) continue;
       this.bitmaps.get(i).close?.(); this.bitmaps.delete(i);
     }
+  }
+  /* release every decoded frame except the one on screen (a scene that is not being drawn keeps only its blobs;
+     seeking again decodes from them) */
+  trim() {
+    if (this.bitmaps.size <= 1) return;
+    for (const [i, bmp] of this.bitmaps) if (i !== this.shown) { bmp.close?.(); this.bitmaps.delete(i); }
   }
   nearestDecoded() {
     const c = Math.round(this.target);

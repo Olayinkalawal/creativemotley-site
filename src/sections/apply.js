@@ -1,4 +1,4 @@
-/* IX · Apply: the "Contact ✦" marquee runs with scroll; the stickers are real links you can drag
+/* X · Apply: the "Contact ✦" marquee runs with scroll; the stickers are real links you can drag
    (pointer events, a little inertia, clamped to the field). A press that doesn't move follows the link. */
 import './apply.css';
 import { onFrame, clamp } from '../core/scroll.js';

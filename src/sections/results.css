@@ -1,4 +1,4 @@
-/* VII · Results: the opener over the watchers, then four counters over the same painting under an ink veil.
+/* VIII · Results: the opener over the watchers, then four counters over the same painting under an ink veil.
    A ledger: each figure sits on a hairline with its label right under it. On wide screens the ledger is only as
    wide as its widest row, so the right of the screen stays clear for the TV. The figure is set in tabular lining
    figures and laid out at its final width from the start; while it counts, the places it has not reached yet show
@@ -15,7 +15,7 @@
 
 /* the counters start under the opener's tail, so the first figure arrives as the dek leaves */
 .rx { position: relative; color: var(--cream); margin-top: -36svh; padding-top: 22svh; }
-/* the ink veil under the ledger: it fades in above the first hairline and out over the start of chapter VIII
+/* the ink veil under the ledger: it fades in above the first hairline and out over the start of chapter IX
    (it runs on past the region, so the painting never shows bare between the last figure and the next chapter) */
 .rx::before {
   content: ''; position: absolute; z-index: -1; top: 0; bottom: -46svh; left: 0; right: 0; pointer-events: none;
