@@ -1,0 +1,66 @@
+/* Teardown blocks: the Editions exploded-hub layout on a pure black stage.
+   Desktop: spec column left, device right, both pinned for the length of the run.
+   Phones: the device pins in the top half; the copy scrolls up over the lower half. */
+.td { position: relative; color: var(--cream); --th-mute: rgba(244, 237, 223, 0.66); }
+.td::before, .td::after { /* soft umber falloff at the stage edges, like light leaking from the chapters around it */
+  content: ''; position: absolute; left: 0; right: 0; height: 18svh; pointer-events: none; z-index: 1;
+}
+.td::before { top: 0; background: linear-gradient(180deg, rgba(42, 30, 16, 0.55), rgba(0, 0, 0, 0)); }
+.td::after { bottom: 0; background: linear-gradient(0deg, rgba(42, 30, 16, 0.5), rgba(0, 0, 0, 0)); }
+.td__run { position: relative; height: var(--td-run, 320svh); }
+.td__pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.td__slot { position: absolute; left: 0; right: 0; top: calc(var(--nav-h) + 1svh); height: 47svh; }
+.td__still { width: 100%; height: 100%; object-fit: contain; opacity: 1; transition: opacity 0.6s var(--ease-out); }
+html.gl-ready .td.is-drawn .td__still { opacity: 0; }
+.td__copy { /* phones: pinned with the device, stacked under it */
+  position: sticky; z-index: 2; top: 0; height: 100svh; margin-top: -100svh;
+  padding: 0 var(--col-pad) calc(4.5svh + env(safe-area-inset-bottom));
+  display: flex; flex-direction: column; justify-content: flex-end; pointer-events: none;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.82) 64%, rgba(0, 0, 0, 0.92));
+}
+.td__copy a { pointer-events: auto; }
+.td__label { color: var(--gold); margin-bottom: 0.9rem; }
+.td__head { font-family: var(--sans); font-weight: 600; font-size: clamp(1.9rem, 2.9vw, 2.9rem); letter-spacing: -0.04em; line-height: 0.98; text-wrap: balance; }
+.td__dek { margin-top: 0.7rem; color: var(--cream); opacity: 0.9; max-width: 22em; font-size: clamp(1.15rem, 1.5vw, 1.45rem); }
+.td__link { margin-top: 1.2rem; }
+.td__specs { margin-top: clamp(1.4rem, 3.4vh, 2.4rem); max-width: 30rem; }
+.td__spec {
+  display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 14px; align-items: start;
+  padding: 11px 0 12px; box-shadow: inset 0 1px 0 rgba(244, 237, 223, 0.2);
+  font-size: 0.875rem; line-height: 1.32; font-weight: 600; letter-spacing: -0.005em;
+}
+.td__spec:last-child { box-shadow: inset 0 1px 0 rgba(244, 237, 223, 0.2), inset 0 -1px 0 rgba(244, 237, 223, 0.2); }
+.td__spec b { display: block; font-weight: 650; color: var(--cream); }
+.td__spec .td__t { color: var(--th-mute); font-weight: 500; }
+.td__ic { width: 22px; height: 22px; color: var(--gold); margin-top: 1px; }
+.td__ic svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.td__spec--stat { grid-template-columns: minmax(5.2rem, auto) minmax(0, 1fr); align-items: baseline; }
+.td__num { font-size: clamp(1.6rem, 2.2vw, 2.1rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1; color: var(--cream); font-variant-numeric: lining-nums tabular-nums; }
+
+@media (min-width: 1024px) {
+  .td__slot { left: calc(var(--rail-w) + clamp(24px, 4.4vw, 72px) + min(29vw, 430px)); right: 1.5vw; top: calc(var(--nav-h) + 3vh); bottom: 4vh; height: auto; }
+  .td__copy {
+    position: sticky; top: 0; height: 100svh; margin-top: -100svh; padding: calc(var(--nav-h) + 4vh) 0 4vh;
+    margin-left: calc(var(--rail-w) + clamp(24px, 4.4vw, 72px)); width: min(29vw, 430px);
+    display: flex; flex-direction: column; justify-content: center; background: none;
+  }
+  /* rows arrive with the explode (JS sets --on per row); without JS they are simply there */
+  html.js .td[data-td-ready] .td__spec { opacity: calc(0.28 + 0.72 * var(--on, 0)); transform: translateX(calc((1 - var(--on, 0)) * 10px)); transition: opacity 0.4s var(--ease-out), transform 0.5s var(--ease-out); }
+  html.js .td[data-td-ready] .td__spec.is-hot b { color: var(--gold); }
+}
+@media (max-width: 1023px) {
+  .td__run { height: var(--td-run-m, 240svh); }
+  .td__slot { top: calc(var(--nav-h) - 4px); height: 54svh; }
+  .td__head { font-size: clamp(1.6rem, 7.4vw, 2.1rem); }
+  .td__dek { font-size: 1.1rem; }
+  .td__specs { max-width: none; margin-top: 1rem; }
+  .td__spec { padding: 7px 0 8px; font-size: 0.8125rem; gap: 10px; grid-template-columns: 20px minmax(0, 1fr); }
+  .td__ic { width: 18px; height: 18px; }
+  .td[data-td-compact] .td__spec .td__t { display: none; }   /* long lists: titles only on phones */
+  .td[data-td-compact] .td__specs { display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; }
+  .td__spec--stat { grid-template-columns: minmax(4.2rem, auto) minmax(0, 1fr); }
+  .td__num { font-size: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .td__run { height: auto; }
+}
