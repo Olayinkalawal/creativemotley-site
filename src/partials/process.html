@@ -3,9 +3,10 @@
        - static (no JS, ?tier=0, reduced motion): the section is one paper sheet with a torn top edge; the steps are a
          calm grid on desktop and a list on phones, captions under / beside each object;
        - .proc-on (JS + a WebGL tier): a tall pinned run. The list becomes an exact CSS-3D proxy of the WebGL desk
-         (same camera, same poses), shown until the objects scene has drawn, then kept as screen-reader text; the
-         live caption follows the active step. The pin's own paper (torn top edge) covers the stage while it
-         dissolves from the umber room, then clears to show the WebGL desk.
+         (same camera, same poses), shown until the objects scene has drawn, then kept as screen-reader text (on
+         phones, where the stage renders below the screen's density, it stays the visible object layer); the live
+         caption follows the active step. The pin's own paper (torn top edge) wipes up over the posters, covers the
+         stage while it dissolves into the objects scene (the data-scene marker below), then clears to the WebGL desk.
      Then the dense two-column grid (title | long line) on a paper sheet that lies over the desk and tears off into
      Results. data-plate="umber": with WebGL off the still behind this opaque chapter stays the dark room, so both
      torn edges read against it. -->
@@ -74,6 +75,25 @@
       </div>
     </div>
   </div>
+
+  <!-- Sound, taken apart: the microphone (recording), then the headphones (mixing and mastering) — photoreal teardowns -->
+  <section class="td" id="td-mic" data-theme="dark" data-scene="td:mic" data-plate="ink" aria-labelledby="td-mic-h" style="--td-run:290svh" data-td-frame="1.12 0.04 0" data-td-frame-tall="1.26 0.03 0.02">
+    <div class="td__run" data-td-run>
+      <div class="td__pin"><div class="td__slot" data-td-slot aria-hidden="true"><img class="td__still" src="/assets/teardown/mic/poster.webp" alt="" loading="lazy" decoding="async" width="1920" height="1080"></div></div>
+      <div class="td__copy">
+        <p class="td__label label">Sound</p>
+        <h3 class="td__head" id="td-mic-h">Because bad audio loses the audience first.</h3>
+      </div>
+    </div>
+  </section>
+  <section class="td" id="td-headphones" data-theme="dark" data-scene="td:headphones" data-plate="ink" aria-labelledby="td-hp-h" style="--td-run:270svh" data-td-frame="1.04 0.05 0" data-td-frame-tall="1.18 0 0.02">
+    <div class="td__run" data-td-run>
+      <div class="td__pin"><div class="td__slot" data-td-slot aria-hidden="true"><img class="td__still" src="/assets/teardown/headphones/poster.webp" alt="" loading="lazy" decoding="async" width="1920" height="1080"></div></div>
+      <div class="td__copy">
+        <h3 class="td__head" id="td-hp-h">Mixed and mastered for phone speakers, because that is where it is heard.</h3>
+      </div>
+    </div>
+  </section>
 
   <!-- the long lines: a calm sheet laid over the desk (torn top, with a soft shadow), torn off at the bottom into Results -->
   <div class="paper proc-more" data-theme="light" data-opaque>
