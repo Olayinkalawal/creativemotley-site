@@ -83,8 +83,8 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
 .rail .index li.is-active .ld { opacity: 0.9; }
 .rail .index li a:hover .nm { opacity: 1; }
 /* over a painted scene: an ink halo, and the dimmed names dimmed by colour, not opacity (which would fade the halo) */
-.rail .is-plate { text-shadow: 0 0 2px rgba(11, 8, 5, 0.55), 0 0 10px rgba(11, 8, 5, 0.85), 0 0 22px rgba(11, 8, 5, 0.6); }
-.rail .index li.is-plate:not(.is-active) :is(.nm, .rn) { opacity: 1; color: rgba(244, 237, 223, 0.66); }
+.rail .is-plate { text-shadow: 0 0 2px rgba(11, 8, 5, 0.75), 0 0 8px rgba(11, 8, 5, 0.95), 0 0 16px rgba(11, 8, 5, 0.85), 0 0 30px rgba(11, 8, 5, 0.6); }
+.rail .index li.is-plate:not(.is-active) :is(.nm, .rn) { opacity: 1; color: rgba(244, 237, 223, 0.82); }
 .rail .index li.is-plate:not(.is-active) a:hover .nm { color: var(--cream); }
 
 /* ── hero frame: the edition mark, dek and index inside a golden frame ── */
