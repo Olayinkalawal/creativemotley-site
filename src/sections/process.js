@@ -9,6 +9,9 @@
      - the live caption: the active step's title + short line (F75/F76 … F93/F94) and a seven-step marker.
    The stage switches to the objects scene at a marker ~0.9 viewport into the run ([data-proc-scene]), so its
    dissolve from the posters happens under the pin's paper, and the paper clears only once that dissolve is done.
+   On the way out it is the same in reverse: over the last dwell the paper and the proxy come back, so the sheet
+   that tears off into the teardown below (the Sound step, on a black stage) is DOM, and the stage dissolves away
+   under it and in the black under its torn bottom edge. The sheet leaves as one: row, lift and caption hold.
    World units are CSS px on the plane z = 0 through the slot (the box the active object lifts into); the camera sits
    D px in front of the slot with an off-axis frustum, so the CSS perspective and the WebGL camera are one camera.
    The desk is a plane tilted back by `tau` and Zd px behind the slot plane; objects at rest lie flat on it.
@@ -46,7 +49,7 @@ export const state = {
   e: 0,               // viewports since the pin stuck (negative while it arrives)
   cover: 1,           // the pin's own paper: 1 opaque … 0 clear (scroll part; the GL hand-over multiplies in)
   cap: 0,             // caption opacity
-  bottom: 0,          // screen y of the chapter's bottom (the sheet tearing off into Results)
+  bottom: 0,          // screen y of the run's bottom (the sheet tearing off into the teardown below)
   gl: false,          // the objects scene has drawn
   crisp: false,       // set by the scene: the DOM proxy stays the object layer (stage dpr well below the screen's)
   ptr: null,          // set by the scene: the stage's eased pointer (-1..1), for the active object's lean
@@ -58,7 +61,7 @@ export function trackAt(y) {
   const L = state.L;
   if (!L || (y === state.y && L.ver === state.ver)) return state;
   state.y = y; state.ver = L.ver;
-  const g = geo(L.run), gs = geo(L.sec);
+  const g = geo(L.run);
   const vh = L.vh, intro = L.intro;
   const span = Math.max(1, g.height - L.pinH);
   const into = y - g.top;
@@ -67,18 +70,19 @@ export function trackAt(y) {
   const i = Math.floor(r);
   const t = seg(r - i, HOLD[0], HOLD[1]);
   const arrive = smooth(seg(into, -vh, intro));          // the row trucks in as the sheet arrives
-  const leave = smooth(seg(-pinTop, 0, vh));             // and on as the pin goes
-  state.pos = i + smoother(t) - 0.6 * (1 - arrive) + 0.6 * leave;
+  state.pos = i + smoother(t) - 0.6 * (1 - arrive);
   // the first object starts to rise while the sheet is still arriving, so the pin sticks on a living desk
-  state.lift = smooth(seg(into, -vh * 0.3, intro * 0.75)) * (1 - smooth(seg(-pinTop, vh * 0.04, vh * 0.55)));
+  state.lift = smooth(seg(into, -vh * 0.3, intro * 0.75));
   state.pinTop = pinTop;
   state.e = into / vh;
-  // the pin's paper clears once the stage has finished dissolving into the objects scene (L.c0, from the marker)
-  state.cover = 1 - smooth(seg(state.e, L.c0, L.c0 + 0.24));
-  state.cap = smooth(seg(into, -vh * 0.12, intro * 0.8)) * (1 - smooth(seg(-pinTop, vh * 0.06, vh * 0.4)));
+  // the pin's paper clears once the stage has finished dissolving into the objects scene (L.c0, from the marker),
+  // and comes back over the last dwell, before the pin leaves (the stage's dissolve into the teardown starts 0.1
+  // viewport after it does)
+  state.cover = Math.max(1 - smooth(seg(state.e, L.c0, L.c0 + 0.24)), smooth(seg(into - span, -vh * 0.24, -vh * 0.03)));
+  state.cap = smooth(seg(into, -vh * 0.12, intro * 0.8));
   state.visible = pinTop < vh && pinTop > -L.pinH;
   state.active = clamp(Math.round(state.pos), 0, N - 1);
-  state.bottom = gs.bottom - y;
+  state.bottom = g.bottom - y;                             // the sheet's torn bottom edge (the run's end) on screen
   return state;
 }
 
@@ -111,8 +115,9 @@ export function place(k, pos, lift, o) {
   o.rz = lk.rz * (1 - a);
   o.a = a;
   o.d = d;
-  // far along the row the objects fade out; resting ones are washed a little toward the paper so they recede
-  o.alpha = 1 - clamp((Math.abs(d) - 2.4) / 0.8);
+  // far along the row the objects fade out (on a phone the row reads one object at a time: neighbours fade out
+  // before the screen edge would cut them to a sliver); resting ones are washed toward the paper so they recede
+  o.alpha = L.phone ? 1 - smooth(clamp((Math.abs(d) - 0.3) / 0.5)) : 1 - clamp((Math.abs(d) - 2.4) / 0.8);
   o.fog = Math.min(0.3, 0.12 + 0.07 * Math.max(0, Math.abs(d) - 1)) * (1 - a);
   // height above the desk (for the shadow's blur) and where its shadow falls: the key light sits near the camera,
   // a little up and to the left, so a lifted object's shadow lands just behind it, down and to the right
@@ -148,12 +153,19 @@ export function init() {
   const caps = [...sec.querySelectorAll('[data-proc-items] > *')];
   const ticks = sec.querySelector('[data-proc-ticks]');
   const objs = lis.map((li) => li.querySelector('.proc-step__obj'));
-  objs.forEach((ob, k) => ob.style.setProperty('--src', `url("${state.items[k].src}")`));   // the wash's mask
+  const more = sec.querySelector('.proc-more'), floor = sec.querySelector('[data-proc-floor]');
+  // each cut-out fades in once its image has arrived (a reader can land deep in the run before they have)
+  const imgs = objs.map((ob) => ob.querySelector('img'));
+  imgs.forEach((im) => {
+    const done = () => im.classList.add('is-in');
+    if (im.complete) done(); else { im.addEventListener('load', done, { once: true }); im.addEventListener('error', done, { once: true }); }
+  });
   const rail = document.querySelector('.rail');
   const o = {};
   let lastY = NaN, lastVer = -1, lastK = -1, lastCrisp = null, lastCover = '', lastList = '', lastCap = [], lastMark = '';
   const lastT = [], lastZ = [], lastL = [], lastF = [], lastA = [];
   let shown = false, glK = 0, glFrom = 0;                                  // the one-time hand-over from the proxy to WebGL
+  let srcOn = false;                                                       // the wash's masks: set once the run is near
 
   function measure() {
     const pr = pin.getBoundingClientRect(), sr = slot.getBoundingClientRect();
@@ -166,7 +178,7 @@ export function init() {
     const shrink = phone ? 0.64 : 0.66;                    // a resting object's scale against the lifted one
     const D = pr.height * (phone ? 1.9 : 1.75);
     const Zd = D * (1 / shrink - 1);
-    // neighbours: on a phone just a sliver at each edge; on wide screens the row reads three across
+    // neighbours: on a phone they fade out before the screen edge (see place()); on wide screens the row reads three across
     const sp = phone ? SW * 0.5 + SW * 0.42 * shrink + 26 : SW * 0.5 + SW * 0.44 * shrink + Math.min(80, vw * 0.045);
     const railW = rail ? rail.offsetWidth : 0;
     const edge = phone ? [0, 6, vw - 6, vw]
@@ -176,7 +188,7 @@ export function init() {
     // dissolves over ±0.4 viewport around the centre): e = (marker - 0.1 vh) / vh; the paper clears just after
     const c0 = (scn ? scn.offsetTop : vh * 0.92) / vh - 0.1 + 0.02;
     state.L = {
-      run, sec, ver: (state.L?.ver ?? 0) + 1, vw, vh, pinH: pr.height, cx, cy, SW, SH, phone,
+      run, ver: (state.L?.ver ?? 0) + 1, vw, vh, pinH: pr.height, cx, cy, SW, SH, phone,
       D, Zd, tau, st: Math.sin(tau), ct: Math.cos(tau), S: sp / shrink, shrink, edge, c0,
       intro: parseFloat(getComputedStyle(run).getPropertyValue('--proc-intro')) / 100 * pr.height || vh * 0.4,
     };
@@ -202,8 +214,27 @@ export function init() {
   state.onGL = () => sec.classList.add('is-gl');
   const f2 = (n) => n.toFixed(2), f4 = (n) => n.toFixed(4);
 
+  // the glow under the dense sheet's bottom tear fades as the stage dissolves into Results (it dissolves over
+  // ±0.4 viewport around the centre: mix = 0.5 + (0.5 vh - tear) / 0.8 vh)
+  let lastFloor = '';
+  onFrame((v) => {
+    const tear = geo(more).bottom - v.y;
+    if (tear < -v.vh * 0.4 || tear > v.vh * 1.1) return;
+    const mix = clamp(0.5 + (v.vh * 0.5 - tear) / (v.vh * 0.8));
+    const f = f2(1 - smooth(clamp(mix / 0.7)));
+    if (f !== lastFloor) { floor.style.setProperty('--floor', f); lastFloor = f; }
+  });
+
   onFrame((v) => {
     if (!state.L) return;
+    if (!srcOn) {   // the wash masks its paper with the cut-out itself; CSS masks load even unseen, so only when near
+      const g = geo(run);
+      if (g.top - v.y < 2 * v.vh && g.bottom - v.y > -v.vh) {
+        objs.forEach((ob, k) => ob.style.setProperty('--src', `url("${state.items[k].src}")`));
+        imgs.forEach((im) => { im.loading = 'eager'; });
+        sec.classList.add('has-src'); srcOn = true;
+      }
+    }
     trackAt(v.y);
     // the hand-over: once WebGL has drawn the desk, the pin's paper and the proxy clear together (scroll-driven),
     // and if WebGL arrives mid-run, they ease out once over half a second. In crisp mode only the paper (and the

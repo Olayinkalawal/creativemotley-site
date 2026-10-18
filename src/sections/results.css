@@ -2,7 +2,7 @@
    A ledger: each figure sits on a hairline with its label right under it. On wide screens the ledger is only as
    wide as its widest row, so the right of the screen stays clear for the TV. The figure is set in tabular lining
    figures and laid out at its final width from the start; while it counts, the places it has not reached yet show
-   as faint zeros and the suffix waits, so nothing ever shifts. */
+   as faint zeros and the + waits (the M, which carries the magnitude, always shows), so nothing ever shifts. */
 /* the opener: a soft ink veil travels with the type, so cream holds over the bright drapery and sky */
 .rx-open::before {
   content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; left: 0; right: 0; pointer-events: none;
@@ -46,7 +46,7 @@
 .rx-digits { font-weight: inherit; }
 .rx-digits i { font-style: normal; }
 .rx-digits i.is-off { opacity: 0.14; }   /* places not reached yet: a ghost of the final figure */
-.rx-suf { letter-spacing: -0.03em; }
+.rx-unit, .rx-suf { letter-spacing: -0.03em; }   /* the unit (M) always shows; the + waits for the landing */
 .rx-lbl {
   font-family: var(--serif); font-weight: 400; font-size: clamp(1.45rem, 6.4vw, 2rem);
   line-height: 1.06; letter-spacing: -0.01em; color: var(--gold); max-width: 13em; text-wrap: balance;

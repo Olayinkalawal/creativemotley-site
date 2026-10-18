@@ -1,7 +1,7 @@
 /* VII · Results: four counters (F99–F102), each a pure function of scroll.
    A counter starts as its hairline rises past the lower part of the viewport (86%) and lands on its final figure
    when it sits comfortably in view (its top at 46% of the viewport), with a cubic ease-out; the gold draws along the
-   hairline in step and the suffix fades in once the count is complete. Scrolling back counts back down exactly.
+   hairline in step and the + fades in once the count is complete (the unit, M, always shows). Scrolling back counts back down exactly.
    The chapter's camera keys (on the section) switch to portrait keys on tall screens (bindCamKeys).
    REDUCED / tier 0 / no JS: the markup's final figures stand. */
 import './results.css';

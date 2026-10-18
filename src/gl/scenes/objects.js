@@ -3,9 +3,10 @@
    geometry: 1 world unit = 1 CSS px on the plane z = 0 through the slot, the camera sits D px in front of it with an
    off-axis frustum (the slot follows the pin as it arrives and leaves).
    - ground: one full-screen pass that ray-casts the tilted desk: the paper colour with faint world-anchored mottling
-     (so the desk visibly travels with the row) and a soft vignette. Below the sheet that tears off into Results it
-     paints ink. (Above the arriving sheet's torn edge it would paint the dark room; the stage only switches to this
-     scene once the pin's paper covers the screen — see the [data-proc-scene] marker — so that is a fallback.)
+     (so the desk visibly travels with the row) and a soft vignette. Below the run's end (where the sheet tears off
+     into the Sound teardown) it paints that teardown's black, so the stage's dissolve into it is invisible under the
+     torn edge; above the pin while it arrives it paints the dark room. Both are fallbacks at the margins: the pin's
+     own paper covers the screen while the stage dissolves in and out (see process.js, state.cover).
    - shadows: one quad per object lying on the desk: its own silhouette, pre-blurred on a canvas and blurred further
      (mip bias) the higher it floats, plus a soft ambient pool (a blurred ellipse drawn on a canvas). The shadow is
      tight and dark when the object settles, offset, wide and faint when it lifts.
@@ -16,7 +17,6 @@
    layer and this scene draws only the desk and the shadows. */
 import * as THREE from 'three';
 import { texture } from '../lib/loaders.js';
-import { geo } from '../../core/layout.js';
 import { state, trackAt, place, drift, N } from '../../sections/process.js';
 
 /* the reading paper as it renders (--paper under the shell's .paper-grain), so the desk and the sheets match */
@@ -29,7 +29,7 @@ uniform vec2 res;      // render target px
 uniform vec2 view;     // CSS px
 uniform vec2 ctr;      // the slot centre on screen (CSS px, from top-left)
 uniform float D, Zd, st, ct, off;
-uniform float topY, botY;   // screen y: dark above topY (the room the sheet arrives over) and below botY (Results)
+uniform float topY, botY;   // screen y: dark above topY (the room the sheet arrives over) and below botY (the teardown)
 uniform float pool;
 uniform vec3 paper;
 float hash(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
@@ -43,7 +43,7 @@ void main() {
     gl_FragColor = vec4(mix(ink, vec3(0.15, 0.1, 0.054), exp(-dot(q, q)) * 0.85), 1.0);
     return;
   }
-  if (px.y > botY) { gl_FragColor = vec4(ink, 1.0); return; }
+  if (px.y > botY) { gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); return; }   // the teardown's stage is pure black
   // the desk: the plane through (0, 0, -Zd) with normal (0, st, ct), seen from (0, 0, D)
   vec3 rd = normalize(vec3(px.x - ctr.x, ctr.y - px.y, -D));
   float t = -(Zd + D) * ct / dot(rd, vec3(0.0, st, ct));
@@ -259,10 +259,9 @@ export default function register(stage) {
       gu.off.value = s.pos * L.S;
       gu.topY.value = s.pinTop > 0 ? s.pinTop : -1;
       gu.botY.value = s.bottom < ctx.vh + 30 ? s.bottom : 1e6;
-      // the post vignette: the room's while it dissolves in, soft over the desk, the next painting's as the sheet
-      // tears off into Results (the switches happen while paper covers the screen)
-      const panelTop = geo(L.run).bottom - ctx.scrollY;
-      this.post.vignette = panelTop <= 0 ? 0.32 : 0.3 - (0.3 - 0.07) * (1 - s.cover);
+      // the post vignette: the room's under the pin's paper, soft over the open desk (it changes only while the
+      // paper covers the screen)
+      this.post.vignette = 0.3 - (0.3 - 0.07) * (1 - s.cover);
     },
   });
 }
