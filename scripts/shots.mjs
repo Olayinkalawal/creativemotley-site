@@ -3,7 +3,10 @@
 //        [--at "top,#storytellers,#storytellers+0.5,12000"] [--tier 2] [--wait 1400] [--full]
 // "--at" items: a CSS selector (scrolls its top to the viewport top), selector+frac (adds frac
 // of the element's height), or a raw scrollY. Without --at it walks the page every 0.75 viewport.
-import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
+import fs_ from 'node:fs';
+// Playwright: the project's own (npm i -D playwright) or, in the cloud container, the preinstalled copy
+const { chromium } = await import('playwright').catch(() => import('/opt/node22/lib/node_modules/playwright/index.mjs'));
+const CHROME = ['/opt/pw-browsers/chromium-1194/chrome-linux/chrome'].find((p) => fs_.existsSync(p));
 import fs from 'fs';
 const A = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? [...a, [v.slice(2), arr[i + 1] && !arr[i + 1].startsWith('--') ? arr[i + 1] : true]] : a), []));
 const url = A.url || 'http://localhost:5173/';
@@ -11,7 +14,7 @@ const mode = A.mode || 'desktop';
 const out = A.out || `qa/shots/${mode}`;
 fs.mkdirSync(out, { recursive: true });
 const vp = mode === 'mobile' ? { width: 390, height: 844 } : { width: +(A.w || 1440), height: +(A.h || 900) };
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'] });
+const browser = await chromium.launch({ ...(CHROME ? { executablePath: CHROME } : {}), args: [...(CHROME ? ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] : []), '--autoplay-policy=no-user-gesture-required'] });
 const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: mode === 'mobile' ? 2 : 1, isMobile: mode === 'mobile', hasTouch: mode === 'mobile', reducedMotion: A.reduced ? 'reduce' : 'no-preference' });
 const page = await ctx.newPage();
 await page.routeWebSocket(/.*/, () => {}); // mute Vite HMR reloads during capture (other builders edit files)
