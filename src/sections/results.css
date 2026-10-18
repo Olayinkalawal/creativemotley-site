@@ -1,0 +1,53 @@
+/* VII · Results: the opener over the watchers, then four counters on the umber stage.
+   A ledger: each figure sits on a hairline, the label beside it (below it on phones). The figure is set in
+   tabular lining figures and laid out at its final width from the start; while it counts, the places it has
+   not reached yet show as faint zeros and the suffix waits, so nothing ever shifts. */
+/* the opener: a soft ink veil travels with the type, so cream holds over the bright drapery and sky */
+.rx-open::before {
+  content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; left: 0; right: 0; pointer-events: none;
+  background: radial-gradient(130% 30% at 30% 55%, rgba(11, 8, 5, 0.66), rgba(11, 8, 5, 0.4) 50%, rgba(11, 8, 5, 0) 100%);
+}
+@media (min-width: 900px) {
+  .rx-open::before { background: radial-gradient(75% 36% at 34% 54%, rgba(11, 8, 5, 0.6), rgba(11, 8, 5, 0.36) 50%, rgba(11, 8, 5, 0) 100%); }
+}
+@media (min-width: 1024px) { .rx-open::before { left: calc(-1 * var(--rail-w)); } }
+
+/* the counters: their region starts under the opener's tail, so the painting has dissolved into the umber room
+   by the time the first figure counts */
+.rx {
+  position: relative; color: var(--cream);
+  margin-top: -36svh; padding-block: 58svh clamp(24px, 5svh, 56px);
+}
+.rx-list { display: grid; }
+.rx-stat {
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(10px, 1.6svh, 18px);
+  padding-block: clamp(22px, 4.4svh, 48px) clamp(56px, 11svh, 120px);
+}
+/* the hairline, and the gold that draws along it as the figure counts */
+.rx-stat::before, .rx-stat::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; }
+.rx-stat::before { background: rgba(244, 237, 223, 0.2); }
+.rx-stat::after { background: var(--gold); transform-origin: 0 50%; transform: scaleX(var(--rx-k, 1)); }
+
+.rx-num {
+  display: flex; align-items: baseline; white-space: nowrap;
+  font-family: var(--sans); font-weight: 600; font-size: clamp(4.5rem, 24vw, 7rem);
+  line-height: 0.84; letter-spacing: -0.05em; margin-left: -0.04em;
+  font-variant-numeric: lining-nums tabular-nums; font-feature-settings: 'lnum' 1, 'tnum' 1;
+}
+.rx-digits { font-weight: inherit; }
+.rx-digits i { font-style: normal; }
+.rx-digits i.is-off { opacity: 0.14; }   /* places not reached yet: a ghost of the final figure */
+.rx-suf { letter-spacing: -0.03em; }
+.rx-lbl {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(1.45rem, 6.4vw, 2rem);
+  line-height: 1.06; letter-spacing: -0.01em; color: var(--gold); max-width: 13em; text-wrap: balance;
+}
+
+@media (min-width: 900px) {
+  .rx-stat {
+    grid-template-columns: minmax(0, 1fr) minmax(0, min(34%, 13em));
+    align-items: end; column-gap: clamp(24px, 4vw, 64px);
+  }
+  .rx-num { font-size: clamp(6rem, 12.4vw, 13rem); }
+  .rx-lbl { font-size: var(--t-dek); padding-bottom: 0.12em; }
+}

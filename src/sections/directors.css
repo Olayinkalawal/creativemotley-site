@@ -1,0 +1,66 @@
+/* VIII · Directors: the opener, then a pinned stage with the alpha film rising from the foot of the screen and
+   the names on a serif line behind the heads.
+   Static by default (no JS, reduced motion): the names stand still, stacked and centred above the heads.
+   .dr-on (JS, motion allowed): the line repeats and runs with scroll; on phones the film pans. */
+.opener.dr-open { min-height: 112svh; }     /* same stage as the counters before it: no new painting to dwell on */
+.dr-run { position: relative; }
+.dr-pin { position: relative; height: calc(var(--film-h) + 26svh); min-height: 300px; overflow: hidden; }
+
+/* the film: as wide as the column on desktop, bottom-anchored */
+.dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 64svh); }
+.dr-on .dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 76svh); }
+@media (min-width: 1024px) { .dr-run { --col-left: var(--rail-w); } }
+.dr-film { position: absolute; z-index: 1; bottom: 0; right: 0; left: var(--col-left, 0px); display: flex; justify-content: center; }
+.dr-video {
+  display: block; width: auto; height: var(--film-h); max-width: none; aspect-ratio: 16 / 9;
+  opacity: 0; transition: opacity 1.2s var(--ease-out);
+  /* the portraits are cut by the frame's foot: soften it, so it never shows as a hard line when the pin lets go */
+  -webkit-mask-image: linear-gradient(0deg, transparent, #000 13%); mask-image: linear-gradient(0deg, transparent, #000 13%);
+}
+.dr-video.is-ready { opacity: 1; }
+
+/* the names. Static: the two names stacked, centred above the heads. Running (.dr-on): one serif line just
+   above the heads, so the portraits stand in front of its foot. */
+.dr-band {
+  position: absolute; z-index: 0; left: var(--col-left, 0px); right: 0;
+  bottom: calc(var(--film-h) * 0.95);
+  display: flex; justify-content: center; pointer-events: none;
+}
+.dr-track {
+  display: flex; flex-wrap: wrap; justify-content: center; text-align: center;
+  font-family: var(--serif); font-weight: 400; font-size: clamp(2.4rem, 5.6vw, 5.6rem);
+  line-height: 1.02; letter-spacing: -0.018em; color: var(--cream); white-space: nowrap;
+  padding-inline: var(--col-pad);
+}
+.dr-unit { display: contents; }
+.dr-unit + .dr-unit { display: none; }
+.dr-unit > span { flex: 0 0 100%; }
+.dr-track i {
+  display: none; font-style: normal; color: var(--accent); font-size: 0.5em; line-height: 1;
+  align-self: center; margin-inline: 0.42em; transform: translateY(-0.12em);
+}
+
+/* the running line */
+.dr-on .dr-run { height: 230svh; }
+.dr-on .dr-pin { position: sticky; top: 0; height: 100svh; min-height: 520px; }
+.dr-on .dr-band {
+  left: 0; justify-content: flex-start; overflow: hidden; bottom: calc(var(--film-h) * 0.855);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.dr-on .dr-track {
+  flex-wrap: nowrap; width: max-content; padding: 0; text-align: left; will-change: transform;
+  font-size: clamp(3.9rem, 10.2vw, 11rem); line-height: 0.98;
+}
+.dr-on .dr-unit, .dr-on .dr-unit + .dr-unit { display: flex; align-items: baseline; }
+.dr-on .dr-unit > span { flex: none; }
+.dr-on .dr-track i { display: inline; }
+.dr-on .dr-film { will-change: transform; }
+
+/* portrait screens (phones, upright tablets): a film taller than the screen is wide; the scroll pans across it */
+@media (orientation: portrait) {
+  .dr-on .dr-run { --film-h: min(64svh, 640px); }
+  .dr-on .dr-film { right: auto; justify-content: flex-start; }
+  .dr-on .dr-band { bottom: calc(var(--film-h) * 0.86); }
+  .dr-on .dr-track { font-size: clamp(3.4rem, 17vw, 7rem); }
+}
