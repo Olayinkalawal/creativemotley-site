@@ -1,5 +1,5 @@
 {
- "note": "Interface labels with no fact in facts.json. Everything else on the page must trace to facts.json.",
+ "note": "Interface labels with no fact in facts.json. Everything else on the page must trace to facts.json. Device labels and part names (Console … Rear glass) name what the teardown renders show; they are descriptive labels, not claims.",
  "strings": [
   "Skip to content",
   "Chapters",
@@ -10,6 +10,33 @@
   "Chapter IX",
   "Primary",
   "Previous",
-  "Next"
+  "Next",
+  "Kit",
+  "Chapter X",
+  "Console",
+  "Headphones",
+  "Faceplate",
+  "Display",
+  "Pad matrix",
+  "Fader bank",
+  "Main board",
+  "Chassis",
+  "Windscreen",
+  "Capsule grille",
+  "Diaphragm",
+  "Voice coil",
+  "Yoke mount",
+  "XLR connector",
+  "Outer cap",
+  "Ear cup",
+  "Driver",
+  "Baffle",
+  "Cushion",
+  "Headband",
+  "Logic board",
+  "Battery",
+  "Charging coil",
+  "Camera module",
+  "Rear glass"
  ]
 }
