@@ -1,9 +1,14 @@
 /* VI · Process: seven objects on a paper desk; the camera trucks along the row and the active one lifts toward you.
    One pure function of scroll (trackAt) drives three things that have to agree:
      - the WebGL scene (src/gl/scenes/objects.js): cut-out planes over a paper desk, contact shadows, the light;
-     - a CSS-3D proxy of the very same desk (the list's images, same camera, same poses): it is what you see while
-       the pin's paper still covers the stage and until the objects scene has drawn (and if WebGL never boots);
+     - a CSS-3D proxy of the very same desk (the list's images, same camera, same poses, same idle drift and wash): it
+       is what you see while the pin's paper still covers the stage and until the objects scene has drawn. Where the
+       stage renders well below the screen's pixel density (phones: the stage caps its dpr), it stays as the object
+       layer for the whole run ("crisp" mode): WebGL then draws only the desk and the shadows, so the cut-outs stay
+       as sharp as the type beside them;
      - the live caption: the active step's title + short line (F75/F76 … F93/F94) and a seven-step marker.
+   The stage switches to the objects scene at a marker ~0.9 viewport into the run ([data-proc-scene]), so its
+   dissolve from the posters happens under the pin's paper, and the paper clears only once that dissolve is done.
    World units are CSS px on the plane z = 0 through the slot (the box the active object lifts into); the camera sits
    D px in front of the slot with an off-axis frustum, so the CSS perspective and the WebGL camera are one camera.
    The desk is a plane tilted back by `tau` and Zd px behind the slot plane; objects at rest lie flat on it.
@@ -43,6 +48,8 @@ export const state = {
   cap: 0,             // caption opacity
   bottom: 0,          // screen y of the chapter's bottom (the sheet tearing off into Results)
   gl: false,          // the objects scene has drawn
+  crisp: false,       // set by the scene: the DOM proxy stays the object layer (stage dpr well below the screen's)
+  ptr: null,          // set by the scene: the stage's eased pointer (-1..1), for the active object's lean
   onGL: null,
 };
 
@@ -66,12 +73,24 @@ export function trackAt(y) {
   state.lift = smooth(seg(into, -vh * 0.3, intro * 0.75)) * (1 - smooth(seg(-pinTop, vh * 0.04, vh * 0.55)));
   state.pinTop = pinTop;
   state.e = into / vh;
-  state.cover = 1 - smooth(seg(state.e, -0.08, 0.2));
+  // the pin's paper clears once the stage has finished dissolving into the objects scene (L.c0, from the marker)
+  state.cover = 1 - smooth(seg(state.e, L.c0, L.c0 + 0.24));
   state.cap = smooth(seg(into, -vh * 0.12, intro * 0.8)) * (1 - smooth(seg(-pinTop, vh * 0.06, vh * 0.4)));
   state.visible = pinTop < vh && pinTop > -L.pinH;
   state.active = clamp(Math.round(state.pos), 0, N - 1);
   state.bottom = gs.bottom - y;
   return state;
+}
+
+/* the active object's idle life (WebGL and the proxy share it): it breathes a little and leans toward a fine
+   pointer. Adds to the pose from place(). */
+export function drift(k, o, time, ptr) {
+  const a = o.a, px = ptr ? ptr.x : 0, py = ptr ? ptr.y : 0;
+  o.by = Math.sin(time * 0.8 + k) * 2.5 * a;
+  o.bx = -py * 0.1 * a;
+  o.bry = px * 0.16 * a;
+  o.brz = Math.sin(time * 0.55 + k * 1.7) * 0.006 * a;
+  return o;
 }
 
 /* object k at track position pos -> pose o (world px; Euler XYZ in three's y-up convention) */
@@ -92,6 +111,9 @@ export function place(k, pos, lift, o) {
   o.rz = lk.rz * (1 - a);
   o.a = a;
   o.d = d;
+  // far along the row the objects fade out; resting ones are washed a little toward the paper so they recede
+  o.alpha = 1 - clamp((Math.abs(d) - 2.4) / 0.8);
+  o.fog = Math.min(0.3, 0.12 + 0.07 * Math.max(0, Math.abs(d) - 1)) * (1 - a);
   // height above the desk (for the shadow's blur) and where its shadow falls: the key light sits near the camera,
   // a little up and to the left, so a lifted object's shadow lands just behind it, down and to the right
   const hh = Math.max(0, o.y * L.st + (o.z + L.Zd) * L.ct);           // dot(p - P0, n)
@@ -121,13 +143,16 @@ export function init() {
   sec.classList.add('proc-on');
   const slot = sec.querySelector('[data-proc-slot]');
   const bg = sec.querySelector('[data-proc-bg]');
+  const scn = sec.querySelector('[data-proc-scene]');
   const capEl = sec.querySelector('[data-proc-cap]');
   const caps = [...sec.querySelectorAll('[data-proc-items] > *')];
   const ticks = sec.querySelector('[data-proc-ticks]');
   const objs = lis.map((li) => li.querySelector('.proc-step__obj'));
+  objs.forEach((ob, k) => ob.style.setProperty('--src', `url("${state.items[k].src}")`));   // the wash's mask
   const rail = document.querySelector('.rail');
   const o = {};
-  let lastY = NaN, lastVer = -1, lastK = -1, lastCover = '', lastCap = [], lastMark = '';
+  let lastY = NaN, lastVer = -1, lastK = -1, lastCrisp = null, lastCover = '', lastList = '', lastCap = [], lastMark = '';
+  const lastT = [], lastZ = [], lastL = [], lastF = [], lastA = [];
   let shown = false, glK = 0, glFrom = 0;                                  // the one-time hand-over from the proxy to WebGL
 
   function measure() {
@@ -147,9 +172,12 @@ export function init() {
     const edge = phone ? [0, 6, vw - 6, vw]
       : railW ? [railW * 0.55, railW + 36, vw - 70, vw - 2]
       : [0, vw * 0.06, vw * 0.94, vw];
+    // the stage's dissolve into this scene ends when the marker is 0.1 viewport above the reading line (the stage
+    // dissolves over ±0.4 viewport around the centre): e = (marker - 0.1 vh) / vh; the paper clears just after
+    const c0 = (scn ? scn.offsetTop : vh * 0.92) / vh - 0.1 + 0.02;
     state.L = {
       run, sec, ver: (state.L?.ver ?? 0) + 1, vw, vh, pinH: pr.height, cx, cy, SW, SH, phone,
-      D, Zd, tau, st: Math.sin(tau), ct: Math.cos(tau), S: sp / shrink, shrink, edge,
+      D, Zd, tau, st: Math.sin(tau), ct: Math.cos(tau), S: sp / shrink, shrink, edge, c0,
       intro: parseFloat(getComputedStyle(run).getPropertyValue('--proc-intro')) / 100 * pr.height || vh * 0.4,
     };
     state.items.forEach((it, k) => {
@@ -178,24 +206,41 @@ export function init() {
     if (!state.L) return;
     trackAt(v.y);
     // the hand-over: once WebGL has drawn the desk, the pin's paper and the proxy clear together (scroll-driven),
-    // and if WebGL arrives mid-run, they ease out once over half a second
+    // and if WebGL arrives mid-run, they ease out once over half a second. In crisp mode only the paper (and the
+    // proxy's own CSS shadows) clear: the proxy stays as the object layer over the WebGL desk and shadows.
     const on = glOn();
     if (on && glK < 1) { const now = performance.now(); if (!glFrom) glFrom = now; glK = Math.min(1, (now - glFrom) / 500); }
     if (!on) { glK = 0; glFrom = 0; }
-    if (v.y === lastY && state.ver === lastVer && glK === lastK) return;
-    lastY = v.y; lastVer = state.ver; lastK = glK;
-    if (!state.visible) return;
+    const crisp = on && state.crisp;
+    const moved = v.y !== lastY || state.ver !== lastVer || glK !== lastK || crisp !== lastCrisp;
+    if (!state.visible) { lastY = v.y; lastVer = state.ver; lastK = glK; lastCrisp = crisp; return; }
     const cover = 1 - glK * (1 - state.cover);
-    const proxy = cover > 0.002;
+    const proxy = crisp || cover > 0.002;
+    // between scroll changes only the active object's idle drift moves, and only while the proxy is the one drawn
+    if (!moved && !(proxy && state.lift > 0)) return;
+    lastY = v.y; lastVer = state.ver; lastK = glK; lastCrisp = crisp;
 
     const cs = f2(cover);
-    if (cs !== lastCover) { bg.style.opacity = cs; list.style.opacity = cs; lastCover = cs; }
+    if (cs !== lastCover) { bg.style.opacity = cs; lastCover = cs; }
+    const ls = `${crisp ? '1.00' : cs}|${crisp ? cs : '1.00'}|${crisp && cover <= 0.002}`;
+    if (ls !== lastList) {
+      lastList = ls;
+      list.style.opacity = crisp ? '1' : cs;
+      list.style.setProperty('--sh', crisp ? cs : '1');                   // the proxy's CSS shadows give way to WebGL's
+      sec.classList.toggle('is-crisp', crisp && cover <= 0.002);
+    }
     for (let k = 0; proxy && k < N; k++) {
       place(k, state.pos, state.lift, o);
+      drift(k, o, v.time, state.ptr);
       // CSS is y-down: translate y and the X / Z turns flip sign; Y turns do not
-      lis[k].style.transform = `translate3d(${f2(o.x)}px,${f2(-o.y)}px,${f2(o.z)}px) rotateX(${f4(-o.rx)}rad) rotateZ(${f4(-o.rz)}rad)`;
-      lis[k].style.zIndex = String(10 + Math.round(o.a * 50) + Math.round(o.z / 20));
-      objs[k].style.setProperty('--lift', f2(o.a));
+      const t = `translate3d(${f2(o.x)}px,${f2(-(o.y + o.by))}px,${f2(o.z)}px) rotateX(${f4(-(o.rx + o.bx))}rad) rotateY(${f4(o.ry + o.bry)}rad) rotateZ(${f4(-(o.rz + o.brz))}rad)`;
+      if (t !== lastT[k]) { lastT[k] = t; lis[k].style.transform = t; }
+      const z = String(10 + Math.round(o.a * 50) + Math.round(o.z / 20));
+      if (z !== lastZ[k]) { lastZ[k] = z; lis[k].style.zIndex = z; }
+      const l = f2(o.a), f = f2(o.fog), al = f2(o.alpha);
+      if (l !== lastL[k]) { lastL[k] = l; objs[k].style.setProperty('--lift', l); }
+      if (f !== lastF[k]) { lastF[k] = f; objs[k].style.setProperty('--fog', f); }
+      if (al !== lastA[k]) { lastA[k] = al; lis[k].style.opacity = al; }
     }
     if (!shown) { sec.classList.add('is-measured'); shown = true; }
     // the caption: each step's title + line fades through the ease, so text never sits over a passing object

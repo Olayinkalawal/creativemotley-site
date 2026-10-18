@@ -1,7 +1,8 @@
-/* VII · Results: the opener over the watchers, then four counters on the umber stage.
-   A ledger: each figure sits on a hairline, the label beside it (below it on phones). The figure is set in
-   tabular lining figures and laid out at its final width from the start; while it counts, the places it has
-   not reached yet show as faint zeros and the suffix waits, so nothing ever shifts. */
+/* VII · Results: the opener over the watchers, then four counters over the same painting under an ink veil.
+   A ledger: each figure sits on a hairline with its label right under it. On wide screens the ledger is only as
+   wide as its widest row, so the right of the screen stays clear for the TV. The figure is set in tabular lining
+   figures and laid out at its final width from the start; while it counts, the places it has not reached yet show
+   as faint zeros and the suffix waits, so nothing ever shifts. */
 /* the opener: a soft ink veil travels with the type, so cream holds over the bright drapery and sky */
 .rx-open::before {
   content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; left: 0; right: 0; pointer-events: none;
@@ -12,20 +13,28 @@
 }
 @media (min-width: 1024px) { .rx-open::before { left: calc(-1 * var(--rail-w)); } }
 
-/* the counters: their region starts under the opener's tail, so the painting has dissolved into the umber room
-   by the time the first figure counts */
-.rx {
-  position: relative; color: var(--cream);
-  margin-top: -36svh; padding-block: 58svh clamp(24px, 5svh, 56px);
+/* the counters start under the opener's tail, so the first figure arrives as the dek leaves */
+.rx { position: relative; color: var(--cream); margin-top: -36svh; padding-top: 22svh; }
+/* the ink veil under the ledger: it fades in above the first hairline and out over the start of chapter VIII
+   (it runs on past the region, so the painting never shows bare between the last figure and the next chapter) */
+.rx::before {
+  content: ''; position: absolute; z-index: -1; top: 0; bottom: -46svh; left: 0; right: 0; pointer-events: none;
+  background: linear-gradient(90deg, rgba(11, 8, 5, 0.84), rgba(11, 8, 5, 0.74));
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 22svh, #000 calc(100% - 46svh), transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 22svh, #000 calc(100% - 46svh), transparent);
 }
+@media (min-width: 900px) {
+  .rx::before { background: linear-gradient(90deg, rgba(11, 8, 5, 0.86), rgba(11, 8, 5, 0.8) 60%, rgba(11, 8, 5, 0.34) 82%, rgba(11, 8, 5, 0.22)); }
+}
+
 .rx-list { display: grid; }
 .rx-stat {
-  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(10px, 1.6svh, 18px);
-  padding-block: clamp(22px, 4.4svh, 48px) clamp(56px, 11svh, 120px);
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(8px, 1.4svh, 16px);
+  padding-block: clamp(22px, 4.4svh, 48px) clamp(48px, 10svh, 108px);
 }
 /* the hairline, and the gold that draws along it as the figure counts */
 .rx-stat::before, .rx-stat::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; }
-.rx-stat::before { background: rgba(244, 237, 223, 0.2); }
+.rx-stat::before { background: rgba(244, 237, 223, 0.24); }
 .rx-stat::after { background: var(--gold); transform-origin: 0 50%; transform: scaleX(var(--rx-k, 1)); }
 
 .rx-num {
@@ -42,12 +51,11 @@
   font-family: var(--serif); font-weight: 400; font-size: clamp(1.45rem, 6.4vw, 2rem);
   line-height: 1.06; letter-spacing: -0.01em; color: var(--gold); max-width: 13em; text-wrap: balance;
 }
+/* Instrument Serif's 1 reads as an l: the one figure inside a label is set in the sans */
+.rx-fig { font-family: var(--sans); font-weight: 500; font-size: 0.8em; letter-spacing: -0.02em; }
 
 @media (min-width: 900px) {
-  .rx-stat {
-    grid-template-columns: minmax(0, 1fr) minmax(0, min(34%, 13em));
-    align-items: end; column-gap: clamp(24px, 4vw, 64px);
-  }
+  .rx-list { grid-template-columns: minmax(0, max-content); }
   .rx-num { font-size: clamp(6rem, 12.4vw, 13rem); }
-  .rx-lbl { font-size: var(--t-dek); padding-bottom: 0.12em; }
+  .rx-lbl { font-size: var(--t-dek); }
 }

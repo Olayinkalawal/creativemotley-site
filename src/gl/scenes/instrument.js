@@ -31,19 +31,19 @@ const lerp = (a, b, t) => a + (b - a) * t;
 
 /* exploded offset along the axis, and where each group starts moving within the explode (front leads) */
 const GROUPS = {
-  body: { dz: -5.0, s: 0.03 },
-  sensor: { dz: -2.8, s: 0.32 },
-  shutter: { dz: -0.6, s: 0.26 },
-  mount: { dz: 3.0, s: 0.18 },
-  inner: { dz: 5.3, s: 0.11 },
-  rings: { dz: 9.0, s: 0.06 },
-  front: { dz: 11.1, s: 0.0 },
+  body: { dz: -6.0, s: 0.03 },
+  sensor: { dz: -3.0, s: 0.32 },
+  shutter: { dz: -0.2, s: 0.26 },
+  mount: { dz: 3.6, s: 0.18 },
+  inner: { dz: 5.6, s: 0.11 },
+  rings: { dz: 9.35, s: 0.06 },
+  front: { dz: 10.75, s: 0.0 },
 };
 const DUR = 0.58;
 /* the pose: assembled 3/4 → the exploded diagonal (wide slots) or a steeper fall (tall slots) */
 const RIG = {
-  wide: { tilt: [0.1, 0.56], yaw: [0.86, 0.74], pitch: [0.2, 0.3], orbit: 0.12, fill: [0.7, 0.97], fl: 2.3 },
-  tall: { tilt: [0.16, 0.92], yaw: [0.84, 0.66], pitch: [0.2, 0.28], orbit: 0.1, fill: [0.66, 1.0], fl: 2.1 },
+  wide: { tilt: [0.1, 0.58], yaw: [0.86, 0.74], pitch: [0.2, 0.3], orbit: 0.12, fill: [0.7, 1.0], fl: 2.3 },
+  tall: { tilt: [0.16, 0.92], yaw: [0.84, 0.66], pitch: [0.2, 0.28], orbit: 0.1, fill: [0.66, 0.93], fl: 2.1 },
 };
 
 /* ── geometry helpers ─────────────────────────────────────────────────── */
@@ -150,6 +150,22 @@ function rr(w, h, r, cx = 0, cy = 0, path = new THREE.Shape()) {
   return path;
 }
 const rrHole = (w, h, r, cx, cy) => rr(w, h, r, cx, cy, new THREE.Path());
+/* the outline x0..x1, y0..y1 (corner radius r) cut at y = ys: the part below it, or above it (upper), inset by the
+   bevel b on every edge, the cut too, so the two halves meet flush and show a seam on the front and back faces */
+function rrCut(x0, x1, y0, y1, r, ys, b, upper) {
+  const s = new THREE.Shape(), X0 = x0 + b, X1 = x1 - b, q = r - b;
+  if (!upper) {
+    const Y0 = y0 + b, Ys = ys - b;
+    s.moveTo(X0, Ys); s.lineTo(X0, Y0 + q); s.absarc(X0 + q, Y0 + q, q, Math.PI, 1.5 * Math.PI, false);
+    s.lineTo(X1 - q, Y0); s.absarc(X1 - q, Y0 + q, q, 1.5 * Math.PI, 2 * Math.PI, false); s.lineTo(X1, Ys);
+  } else {
+    const Y1 = y1 - b, Ys = ys + b;
+    s.moveTo(X1, Ys); s.lineTo(X1, Y1 - q); s.absarc(X1 - q, Y1 - q, q, 0, 0.5 * Math.PI, false);
+    s.lineTo(X0 + q, Y1); s.absarc(X0 + q, Y1 - q, q, 0.5 * Math.PI, Math.PI, false); s.lineTo(X0, Ys);
+  }
+  s.closePath();
+  return s;
+}
 const circ = (r, cx = 0, cy = 0) => { const p = new THREE.Path(); p.absarc(cx, cy, r, 0, TAU, true); return p; };
 /* a polygon with filleted corners */
 function fillet(pts, rad) {
@@ -423,25 +439,41 @@ function buildModel(base) {
     if (!gr.mats[k]) gr.mats[k] = patch(base[key].clone(), gr.lift);
     return gr.mats[k];
   };
-  const sub = (name, key, p = [0, 0, 0]) => { const o = new THREE.Group(); o.position.set(...p); G[name].obj.add(o); G[name].sub[key] = o; o.userData.base = o.position.clone(); return o; };
+  const sub = (name, key, p = [0, 0, 0], parent = G[name].obj) => { const o = new THREE.Group(); o.position.set(...p); parent.add(o); G[name].sub[key] = o; o.userData.base = o.position.clone(); return o; };
   const RX = -Math.PI / 2;   // turns a +Z part to stand along +Y
 
   /* body */
   {
     const B = G.body.obj, m = (k) => mat('body', k);
-    kit.add(B, m('satin'), solid(rr(12.72, 7.52, 0.66), 5.0, 0.24, 12, 5), { p: [-1.2, 0, -0.7] });
+    // the shell in two: the body below the seam, and the top deck (EVF, dials, hot shoe, mic) that lifts off it
+    kit.add(B, m('satin'), solid(rrCut(-7.8, 5.4, -4, 4, 0.9, 2.8, 0.24, false), 5.0, 0.24, 12, 5), { p: [0, 0, -0.7] });
     kit.add(B, m('leather'), solid(fillet([[-7.25, -1.15], [-4.85, -1.15], [-4.85, -4.35], [-7.25, -4.35]], [0.2, 0.2, 0.8, 1.2]), 7.6, 0.55, 12), { p: [0, -0.2, 0], r: [RX, 0, 0] });
-    kit.add(B, m('satin'), solid(fillet([[3.42, 3.9], [3.42, 5.92], [-0.24, 5.92], [-1.66, 4.62], [-1.66, 3.9]], [0.1, 0.42, 0.4, 0.4, 0.1]), 5.6, 0.18, 10, 4), { r: [0, Math.PI / 2, 0] });
-    kit.add(B, m('leather'), rbox(4.4, 2.8, 1.4, 0.55, 4), { p: [0, 4.85, -3.95] });
-    kit.add(B, m('screen'), rbox(2.9, 1.6, 0.1, 0.04), { p: [0, 4.85, -4.66] });
-    kit.add(B, m('steel'), rbox(2.3, 0.16, 2.6, 0.05), { p: [0, 6.16, -1.4] });
-    for (const x of [-1.02, 1.02]) kit.add(B, m('steel'), rbox(0.28, 0.24, 2.6, 0.06), { p: [x, 6.3, -1.4] });
+    const top = sub('body', 'top');
+    kit.add(top, m('satin'), solid(rrCut(-7.8, 5.4, -4, 4, 0.9, 2.8, 0.24, true), 5.0, 0.24, 12, 5), { p: [0, 0, -0.7] });
+    kit.add(top, m('satin'), solid(fillet([[3.42, 3.9], [3.42, 5.92], [-0.24, 5.92], [-1.66, 4.62], [-1.66, 3.9]], [0.1, 0.42, 0.4, 0.4, 0.1]), 5.6, 0.18, 10, 4), { r: [0, Math.PI / 2, 0] });
+    kit.add(top, m('leather'), rbox(4.4, 2.8, 1.4, 0.55, 4), { p: [0, 4.85, -3.95] });
+    kit.add(top, m('screen'), rbox(2.9, 1.6, 0.1, 0.04), { p: [0, 4.85, -4.66] });
+    kit.add(top, m('steel'), rbox(2.3, 0.16, 2.6, 0.05), { p: [0, 6.16, -1.4] });
+    for (const x of [-1.02, 1.02]) kit.add(top, m('steel'), rbox(0.28, 0.24, 2.6, 0.06), { p: [x, 6.3, -1.4] });
     // dials: knurled, with polished caps
     const cap = (r, z) => turn([...hard([r + 0.05, z - 0.05], [r, z]), [[r, z], [0, z]]], 64);
-    kit.add(B, m('anod'), ribs(1.2, 0.07, 0, 0.75, 64, 0.3), { p: [-5.0, 4.0, -1.2], r: [RX, 0, 0] });
-    kit.add(B, m('steel'), cap(1.0, 0.78), { p: [-5.0, 4.0, -1.2], r: [RX, 0, 0] });
-    kit.add(B, m('anod'), ribs(1.0, 0.06, 0, 0.6, 54, 0.3), { p: [3.4, 4.0, -1.5], r: [RX, 0, 0] });
-    kit.add(B, m('steel'), cap(0.82, 0.63), { p: [3.4, 4.0, -1.5], r: [RX, 0, 0] });
+    kit.add(top, m('anod'), ribs(1.2, 0.07, 0, 0.75, 64, 0.3), { p: [-5.0, 4.0, -1.2], r: [RX, 0, 0] });
+    kit.add(top, m('steel'), cap(1.0, 0.78), { p: [-5.0, 4.0, -1.2], r: [RX, 0, 0] });
+    kit.add(top, m('anod'), ribs(1.0, 0.06, 0, 0.6, 54, 0.3), { p: [3.4, 4.0, -1.5], r: [RX, 0, 0] });
+    kit.add(top, m('steel'), cap(0.82, 0.63), { p: [3.4, 4.0, -1.5], r: [RX, 0, 0] });
+    // the innards under the top deck: the main board, processor under its lid, memory, card slot, cell, flex to the front
+    kit.add(B, m('pcb'), planarUV(solid(rr(11.94, 4.14, 0.3), 0.14, 0.03)), { p: [-1.2, 2.87, -0.8], r: [RX, 0, 0] });
+    kit.add(B, m('plastic'), rbox(2.0, 0.22, 2.0, 0.05), { p: [-0.6, 3.05, -1.05] });
+    kit.add(B, m('steel'), rbox(1.5, 0.07, 1.5, 0.03, 1), { p: [-0.6, 3.19, -1.05] });
+    for (const z of [-1.7, -0.5]) kit.add(B, m('plastic'), rbox(1.1, 0.16, 0.8, 0.04), { p: [1.5, 3.02, z] });
+    kit.add(B, m('steel'), rbox(2.6, 0.3, 2.2, 0.06), { p: [-4.7, 3.09, -1.3] });
+    kit.add(B, m('plastic'), rbox(2.2, 0.05, 0.12, 0.02, 1), { p: [-4.7, 3.24, -0.22] });
+    for (const [x, z] of [[3.1, 0.7], [-2.6, 0.75]]) kit.add(B, m('cream'), rbox(1.6, 0.26, 0.36, 0.05), { p: [x, 3.06, z] });
+    for (let i = 0; i < 4; i++) kit.add(B, m('steel'), ring(0, 0.17, 0, 0.32, 0.03, 20), { p: [2.9 + i * 0.42, 2.94, -2.2], r: [RX, 0, 0] });
+    kit.add(B, m('steel'), ring(0, 0.46, 0, 0.12, 0.02, 40), { p: [-2.6, 2.94, -2.15], r: [RX, 0, 0] });
+    const flexPath = new THREE.CatmullRomCurve3([[0.9, 2.96, 0.6], [0.9, 3.12, 1.4], [0.9, 2.86, 2.05], [0.9, 2.3, 2.2], [0.9, 1.9, 2.12]].map((v) => new THREE.Vector3(...v)));
+    const flexShape = new THREE.Shape([new THREE.Vector2(-0.015, -0.6), new THREE.Vector2(0.015, -0.6), new THREE.Vector2(0.015, 0.6), new THREE.Vector2(-0.015, 0.6)]);
+    kit.add(B, m('copper'), new THREE.ExtrudeGeometry(flexShape, { steps: 28, bevelEnabled: false, extrudePath: flexPath }));
     // shutter button in its collar on the grip
     kit.add(B, m('anod'), ring(0.44, 0.86, 0, 0.32, 0.05, 64), { p: [-6.05, 3.6, 3.1], r: [RX, 0, 0] });
     kit.add(B, m('steel'), turn([...hard([0.4, 0.05], [0.4, 0.42]), [[0.4, 0.42], [0.32, 0.5], [0.18, 0.54], [0, 0.555]]], 64), { p: [-6.05, 3.6, 3.1], r: [RX, 0, 0] });
@@ -462,7 +494,7 @@ function buildModel(base) {
     kit.add(bat, m('gold'), rbox(0.06, 0.42, 1.6, 0.02, 1), { p: [-1.16, 2.2, 0] });
     kit.add(bat, m('satin'), rbox(2.5, 0.26, 3.1, 0.1, 2), { p: [0, -2.86, 0] });
     // the shotgun mic on a shock mount, and its cable to the side port
-    const mic = sub('body', 'mic', [0, 6.24, -1.4]);
+    const mic = sub('body', 'mic', [0, 6.24, -1.4], top);
     kit.add(mic, m('anod'), rbox(1.9, 0.3, 2.3, 0.08), { p: [0, 0.15, 0] });
     kit.add(mic, m('anod'), rbox(0.55, 0.85, 0.55, 0.12), { p: [0, 0.7, 0] });
     kit.add(mic, m('anod'), rbox(0.5, 0.34, 3.9, 0.12), { p: [0, 1.05, 0] });
@@ -482,8 +514,8 @@ function buildModel(base) {
     kit.add(mic, m('anod'), rbox(0.5, 0.42, 0.42, 0.1), { p: [5.52, -3.84, 0.9] });
     kit.add(B, m('leather'), solid(rr(3.7, 5.4, 0.3), 0.08, 0.03, 10, 2), { p: [-7.82, -0.6, -1.25], r: [0, -Math.PI / 2, 0] });
     for (const x of [-7.86, 5.46]) {
-      kit.add(B, m('anod'), rbox(0.24, 0.9, 0.7, 0.1), { p: [x, 2.7, -1.6] });
-      kit.add(B, m('steel'), new THREE.TorusGeometry(0.46, 0.065, 8, 28), { p: [x + Math.sign(x) * 0.42, 2.7, -1.6], r: [0, 0, Math.PI / 2], s: [1, 0.72, 1] });
+      kit.add(B, m('anod'), rbox(0.24, 0.9, 0.7, 0.1), { p: [x, 2.05, -1.6] });
+      kit.add(B, m('steel'), new THREE.TorusGeometry(0.46, 0.065, 8, 28), { p: [x + Math.sign(x) * 0.42, 2.05, -1.6], r: [0, 0, Math.PI / 2], s: [1, 0.72, 1] });
     }
     G.body.anchor = { obj: mic, p: new THREE.Vector3(0, 2.62, 5.6) };
   }
@@ -638,8 +670,9 @@ function buildModel(base) {
     });
     gr.fit.push({ obj: gr.obj, box });
     for (const o of Object.values(gr.sub)) {
+      // each moving part is fitted on its own: only the meshes it carries directly, in its own frame
       const sb = new THREE.Box3();
-      o.traverse((c) => { if (c.isMesh && !c.isInstancedMesh) { c.geometry.computeBoundingBox(); sb.union(c.geometry.boundingBox.clone().applyMatrix4(c.matrix)); } });
+      for (const c of o.children) if (c.isMesh && !c.isInstancedMesh) { c.geometry.computeBoundingBox(); sb.union(c.geometry.boundingBox.clone().applyMatrix4(c.matrix)); }
       if (!sb.isEmpty()) gr.fit.push({ obj: o, box: sb });
     }
   }
@@ -818,7 +851,8 @@ export default function register(stage) {
     }
     const eb = G.body.e, sb = G.body.sub;
     sb.battery.position.copy(sb.battery.userData.base).setY(sb.battery.userData.base.y - 7.2 * easeIO(seg(eb, 0.25, 1)));
-    sb.mic.position.copy(sb.mic.userData.base).setY(sb.mic.userData.base.y + 1.7 * easeIO(seg(eb, 0.12, 0.85)));
+    sb.top.position.copy(sb.top.userData.base).setY(sb.top.userData.base.y + 2.7 * easeIO(seg(eb, 0.06, 0.72)));
+    sb.mic.position.copy(sb.mic.userData.base).setY(sb.mic.userData.base.y + 1.1 * easeIO(seg(eb, 0.3, 0.95)));
     sb.screen.rotation.x = 0.55 * easeIO(seg(eb, 0.3, 1));
     for (let k = 0; k < 4; k++) {
       const at = M.screws.userData.at[k], t = easeIO(seg(eb, 0.1 + 0.08 * k, 0.78 + 0.05 * k)), drop = (2.5 + 0.55 * k) * t;

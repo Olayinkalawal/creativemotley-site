@@ -2,13 +2,16 @@
    Static by default (no JS, ?tier=0, reduced motion): one paper sheet with a torn top edge; the seven steps are a calm
    grid on wide screens and a list on phones (object, title, short line), then the dense grid of long lines.
    .proc-on (JS + a WebGL tier): a tall pinned run. The pin carries its own paper (.proc-bg) that covers the stage
-   while it dissolves in from the umber room, then clears; the list becomes a CSS-3D proxy of the WebGL desk and the
-   live caption (title + short line + a seven-step marker) follows the active object. */
+   while it dissolves in from the posters (the scene marker sits ~0.9 viewport into the run), then clears; the list
+   becomes a CSS-3D proxy of the WebGL desk and the live caption (title + short line + a seven-step marker) follows
+   the active object. .is-crisp (phones): the proxy stays the object layer over the WebGL desk and shadows. */
 
 /* ── the sheet: paper with a torn top edge (and, at the end of the chapter, a torn bottom edge) ─────────── */
 .proc {
   position: relative; color: var(--paper-ink);
-  --proc-rim: rgb(222 217 198);   /* the torn rims carry no grain: give them the grained paper's average tone */
+  /* the shell's paper grain (--paper-noise at alpha .55, laid on at opacity .5, multiplied) as one background layer
+     at alpha .275, so the torn rims are the same grained paper as the sheet they belong to */
+  --proc-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42  0 0 0 0 .36  0 0 0 0 .26  0 0 0 .275 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E");
   /* --paper-mute is 4.9:1 on flat --paper but ~4:1 on the grained sheet; a touch more ink keeps grey lines ≥ 4.5:1 */
   --proc-mute: color-mix(in srgb, var(--paper-mute) 78%, var(--paper-ink));
 }
@@ -16,9 +19,13 @@
 .proc-run { position: relative; }
 .proc-pin { position: relative; padding-block: calc(var(--nav-h) + clamp(40px, 9vh, 96px)) clamp(64px, 12vh, 140px); }
 .proc-bg { position: absolute; inset: 0; background: var(--paper); pointer-events: none; }
-.proc-bg::before {
-  content: ''; position: absolute; left: 0; right: 0; top: -22px; height: 24px;
-  background: var(--proc-rim);
+/* the torn rims: paper + the half-strength grain, overlapping their sheet by 2px (no hairline gap can open at
+   fractional positions). On a top rim the grain stops 2px short, so on the overlap rows the sheet's own .paper-grain
+   (painted later) is the only grain: no darker seam. The grain tile is phased to continue the sheet's. */
+.proc-bg::before, .proc .proc-more::before {
+  content: ''; position: absolute; left: 0; right: 0; top: -22px; height: 24px; box-sizing: border-box; padding-bottom: 2px;
+  background: var(--proc-noise) 0 22px / 220px 220px content-box, linear-gradient(var(--paper), var(--paper)) border-box;
+  background-blend-mode: multiply, normal;
   -webkit-mask: var(--tear) top / 1200px 24px repeat-x; mask: var(--tear) top / 1200px 24px repeat-x;
 }
 .proc-head, .proc-desk { position: relative; z-index: 1; }
@@ -33,6 +40,7 @@
 }
 .proc-step { display: grid; gap: 16px; align-content: start; }
 .proc-step__obj { aspect-ratio: 5 / 4; }
+.proc-step__obj { position: relative; }
 .proc-step__obj img {
   width: 100%; height: 100%; object-fit: contain;
   filter: drop-shadow(0 10px 12px rgba(36, 24, 10, 0.2)) drop-shadow(0 2px 2px rgba(36, 24, 10, 0.16));
@@ -49,25 +57,36 @@
 
 /* ── the long lines: a sheet laid over the desk, torn off at the bottom into Results ──────────────────── */
 .proc-more { isolation: isolate; padding-block: clamp(64px, 11vh, 128px) clamp(96px, 16vh, 180px); }
-.proc-more::after {   /* the bottom tear (the shell's tear, flipped) */
+.proc-more::after {   /* the bottom tear (the shell's tear, flipped); painted over the sheet's grain, so grained throughout */
   content: ''; position: absolute; left: 0; right: 0; bottom: -22px; height: 24px; pointer-events: none;
-  background: var(--proc-rim); transform: scaleY(-1);
+  background: var(--proc-noise) 0 0 / 220px 220px, linear-gradient(var(--paper), var(--paper));
+  background-blend-mode: multiply, normal; transform: scaleY(-1);
   -webkit-mask: var(--tear) top / 1200px 24px repeat-x; mask: var(--tear) top / 1200px 24px repeat-x;
   -webkit-mask-position: 37% 0; mask-position: 37% 0;
 }
 /* the soft shadow the torn top edge casts on the desk (paper over paper needs it to read) */
-.proc-more__shade { position: absolute; z-index: -1; left: 0; right: 0; top: -40px; height: 40px; pointer-events: none; filter: blur(5px); }
+.proc-more__shade {   /* clipped at the sheet's top, so the blur's tail never greys the sheet's first rows */
+  position: absolute; z-index: -1; left: 0; right: 0; top: -40px; height: 40px; pointer-events: none; filter: blur(5px);
+  clip-path: inset(-24px 0 0 0);
+}
 .proc-more__shade i {
   position: absolute; left: 0; right: 0; bottom: 4px; height: 24px; background: rgba(36, 24, 10, 0.26);
   -webkit-mask: var(--tear) top / 1200px 24px repeat-x; mask: var(--tear) top / 1200px 24px repeat-x;
 }
-.proc .proc-more::before { background: var(--proc-rim); }
 .proc:not(.proc-on) .proc-more { padding-top: clamp(24px, 5vh, 56px); }
 .proc:not(.proc-on) .proc-more::before, .proc:not(.proc-on) .proc-more__shade { display: none; }
 .proc-dense { box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.16); padding-top: 10px; }
 
 /* ── animated: the pinned run ───────────────────────────────────────────────────────────────────────── */
 .proc-on .proc-run { --proc-intro: 34; --proc-dwell: 56; height: calc((var(--proc-intro) + 7 * var(--proc-dwell) + 100) * 1svh); }
+/* where the stage switches to the objects scene: its top sits deep enough that the pin's paper already covers the
+   screen for the whole ±0.4 viewport dissolve (lvh ≥ the stage's innerHeight, so ≥ 0.9 of it on every phone). It
+   reaches down to the run's end, so the stage's preload (scenes within 1.5 viewports of their element) still loads
+   the scene when a reader lands deep in the run. */
+.proc-scene { position: absolute; left: 0; top: 0; width: 1px; height: 1px; pointer-events: none; }
+.proc-on .proc-scene { top: 92lvh; bottom: 0; height: auto; }
+/* the pin is 100svh; when a phone's toolbar retracts the viewport grows to lvh, so the pin's paper reaches on down */
+.proc-on .proc-bg { bottom: calc(100svh - 100lvh); }
 .proc-on .proc-pin {
   position: sticky; top: 0; height: 100svh; padding: 0;
   display: grid; grid-template-rows: auto minmax(0, 1fr);
@@ -79,12 +98,20 @@
   -webkit-mask-image: linear-gradient(90deg, transparent var(--l0, 0px), #000 var(--l1, 0px), #000 var(--r0, 100%), transparent var(--r1, 100%));
   mask-image: linear-gradient(90deg, transparent var(--l0, 0px), #000 var(--l1, 0px), #000 var(--r0, 100%), transparent var(--r1, 100%));
 }
-.proc-on:not(.is-measured) .proc-list { visibility: hidden; }   /* until the proxy has its first pose */
+/* until the proxy has its first pose: hide only the pixels (the steps' titles, lines and alts stay readable) */
+.proc-on:not(.is-measured) .proc-step__obj { opacity: 0; }
 .proc-on .proc-step { position: absolute; left: 0; top: 0; display: block; will-change: transform; transform-origin: 50% 50%; }
 .proc-on .proc-step__obj { width: 100%; height: 100%; aspect-ratio: auto; }
 .proc-on .proc-step__obj img {
   width: 100%; height: 100%; object-fit: fill;
-  filter: drop-shadow(0 calc(3px + var(--lift, 0) * 26px) calc(3px + var(--lift, 0) * 18px) rgba(36, 24, 10, calc(0.32 - var(--lift, 0) * 0.14)));
+  filter: drop-shadow(0 calc(3px + var(--lift, 0) * 26px) calc(3px + var(--lift, 0) * 18px) rgba(36, 24, 10, calc((0.32 - var(--lift, 0) * 0.14) * var(--sh, 1))));
+}
+.proc-on.is-crisp .proc-step__obj img { filter: none; }   /* WebGL draws the shadows */
+/* the resting objects' wash toward the paper (the WebGL objects' fog): paper laid over the cut-out's own shape */
+.proc-on .proc-step__obj::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; background: rgb(220 215 197);
+  -webkit-mask: var(--src) 0 0 / 100% 100% no-repeat; mask: var(--src) 0 0 / 100% 100% no-repeat;
+  opacity: var(--fog, 0);
 }
 .proc-on .proc-step__txt {   /* kept for screen readers; the live caption shows it */
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
@@ -134,5 +161,10 @@
   .proc-cap__s { font-size: 1.2rem; }
 }
 
-/* the sheet over the desk must still cover the screen when the stage starts its dissolve into Results */
-.proc-on .proc-more { min-height: 100lvh; }
+/* the sheet over the desk must still cover the screen above it while the stage dissolves into Results (the
+   dissolve starts when Results' top is 0.9 viewport down): 92lvh does, and the grid sits centred on it, so the exit
+   hands off from the content, with the blank split above and below rather than left as half a screen of paper */
+.proc-on .proc-more {
+  min-height: 92lvh; display: flex; flex-direction: column; justify-content: center;
+  padding-block: clamp(56px, 8vh, 96px);
+}

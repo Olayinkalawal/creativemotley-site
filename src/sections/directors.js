@@ -1,11 +1,12 @@
 /* VIII · Directors: the alpha film and the names.
    - The film (two painted portraits on transparency): VP9-with-alpha WebM, or HEVC-with-alpha MP4 on WebKit
-     (Safari plays WebM but not its alpha). It starts loading two and a half screens before it is reached and plays
-     only while it is in view (IntersectionObserver); it fades in once it has a frame, so nothing pops.
+     (Safari plays WebM but not its alpha). Two and a half screens before it is reached it gets its poster (frame 1,
+     a transparent WebP) and starts loading; it plays only while it is in view (IntersectionObserver). It fades in
+     once the poster or a frame is there, so nothing pops. No JS: a <noscript> still of the same frame.
    - The names run on a serif line behind the heads: its position is a pure function of scroll (one period of
      the repeated pair over the run's pass), so scrolling back is exact.
    - Portrait screens: the film is taller than the screen is wide; the pin pans the camera from one portrait to the other.
-   REDUCED: the film shows its first frame and does not play; the names stand still (the static layout). */
+   REDUCED: the poster only (the film is never downloaded); the names stand still (the static layout). */
 import './directors.css';
 import { onFrame, clamp, smooth } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
@@ -26,8 +27,20 @@ export function init() {
   video.muted = true;
   const ready = () => video.classList.add('is-ready');
   video.addEventListener('loadeddata', ready, { once: true });
-  let loaded = false, inView = false;
-  const load = () => { if (loaded) return; loaded = true; video.preload = 'auto'; video.load(); };
+  let loaded = false, inView = false, still = false;
+  const poster = () => {
+    const src = video.dataset.poster;
+    if (still || !src) return;
+    still = true;
+    const img = new Image();
+    img.onload = ready; img.src = src;
+    video.poster = src;
+  };
+  const load = () => {
+    poster();
+    if (loaded || REDUCED) return;
+    loaded = true; video.preload = 'auto'; video.load();
+  };
   const sync = () => {
     if (inView && !REDUCED) { load(); video.play().catch(() => {}); }
     else if (!video.paused) video.pause();
