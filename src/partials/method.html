@@ -5,10 +5,14 @@
      Framing ("zoom shiftX shiftY", frame uv): data-td-hero / -hero-tall (the full-screen orbit), data-td-frame0 /
      -frame0-tall (the column as the hand-off lands, whole device) → data-td-frame / -frame-tall (fully exploded). data-td-box / data-td-pbox: the device's box at the hero angle / fully exploded (uv; for the lines and the fit clamp).
      Each step's data-anchor ("u v depth [leader]") is its marker on the exploded camera (poster.webp uv).
+     data-td-bleed / -bleed-tall: how far (fraction of the screen's width) the camera may run past the screen's edge in
+     the column phase (the lens off the right edge, as the Editions hub runs off the top). data-wipe: the black stage
+     is a sheet that scrolls off Showcase (the stage splits the two at its edge), so the camera leaves with its list.
      Choreography: src/sections/_teardown.js + src/gl/lib/tdcore.js; scene: src/gl/scenes/teardowns.js. -->
-<section class="chapter td td--open" id="method" data-chapter data-td data-td-open data-theme="dark" data-scene="td:camera" data-plate="ink"
+<section class="chapter td td--open" id="method" data-chapter data-td data-td-open data-wipe data-theme="dark" data-scene="td:camera" data-plate="ink"
   aria-labelledby="method-title" style="--td-run:540svh; --td-run-m:440svh"
-  data-td-hero="1.24 -0.085 0.05" data-td-hero-tall="1.62 0 0.02" data-td-frame0="1.22 -0.005 0" data-td-frame0-tall="1.36 -0.005 0" data-td-frame="1.04 0 0" data-td-frame-tall="1.02 0 0.01"
+  data-td-hero="1.24 -0.105 0.05" data-td-hero-tall="1.62 0 0.02" data-td-frame0="1.42 -0.005 0" data-td-frame0-tall="1.5 -0.005 0" data-td-frame="1.2 -0.05 0" data-td-frame-tall="1.2 0 0.01"
+  data-td-bleed="0.03" data-td-bleed-tall="0.06"
   data-td-box="0.147 0.149 0.844 0.859" data-td-pbox="0.034 0.11 0.953 0.888" data-td-compact>
   <div class="td__run" data-td-run>
     <div class="td__pin">
@@ -33,7 +37,7 @@
           <li class="td__spec" data-anchor="0.31 0.52 0.73 nw"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 10.5h17v9h-17z"/><path d="M3.5 10.5l15.6-5.2 1 3-15.6 5.2"/><path d="M7.4 9.2l2.4 2.6M11.9 7.7l2.4 2.6M16.3 6.2l2.4 2.6"/></svg></span><span class="td__t"><b>Production</b> <span class="td__l">Shoot days, kit, crew — or your own, better run.</span></span></li>
           <li class="td__spec" data-anchor="0.40 0.83 0.82 se"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="8.5" width="15" height="4" rx="2"/><path d="M17.5 9.2l3.5-.9v4.4l-3.5-.9"/><path d="M6 10.5h1.4M9 10.5h1.4M12 10.5h1.4"/><path d="M9.5 12.5v3.5M7 16h5v1.6H7z"/></svg></span><span class="td__t"><b>Sound</b> <span class="td__l">Because bad audio loses the audience first.</span></span></li>
           <li class="td__spec" data-anchor="0.625 0.50 0.84 sw"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6.5h18M3 17.5h18"/><rect x="4" y="8.6" width="6.5" height="2.6" rx=".6"/><rect x="11.8" y="8.6" width="7.4" height="2.6" rx=".6"/><rect x="6.5" y="12.8" width="9" height="2.6" rx=".6"/><path d="M14 4v16"/></svg></span><span class="td__t"><b>Edit</b> <span class="td__l">Thumbnails, titles, metadata, cut to retain.</span></span></li>
-          <li class="td__spec" data-anchor="0.86 0.50 0.94 ne"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4.5" y="3" width="15" height="18" rx="1"/><rect x="7" y="5.5" width="10" height="10"/><path d="M7 13.2l3-2.7 2.4 2 1.6-1.3 3 2.4"/><circle cx="14.4" cy="8.3" r="1.1"/></svg></span><span class="td__t"><b>Published</b> <span class="td__l">Then measured, and done again.</span></span></li>
+          <li class="td__spec" data-anchor="0.86 0.50 0.94 nw"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4.5" y="3" width="15" height="18" rx="1"/><rect x="7" y="5.5" width="10" height="10"/><path d="M7 13.2l3-2.7 2.4 2 1.6-1.3 3 2.4"/><circle cx="14.4" cy="8.3" r="1.1"/></svg></span><span class="td__t"><b>Published</b> <span class="td__l">Then measured, and done again.</span></span></li>
         </ol>
       </div>
     </div>

@@ -1,3 +1,7 @@
 /* IV · Method: the camera teardown (shared block styles in _teardown.css). The giant title sits over the camera's
-   dark body: a slightly deeper ink scrim keeps it at full contrast while the orbit turns under it. */
+   dark body: a slightly deeper ink scrim keeps it at full contrast while the orbit turns under it. The copy column
+   is as narrow as the Kit's, so the camera gets the room (Editions: the hub at a third of the screen). */
+@media (min-width: 1024px) {
+  #method { --td-col-w: clamp(250px, 21vw, 300px); }
+}
 #method .td__hero.scrim::before { inset: -26% -22% -34% -14%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.45) 58%, rgba(0, 0, 0, 0)); }

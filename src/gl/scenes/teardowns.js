@@ -9,11 +9,15 @@
    framing; it is never clipped to the slot, so it may bleed past it (into the render's own black).
    Phases, framing and the uv → screen mapping live in gl/lib/tdcore.js (shared with the section).
    Once the parts settle, the exploded frame becomes a depth diorama: pointer parallax and a slow push.
+   Tiers: each stream picks its source (lg 1920/1600 px, sm 1080/960) from the device pixels it will cover
+   (viewport or column × zoom × devicePixelRatio, capped at 2), and asks the stage for full-DPR rendering (hiDpr).
+   Portrait screens: the 16:9 frame is a band across the middle, so its top and bottom edges feather long (no hard
+   line where a close render runs past its own frame), and data-td-orbit-tall keeps the orbit to its clean range.
    Scene ids: td:camera (Method), td:mixer, td:mic, td:headphones, td:phone (Kit). One draw per scene. */
 import * as THREE from 'three';
 import { FrameStream } from '../lib/frameStream.js';
 import { loadTexture } from '../lib/loaders.js';
-import { TD_ORBIT, TD_EXPLODE, TD_ASPECT, TD_LIVE, tdRun, tdPhases, tdOrbitFrame, tdExplodeFrame, tdFraming, tdFit, tdView } from '../lib/tdcore.js';
+import { TD_EXPLODE, TD_ASPECT, tdLive, tdRun, tdPhases, tdFlags, tdOrbitRange, tdOrbitFrame, tdExplodeFrame, tdFraming, tdFit, tdView, tdContain, tdLerpRect, tdPinTop } from '../lib/tdcore.js';
 
 const vert = /* glsl */`varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`;
 const frag = /* glsl */`
@@ -27,6 +31,7 @@ uniform float aspect;
 uniform vec2 pointer; uniform float strength; uniform float push; uniform float zoom;
 uniform float fade;
 uniform vec2 shift;
+uniform vec2 feather;     // frame-edge feather (frame uv): long vertically on portrait screens
 float D(vec2 p){ return texture2D(depth, vec2(p.x, 1.0 - p.y)).r; }
 void main(){
   vec2 q = (gl_FragCoord.xy - rect.xy) / rect.zw;            // 0..1 inside the slot (and beyond it)
@@ -43,11 +48,23 @@ void main(){
     if (mixT < 0.999) c = texture2D(mapA, t).rgb;
     if (mixT > 0.001) c = mix(c, texture2D(mapB, t).rgb, mixT);
     // feather the frame edge into the void so no seam can show where the frame ends inside the screen
-    vec2 e = smoothstep(vec2(0.0), vec2(0.03), p) * smoothstep(vec2(0.0), vec2(0.03), 1.0 - p);
+    vec2 e = smoothstep(vec2(0.0), feather, p) * smoothstep(vec2(0.0), feather, 1.0 - p);
     c *= e.x * e.y;
   }
   gl_FragColor = vec4(c * fade, 1.0);
 }`;
+
+/* source tier per stream from the device pixels it will cover (a sm frame is 1080 px wide (orbit), 960 (explode));
+   portrait screens accept a little upscale before paying for the lg frames */
+function tiers(section) {
+  const W = innerWidth, H = innerHeight, tall = H > W, dpr = Math.min(2, window.devicePixelRatio || 1);
+  const F = tdFraming(section, tall);
+  const t = section.querySelector('[data-td-target]');
+  const orbitPx = tdContain(W, H).w * F.hero.z * dpr;
+  const colPx = tdContain(t?.offsetWidth || W, t?.offsetHeight || H).w * Math.max(F.frame0.z, F.frame.z) * dpr;
+  const k = tall ? 1.2 : 1.0;
+  return { o: orbitPx > 1080 * k ? 'lg' : 'sm', x: colPx > 960 * k ? 'lg' : 'sm', tall };
+}
 
 function teardown(name, stage) {
   const id = `td:${name}`;
@@ -59,25 +76,32 @@ function teardown(name, stage) {
       mapA: { value: null }, mapB: { value: null }, depth: { value: null }, mixT: { value: 0 },
       rect: { value: new THREE.Vector4(0, 0, 1, 1) }, aspect: { value: TD_ASPECT },
       pointer: { value: new THREE.Vector2() }, strength: { value: 0 }, push: { value: 0 },
-      zoom: { value: 1 }, fade: { value: 1 }, shift: { value: new THREE.Vector2() },
+      zoom: { value: 1 }, fade: { value: 1 }, shift: { value: new THREE.Vector2() }, feather: { value: new THREE.Vector2(0.03, 0.03) },
     },
   });
   const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);
   quad.frustumCulled = false;
   scene.add(quad);
-  const live = { px: 0, py: 0, push: 0, strength: 0 };
-  TD_LIVE.set(id, live);
-  const V = {};
-  let orbit = null, explode = null, tier = 'lg';
-  let section = null, run = null, slot = null, F = null, tall = null, open = false, vw = 0, vh = 0;
+  const live = tdLive(id);
+  const V = {}, S = {};
+  let orbit = null, orbitKey = '', explode = null, T = { o: 'lg', x: 'lg', tall: false };
+  let section = null, run = null, F = null, fl = null, tall = null, vw = 0, vh = 0, heroR = null, colR = null, pinH = 0;
+  const orbitStream = (lo, hi) => {
+    const key = `${lo}-${hi}`;
+    if (key === orbitKey && orbit) return orbit;
+    orbitKey = key;
+    const n = hi - lo + 1, small = T.tall && T.o === 'lg';
+    return (orbit = new FrameStream({ dir: `/assets/teardown/${name}/orbit/${T.o}`, count: n, name: (i) => `f_${String(lo + i).padStart(4, '0')}.webp`, rev: 1, ahead: n, behind: n, decoded: small ? 6 : 10 }));
+  };
 
   stage.add({
-    id, scene, camera,
+    id, scene, camera, hiDpr: true,
     post: { vignette: 0.16, grain: 0.03, fringe: 0.5 },
-    async load(ctx) {
-      // phones get the 1080/960 px tier; anything that will show more than ~1500 device px gets the full one
-      tier = ctx.vw * Math.min(2, ctx.dpr || 1) >= 1500 ? 'lg' : 'sm';
-      orbit = new FrameStream({ dir: `/assets/teardown/${name}/orbit/${tier}`, count: TD_ORBIT, rev: 1, ahead: TD_ORBIT, behind: TD_ORBIT, decoded: 10 });
+    async load() {
+      const sec = document.querySelector(`[data-scene="${id}"]`);
+      T = sec ? tiers(sec) : T;
+      const [lo, hi] = sec ? tdOrbitRange(sec, T.tall) : [1, 97];
+      orbitStream(lo, hi);
       const [dep] = await Promise.all([loadTexture(`/assets/teardown/${name}/depth.png`), orbit.first()]);
       mat.uniforms.depth.value = dep;
     },
@@ -87,31 +111,41 @@ function teardown(name, stage) {
       if (s.el !== section || isTall !== tall || ctx.vw !== vw || ctx.vh !== vh) {
         section = s.el; tall = isTall; vw = ctx.vw; vh = ctx.vh;
         run = section.querySelector('[data-td-run]') || section;
-        slot = section.querySelector('[data-td-slot]');
+        const pin = section.querySelector('.td__pin');
         const target = section.querySelector('[data-td-target]');
-        F = tdFraming(section, tall);
-        if (target) tdFit(F, { x: target.offsetLeft, y: target.offsetTop, w: target.offsetWidth, h: target.offsetHeight }, ctx.vw, ctx.vh);
-        open = section.hasAttribute('data-td-open');
+        pinH = pin ? pin.clientHeight : ctx.vh;
+        heroR = { x: 0, y: 0, w: pin ? pin.clientWidth : ctx.vw, h: pinH };
+        colR = target ? { x: target.offsetLeft, y: target.offsetTop, w: target.offsetWidth, h: target.offsetHeight } : heroR;
+        F = tdFit(tdFraming(section, tall), colR, heroR.w, heroR.h);
+        fl = tdFlags(section);
+        const [lo, hi] = tdOrbitRange(section, tall);
+        orbitStream(lo, hi);
+        mat.uniforms.feather.value.set(0.03, tall ? 0.15 : 0.03);
       }
       const r = tdRun(run, ctx.scrollY, ctx.vh);
-      const ph = tdPhases(r.pv, r.vp, open);
+      const ph = tdPhases(r.pv, r.vp, fl);
+      const Fx = (live.F && live.F.tall === tall) ? live.F : F;   // the section's framing (it fits the measured column)
       const reduced = ctx.reduced;
       // the explode streams once its run is within a viewport (the orbit, shown first, loads first)
       if (!explode && (r.pv > -r.vp || orbit.complete)) {
-        explode = new FrameStream({ dir: `/assets/teardown/${name}/${tier}`, count: TD_EXPLODE, rev: 1, ahead: 150, behind: 40, decoded: 12 });
+        const small = T.tall && T.x === 'lg';
+        explode = new FrameStream({ dir: `/assets/teardown/${name}/${T.x}`, count: TD_EXPLODE, rev: 1, ahead: 150, behind: 40, decoded: small ? 8 : 12 });
       }
       const u = mat.uniforms;
-      if (ph.mix < 1 || !explode?.ready) orbit.seek(reduced ? TD_ORBIT - 1 : tdOrbitFrame(ph));
+      if (ph.mix < 1 || !explode?.ready) orbit.seek(reduced ? orbit.count - 1 : tdOrbitFrame(ph, orbit.count));
       else orbit.trim();   // past the junction: the orbit's decoded frames are not needed until we scroll back
-      if (explode) explode.seek(reduced ? TD_EXPLODE - 1 : tdExplodeFrame(ph));
+      if (explode) explode.seek(reduced ? TD_EXPLODE - 1 : tdExplodeFrame(ph, Fx.xmap));
       u.mapA.value = orbit.texture;
       u.mapB.value = explode ? explode.texture : orbit.texture;
       u.mixT.value = explode?.ready ? ph.mix : 0;
-      // slot rect: canvas px, y measured from the bottom (gl_FragCoord); the section JS wrote it this frame
-      const b = slot ? slot.getBoundingClientRect() : { left: 0, top: 0, width: ctx.vw, height: ctx.vh };
+      // slot rect (viewport px): the section JS computed it this frame (it drives the slot element from the same
+      // numbers); if it has not (it rests while far away), the same rect from the same clock
+      let x, y, w, h;
+      if (live.t === ctx.time) { x = live.x; y = live.y; w = live.w; h = live.h; }
+      else { tdLerpRect(heroR, colR, ph.hand, S); x = S.x; y = S.y + tdPinTop(r, ctx.scrollY, pinH); w = S.w; h = S.h; }
       const k = ctx.dpr;
-      u.rect.value.set(b.left * k, (ctx.vh - b.top - b.height) * k, Math.max(1, b.width * k), Math.max(1, b.height * k));
-      tdView(F, ph, V);
+      u.rect.value.set(x * k, (ctx.vh - y - h) * k, Math.max(1, w * k), Math.max(1, h * k));
+      tdView(Fx, ph, V);
       u.zoom.value = V.zoom;
       u.shift.value.set(V.sx, V.sy);
       // the settled diorama: depth parallax under the pointer and a slow breathing push

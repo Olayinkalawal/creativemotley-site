@@ -8,7 +8,10 @@
      hand-off  p  0.27 → 0.45      the slot glides from the whole viewport to the column rect; zoom hero → frame
      junction  p  0.355 → 0.375    orbit f_0097 crossfades into explode f_0001 (the same picture)
      explode   p  0.45 → 0.86      explode frames 1 → 145, eased
-     settle    p  0.86 → 0.97      depth parallax + slow push; markers draw in; then the run fades to black as it leaves
+     settle    p  0.86 → 0.97      depth parallax + slow push; markers draw in
+   Leaving: a run marked data-wipe is a black sheet that scrolls off the next scene (the stage splits the two at the
+   boundary, feathered; gl/stage.js), so its device rides up with its copy and never fades. Arriving under such a
+   sheet, a run is already lit. Otherwise a run fades in from black (and out, if it had no wipe).
    (vp = one viewport of scroll, in pv units: the run's pre-roll is measured in viewports, not in run length.) */
 import { clamp, lerp, smooth, seg } from '../../core/scroll.js';
 import { geo } from '../../core/layout.js';
@@ -34,14 +37,21 @@ export function tdRun(run, y, vh) {
   return { pv: (y - g.top) / len, vp: vh / len, top: g.top, height: g.height };
 }
 
-/* phase fractions for pin progress pv (unclamped) of a run whose viewport is vp pv-units long.
-   open: the run opens a chapter straight out of paper (its device is revealed by the paper's edge, so it is lit early) */
-export function tdPhases(pv, vp = 0.25, open = false) {
+/* how a run meets its neighbours: open (it opens a chapter straight out of paper: its device is revealed by the
+   paper's edge, so it is lit early), win (it arrives under a wiping run: lit as it slides in), wout (it leaves as a
+   wiping sheet: never fades) */
+export function tdFlags(el) {
+  const prev = el.previousElementSibling;
+  return { open: el.hasAttribute('data-td-open'), wout: el.hasAttribute('data-wipe'), win: !!(prev && prev.matches('[data-td][data-wipe]')) };
+}
+const NOFLAGS = { open: false, win: false, wout: false };
+/* phase fractions for pin progress pv (unclamped) of a run whose viewport is vp pv-units long (flags: tdFlags) */
+export function tdPhases(pv, vp = 0.25, fl = NOFLAGS) {
   const P = TD_PHASE;
   const p = clamp(pv);
   const o = seg(pv, P.orbit[0] * vp, P.orbit[1]);
-  const fin = open ? smooth(seg(pv, -1.0 * vp, -0.5 * vp)) : smooth(seg(pv, -0.5 * vp, -0.12 * vp));
-  const fout = 1 - smooth(seg(pv, 1 + 0.02 * vp, 1 + 0.36 * vp));
+  const fin = fl.win ? 1 : fl.open ? smooth(seg(pv, -1.0 * vp, -0.5 * vp)) : smooth(seg(pv, -0.5 * vp, -0.12 * vp));
+  const fout = fl.wout ? 1 : 1 - smooth(seg(pv, 1 + 0.25 * vp, 1 + 0.48 * vp));
   return {
     p, pv,
     orbit: 0.72 * o + 0.28 * easeSine(o),       // the orbit frames are re-timed to constant speed: ease only the ends
@@ -54,8 +64,28 @@ export function tdPhases(pv, vp = 0.25, open = false) {
     fade: fin * fout,
   };
 }
-export const tdOrbitFrame = (ph) => ph.orbit * (TD_ORBIT - 1);
-export const tdExplodeFrame = (ph) => ph.explode * (TD_EXPLODE - 1);
+/* the orbit plays frames a…b of the render (data-td-orbit="a-b", data-td-orbit-tall on portrait screens; 1-based,
+   default all 97): a sub-range keeps one clean move where a render wobbles or runs past its own frame */
+export function tdOrbitRange(el, tall) {
+  const s = (tall && el.dataset.tdOrbitTall) || el.dataset.tdOrbit;
+  const [a, b] = (s || '').split('-').map(Number);
+  const lo = Math.max(1, Math.min(TD_ORBIT, a || 1)), hi = Math.max(lo, Math.min(TD_ORBIT, b || TD_ORBIT));
+  return [lo, hi];
+}
+/* playhead inside the range's own stream (0 … n−1) */
+export const tdOrbitFrame = (ph, n = TD_ORBIT) => ph.orbit * (n - 1);
+/* explode playhead; xmap (data-td-xmap="e f e f …", explode progress → frame fraction, piecewise linear) re-times a
+   render whose camera moves mid-explode (the mic's pushes in on the capsule: crossed quickly, so the whole mic is
+   back while its rows light) */
+export function tdExplodeFrame(ph, xmap) {
+  let e = ph.explode;
+  if (xmap) {
+    for (let i = 2; i < xmap.length; i += 2) {
+      if (e <= xmap[i] || i === xmap.length - 2) { const t = (e - xmap[i - 2]) / Math.max(1e-6, xmap[i] - xmap[i - 2]); e = xmap[i - 1] + (xmap[i + 1] - xmap[i - 1]) * Math.max(0, Math.min(1, t)); break; }
+    }
+  }
+  return e * (TD_EXPLODE - 1);
+}
 
 /* framing: "zoom shiftX shiftY" (shift in frame-uv units, +x samples further right, +y further up) */
 const parse = (s, d) => {
@@ -72,7 +102,10 @@ export function tdFraming(el, tall) {
   const frame0 = parse((tall && d.tdFrame0Tall) || d.tdFrame0, frame);
   const hero = parse((tall && d.tdHeroTall) || d.tdHero, { z: tall ? 1.6 : 1.3, x: 0, y: 0 });
   const name = (d.scene || '').split(':')[1];
-  return { hero, frame0, frame, tall, hbox: box(d.tdBox), pbox: box(d.tdPbox), ext: TD_EXT[name] || null, col: null };
+  // bleed: how far (fraction of the pin's width) the device may run past the viewport's side edges in the column phase
+  const bleed = parseFloat((tall && d.tdBleedTall) || d.tdBleed) || 0;
+  const xmap = box(d.tdXmap);
+  return { hero, frame0, frame, tall, bleed, xmap: xmap && xmap.length >= 4 ? xmap : null, hbox: box(d.tdBox), pbox: box(d.tdPbox), ext: TD_EXT[name] || null, col: null };
 }
 
 /* the device's extent in the explode frames (u0 v0 u1 v1, every 4th frame, measured from the renders): the parts
@@ -91,11 +124,13 @@ function extAt(E, f, out) {
   return out;
 }
 /* the column slot for the fit: its size, and how far (px) the device may run past each of its edges
-   (desktop: to the viewport's right and bottom edges, never left into the copy; phones: never down into the copy) */
+   (desktop: to the viewport's right and bottom edges, plus the run's bleed off the right edge, never left into the
+   copy; phones: off both sides by the bleed, never down into the copy) */
 export function tdFit(F, col, pinW, pinH) {
+  const bl = F.bleed * pinW;
   F.col = {
-    w: col.w, h: col.h, l: 0, t: 0,
-    r: F.tall ? 2 : Math.max(0, pinW - (col.x + col.w) - 4),
+    w: col.w, h: col.h, l: F.tall ? bl : 0, t: 0,
+    r: F.tall ? 2 + bl : Math.max(0, pinW - (col.x + col.w) - 4) + bl,
     b: F.tall ? 0 : Math.max(0, pinH - (col.y + col.h) - 6),
   };
   return F;
@@ -119,7 +154,7 @@ export function tdView(F, ph, out = {}) {
   const k = ph.explode;
   const fx = lerp(F.frame0.x, F.frame.x, k), fy = lerp(F.frame0.y, F.frame.y, k);
   // the column zoom: eased from frame0 to frame (plus the settle's slow push), but never more than the fit
-  const fz = Math.min(lerp(F.frame0.z, F.frame.z, k) * (1 + 0.022 * ph.settle), fitZoom(F, k * (TD_EXPLODE - 1), fx, fy));
+  const fz = Math.min(lerp(F.frame0.z, F.frame.z, k) * (1 + 0.022 * ph.settle), fitZoom(F, tdExplodeFrame(ph, F.xmap), fx, fy));
   out.zoom = lerp(zh, fz, ph.hand);
   out.sx = lerp(F.hero.x, fx, ph.hand);
   out.sy = lerp(F.hero.y, fy, ph.hand);
@@ -150,5 +185,16 @@ export function tdLerpRect(a, b, k, out = {}) {
   return out;
 }
 
-/* live values the scene writes each frame (pointer, push) so DOM markers can ride the parallax; keyed by scene id */
+/* the sticky pin's top in the viewport (it rides in with the run, holds at 0, then rides out) */
+export function tdPinTop(r, y, pinH) { return r.top - y + clamp(y - r.top, 0, Math.max(0, r.height - pinH)); }
+
+/* per scene id, shared between the section and the scene each frame:
+   - the section writes the slot's viewport rect (x, y, w, h) and the clock it was computed at (t), so the scene never
+     measures the DOM in its frame;
+   - the scene writes its live values (pointer, push) so DOM markers can ride the parallax. */
 export const TD_LIVE = new Map();
+export function tdLive(id) {
+  let L = TD_LIVE.get(id);
+  if (!L) TD_LIVE.set(id, (L = { px: 0, py: 0, push: 0, strength: 0, x: 0, y: 0, w: 0, h: 0, t: -1 }));
+  return L;
+}

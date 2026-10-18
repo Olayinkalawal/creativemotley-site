@@ -4,17 +4,26 @@
    Phones: the device in the middle third, copy at the top (opener) or bottom (head); then the device rises into
    the top slot and the list settles at the bottom.
    Static (.td-static: reduced motion; or no JS): the hero still with the opener or head, then the exploded still
-   beside the list. No pin. */
+   beside the list. No pin.
+   Edges: each run is a black sheet (data-wipe): with WebGL the stage splits it from the next scene at its bottom edge
+   (feathered, with a warm edge light: gl/lib/post.js); without WebGL (tier 0, reduced motion, no JS) the section
+   carries its own black and a soft shadow below it, so the next chapter's plate never shows a hard line. */
 .td {
   position: relative; color: var(--cream); --th-mute: rgba(244, 237, 223, 0.66);
   --td-gold: rgba(201, 165, 92, 0.58); --td-gold-hi: rgba(217, 188, 133, 0.78);
   --td-col-x: var(--col-pad); --td-col-w: 100%; --td-gap: 0px;
 }
-.td::before, .td::after { /* edge light: a warm umber falloff where the black stage meets the chapters around it */
-  content: ''; position: absolute; left: 0; right: 0; height: 18svh; pointer-events: none; z-index: 1;
+.td--open::before { /* edge light: a warm umber falloff where the black stage arrives under the chapter before it */
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 18svh; pointer-events: none; z-index: 1;
+  background: linear-gradient(180deg, rgba(42, 30, 16, 0.5), rgba(0, 0, 0, 0));
 }
-.td::before { top: 0; background: linear-gradient(180deg, rgba(42, 30, 16, 0.5), rgba(0, 0, 0, 0)); }
-.td::after { bottom: 0; background: linear-gradient(0deg, rgba(42, 30, 16, 0.45), rgba(0, 0, 0, 0)); }
+/* no stage (tier 0, reduced motion, no JS, or before it boots): the sheet carries its own black, and its lower edge
+   casts a soft shadow onto the next chapter (black on black between the Kit's runs, so only the exits show it) */
+html:not(.gl-ready) .td { background: #000; }
+html:not(.gl-ready) .td[data-wipe]::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 9svh; pointer-events: none; z-index: 1;
+  background: linear-gradient(180deg, #000, rgba(0, 0, 0, 0.55) 40%, rgba(0, 0, 0, 0));
+}
 
 .td__run { position: relative; height: var(--td-run, 400svh); }
 .td__pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
@@ -27,6 +36,15 @@
 html.gl-ready .td.is-drawn .td__still { opacity: 0; visibility: hidden; }
 .td__target { position: absolute; visibility: hidden; pointer-events: none; }
 .td__fx { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+@media (min-width: 1024px) {
+  /* the rail reads over the device while it fills the screen (an ink veil under the rail), gone once it moves aside */
+  .td__fx::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--rail-w) + 56px); opacity: calc(1 - var(--td-hand, 0));
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.66), rgba(0, 0, 0, 0.5) calc(var(--rail-w) - 40px), rgba(0, 0, 0, 0));
+    /* soft at the pin's top and bottom too, so it never draws a line where one sheet meets the next */
+    -webkit-mask: linear-gradient(180deg, transparent, #000 14%, #000 96%, transparent); mask: linear-gradient(180deg, transparent, #000 14%, #000 96%, transparent);
+  }
+}
 
 /* hero copy: the chapter opener (kicker + giant) over the orbit */
 .td__hero {
@@ -41,8 +59,12 @@ html.gl-ready .td.is-drawn .td__still { opacity: 0; visibility: hidden; }
   position: absolute; z-index: 2; inset: 0; display: flex; flex-direction: column; justify-content: flex-end;
   padding: 0 var(--col-pad) calc(4.5svh + env(safe-area-inset-bottom));
 }
-.td__intro { position: relative; }
-.td__intro.scrim::before { inset: -40% -24% -46% -18%; }
+.td__intro { position: relative; transform-origin: 0 0; }
+/* over the orbit (runs 2+) the head needs a deeper ink halo than over black; it lifts as the copy reaches the column */
+.td__intro.scrim::before {
+  inset: -40% -24% -46% -18%; opacity: calc(1 - var(--td-hand, 0));
+  background: radial-gradient(closest-side, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.5) 58%, rgba(0, 0, 0, 0));
+}
 .td__label { color: var(--gold); margin-bottom: 0.75rem; }
 .td__head { font-family: var(--sans); font-weight: 600; font-size: clamp(1.75rem, 2.45vw, 2.55rem); letter-spacing: -0.04em; line-height: 1.0; text-wrap: balance; }
 .td__specs { margin-top: clamp(1.1rem, 3.2vh, 2.2rem); }
@@ -68,7 +90,8 @@ html.js .td[data-td-ready]:not(.td-static) .td__spec {
   opacity: calc(var(--in, 1) * (0.5 + 0.5 * var(--on, 1)));
   transform: translate3d(0, calc((1 - var(--in, 1)) * 18px), 0);
 }
-html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hot b { color: var(--gold); }
+html.js .td[data-td-ready]:not(.td-static) .td__spec:is(.is-hot, .is-hl) b { color: var(--gold); }
+html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hl { opacity: var(--in, 1); }
 
 /* construction lines (drawn by --k between each element's --a and --b) */
 .td__lines { position: absolute; left: 0; top: 0; overflow: visible; }
@@ -115,7 +138,7 @@ html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hot b { color: var(--gol
 /* ── desktop: the column layout (Editions: copy left, device right) ───────────────────────────────── */
 @media (min-width: 1024px) {
   .td {
-    --td-col-x: calc(var(--rail-w) + clamp(24px, 4.4vw, 72px));
+    --td-col-x: calc(var(--rail-w) + clamp(20px, 2.8vw, 44px));
     --td-col-w: clamp(250px, 24vw, 360px);
     --td-gap: clamp(16px, 2.2vw, 36px);
   }
@@ -143,9 +166,10 @@ html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hot b { color: var(--gol
 @media (max-width: 1023px) {
   .td__run { height: var(--td-run-m, 330svh); }
   .td__target { left: 0; right: 0; top: calc(var(--nav-h) - 4px); height: 54svh; }
-  .td__copy::before { /* the list reads over a black floor */
+  .td__copy::before { /* the list reads over a black floor (feathered off at the sheet's lower edge, where the stage
+       draws its edge light into the next scene: a floor that ran to the edge would cut it with a line) */
     content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.8) 63%, rgba(0, 0, 0, 0.92));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.8) 63%, rgba(0, 0, 0, 0.92) calc(100% - 4.5svh), rgba(0, 0, 0, 0));
   }
   .td--open .td__copy::before { opacity: var(--td-hand, 0); }
   .td.td-measure-hero .td__specs { display: none; }
@@ -167,6 +191,12 @@ html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hot b { color: var(--gol
 :is(.td-static, html:not(.js) .td) :is(.td__target, .td__fx) { display: none; }
 :is(.td-static, html:not(.js) .td) .td__still { position: relative; inset: auto; opacity: 1; transform: none; will-change: auto; }
 :is(.td-static, html:not(.js) .td) .td__still--hero { grid-area: 1 / 1 / 2 / -1; width: 100%; height: 100%; object-fit: cover; }
+/* an ink halo under the hero copy (the still is full bleed behind it) */
+:is(.td-static, html:not(.js) .td) .td__run::before {
+  content: ''; grid-area: 1 / 1 / 2 / -1; z-index: 1; pointer-events: none;
+  background: radial-gradient(64% 52% at 22% 18%, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.5) 55%, rgba(0, 0, 0, 0));
+}
+:is(.td-static, html:not(.js) .td) :is(.td__hero, .td__intro, .td__copy) { z-index: 2; }
 :is(.td-static, html:not(.js) .td) .td__still--poster { grid-area: 2 / 4 / 3 / 5; width: 100%; height: auto; align-self: center; }
 :is(.td-static, html:not(.js) .td) .td__hero { position: relative; left: auto; right: auto; top: auto; grid-area: 1 / 2 / 2 / 5; align-self: start; padding-top: calc(var(--nav-h) + 6vh); }
 :is(.td-static, html:not(.js) .td) .td__copy { position: relative; inset: auto; width: auto; grid-area: 2 / 2 / 3 / 3; padding: 14vh 0; display: block; }

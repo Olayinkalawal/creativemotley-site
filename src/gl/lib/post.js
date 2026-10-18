@@ -1,12 +1,13 @@
-/* Final pass: two scene layers dissolved through ink-bleed noise, then the film finish
-   (grain, vignette, a touch of chromatic fringe that follows scroll speed). */
+/* Final pass: two scene layers dissolved through ink-bleed noise, or split at a wiping sheet's edge (wipe: the edge's
+   line, 0 top … 1 bottom of the screen; the sheet above it, feathered into the scene below, with a faint warm edge
+   light), then the film finish (grain, vignette, a touch of chromatic fringe that follows scroll speed). */
 import * as THREE from 'three';
 
 const vert = /* glsl */`varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }`;
 const frag = /* glsl */`
 precision highp float;
 uniform sampler2D tA; uniform sampler2D tB;
-uniform float mixAB; uniform float time; uniform vec2 res;
+uniform float mixAB; uniform float time; uniform vec2 res; uniform float wipe;
 uniform float grain; uniform float vignette; uniform float fringe; uniform vec3 fadeColor; uniform float fade;
 varying vec2 vUv;
 float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
@@ -28,6 +29,15 @@ void main(){
     float rim = smoothstep(0.0, 0.08, edge) * (1.0 - smoothstep(0.08, 0.22, edge));
     c = mix(b, a, edge);
     c += vec3(0.85, 0.66, 0.38) * rim * 0.18 * (1.0 - abs(mixAB - 0.5) * 2.0);
+  } else if (wipe >= 0.0) {
+    vec3 b = texture2D(tB, vUv).rgb;
+    float y = 1.0 - vUv.y;                                   // from the top
+    float f = 0.1;                                           // feather, below the edge (the sheet's soft shadow)
+    float k = smoothstep(wipe, wipe + f, y);                 // 0 sheet … 1 the scene below
+    float up = smoothstep(wipe - 0.16, wipe, y);
+    float glow = up * up * (1.0 - k);                          // warm falloff along the sheet's lower edge
+    vec3 s = a + vec3(0.075, 0.053, 0.028) * glow * (1.0 - dot(a, vec3(0.333)));
+    c = mix(s, b, k);
   }
   vec2 q = vUv - 0.5;
   c *= 1.0 - vignette * smoothstep(0.25, 0.95, dot(q, q) * 2.2);
@@ -43,7 +53,7 @@ export function createPost() {
     uniforms: {
       tA: { value: null }, tB: { value: null }, mixAB: { value: 0 }, time: { value: 0 },
       res: { value: new THREE.Vector2(1, 1) }, grain: { value: 0.045 }, vignette: { value: 0.32 },
-      fringe: { value: 0 }, fadeColor: { value: new THREE.Color(0x0b0805) }, fade: { value: 0 },
+      fringe: { value: 0 }, fadeColor: { value: new THREE.Color(0x0b0805) }, fade: { value: 0 }, wipe: { value: -1 },
     },
   });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);

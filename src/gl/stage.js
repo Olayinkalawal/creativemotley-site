@@ -14,8 +14,14 @@
      render(renderer, target), // draw into target (default: renderer.render(this.scene, this.camera))
      resize(w, h, dpr),
      activate(), deactivate(), // e.g. play/pause a video when the scene starts/stops being drawn
-     post: { grain, vignette, fringe }   // optional finish overrides
-   }) */
+     post: { grain, vignette, fringe },  // optional finish overrides
+     hiDpr: true               // optional: while it is drawn, render at the device's own pixel ratio (≤ 2), not the
+                               //   tier's cap (one-quad photoreal frames, which the cap would soften)
+   })
+   Boundaries: where the scene changes, the two dissolve through ink-bleed noise around the reading line. A section
+   marked data-wipe is a sheet instead (the black teardown stage): while its bottom edge is in the viewport both scenes
+   draw, split at that edge (feathered, with a faint warm edge light), so the sheet and its device scroll off the
+   next scene the way the DOM above it does. */
 import * as THREE from 'three';
 import { createPost } from './lib/post.js';
 import { onFrame, onResize, clamp, view } from '../core/scroll.js';
@@ -29,6 +35,7 @@ export class Stage {
     this.renderer.outputColorSpace = THREE.LinearSRGBColorSpace;   // pass-through: everything is display-referred sRGB
     this.renderer.setClearColor(0x0b0805, 1);
     this.dprCap = TIER >= 2 ? 1.6 : 1.2;
+    this.hiDpr = false;
     this.scale = 1;
     this.scenes = new Map();
     this.segs = [];
@@ -51,11 +58,11 @@ export class Stage {
     // only regions whose scene is registered and that have height: an empty or unbuilt slot must not turn a dissolve into hold-then-cut
     this.segs = [...document.querySelectorAll('[data-scene]')]
       .filter((el) => this.scenes.has(el.dataset.scene) && el.getBoundingClientRect().height > 0)
-      .map((el) => ({ el, id: el.dataset.scene, dissolve: parseFloat(el.dataset.dissolve) || 0 }));
+      .map((el) => ({ el, id: el.dataset.scene, dissolve: parseFloat(el.dataset.dissolve) || 0, wipe: el.hasAttribute('data-wipe') }));
     this.opaque = [...document.querySelectorAll('[data-opaque]')];
   }
   resize() {
-    const dpr = Math.min(window.devicePixelRatio || 1, this.dprCap) * this.scale;
+    const dpr = Math.min(window.devicePixelRatio || 1, this.hiDpr ? 2 : this.dprCap) * this.scale;
     const w = window.innerWidth, h = window.innerHeight;
     this.renderer.setPixelRatio(dpr);
     this.renderer.setSize(w, h, false);
@@ -108,8 +115,15 @@ export class Stage {
     }
     let i = 0;
     for (let j = 0; j < this.segs.length; j++) if (geo(this.segs[j].el).top <= c) i = j;
-    let A = this.segs[i], B = null, mix = 0, best = Infinity;
+    let A = this.segs[i], B = null, mix = 0, best = Infinity, wipe = -1;
+    // a wiping sheet's bottom edge in the viewport: the sheet above it, the next scene below it
     for (let j = 1; j < this.segs.length && !cut; j++) {
+      const a = this.segs[j - 1];
+      if (!a.wipe || a.id === this.segs[j].id) continue;
+      const t = geo(this.segs[j].el).top - y;
+      if (t > 0 && t < vh) { A = a; B = this.segs[j]; wipe = t / vh; mix = 1; break; }
+    }
+    for (let j = 1; j < this.segs.length && !cut && wipe < 0; j++) {
       if (this.segs[j].id === this.segs[j - 1].id) continue;
       // a boundary right under a paper sheet's bottom edge is a cut (the outgoing scene is hidden by the paper)
       const t = geo(this.segs[j].el).top;
@@ -122,8 +136,8 @@ export class Stage {
     const okA = sa && sa.loaded, okB = sb && sb.loaded;
     if (!okA && !okB) { this.setDrawn([]); return; }
     let first = okA ? sa : sb, second = okA && okB && mix > 0.001 ? sb : null;
-    if (!okA) mix = 0;
-    if (okA && !okB && mix > 0.5) mix = 0;   // hold A until B is ready
+    if (!okA) { mix = 0; wipe = -1; }
+    if (okA && !okB && mix > 0.5) { mix = 0; wipe = -1; }   // hold A until B is ready
     const segA = okA ? this.segInfo(A, y, vh) : this.segInfo(B, y, vh);
     const segB = second ? this.segInfo(B, y, vh) : null;
     this.setDrawn(second ? [first, second] : [first]);
@@ -131,7 +145,9 @@ export class Stage {
     this.draw(first, segA, this.rtA);
     if (second) this.draw(second, segB, this.rtB);
     const u = this.post.u, pf = first.post || {};
-    u.tA.value = this.rtA.texture; u.tB.value = this.rtB.texture; u.mixAB.value = second ? mix : 0;
+    u.tA.value = this.rtA.texture; u.tB.value = this.rtB.texture;
+    u.mixAB.value = second && wipe < 0 ? mix : 0;
+    u.wipe.value = second ? wipe : -1;
     u.time.value = v.time;
     u.grain.value = pf.grain ?? 0.045; u.vignette.value = pf.vignette ?? 0.32;
     u.fringe.value = REDUCED ? 0 : Math.min(0.006, Math.abs(v.velocity) * 0.00012) * (pf.fringe ?? 1);
@@ -149,6 +165,8 @@ export class Stage {
     else this.renderer.render(s.scene, s.camera);
   }
   setDrawn(list) {
+    const hi = list.some((s) => s.hiDpr);
+    if (hi !== this.hiDpr) { this.hiDpr = hi; this.pendingResize = true; }   // applied before the next frame draws
     const now = new Set(list);
     for (const s of this.drawn) if (!now.has(s)) s.deactivate?.();
     for (const s of now) if (!this.drawn.has(s)) s.activate?.();
