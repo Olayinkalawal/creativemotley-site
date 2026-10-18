@@ -1,32 +1,41 @@
-<!-- VII · RESULTS · scene: plate:results · owner: builder B
+<!-- VIII · RESULTS · scene: plate:results · owner: builder B
      One painting for the whole chapter: the watchers on the grass, the TV playing. The camera drifts down from the
      watchers onto the grass and the TV band as you read (data-cam-*, over the chapter's pass; portrait screens end on
-     the whole TV, at a modest zoom so the phones' 1100px plate is not stretched).
-     The sentence is split across the chapter: the opener says "The work went out."; the phone, where the world
-     watched, is then taken apart on a black stage under "The world watched.", with the four figures as its spec list. -->
-<section class="chapter" id="results" data-chapter data-theme="dark" aria-labelledby="results-title">
-  <div class="opener col rx-open" data-scene="plate:results" data-plate="results"
-    data-cam-from="1.06 0.5 0.52 0" data-cam-to="1.4 0.62 0.24 0.14"
-    data-cam-from-tall="1.06 0.34 0.5 0" data-cam-to-tall="1.18 2.53 0.3 0.017">
+     the whole TV, at a modest zoom so the phones' 1100px plate is not stretched), and the four counters arrive over
+     it under an ink veil, the figures on the left and the TV on the right.
+     F98 is split across the hand-over: the Kit's last teardown (the phone, chapter VII) says "The work went out.",
+     and this opener answers "The world watched."
+     Each counter's value is a pure function of scroll; the final figure is laid out from the start (tabular lining
+     figures), so digits never shift. The unit (M) always shows, since it carries the magnitude; only the + waits.
+     Without JS, at ?tier=0 and with reduced motion the final values simply show. -->
+<section class="chapter" id="results" data-chapter data-theme="dark" data-scene="plate:results" data-plate="results"
+  data-cam-from="1.06 0.5 0.52 0" data-cam-to="1.4 0.62 0.24 0.14"
+  data-cam-from-tall="1.06 0.34 0.5 0" data-cam-to-tall="1.18 2.53 0.3 0.017" aria-labelledby="results-title">
+  <div class="opener col rx-open">
     <div class="scrim">
-      <p class="kicker" data-reveal>Chapter VII</p>
+      <p class="kicker" data-reveal>Chapter VIII</p>
       <h2 class="giant" id="results-title" data-reveal>Results</h2>
-      <p class="dek" data-reveal="0.08"><span class="dc">T</span>he work went out.</p>
+      <p class="dek" data-reveal="0.08"><span class="dc">T</span>he world watched.</p>
     </div>
   </div>
-  <!-- the phone, where the world watched, taken apart (photoreal teardown); the four figures are its spec list -->
-  <section class="td" id="td-phone" data-theme="dark" data-scene="td:phone" data-plate="ink" aria-labelledby="td-phone-h" style="--td-run:300svh" data-td-frame="1.12 0.02 0" data-td-frame-tall="1.32 0.02 0.02">
-    <div class="td__run" data-td-run>
-      <div class="td__pin"><div class="td__slot" data-td-slot aria-hidden="true"><img class="td__still" src="/assets/teardown/phone/poster.webp" alt="" loading="lazy" decoding="async" width="1920" height="1080"></div></div>
-      <div class="td__copy">
-        <h3 class="td__head" id="td-phone-h">The world watched.</h3>
-        <ul class="td__specs">
-          <li class="td__spec td__spec--stat"><span class="td__num">100M+</span><span class="td__t">monthly views</span></li>
-          <li class="td__spec td__spec--stat"><span class="td__num">70+</span><span class="td__t">channels managed</span></li>
-          <li class="td__spec td__spec--stat"><span class="td__num">13+</span><span class="td__t">channels past 1M subscribers</span></li>
-          <li class="td__spec td__spec--stat"><span class="td__num">16+</span><span class="td__t">years in media</span></li>
-        </ul>
-      </div>
-    </div>
-  </section>
+  <div class="rx">
+    <ul class="rx-list col" data-rx>
+      <li class="rx-stat">
+        <p class="rx-num" aria-hidden="true"><b class="rx-digits" data-n="100">100</b><span class="rx-unit">M</span><span class="rx-suf">+</span></p>
+        <p class="rx-lbl"><span class="sr-only">100M+ </span>monthly views</p>
+      </li>
+      <li class="rx-stat">
+        <p class="rx-num" aria-hidden="true"><b class="rx-digits" data-n="70">70</b><span class="rx-suf">+</span></p>
+        <p class="rx-lbl"><span class="sr-only">70+ </span>channels managed</p>
+      </li>
+      <li class="rx-stat">
+        <p class="rx-num" aria-hidden="true"><b class="rx-digits" data-n="13">13</b><span class="rx-suf">+</span></p>
+        <p class="rx-lbl"><span class="sr-only">13+ </span>channels past <span class="rx-fig">1M</span> subscribers</p>
+      </li>
+      <li class="rx-stat">
+        <p class="rx-num" aria-hidden="true"><b class="rx-digits" data-n="16">16</b><span class="rx-suf">+</span></p>
+        <p class="rx-lbl"><span class="sr-only">16+ </span>years in media</p>
+      </li>
+    </ul>
+  </div>
 </section>

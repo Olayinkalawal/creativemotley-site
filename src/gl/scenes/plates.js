@@ -4,7 +4,7 @@
    - plate:storytellers  (Creators, Brands)
    - plate:hero          (Apply: the hands, a bookend to the hero)
    - plate:results       (Results: the watchers; the TV plays — a video texture over the plate)
-   - plate:method        (Method at rest, before its film takes over) */
+   (Method is the camera teardown now, td:camera in teardowns.js: no painted plate.) */
 import * as THREE from 'three';
 import { plateMaterial, fullscreenQuad } from '../lib/plate.js';
 import { loadTexture, videoTexture } from '../lib/loaders.js';
@@ -50,7 +50,6 @@ export function plateScene({ id, image, depth, video = null, strength = 0.022, p
 export default function register(stage) {
   stage.add(plateScene({ id: 'plate:storytellers', image: '/assets/plates/storytellers.webp', depth: '/assets/plates/storytellers-depth.png' }));
   stage.add(plateScene({ id: 'plate:hero', image: '/assets/plates/hero.webp', depth: '/assets/plates/hero-depth.png' }));
-  stage.add(plateScene({ id: 'plate:method', image: '/assets/plates/method.webp', depth: '/assets/plates/method-depth.png' }));
   stage.add(plateScene({
     id: 'plate:results', image: '/assets/plates/results.webp', depth: '/assets/plates/results-depth.png',
     video: (ctx) => [{ src: ctx.vw < 900 ? '/assets/video/results-sm.mp4' : '/assets/video/results.mp4', type: 'video/mp4' }],

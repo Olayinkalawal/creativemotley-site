@@ -1,6 +1,6 @@
-/* IV · Method: the painted alcove room opens the chapter (plate:method, a depth diorama with an ink veil that
-   travels with the type, because the table is bright); the camera on its table is then taken apart, photoreal,
-   in the instrument teardown that follows (src/partials/teardown.html, shared block in _teardown.js). */
+/* IV · Method: the chapter is the camera teardown (td:camera). The opener (Chapter IV / Method) sits over the
+   camera filling the screen while the view orbits it; the camera then glides aside and comes apart beside the
+   seven steps. Markup: src/partials/method.html; choreography: src/sections/_teardown.js (shared with Kit). */
 import './method.css';
 
 export function init() {}

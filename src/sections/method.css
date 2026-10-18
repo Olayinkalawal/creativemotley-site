@@ -1,11 +1,3 @@
-/* IV · Method: the opener over the painted alcove room (plate:method). */
-
-/* the opener's type passes over the lit stone table on its way up: an ink veil travels with it (out under the rail) */
-.mt-open::before {
-  content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; left: 0; right: 0; pointer-events: none;
-  background: radial-gradient(130% 30% at 32% 52%, rgba(11, 8, 5, 0.62), rgba(11, 8, 5, 0.4) 50%, rgba(11, 8, 5, 0) 100%);
-}
-@media (min-width: 900px) {
-  .mt-open::before { background: radial-gradient(70% 34% at 34% 52%, rgba(11, 8, 5, 0.6), rgba(11, 8, 5, 0.38) 52%, rgba(11, 8, 5, 0) 100%); }
-}
-@media (min-width: 1024px) { .mt-open::before { left: calc(-1 * var(--rail-w)); } }
+/* IV · Method: the camera teardown (shared block styles in _teardown.css). The giant title sits over the camera's
+   dark body: a slightly deeper ink scrim keeps it at full contrast while the orbit turns under it. */
+#method .td__hero.scrim::before { inset: -26% -22% -34% -14%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.45) 58%, rgba(0, 0, 0, 0)); }

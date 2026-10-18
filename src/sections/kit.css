@@ -1,0 +1,5 @@
+/* VII · Kit: four teardown runs (shared block styles in _teardown.css). The part lists are names only, so the
+   copy column is narrower than Method's and the devices get the room. */
+@media (min-width: 1024px) {
+  .kit .td { --td-col-w: clamp(230px, 20vw, 300px); }
+}

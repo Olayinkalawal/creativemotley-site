@@ -856,7 +856,8 @@
   "source_sentence": "Chapter VII",
   "url": "https://creativemotley.com/",
   "location": "#results .rx-copy .ch-eyebrow",
-  "kind": "ui-copy"
+  "kind": "ui-copy",
+  "note": "Rebuild: 'Chapter VII' is now the kicker of the new Kit chapter (#kit, docs/teardown-v2.md), the photoreal teardowns between Process and Results; Results is chapter VIII (see F103)."
  },
  {
   "id": "F97",
@@ -873,7 +874,7 @@
   "url": "https://creativemotley.com/",
   "location": "#results .rx-copy p",
   "kind": "positioning",
-  "note": "Serif line over the TV painting; fades out (p .16–.26) before the counters arrive."
+  "note": "Serif line over the TV painting; fades out (p .16–.26) before the counters arrive. Rebuild: split across the Kit → Results hand-over (docs/teardown-v2.md): 'The work went out.' heads the Kit's last teardown (the phone, #td-phone), and 'The world watched.' is the Results opener dek over the TV painting."
  },
  {
   "id": "F99",
@@ -945,7 +946,8 @@
   "source_sentence": "Chapter VIII",
   "url": "https://creativemotley.com/",
   "location": "#directors .dirs-title .ch-eyebrow",
-  "kind": "ui-copy"
+  "kind": "ui-copy",
+  "note": "Rebuild: 'Chapter VIII' is now the Results kicker (#results), because the new chapter VII Kit sits before it (docs/teardown-v2.md); Directors is chapter IX ('Chapter IX', docs/ui-strings.json) and Apply chapter X ('Chapter X', docs/ui-strings.json)."
  },
  {
   "id": "F104",
@@ -1172,30 +1174,39 @@
  },
  {
   "id": "F129",
-  "claim": "Results  VII",
+  "claim": "Results  VIII",
   "source_sentence": "Results",
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(7) (a href=#results + span.num 'VII')",
   "kind": "ui-copy",
-  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'VII' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Rebuild numbering (docs/teardown-v2.md): the new chapter VII Kit sits between Process and Results, so the chapters after it move up one; the live site's numeral here was 'VII'. Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'VIII' Instrument Serif 11px right-aligned at 42% opacity."
  },
  {
   "id": "F130",
-  "claim": "Directors  VIII",
+  "claim": "Directors  IX",
   "source_sentence": "Directors",
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(8) (a href=#directors + span.num 'VIII')",
   "kind": "ui-copy",
-  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'VIII' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Rebuild numbering (docs/teardown-v2.md): the new chapter VII Kit sits between Process and Results, so the chapters after it move up one; the live site's numeral here was 'VIII'. Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'IX' Instrument Serif 11px right-aligned at 42% opacity."
  },
  {
   "id": "F131",
-  "claim": "Apply  IX",
+  "claim": "Apply  X",
   "source_sentence": "Apply",
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(9) (a href=#foot + span.num 'IX')",
   "kind": "ui-copy",
-  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'IX' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Rebuild numbering (docs/teardown-v2.md): the new chapter VII Kit sits between Process and Results, so the chapters after it move up one; the live site's numeral here was 'IX'. Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'X' Instrument Serif 11px right-aligned at 42% opacity."
+ },
+ {
+  "id": "F136",
+  "claim": "Kit  VII",
+  "source_sentence": "Kit",
+  "url": "docs/teardown-v2.md",
+  "location": "rebuild: hero index li[data-for=kit] (a href=#kit + span.rn 'VII'), cloned into the rail, the chapters dropdown and the mobile menu",
+  "kind": "ui-copy",
+  "note": "Rebuild-only chapter (no live-site source): the label 'Kit' is a UI string (docs/ui-strings.json) naming chapter VII, the console, microphone, headphones and phone taken apart; its kicker is 'Chapter VII' (F96). Same index style as F123–F131."
  },
  {
   "id": "F132",

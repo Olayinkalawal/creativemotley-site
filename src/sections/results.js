@@ -1,4 +1,4 @@
-/* VII · Results: four counters (F99–F102), each a pure function of scroll.
+/* VIII · Results: four counters (F99–F102), each a pure function of scroll.
    A counter starts as its hairline rises past the lower part of the viewport (86%) and lands on its final figure
    when it sits comfortably in view (its top at 46% of the viewport), with a cubic ease-out; the gold draws along the
    hairline in step and the + fades in once the count is complete (the unit, M, always shows). Scrolling back counts back down exactly.
@@ -15,7 +15,7 @@ const ease = (t) => 1 - Math.pow(1 - t, 3);
 export function init() {
   const sec = document.getElementById('results');
   if (!sec) return;
-  bindCamKeys(sec.querySelector('[data-scene]') || sec);
+  bindCamKeys(sec);
   if (TIER === 0 || REDUCED) return;
   sec.classList.add('rx-on');
 

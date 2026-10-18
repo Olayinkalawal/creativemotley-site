@@ -1,67 +1,185 @@
-/* Teardown blocks: the Editions exploded-hub layout on a pure black stage.
-   Desktop: spec column left, device right, both pinned for the length of the run.
-   Phones: the device pins in the top half; the copy scrolls up over the lower half. */
-.td { position: relative; color: var(--cream); --th-mute: rgba(244, 237, 223, 0.66); }
-.td::before, .td::after { /* soft umber falloff at the stage edges, like light leaking from the chapters around it */
+/* Teardown runs (the Editions Retail moment) on a pure black stage.
+   Pinned (JS): the device fills the screen while the view orbits it (opener or head top-left over a soft ink
+   scrim); then it glides into the column layout, right of the copy, and comes apart beside its spec list.
+   Phones: the device in the middle third, copy at the top (opener) or bottom (head); then the device rises into
+   the top slot and the list settles at the bottom.
+   Static (.td-static: reduced motion; or no JS): the hero still with the opener or head, then the exploded still
+   beside the list. No pin. */
+.td {
+  position: relative; color: var(--cream); --th-mute: rgba(244, 237, 223, 0.66);
+  --td-gold: rgba(201, 165, 92, 0.58); --td-gold-hi: rgba(217, 188, 133, 0.78);
+  --td-col-x: var(--col-pad); --td-col-w: 100%; --td-gap: 0px;
+}
+.td::before, .td::after { /* edge light: a warm umber falloff where the black stage meets the chapters around it */
   content: ''; position: absolute; left: 0; right: 0; height: 18svh; pointer-events: none; z-index: 1;
 }
-.td::before { top: 0; background: linear-gradient(180deg, rgba(42, 30, 16, 0.55), rgba(0, 0, 0, 0)); }
-.td::after { bottom: 0; background: linear-gradient(0deg, rgba(42, 30, 16, 0.5), rgba(0, 0, 0, 0)); }
-.td__run { position: relative; height: var(--td-run, 320svh); }
+.td::before { top: 0; background: linear-gradient(180deg, rgba(42, 30, 16, 0.5), rgba(0, 0, 0, 0)); }
+.td::after { bottom: 0; background: linear-gradient(0deg, rgba(42, 30, 16, 0.45), rgba(0, 0, 0, 0)); }
+
+.td__run { position: relative; height: var(--td-run, 400svh); }
 .td__pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
-.td__slot { position: absolute; left: 0; right: 0; top: calc(var(--nav-h) + 1svh); height: 47svh; }
-.td__still { width: 100%; height: 100%; object-fit: contain; opacity: 1; transition: opacity 0.6s var(--ease-out); }
-html.gl-ready .td.is-drawn .td__still { opacity: 0; }
-.td__copy { /* phones: pinned with the device, stacked under it */
-  position: sticky; z-index: 2; top: 0; height: 100svh; margin-top: -100svh;
-  padding: 0 var(--col-pad) calc(4.5svh + env(safe-area-inset-bottom));
-  display: flex; flex-direction: column; justify-content: flex-end; pointer-events: none;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, 0.82) 64%, rgba(0, 0, 0, 0.92));
+.td__slot { position: absolute; left: 0; top: 0; width: 100%; height: 100%; contain: layout; }
+.td__still {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+  transform-origin: 50% 50%; opacity: var(--o, 1); will-change: transform, opacity;
 }
-.td__copy a { pointer-events: auto; }
-.td__label { color: var(--gold); margin-bottom: 0.9rem; }
-.td__head { font-family: var(--sans); font-weight: 600; font-size: clamp(1.9rem, 2.9vw, 2.9rem); letter-spacing: -0.04em; line-height: 0.98; text-wrap: balance; }
-.td__dek { margin-top: 0.7rem; color: var(--cream); opacity: 0.9; max-width: 22em; font-size: clamp(1.15rem, 1.5vw, 1.45rem); }
-.td__link { margin-top: 1.2rem; }
-.td__specs { margin-top: clamp(1.4rem, 3.4vh, 2.4rem); max-width: 30rem; }
+.td__still--poster { opacity: var(--o, 0); }
+html.gl-ready .td.is-drawn .td__still { opacity: 0; visibility: hidden; }
+.td__target { position: absolute; visibility: hidden; pointer-events: none; }
+.td__fx { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+
+/* hero copy: the chapter opener (kicker + giant) over the orbit */
+.td__hero {
+  position: absolute; z-index: 2; left: var(--td-col-x); top: calc(var(--nav-h) + 4svh); will-change: transform, opacity;
+  max-width: calc(100% - var(--td-col-x) - var(--col-pad));   /* shrink-wrapped, so its scrim sits behind the type */
+}
+.td__hero .kicker { margin-bottom: 1.1rem; opacity: 0.86; }
+.td__hero .scrim::before, .td__hero.scrim::before { inset: -18% -16% -24% -10%; }
+
+/* copy: label + head, then the spec list */
+.td__copy {
+  position: absolute; z-index: 2; inset: 0; display: flex; flex-direction: column; justify-content: flex-end;
+  padding: 0 var(--col-pad) calc(4.5svh + env(safe-area-inset-bottom));
+}
+.td__intro { position: relative; }
+.td__intro.scrim::before { inset: -40% -24% -46% -18%; }
+.td__label { color: var(--gold); margin-bottom: 0.75rem; }
+.td__head { font-family: var(--sans); font-weight: 600; font-size: clamp(1.75rem, 2.45vw, 2.55rem); letter-spacing: -0.04em; line-height: 1.0; text-wrap: balance; }
+.td__specs { margin-top: clamp(1.1rem, 3.2vh, 2.2rem); }
 .td__spec {
-  display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 14px; align-items: start;
-  padding: 11px 0 12px; box-shadow: inset 0 1px 0 rgba(244, 237, 223, 0.2);
+  display: grid; grid-template-columns: 24px minmax(0, 1fr); gap: 14px; align-items: start;
+  padding: 10px 0 11px; box-shadow: inset 0 1px 0 rgba(244, 237, 223, 0.2);
   font-size: 0.875rem; line-height: 1.32; font-weight: 600; letter-spacing: -0.005em;
 }
 .td__spec:last-child { box-shadow: inset 0 1px 0 rgba(244, 237, 223, 0.2), inset 0 -1px 0 rgba(244, 237, 223, 0.2); }
 .td__spec b { display: block; font-weight: 650; color: var(--cream); transition: color 0.3s; }
 .td__spec .td__l { display: block; }
 .td__spec .td__t { color: var(--th-mute); font-weight: 500; }
-.td__ic { width: 22px; height: 22px; color: var(--gold); margin-top: 1px; }
+.td__ic { width: 22px; height: 22px; color: var(--gold); margin-top: -1px; }
 .td__ic svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
-.td__spec--stat { grid-template-columns: minmax(5.2rem, auto) minmax(0, 1fr); align-items: baseline; }
-.td__num { font-size: clamp(1.6rem, 2.2vw, 2.1rem); font-weight: 600; letter-spacing: -0.045em; line-height: 1; color: var(--cream); font-variant-numeric: lining-nums tabular-nums; }
 
-@media (min-width: 1024px) {
-  .td__slot { left: calc(var(--rail-w) + clamp(24px, 4.4vw, 72px) + min(29vw, 430px)); right: 1.5vw; top: calc(var(--nav-h) + 3vh); bottom: 4vh; height: auto; }
-  .td__copy {
-    position: sticky; top: 0; height: 100svh; margin-top: -100svh; padding: calc(var(--nav-h) + 4vh) 0 4vh;
-    margin-left: calc(var(--rail-w) + clamp(24px, 4.4vw, 72px)); width: min(29vw, 430px);
-    display: flex; flex-direction: column; justify-content: center; background: none;
-  }
-  /* rows arrive with the explode (JS sets --on per row); without JS they are simply there */
-  html.js .td[data-td-ready] .td__spec { opacity: calc(0.28 + 0.72 * var(--on, 0)); transition: opacity 0.4s var(--ease-out); }
-  html.js .td[data-td-ready] .td__spec.is-hot b { color: var(--gold); }
+/* kinetic copy: heads reveal line by line through a mask (JS splits the lines and sets --k per line) */
+.td-ln { display: block; overflow: hidden; padding: 0.06em 0 0.12em; margin: -0.06em 0 -0.12em; }
+.td-ln__in { display: block; transform: translate3d(0, calc((1 - var(--k, 1)) * 112%), 0); will-change: transform; }
+.td__giant .td-ln { padding: 0.12em 0.08em 0.16em; margin: -0.12em -0.08em -0.16em; }
+
+/* spec rows (pinned): stagger in with the hand-off (--in), then light in step with the explode (--on) */
+html.js .td[data-td-ready]:not(.td-static) .td__spec {
+  opacity: calc(var(--in, 1) * (0.5 + 0.5 * var(--on, 1)));
+  transform: translate3d(0, calc((1 - var(--in, 1)) * 18px), 0);
 }
+html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hot b { color: var(--gold); }
+
+/* construction lines (drawn by --k between each element's --a and --b) */
+.td__lines { position: absolute; left: 0; top: 0; overflow: visible; }
+.td__lines > g > * {
+  fill: none; stroke: var(--td-gold); stroke-width: 1;
+  stroke-dasharray: 1 1; stroke-dashoffset: calc(1 - clamp(0, (var(--k, 0) - var(--a)) / (var(--b) - var(--a)), 1));
+}
+.td__lines .is-strong { stroke: var(--td-gold-hi); }
+
+/* degree ticker: a turntable scale tilted into an ellipse under the device, turning with the orbit; front arc only */
+.td__tick {
+  position: absolute; left: 0; top: 0; opacity: 0;
+  -webkit-mask: linear-gradient(180deg, transparent 30%, #000 70%); mask: linear-gradient(180deg, transparent 30%, #000 70%);
+}
+.td__tick-disc { position: absolute; left: 0; top: 50%; width: 100%; aspect-ratio: 1; transform: translateY(-50%) rotateX(73deg) rotate(var(--deg, 0deg)); }
+.td__tick svg { width: 100%; height: 100%; overflow: visible; }
+.td__tick :is(circle, line) { fill: none; stroke: var(--td-gold); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.td__tick .is-long { stroke: var(--td-gold-hi); }
+.td__tick .is-faint { stroke: rgba(201, 165, 92, 0.22); }
+.td__tick-idx { position: absolute; left: 50%; bottom: -3px; width: 0; height: 0; border: 4px solid transparent; border-bottom: 6px solid var(--gold); transform: translateX(-50%); }
+
+/* part markers (desktop): a gold dot on the part, a short leader, the row's number */
+.td__mk { position: absolute; left: 0; top: 0; width: 0; height: 0; opacity: 0; display: none; will-change: transform, opacity; }
+.td__mk-dot {
+  position: absolute; left: -4px; top: -4px; width: 8px; height: 8px; border-radius: 50%; background: var(--gold);
+  box-shadow: 0 0 0 3px rgba(217, 188, 133, 0.2), 0 0 16px rgba(217, 188, 133, 0.55);
+  transform: scale(calc(0.4 + 0.6 * var(--k, 0))); transition: transform 0.3s var(--ease-out), background 0.3s;
+}
+.td__mk-lead {
+  position: absolute; left: 0; top: -0.5px; width: 32px; height: 1px; transform-origin: 0 50%;
+  background: linear-gradient(90deg, rgba(217, 188, 133, 0.95), rgba(217, 188, 133, 0.5));
+  transform: rotate(var(--ang)) scaleX(var(--k, 0));
+}
+.td__mk-n {
+  position: absolute; left: 0; top: 0; padding: 3px 5px 2px; border-radius: 3px; background: rgba(0, 0, 0, 0.62);
+  font: 650 0.6875rem/1 var(--sans); letter-spacing: 0.06em; color: var(--gold); font-variant-numeric: tabular-nums;
+  transform: translate(calc(var(--lx) - 50%), calc(var(--ly) - 50%)); opacity: clamp(0, calc(var(--k, 0) * 2 - 1), 1);
+  transition: color 0.3s, background 0.3s;
+}
+.td.has-hl .td__mk:not(.is-hl) { filter: opacity(0.35); }
+.td__mk.is-hl .td__mk-dot { transform: scale(1.6); background: var(--cream); }
+.td__mk.is-hl .td__mk-n { background: var(--gold); color: var(--ink); }
+
+/* ── desktop: the column layout (Editions: copy left, device right) ───────────────────────────────── */
+@media (min-width: 1024px) {
+  .td {
+    --td-col-x: calc(var(--rail-w) + clamp(24px, 4.4vw, 72px));
+    --td-col-w: clamp(250px, 24vw, 360px);
+    --td-gap: clamp(16px, 2.2vw, 36px);
+  }
+  .td__target { left: calc(var(--td-col-x) + var(--td-col-w) + var(--td-gap)); right: 1.2vw; top: calc(var(--nav-h) + 1.5vh); bottom: 2.5vh; }
+  .td__copy {
+    left: var(--td-col-x); right: auto; width: var(--td-col-w);
+    justify-content: center; padding: calc(var(--nav-h) + 3vh) 0 4vh;
+  }
+  /* runs 2+: the head's place in the hero phase (top-left over the orbit); JS glides it from here to the column */
+  .td.td-measure-hero .td__copy { justify-content: flex-start; padding-top: calc(var(--nav-h) + 6.5vh); }
+  .td.td-measure-hero .td__specs { display: none; }
+  .td__mk { display: block; }
+}
+/* short desktop screens (1280×720, 1024×768): a tighter column so the head and a long list fit under the bar */
+@media (min-width: 1024px) and (max-height: 860px) {
+  .td__copy { padding: calc(var(--nav-h) + 1.5vh) 0 2.5vh; }
+  .td__head { font-size: clamp(1.55rem, 2.15vw, 2.1rem); }
+  .td__label { margin-bottom: 0.55rem; }
+  .td__specs { margin-top: clamp(0.8rem, 2.2vh, 1.4rem); }
+  .td__spec { padding: 7px 0 8px; font-size: 0.8125rem; line-height: 1.26; gap: 12px; }
+  .td__ic { width: 20px; height: 20px; }
+}
+
+/* ── phones / portrait tablets ─────────────────────────────────────────────────────────────────── */
 @media (max-width: 1023px) {
-  .td__run { height: var(--td-run-m, 240svh); }
-  .td__slot { top: calc(var(--nav-h) - 4px); height: 54svh; }
-  .td__head { font-size: clamp(1.6rem, 7.4vw, 2.1rem); }
-  .td__dek { font-size: 1.1rem; }
-  .td__specs { max-width: none; margin-top: 1rem; }
-  .td__spec { padding: 7px 0 8px; font-size: 0.8125rem; gap: 10px; grid-template-columns: 20px minmax(0, 1fr); }
+  .td__run { height: var(--td-run-m, 330svh); }
+  .td__target { left: 0; right: 0; top: calc(var(--nav-h) - 4px); height: 54svh; }
+  .td__copy::before { /* the list reads over a black floor */
+    content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.8) 63%, rgba(0, 0, 0, 0.92));
+  }
+  .td--open .td__copy::before { opacity: var(--td-hand, 0); }
+  .td.td-measure-hero .td__specs { display: none; }
+  .td__hero { left: var(--col-pad); top: calc(var(--nav-h) + 3svh); }
+  .td__head { font-size: clamp(1.6rem, 7.2vw, 2.1rem); }
+  .td__specs { max-width: none; margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; }
+  .td__spec { padding: 7px 0 8px; font-size: 0.8125rem; gap: 10px; grid-template-columns: 18px minmax(0, 1fr); }
+  .td__spec:nth-last-child(2):nth-child(odd) { box-shadow: inset 0 1px 0 rgba(244, 237, 223, 0.2), inset 0 -1px 0 rgba(244, 237, 223, 0.2); }
   .td__ic { width: 18px; height: 18px; }
   .td[data-td-compact] .td__spec .td__l { display: none; }   /* long lists: titles only on phones */
-  .td[data-td-compact] .td__specs { display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; }
-  .td__spec--stat { grid-template-columns: minmax(4.2rem, auto) minmax(0, 1fr); }
-  .td__num { font-size: 1.5rem; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .td__run { height: auto; }
+
+/* ── static: reduced motion (.td-static) or no JS ──────────────────────────────────────────────── */
+:is(.td-static, html:not(.js) .td) .td__run {
+  height: auto; display: grid; grid-template-columns: var(--td-col-x) var(--td-col-w) var(--td-gap) minmax(0, 1fr) 1.2vw;
+  grid-template-rows: 100svh auto;
+}
+:is(.td-static, html:not(.js) .td) :is(.td__pin, .td__slot) { display: contents; }
+:is(.td-static, html:not(.js) .td) :is(.td__target, .td__fx) { display: none; }
+:is(.td-static, html:not(.js) .td) .td__still { position: relative; inset: auto; opacity: 1; transform: none; will-change: auto; }
+:is(.td-static, html:not(.js) .td) .td__still--hero { grid-area: 1 / 1 / 2 / -1; width: 100%; height: 100%; object-fit: cover; }
+:is(.td-static, html:not(.js) .td) .td__still--poster { grid-area: 2 / 4 / 3 / 5; width: 100%; height: auto; align-self: center; }
+:is(.td-static, html:not(.js) .td) .td__hero { position: relative; left: auto; right: auto; top: auto; grid-area: 1 / 2 / 2 / 5; align-self: start; padding-top: calc(var(--nav-h) + 6vh); }
+:is(.td-static, html:not(.js) .td) .td__copy { position: relative; inset: auto; width: auto; grid-area: 2 / 2 / 3 / 3; padding: 14vh 0; display: block; }
+:is(.td-static, html:not(.js) .td):not(.td--open) .td__copy { display: contents; }
+:is(.td-static, html:not(.js) .td):not(.td--open) .td__intro { grid-area: 1 / 2 / 2 / 4; align-self: start; margin-top: calc(var(--nav-h) + 7vh); }
+:is(.td-static, html:not(.js) .td):not(.td--open) .td__specs { grid-area: 2 / 2 / 3 / 3; align-self: center; margin: 14vh 0; }
+@media (max-width: 1023px) {
+  :is(.td-static, html:not(.js) .td) .td__run { grid-template-columns: var(--col-pad) minmax(0, 1fr) var(--col-pad); grid-template-rows: auto auto auto auto; }
+  :is(.td-static, html:not(.js) .td) .td__hero { grid-area: 1 / 2 / 2 / 3; padding-top: calc(var(--nav-h) + 8svh); }
+  :is(.td-static, html:not(.js) .td):not(.td--open) .td__intro { grid-area: 1 / 2 / 2 / 3; margin-top: calc(var(--nav-h) + 8svh); }
+  :is(.td-static, html:not(.js) .td) .td__still--hero { grid-area: 2 / 1 / 3 / -1; height: 52svh; object-fit: contain; transform: scale(1.5); }
+  :is(.td-static, html:not(.js) .td) .td__copy { grid-area: 3 / 2 / 4 / 3; padding: 4svh 0 0; }
+  :is(.td-static, html:not(.js) .td):not(.td--open) .td__specs { grid-area: 3 / 2 / 4 / 3; margin: 4svh 0 0; }
+  :is(.td-static, html:not(.js) .td) .td__still--poster { grid-area: 4 / 1 / 5 / -1; margin: 3svh 0 10svh; transform: scale(1.06); }
+  :is(.td-static, html:not(.js) .td) .td__copy::before { display: none; }
 }

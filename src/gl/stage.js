@@ -95,12 +95,25 @@ export class Stage {
 
     // the section under the reading line; near a boundary between two scenes, dissolve across it
     if (!this.segs.length) return;
-    const c = y + vh * 0.5, W = vh * 0.4;
+    let c = y + vh * 0.5, cut = false;
+    const W = vh * 0.4;
+    // paper over the reading line: read the uncovered strip instead (the larger one), with no dissolve, so the
+    // scene that shows under a torn edge is the one whose section is actually there
+    for (const el of this.opaque) {
+      const g = geo(el);
+      if (g.top <= c && g.bottom >= c) {
+        const above = g.top - y, below = y + vh - g.bottom;
+        c = above > below ? y + above * 0.5 : g.bottom + below * 0.5; cut = true; break;
+      }
+    }
     let i = 0;
     for (let j = 0; j < this.segs.length; j++) if (geo(this.segs[j].el).top <= c) i = j;
     let A = this.segs[i], B = null, mix = 0, best = Infinity;
-    for (let j = 1; j < this.segs.length; j++) {
+    for (let j = 1; j < this.segs.length && !cut; j++) {
       if (this.segs[j].id === this.segs[j - 1].id) continue;
+      // a boundary right under a paper sheet's bottom edge is a cut (the outgoing scene is hidden by the paper)
+      const t = geo(this.segs[j].el).top;
+      if (this.opaque.some((el) => Math.abs(geo(el).bottom - t) < vh * 0.12)) continue;
       const w = this.segs[j].dissolve ? vh * this.segs[j].dissolve : W;
       const d = c - geo(this.segs[j].el).top;
       if (Math.abs(d) < w && Math.abs(d) < best) { best = Math.abs(d); A = this.segs[j - 1]; B = this.segs[j]; mix = clamp(0.5 + d / (2 * w)); }

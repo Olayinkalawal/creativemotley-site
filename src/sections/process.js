@@ -9,9 +9,10 @@
      - the live caption: the active step's title + short line (F75/F76 … F93/F94) and a seven-step marker.
    The stage switches to the objects scene at a marker ~0.9 viewport into the run ([data-proc-scene]), so its
    dissolve from the posters happens under the pin's paper, and the paper clears only once that dissolve is done.
-   On the way out it is the same in reverse: over the last dwell the paper and the proxy come back, so the sheet
-   that tears off into the teardown below (the Sound step, on a black stage) is DOM, and the stage dissolves away
-   under it and in the black under its torn bottom edge. The sheet leaves as one: row, lift and caption hold.
+   On the way out the row trucks on, the lifted object settles and the caption fades as the pin leaves, and the long
+   lines arrive on a second sheet laid over the live desk; it tears off at the bottom onto chapter VII's black stage
+   (the Kit), where the objects scene paints the black under the torn edge (state.bottom) until the stage has
+   dissolved into the Kit's first teardown.
    World units are CSS px on the plane z = 0 through the slot (the box the active object lifts into); the camera sits
    D px in front of the slot with an off-axis frustum, so the CSS perspective and the WebGL camera are one camera.
    The desk is a plane tilted back by `tau` and Zd px behind the slot plane; objects at rest lie flat on it.
@@ -49,7 +50,7 @@ export const state = {
   e: 0,               // viewports since the pin stuck (negative while it arrives)
   cover: 1,           // the pin's own paper: 1 opaque … 0 clear (scroll part; the GL hand-over multiplies in)
   cap: 0,             // caption opacity
-  bottom: 0,          // screen y of the run's bottom (the sheet tearing off into the teardown below)
+  bottom: 0,          // screen y of the chapter's bottom (the sheet tearing off onto the Kit's black stage)
   gl: false,          // the objects scene has drawn
   crisp: false,       // set by the scene: the DOM proxy stays the object layer (stage dpr well below the screen's)
   ptr: null,          // set by the scene: the stage's eased pointer (-1..1), for the active object's lean
@@ -61,7 +62,7 @@ export function trackAt(y) {
   const L = state.L;
   if (!L || (y === state.y && L.ver === state.ver)) return state;
   state.y = y; state.ver = L.ver;
-  const g = geo(L.run);
+  const g = geo(L.run), gs = geo(L.sec);
   const vh = L.vh, intro = L.intro;
   const span = Math.max(1, g.height - L.pinH);
   const into = y - g.top;
@@ -70,19 +71,18 @@ export function trackAt(y) {
   const i = Math.floor(r);
   const t = seg(r - i, HOLD[0], HOLD[1]);
   const arrive = smooth(seg(into, -vh, intro));          // the row trucks in as the sheet arrives
-  state.pos = i + smoother(t) - 0.6 * (1 - arrive);
+  const leave = smooth(seg(-pinTop, 0, vh));             // and on as the pin goes
+  state.pos = i + smoother(t) - 0.6 * (1 - arrive) + 0.6 * leave;
   // the first object starts to rise while the sheet is still arriving, so the pin sticks on a living desk
-  state.lift = smooth(seg(into, -vh * 0.3, intro * 0.75));
+  state.lift = smooth(seg(into, -vh * 0.3, intro * 0.75)) * (1 - smooth(seg(-pinTop, vh * 0.04, vh * 0.55)));
   state.pinTop = pinTop;
   state.e = into / vh;
-  // the pin's paper clears once the stage has finished dissolving into the objects scene (L.c0, from the marker),
-  // and comes back over the last dwell, before the pin leaves (the stage's dissolve into the teardown starts 0.1
-  // viewport after it does)
-  state.cover = Math.max(1 - smooth(seg(state.e, L.c0, L.c0 + 0.24)), smooth(seg(into - span, -vh * 0.24, -vh * 0.03)));
-  state.cap = smooth(seg(into, -vh * 0.12, intro * 0.8));
+  // the pin's paper clears once the stage has finished dissolving into the objects scene (L.c0, from the marker)
+  state.cover = 1 - smooth(seg(state.e, L.c0, L.c0 + 0.24));
+  state.cap = smooth(seg(into, -vh * 0.12, intro * 0.8)) * (1 - smooth(seg(-pinTop, vh * 0.06, vh * 0.4)));
   state.visible = pinTop < vh && pinTop > -L.pinH;
   state.active = clamp(Math.round(state.pos), 0, N - 1);
-  state.bottom = g.bottom - y;                             // the sheet's torn bottom edge (the run's end) on screen
+  state.bottom = gs.bottom - y;                            // the dense sheet's torn bottom edge on screen
   return state;
 }
 
@@ -153,7 +153,6 @@ export function init() {
   const caps = [...sec.querySelectorAll('[data-proc-items] > *')];
   const ticks = sec.querySelector('[data-proc-ticks]');
   const objs = lis.map((li) => li.querySelector('.proc-step__obj'));
-  const more = sec.querySelector('.proc-more'), floor = sec.querySelector('[data-proc-floor]');
   // each cut-out fades in once its image has arrived (a reader can land deep in the run before they have)
   const imgs = objs.map((ob) => ob.querySelector('img'));
   imgs.forEach((im) => {
@@ -188,7 +187,7 @@ export function init() {
     // dissolves over ±0.4 viewport around the centre): e = (marker - 0.1 vh) / vh; the paper clears just after
     const c0 = (scn ? scn.offsetTop : vh * 0.92) / vh - 0.1 + 0.02;
     state.L = {
-      run, ver: (state.L?.ver ?? 0) + 1, vw, vh, pinH: pr.height, cx, cy, SW, SH, phone,
+      run, sec, ver: (state.L?.ver ?? 0) + 1, vw, vh, pinH: pr.height, cx, cy, SW, SH, phone,
       D, Zd, tau, st: Math.sin(tau), ct: Math.cos(tau), S: sp / shrink, shrink, edge, c0,
       intro: parseFloat(getComputedStyle(run).getPropertyValue('--proc-intro')) / 100 * pr.height || vh * 0.4,
     };
@@ -213,17 +212,6 @@ export function init() {
   const glOn = () => state.gl && document.documentElement.classList.contains('gl-ready');
   state.onGL = () => sec.classList.add('is-gl');
   const f2 = (n) => n.toFixed(2), f4 = (n) => n.toFixed(4);
-
-  // the glow under the dense sheet's bottom tear fades as the stage dissolves into Results (it dissolves over
-  // ±0.4 viewport around the centre: mix = 0.5 + (0.5 vh - tear) / 0.8 vh)
-  let lastFloor = '';
-  onFrame((v) => {
-    const tear = geo(more).bottom - v.y;
-    if (tear < -v.vh * 0.4 || tear > v.vh * 1.1) return;
-    const mix = clamp(0.5 + (v.vh * 0.5 - tear) / (v.vh * 0.8));
-    const f = f2(1 - smooth(clamp(mix / 0.7)));
-    if (f !== lastFloor) { floor.style.setProperty('--floor', f); lastFloor = f; }
-  });
 
   onFrame((v) => {
     if (!state.L) return;

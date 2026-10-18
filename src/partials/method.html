@@ -1,12 +1,41 @@
-<!-- IV · METHOD · scene: plate:method (the alcove room as a depth diorama) · then the instrument teardown (teardown.html)
-     The painted room opens the chapter; the camera that sat on its table is then taken apart, photoreal, on a black
-     stage (#instrument), with the seven steps as its spec list. -->
-<section class="chapter" id="method" data-chapter data-theme="dark" data-scene="plate:method" data-plate="method"
-  data-cam-from="1.06 0.5 0.55 0" data-cam-to="1.34 0.36 0.66 0.12" data-cam-from-tall="1.08 0.3 0.6 0" data-cam-to-tall="1.4 0.27 0.7 0.1" aria-labelledby="method-title">
-  <div class="opener col mt-open">
-    <div class="scrim">
-      <p class="kicker" data-reveal>Chapter IV</p>
-      <h2 class="giant" id="method-title" data-reveal>Method</h2>
+<!-- IV · METHOD · scene: td:camera (photoreal teardown, scroll-scrubbed) · owner: builder A (teardowns v2)
+     The chapter IS the camera: no painted room. The opener (Chapter IV / Method) sits over the camera filling the
+     screen while the view orbits it; then the camera glides aside into the column layout and comes apart beside
+     the seven steps (F62 + F75…F94): one instrument, and one way of working.
+     Framing ("zoom shiftX shiftY", frame uv): data-td-hero / -hero-tall (the full-screen orbit), data-td-frame0 /
+     -frame0-tall (the column as the hand-off lands, whole device) → data-td-frame / -frame-tall (fully exploded). data-td-box / data-td-pbox: the device's box at the hero angle / fully exploded (uv; for the lines and the fit clamp).
+     Each step's data-anchor ("u v depth [leader]") is its marker on the exploded camera (poster.webp uv).
+     Choreography: src/sections/_teardown.js + src/gl/lib/tdcore.js; scene: src/gl/scenes/teardowns.js. -->
+<section class="chapter td td--open" id="method" data-chapter data-td data-td-open data-theme="dark" data-scene="td:camera" data-plate="ink"
+  aria-labelledby="method-title" style="--td-run:540svh; --td-run-m:440svh"
+  data-td-hero="1.24 -0.085 0.05" data-td-hero-tall="1.62 0 0.02" data-td-frame0="1.22 -0.005 0" data-td-frame0-tall="1.36 -0.005 0" data-td-frame="1.04 0 0" data-td-frame-tall="1.02 0 0.01"
+  data-td-box="0.147 0.149 0.844 0.859" data-td-pbox="0.034 0.11 0.953 0.888" data-td-compact>
+  <div class="td__run" data-td-run>
+    <div class="td__pin">
+      <div class="td__slot" data-td-slot aria-hidden="true">
+        <img class="td__still td__still--hero" src="/assets/teardown/camera/hero.webp" alt="" decoding="async" width="1920" height="1080">
+        <img class="td__still td__still--poster" src="/assets/teardown/camera/poster.webp" alt="" loading="lazy" decoding="async" width="1920" height="1080">
+      </div>
+      <div class="td__target" data-td-target aria-hidden="true"></div>
+      <div class="td__fx" data-td-fx aria-hidden="true"></div>
+      <header class="td__hero scrim">
+        <p class="kicker">Chapter IV</p>
+        <h2 class="giant td__giant" id="method-title" data-td-lines>Method</h2>
+      </header>
+      <div class="td__copy">
+        <div class="td__intro">
+          <h3 class="td__head" data-td-lines>Everything we make passes through one instrument, and one way of working.</h3>
+        </div>
+        <ol class="td__specs">
+          <li class="td__spec" data-anchor="0.075 0.50 0.30 nw"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h7.5l4 4v13h-11.5z"/><path d="M14 3.5v4h4"/><path d="M9.5 2.6h5v2.2h-5z"/></svg></span><span class="td__t"><b>Blank page</b> <span class="td__l">The channel as it stands — nothing assumed.</span></span></li>
+          <li class="td__spec" data-anchor="0.165 0.42 0.40 sw"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="7" width="7.5" height="12" rx="1"/><rect x="8.6" y="5.2" width="7.5" height="12" rx="1" transform="rotate(-9 12.35 11.2)"/><rect x="13.4" y="4" width="7.2" height="12" rx="1" transform="rotate(-18 17 10)"/><path d="M4.6 15.4h5.3M5.2 17.2h3.6"/></svg></span><span class="td__t"><b>Moodboard</b> <span class="td__l">Look, palette, references. What it should feel like.</span></span></li>
+          <li class="td__spec" data-anchor="0.40 0.16 0.42 ne"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M9 5v14M15 5v14M3 12h18"/></svg></span><span class="td__t"><b>Storyboard</b> <span class="td__l">Series design and upload calendar, mapped out.</span></span></li>
+          <li class="td__spec" data-anchor="0.31 0.52 0.73 nw"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.5 10.5h17v9h-17z"/><path d="M3.5 10.5l15.6-5.2 1 3-15.6 5.2"/><path d="M7.4 9.2l2.4 2.6M11.9 7.7l2.4 2.6M16.3 6.2l2.4 2.6"/></svg></span><span class="td__t"><b>Production</b> <span class="td__l">Shoot days, kit, crew — or your own, better run.</span></span></li>
+          <li class="td__spec" data-anchor="0.40 0.83 0.82 se"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="8.5" width="15" height="4" rx="2"/><path d="M17.5 9.2l3.5-.9v4.4l-3.5-.9"/><path d="M6 10.5h1.4M9 10.5h1.4M12 10.5h1.4"/><path d="M9.5 12.5v3.5M7 16h5v1.6H7z"/></svg></span><span class="td__t"><b>Sound</b> <span class="td__l">Because bad audio loses the audience first.</span></span></li>
+          <li class="td__spec" data-anchor="0.625 0.50 0.84 sw"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6.5h18M3 17.5h18"/><rect x="4" y="8.6" width="6.5" height="2.6" rx=".6"/><rect x="11.8" y="8.6" width="7.4" height="2.6" rx=".6"/><rect x="6.5" y="12.8" width="9" height="2.6" rx=".6"/><path d="M14 4v16"/></svg></span><span class="td__t"><b>Edit</b> <span class="td__l">Thumbnails, titles, metadata, cut to retain.</span></span></li>
+          <li class="td__spec" data-anchor="0.86 0.50 0.94 ne"><span class="td__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4.5" y="3" width="15" height="18" rx="1"/><rect x="7" y="5.5" width="10" height="10"/><path d="M7 13.2l3-2.7 2.4 2 1.6-1.3 3 2.4"/><circle cx="14.4" cy="8.3" r="1.1"/></svg></span><span class="td__t"><b>Published</b> <span class="td__l">Then measured, and done again.</span></span></li>
+        </ol>
+      </div>
     </div>
   </div>
 </section>
