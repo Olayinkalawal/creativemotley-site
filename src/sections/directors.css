@@ -1,22 +1,25 @@
 /* VIII · Directors: the opener, then a pinned stage with the alpha film rising from the foot of the screen and
    the names on a serif line behind the heads.
-   Static by default (no JS, reduced motion): the names stand still, stacked and centred above the heads.
-   .dr-on (JS, motion allowed): the line repeats and runs with scroll; on phones the film pans. */
+   Static by default (no JS, reduced motion): the names stand still, stacked and centred above the heads; on upright
+   screens the heads are two crops of the still, side by side (.dr-duo).
+   .dr-on (JS, motion allowed): the line repeats and runs with scroll; on phones the film pans.
+   The stage is exactly the screen (no floor): the film and the line are sized to fit under the bar on short
+   landscapes too, so the faces are never below the fold while the stage is pinned. */
 #directors {
   /* the brand's torn edge, flipped: paper above the tear (the portraits are torn cut-outs; their foot is torn too) */
   --dr-tear: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='24' viewBox='0 0 1200 24' preserveAspectRatio='none'%3E%3Cpath transform='matrix(1 0 0 -1 0 24)' d='M0 24 L0.0 11.2 L3.9 12.0 L7.3 12.1 L12.5 10.2 L18.6 8.4 L24.2 6.9 L27.7 7.2 L35.7 6.1 L40.0 7.4 L48.7 8.3 L54.1 10.8 L57.4 12.5 L62.1 10.9 L65.8 10.2 L73.7 9.0 L80.2 10.0 L85.4 10.4 L88.8 8.7 L93.0 9.9 L98.6 9.3 L105.1 9.4 L109.9 11.0 L117.1 10.0 L123.6 10.4 L131.8 11.6 L136.5 13.7 L140.3 13.2 L147.8 11.5 L153.7 9.5 L160.7 11.0 L167.2 12.8 L172.1 13.5 L178.6 13.7 L184.4 15.0 L193.0 14.5 L200.0 12.3 L207.2 12.9 L216.2 14.2 L220.9 13.4 L227.9 11.2 L233.7 9.8 L237.4 8.1 L245.0 7.0 L249.5 7.1 L257.7 5.8 L263.4 6.8 L271.7 8.8 L279.9 8.2 L285.4 8.1 L293.7 10.5 L297.6 9.3 L302.0 8.4 L307.9 9.3 L312.5 7.4 L318.0 7.4 L324.4 9.9 L331.5 10.2 L338.2 11.2 L341.5 13.1 L349.2 14.6 L357.0 13.8 L362.4 11.9 L369.2 9.9 L372.6 8.9 L376.6 8.6 L379.9 6.8 L383.8 5.7 L389.0 4.3 L397.2 5.8 L401.1 5.4 L406.2 5.6 L410.0 7.9 L418.9 8.3 L424.8 6.9 L428.4 6.8 L433.0 8.9 L437.0 7.1 L445.7 7.9 L449.6 8.5 L452.7 9.1 L461.6 11.0 L468.8 10.1 L474.0 8.9 L481.6 9.4 L489.3 8.9 L493.6 10.7 L502.5 12.4 L510.4 13.7 L517.8 12.3 L523.9 11.7 L527.1 9.6 L531.8 8.8 L538.9 11.2 L544.6 13.2 L553.5 15.1 L558.7 13.5 L563.1 12.0 L567.3 12.5 L575.7 14.0 L581.6 14.4 L589.4 12.3 L596.3 14.1 L604.0 14.9 L609.9 13.1 L617.6 12.3 L625.4 14.3 L630.8 13.6 L639.5 14.4 L643.5 12.5 L647.4 14.2 L655.3 12.4 L663.2 14.4 L670.2 13.5 L676.5 11.7 L679.6 13.8 L686.4 13.7 L695.1 13.2 L703.3 14.5 L707.5 13.1 L712.3 11.8 L718.8 10.8 L724.3 9.3 L732.8 9.0 L738.5 9.7 L747.0 9.6 L755.5 9.9 L761.7 10.3 L764.8 10.2 L768.9 8.3 L776.7 7.3 L782.5 8.8 L788.9 8.4 L795.0 9.1 L802.7 7.7 L809.0 7.1 L813.7 8.9 L819.7 9.6 L827.3 11.7 L833.0 12.2 L839.0 12.2 L846.2 12.0 L852.4 11.9 L861.0 12.8 L869.3 14.6 L873.8 14.6 L882.5 15.8 L886.3 13.7 L892.0 11.6 L896.4 9.7 L903.4 11.3 L911.8 9.8 L919.1 10.8 L922.9 12.6 L931.8 11.3 L940.5 11.0 L946.4 13.2 L954.4 11.6 L960.0 11.7 L965.0 10.4 L969.9 11.6 L973.0 11.9 L978.7 9.8 L983.7 10.6 L989.7 8.8 L998.7 10.5 L1007.5 8.9 L1012.1 7.3 L1019.8 6.8 L1023.5 7.1 L1032.0 9.1 L1036.5 7.9 L1045.1 8.7 L1052.3 7.3 L1055.6 8.7 L1061.2 7.2 L1069.8 8.4 L1077.6 7.0 L1085.7 5.7 L1093.9 6.2 L1099.0 7.2 L1107.5 6.7 L1111.3 7.5 L1115.7 6.3 L1119.7 5.0 L1123.9 5.0 L1128.7 7.0 L1133.5 7.6 L1137.5 7.4 L1140.6 6.9 L1143.7 8.5 L1150.0 7.6 L1155.9 10.0 L1159.5 11.7 L1165.1 11.7 L1173.1 11.3 L1179.2 12.2 L1188.1 11.5 L1196.1 12.4 L1200.0 11.2 L1200 24 Z' fill='black'/%3E%3C/svg%3E");
   padding-bottom: 40svh;                   /* an umber tail: the film has left the screen before IX's plate arrives */
 }
-#directors.dr-on { padding-bottom: 45svh; }
+#directors.dr-on { padding-bottom: 22svh; }   /* the torn foot leaves over the start of IX's dissolve */
 .opener.dr-open { min-height: 100svh; }
 .dr-run { position: relative; }
 .dr-pin { position: relative; height: calc(var(--film-h) + 26svh); min-height: 300px; overflow: hidden; }
 
-/* the film: as wide as the column on desktop, bottom-anchored */
-.dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 64svh); }
+/* the film: as wide as the column on desktop, bottom-anchored (--film-b lifts it off the foot on upright screens) */
+.dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 64svh); --film-b: 0px; }
 .dr-on .dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 76svh); }
 @media (min-width: 1024px) { .dr-run { --col-left: var(--rail-w); } }
-.dr-film { position: absolute; z-index: 1; bottom: 0; right: 0; left: var(--col-left, 0px); display: flex; justify-content: center; }
+.dr-film { position: absolute; z-index: 1; bottom: var(--film-b); right: 0; left: var(--col-left, 0px); display: flex; justify-content: center; }
 .dr-video {
   display: block; width: auto; height: var(--film-h); max-width: none; aspect-ratio: 16 / 9;
   /* the frame's foot cuts the portraits: tear it, like the paper and the cut-outs, so it reads as made when the pin lets go */
@@ -26,12 +29,15 @@
 html:not(.js) video.dr-video { display: none; }          /* no JS: the still (noscript) stands in */
 html.js .dr-video { opacity: 0; transition: opacity 1.2s var(--ease-out); }
 html.js .dr-video.is-ready { opacity: 1; }
+/* iOS (Low Power Mode) can refuse play() on a muted inline video and draw its start button over the poster: never */
+.dr-video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
+.dr-video::-webkit-media-controls { display: none !important; }
 
 /* the names. Static: the two names stacked, centred above the heads. Running (.dr-on): one serif line just
    above the heads, so the portraits stand in front of its foot. */
 .dr-band {
   position: absolute; z-index: 0; left: var(--col-left, 0px); right: 0;
-  bottom: calc(var(--film-h) * 0.95);
+  bottom: calc(var(--film-h) * 0.95 + var(--film-b));
   display: flex; justify-content: center; pointer-events: none;
 }
 .dr-track {
@@ -50,9 +56,10 @@ html.js .dr-video.is-ready { opacity: 1; }
 
 /* the running line: the stage starts under the opener's tail, so the portraits rise as the dek leaves */
 .dr-on .dr-run { height: 230svh; margin-top: -30svh; }
-.dr-on .dr-pin { position: sticky; top: 0; height: 100svh; min-height: 520px; }
+.dr-on .dr-pin { position: sticky; top: 0; height: 100svh; min-height: 0; }
 .dr-on .dr-band {
-  left: 0; justify-content: flex-start; overflow: hidden; bottom: calc(var(--film-h) * 0.855);
+  left: 0; justify-content: flex-start; overflow: hidden; bottom: calc(var(--film-h) * 0.855 + var(--film-b));
+  opacity: 0;                              /* directors.js fades it in as it rises (a pure function of scroll) */
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
 }
@@ -67,10 +74,43 @@ html.js .dr-video.is-ready { opacity: 1; }
 .dr-on .dr-track i { display: inline; }
 .dr-on .dr-film { will-change: transform; }
 
-/* portrait screens (phones, upright tablets): a film taller than the screen is wide; the scroll pans across it */
+/* short landscapes (phones on their side, short windows): the stage is the screen, so the film and the line are
+   sized to fit under the bar with the heads whole */
+@media (orientation: landscape) and (max-height: 560px) {
+  .dr-on .dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 72svh); }
+  .dr-on .dr-track { font-size: min(clamp(3.9rem, 10.2vw, 11rem), 15svh); }
+}
+
+/* portrait screens (phones, upright tablets): a film taller than the screen is wide; the scroll pans across it.
+   The group (line + heads) is lifted off the foot so it sits near the optical centre, not under a bare sky. */
 @media (orientation: portrait) {
-  .dr-on .dr-run { --film-h: min(64svh, 640px); }
+  #directors.dr-on { padding-bottom: 12svh; }   /* the lift is part of the tail: the same 22svh as on wide screens */
+  .dr-on .dr-run { --film-h: min(66svh, 660px); --film-b: 10svh; }
   .dr-on .dr-film { right: auto; justify-content: flex-start; }
-  .dr-on .dr-band { bottom: calc(var(--film-h) * 0.86); }
+  .dr-on .dr-band { bottom: calc(var(--film-h) * 0.86 + var(--film-b)); }
   .dr-on .dr-track { font-size: clamp(3.4rem, 17vw, 7rem); }
+}
+
+/* the still pair (static layout on upright screens): each portrait its own crop of the still (x: the face's centre
+   in the frame, --f; y: from just above the hat to below the collar), side by side under the names, foot torn */
+.dr-duo { display: none; }
+@media (orientation: portrait) {
+  #directors:not(.dr-on) { padding-bottom: 14svh; }   /* the pair is a short block: a short tail */
+  #directors:not(.dr-on) .dr-pin { height: auto; min-height: 0; overflow: visible; padding-top: 4svh; }
+  #directors:not(.dr-on) .dr-band { position: relative; bottom: auto; }
+  #directors:not(.dr-on) .dr-film { display: none; }
+  #directors:not(.dr-on) .dr-duo {
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 3vw, 24px);
+    margin: clamp(18px, 3svh, 36px) 0 0 var(--col-left, 0px);
+    padding-inline: max(var(--col-pad), calc((100% - var(--col-left, 0px) - 36rem) / 2));
+  }
+}
+.dr-duo__crop {
+  position: relative; overflow: hidden; aspect-ratio: 3 / 4;
+  -webkit-mask: linear-gradient(#000, #000) top / 100% calc(100% - 14px) no-repeat, var(--dr-tear) bottom / 520px 20px repeat-x;
+  mask: linear-gradient(#000, #000) top / 100% calc(100% - 14px) no-repeat, var(--dr-tear) bottom / 520px 20px repeat-x;
+}
+.dr-duo__crop img {
+  position: absolute; left: 50%; top: -4.35%; height: 144.93%; width: auto; max-width: none;
+  transform: translateX(calc(var(--f) * -100%));
 }
