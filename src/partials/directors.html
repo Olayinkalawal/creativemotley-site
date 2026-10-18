@@ -1,11 +1,13 @@
 <!-- VIII · DIRECTORS · scene: plate:umber (shader-only dark umber stage: a warm pool of light, slow dust) · owner: builder B
-     The opener, then a pinned stage: the directors' alpha film (two painted portraits on transparency) rises from
-     the foot of the screen; the names glide behind their heads on a serif line that runs with scroll. On phones
-     the film is taller than the screen is wide, so the scroll pans the camera from one portrait to the other.
-     The film is decorative (aria-hidden); the names are text (the list below, read once). data-umber keys the
-     stage's pool of light for each region (see src/gl/scenes/umber.js). -->
+     The Results painting dissolves into the umber room at this chapter's top. The opener, then a pinned stage that
+     starts under the opener's tail: the directors' alpha film (two painted portraits on transparency, their foot torn
+     like paper) rises from the foot of the screen as the dek leaves; the names glide behind their heads on a serif
+     line that runs with scroll. On phones the film is taller than the screen is wide, so the scroll pans the camera
+     from one portrait to the other. The film is decorative (aria-hidden); the names are text (the list below, read
+     once). data-umber keys the stage's pool of light per region (see src/gl/scenes/umber.js): a dim, low pool on the
+     opener, a bright one behind the heads on the run. -->
 <section class="chapter" id="directors" data-chapter data-theme="dark" data-scene="plate:umber" data-plate="umber"
-  data-umber="-0.14 0.44 0.6 0.85 0.8" aria-labelledby="directors-title">
+  data-umber="-0.12 0.3 0.42 0.5 0.55" aria-labelledby="directors-title">
   <div class="opener col dr-open">
     <div class="scrim">
       <p class="kicker" data-reveal>Chapter VIII</p>
@@ -13,7 +15,7 @@
       <p class="dek" data-reveal="0.08"><span class="dc">T</span>he two people answerable for all of it.</p>
     </div>
   </div>
-  <div class="dr-run" data-dr-run data-umber="0 0.5 0.72 1 1">
+  <div class="dr-run" data-dr-run data-umber="0 0.56 0.78 1.05 1">
     <ul class="sr-only"><li>Olayinka Lawal</li><li>Gbenga Sosanya</li></ul>
     <div class="dr-pin">
       <div class="dr-band" aria-hidden="true">
@@ -21,10 +23,11 @@
       </div>
       <div class="dr-film" data-dr-film>
         <video class="dr-video" data-dr-video muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"
-          disablepictureinpicture disableremoteplayback width="1920" height="1080">
+          disablepictureinpicture disableremoteplayback width="1920" height="1080" data-poster="/assets/video/directors-poster.webp">
           <source src="/assets/video/directors.webm" type='video/webm; codecs="vp9"'>
           <source src="/assets/video/directors.mp4" type='video/mp4; codecs="hvc1"'>
         </video>
+        <noscript><img class="dr-video" src="/assets/video/directors-poster.webp" alt="" width="1600" height="900"></noscript>
       </div>
     </div>
   </div>

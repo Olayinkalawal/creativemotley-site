@@ -3,18 +3,21 @@
    geometry: 1 world unit = 1 CSS px on the plane z = 0 through the slot, the camera sits D px in front of it with an
    off-axis frustum (the slot follows the pin as it arrives and leaves).
    - ground: one full-screen pass that ray-casts the tilted desk: the paper colour with faint world-anchored mottling
-     (so the desk visibly travels with the row) and a soft vignette. Above the arriving sheet's torn edge it paints the
-     dark room (the stage dissolves the umber room into that, not into paper), and below the sheet that tears off into
-     Results it paints ink.
+     (so the desk visibly travels with the row) and a soft vignette. Below the sheet that tears off into Results it
+     paints ink. (Above the arriving sheet's torn edge it would paint the dark room; the stage only switches to this
+     scene once the pin's paper covers the screen — see the [data-proc-scene] marker — so that is a fallback.)
    - shadows: one quad per object lying on the desk: its own silhouette, pre-blurred on a canvas and blurred further
      (mip bias) the higher it floats, plus a soft ambient pool (a blurred ellipse drawn on a canvas). The shadow is
      tight and dark when the object settles, offset, wide and faint when it lifts.
    - objects: premultiplied cut-outs; the active one turns to face you under a soft light band, the resting ones are
-     washed a little toward the paper so they recede. Paper grain comes from the stage's post pass. */
+     washed a little toward the paper so they recede. Paper grain comes from the stage's post pass.
+   Crisp mode: where the stage renders well below the screen's pixel density (its dpr cap on phones), the cut-outs
+   would look soft beside the type, so the section's CSS-3D proxy (same poses, drift and wash) stays as the object
+   layer and this scene draws only the desk and the shadows. */
 import * as THREE from 'three';
 import { texture } from '../lib/loaders.js';
 import { geo } from '../../core/layout.js';
-import { state, trackAt, place, N } from '../../sections/process.js';
+import { state, trackAt, place, drift, N } from '../../sections/process.js';
 
 /* the reading paper as it renders (--paper under the shell's .paper-grain), so the desk and the sheets match */
 const PAPER = [220 / 255, 215 / 255, 197 / 255];
@@ -210,26 +213,32 @@ export default function register(stage) {
       if (!L || !ready) return;
       const s = trackAt(ctx.scrollY);
       if (!state.gl) { state.gl = true; state.onGL?.(); }
+      // crisp mode: judged on the stage's resolution before its dynamic scaling, so it never flips mid-run on a
+      // slow GPU; a phone (dpr 2–3 against a cap of 1.2–1.6) is the case it is for
+      const dpr0 = ctx.dpr / (ctx.stage?.scale || 1);
+      state.crisp = dpr0 < (window.devicePixelRatio || 1) * 0.8;
+      state.ptr = ctx.pointer;
       const cy = L.cy + s.pinTop;
       project(L.cx, cy, ctx.vw, ctx.vh, L.D);
       edge.set(L.edge[0] / ctx.vw, L.edge[1] / ctx.vw, L.edge[2] / ctx.vw, L.edge[3] / ctx.vw);
 
-      const live = ctx.reduced ? 0 : 1, px = ctx.pointer.x * live, py = ctx.pointer.y * live, tm = ctx.time;
+      const live = !ctx.reduced, px = ctx.pointer.x, tm = ctx.time;
       for (let k = 0; k < N; k++) {
         place(k, s.pos, s.lift, o);
         const a = o.a, m = objs[k], sh = shadows[k];
-        // the active object breathes a little and leans toward a fine pointer
-        m.position.set(o.x, o.y + Math.sin(tm * 0.8 + k) * 2.5 * a * live, o.z);
-        m.rotation.set(o.rx - py * 0.1 * a, o.ry + px * 0.16 * a, o.rz + Math.sin(tm * 0.55 + k * 1.7) * 0.006 * a * live);
+        // the active object breathes a little and leans toward a fine pointer (shared with the proxy)
+        if (live) drift(k, o, tm, ctx.pointer); else o.by = o.bx = o.bry = o.brz = 0;
+        m.visible = !state.crisp;
+        m.position.set(o.x, o.y + o.by, o.z);
+        m.rotation.set(o.rx + o.bx, o.ry + o.bry, o.rz + o.brz);
         m.scale.set(o.w, o.hgt, 1);
         m.renderOrder = Math.round(o.z) + 2000;
-        const far = Math.max(0, Math.abs(o.d) - 1);
         const ou = m.material.uniforms;
-        ou.alpha.value = 1 - Math.min(1, Math.max(0, Math.abs(o.d) - 2.4) / 0.8);
-        ou.fog.value = Math.min(0.3, 0.12 + 0.07 * far) * (1 - a);
+        ou.alpha.value = o.alpha;
+        ou.fog.value = o.fog;
         ou.lit.value = 0.975 + 0.045 * a;
         ou.sheen.value = 0.09 * Math.sin(Math.PI * a) + 0.025 * a;
-        ou.sheenAt.value = 1.25 - 0.95 * a - px * 0.18 * a;
+        ou.sheenAt.value = 1.25 - 0.95 * a - px * 0.18 * a * (live ? 1 : 0);
         // its shadow on the desk: tight and dark when it rests, wide, offset and faint when it lifts
         const hn = o.h / (L.SW * 0.9);                  // 0 resting … ~1 lifted
         const pad = sh.userData.pad || [1.5, 1.5];
@@ -242,7 +251,7 @@ export default function register(stage) {
         su.lod.value = 0.2 + hc * 3.0;
         su.sil.value = 0.42 * (1 - 0.64 * hc);
         su.amb.value = 0.22 * (1 - 0.7 * hc);
-        su.alpha.value = ou.alpha.value;
+        su.alpha.value = o.alpha;
       }
       const gu = ground.uniforms;
       gu.view.value.set(ctx.vw, ctx.vh); gu.ctr.value.set(L.cx, cy);
