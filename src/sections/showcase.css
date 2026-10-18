@@ -1,0 +1,129 @@
+/* V · Showcase
+   Static by default (no JS, ?tier=0, reduced motion): a calm grid on desktop, a scroll-snap row on phones.
+   .sc-on (JS + a WebGL tier): a tall pinned run; the poster buttons become a CSS-3D proxy of the WebGL arc.
+   .sc-on.is-gl under html.gl-ready: WebGL draws the posters; the proxy is invisible and lets the pointer
+   through, but keeps its buttons for keyboard focus and screen readers. */
+
+/* ── static ─────────────────────────────────────────────────────────── */
+.sc-run { position: relative; padding-block: clamp(8px, 2vh, 24px) clamp(96px, 16vh, 180px); }
+.sc-pin { position: relative; }
+.sc-frame { display: none; }
+.sc-list {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  gap: clamp(32px, 5vh, 56px) clamp(18px, 2.4vw, 32px); align-items: end;
+}
+.sc-item { display: grid; gap: 14px; }
+.sc-card { position: relative; display: block; width: 100%; border-radius: 1px; }
+.sc-card img { width: 100%; height: auto; box-shadow: 0 26px 40px -18px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.35); transition: transform 0.5s var(--ease-out); }
+.sc-card:hover img { transform: translateY(-4px); }
+.sc-card:focus-visible { outline-offset: 6px; }
+.sc-item__cap {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  padding-top: 10px; box-shadow: inset 0 1px 0 rgba(244, 237, 223, 0.22);
+}
+.sc-item__nm { font-family: var(--serif); font-size: clamp(1.2rem, 1.5vw, 1.45rem); line-height: 1.1; letter-spacing: -0.005em; }
+.sc-item__n, .sc-cap__n {
+  font-weight: 650; font-size: var(--t-label); letter-spacing: 0.08em; white-space: nowrap;
+  font-variant-numeric: lining-nums tabular-nums; color: var(--cream-mute);
+}
+.sc-item__n b, .sc-cap__n b { font-weight: 650; color: var(--cream); }
+@media (max-width: 719px) {
+  .sc-list {
+    display: flex; gap: 14px; align-items: flex-end;
+    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin-inline: calc(-1 * var(--col-pad)); padding: 4px var(--col-pad) 8px; scroll-padding-inline: var(--col-pad);
+  }
+  .sc-list::-webkit-scrollbar { display: none; }
+  .sc-item { flex: 0 0 min(74vw, 320px); scroll-snap-align: center; }
+}
+
+/* ── animated: the pinned run ───────────────────────────────────────── */
+.sc-on .sc-run { --sc-dwell: 60svh; height: calc(7 * var(--sc-dwell) + 100svh); padding: 0; }
+.sc-on .sc-pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.sc-on .sc-stage { position: absolute; inset: 0; }
+.sc-on .sc-col { position: static; }
+.sc-on .sc-list {
+  position: absolute; inset: 0; display: block; overflow: visible; margin: 0; padding: 0;
+  /* fade at the viewport edges (under the rail on desktop): same stops as the WebGL fade */
+  -webkit-mask-image: linear-gradient(90deg, transparent var(--l0, 0px), #000 var(--l1, 0px), #000 var(--r0, 100%), transparent var(--r1, 100%));
+  mask-image: linear-gradient(90deg, transparent var(--l0, 0px), #000 var(--l1, 0px), #000 var(--r0, 100%), transparent var(--r1, 100%));
+}
+.sc-on .sc-item { position: absolute; left: 0; top: 0; display: block; will-change: transform, opacity; }
+.sc-on .sc-item__cap { display: none; }
+.sc-on .sc-card { width: 100%; height: 100%; }
+.sc-on .sc-card img { width: 100%; height: 100%; transition: opacity 0.6s var(--ease-out); }
+.sc-on .sc-card:hover img { transform: none; }
+.sc-on .sc-card::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: var(--ink); opacity: var(--shade, 0); transition: opacity 0.6s var(--ease-out);
+}
+.sc-on .sc-card:focus-visible { outline-offset: 10px; }
+.sc-on .sc-pin.is-hover { cursor: pointer; }
+
+/* WebGL has drawn: hide the proxy's pixels, keep its buttons (focus ring + screen readers) */
+html.gl-ready .sc-on.is-gl .sc-card { pointer-events: none; }
+html.gl-ready .sc-on.is-gl .sc-card img,
+html.gl-ready .sc-on.is-gl .sc-card::after { opacity: 0; box-shadow: none; }
+html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none; }
+
+/* the frame over the pin: the slot the centred poster fills, and the caption under it */
+.sc-on .sc-frame {
+  --sc-h: min(60svh, 700px);
+  position: relative; z-index: 2; height: 100%; pointer-events: none;
+  display: grid; align-content: center; justify-items: center; row-gap: clamp(20px, 4.4svh, 48px);
+  padding-top: calc(var(--nav-h) + 2svh); padding-bottom: clamp(14px, 3svh, 32px);
+}
+.sc-slot { height: var(--sc-h); aspect-ratio: 4 / 5; }
+/* the caption sits under the centred poster like a museum label, as wide as the slot */
+.sc-cap { width: min(100%, calc(var(--sc-h) * 0.8)); color: var(--cream); transition: opacity 0.35s var(--ease-out); }
+.sc-on.is-modal .sc-cap { opacity: 0; }   /* it would show through the modal's scrim */
+.sc-cap__rule { position: relative; height: 1px; background: rgba(244, 237, 223, 0.24); margin-bottom: 14px; }
+.sc-cap__ticks { position: absolute; inset: 0; display: flex; justify-content: space-between; }
+.sc-cap__ticks i { width: 1px; height: 7px; margin-top: -3px; background: rgba(244, 237, 223, 0.42); }
+.sc-cap__dot {
+  position: absolute; left: -4px; top: -4px; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 0 3px rgba(11, 8, 5, 0.55);
+}
+.sc-cap__row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.sc-cap__names { display: grid; min-width: 0; }
+.sc-cap__names > span {
+  grid-area: 1 / 1; font-family: var(--serif); font-size: clamp(1.3rem, calc(var(--sc-h) * 0.058), 2.4rem); line-height: 1.05;
+  letter-spacing: -0.012em; white-space: nowrap;
+  opacity: 0; transform: translate3d(0, 0.45em, 0);
+  transition: opacity 0.45s var(--ease-out), transform 0.7s var(--ease-out);
+}
+.sc-cap__names > span.is-before { transform: translate3d(0, -0.45em, 0); }
+.sc-cap__names > span.is-on { opacity: 1; transform: none; }
+@media (max-width: 719px) {
+  .sc-on .sc-frame { --sc-h: min(50svh, calc((100vw - 96px) * 1.25)); }
+}
+
+/* ── the poster modal ───────────────────────────────────────────────── */
+.scm { display: grid; gap: clamp(18px, 3vw, 40px); align-items: end; justify-items: center; color: var(--cream); }
+.scm__art { position: relative; }
+.scm__img {
+  display: block; width: auto; height: min(calc(100svh - 150px), 1100px); max-width: 100%;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.85), 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: opacity 0.25s var(--ease-out);
+}
+.scm.is-swapping .scm__img { opacity: 0.35; }
+.scm__cap { display: grid; gap: 14px; justify-self: stretch; }
+.scm__n { font-weight: 650; font-size: var(--t-label); letter-spacing: 0.08em; color: var(--cream-mute); font-variant-numeric: lining-nums tabular-nums; }
+.scm__n b { font-weight: 650; color: var(--cream); }
+.scm__title { display: grid; gap: 8px; }
+.scm__nm { font-weight: 600; font-size: clamp(1.9rem, 3vw, 2.9rem); letter-spacing: -0.045em; line-height: 0.95; }
+.scm__tag { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: clamp(1.25rem, 1.8vw, 1.65rem); line-height: 1.1; color: var(--gold); }
+.scm__nav { display: flex; gap: 10px; margin-top: 6px; }
+.scm__btn {
+  font-weight: 650; font-size: var(--t-label); text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 10px 14px; border-radius: 100px; box-shadow: inset 0 0 0 1px rgba(244, 237, 223, 0.4);
+  transition: background 0.2s, opacity 0.2s;
+}
+.scm__btn:hover:not(:disabled) { background: rgba(244, 237, 223, 0.12); }
+.scm__btn:disabled { opacity: 0.32; cursor: default; }
+@media (min-width: 900px) {
+  .scm { grid-template-columns: auto minmax(220px, 300px); justify-items: start; }
+}
+@media (max-width: 899px) {
+  .scm__img { height: auto; max-height: 60svh; margin-inline: auto; }
+}
