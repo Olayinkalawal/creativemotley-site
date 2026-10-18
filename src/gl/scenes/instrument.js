@@ -330,7 +330,7 @@ function makeTextures() {
   // the sensor die: blue-green colour filter with a fine pixel grid; gold bond pads round the edge
   const dc = cnv(384, 256), dg = dc.getContext('2d');
   const grad = dg.createLinearGradient(0, 0, 384, 256);
-  grad.addColorStop(0, '#2446a6'); grad.addColorStop(0.55, '#1f5f96'); grad.addColorStop(1, '#1d7f86');
+  grad.addColorStop(0, '#1c3fd0'); grad.addColorStop(0.5, '#1866c0'); grad.addColorStop(1, '#109aa0');
   dg.fillStyle = grad; dg.fillRect(0, 0, 384, 256);
   dg.fillStyle = 'rgba(160,210,230,0.10)';
   for (let x = 14; x < 370; x += 3) dg.fillRect(x, 14, 1, 228);
@@ -392,7 +392,7 @@ function baseMaterials(tx) {
   });
   return {
     satin: phy({ color: 0x111113, roughness: 0.42, metalness: 0.05, clearcoat: 0.35, clearcoatRoughness: 0.2, normalMap: tx.stipple, normalScale: new THREE.Vector2(0.35, 0.35) }),
-    leather: std({ color: 0x0f0f10, roughness: 0.74, normalMap: tx.leather, normalScale: new THREE.Vector2(1, 1) }),
+    leather: std({ color: 0x0f0f10, roughness: 0.72, normalMap: tx.leather, normalScale: new THREE.Vector2(1.7, 1.7) }),
     anod: std({ color: 0x151517, metalness: 0.8, roughness: 0.3 }),
     rubber: std({ color: 0x111111, roughness: 0.68 }),
     plastic: std({ color: 0x242426, roughness: 0.5 }),
@@ -405,7 +405,7 @@ function baseMaterials(tx) {
     copper: std({ color: 0xc8784a, metalness: 1, roughness: 0.3 }),
     red: std({ color: 0x8e1b20, metalness: 0.55, roughness: 0.3 }),
     pcb: std({ map: tx.pcb, roughnessMap: tx.pcbRM, metalnessMap: tx.pcbRM, roughness: 1, metalness: 1 }),
-    die: phy({ map: tx.die, metalness: 0.3, roughness: 0.12, iridescence: 0.6, iridescenceIOR: 1.5, iridescenceThicknessRange: [300, 820], clearcoat: 1, clearcoatRoughness: 0.04 }),
+    die: phy({ map: tx.die, metalness: 0.12, roughness: 0.1, iridescence: 0.55, iridescenceIOR: 1.45, iridescenceThicknessRange: [300, 820], clearcoat: 1, clearcoatRoughness: 0.04 }),
     screen: phy({ color: 0x060708, roughness: 0.06, clearcoat: 1, clearcoatRoughness: 0.03 }),
     mic: std({ map: tx.mic, metalness: 0.5, roughness: 0.42 }),
     glass,
@@ -480,6 +480,7 @@ function buildModel(base) {
     const cable = new THREE.CatmullRomCurve3([[0, 2.0, -3.75], [0.15, 1.85, -4.5], [1.4, 1.1, -5.0], [3.7, -0.7, -4.1], [5.55, -2.7, -2.0], [5.6, -3.84, 0.4], [5.62, -3.84, 0.9]].map((p) => new THREE.Vector3(...p)));
     kit.add(mic, m('rubber'), new THREE.TubeGeometry(cable, 72, 0.1, 8, false));
     kit.add(mic, m('anod'), rbox(0.5, 0.42, 0.42, 0.1), { p: [5.52, -3.84, 0.9] });
+    kit.add(B, m('leather'), solid(rr(3.7, 5.4, 0.3), 0.08, 0.03, 10, 2), { p: [-7.82, -0.6, -1.25], r: [0, -Math.PI / 2, 0] });
     for (const x of [-7.86, 5.46]) {
       kit.add(B, m('anod'), rbox(0.24, 0.9, 0.7, 0.1), { p: [x, 2.7, -1.6] });
       kit.add(B, m('steel'), new THREE.TorusGeometry(0.46, 0.065, 8, 28), { p: [x + Math.sign(x) * 0.42, 2.7, -1.6], r: [0, 0, Math.PI / 2], s: [1, 0.72, 1] });
@@ -528,6 +529,9 @@ function buildModel(base) {
     const slab = rr(9.29, 7.24, 0.62);
     slab.holes.push(circ(2.6 + 0.18, -0.575, 0));
     kit.add(T, m('satin'), solid(slab, 1.8, 0.18, 20, 4), { p: [0.575, 0, 2.7] });
+    const inlay = rr(8.9, 6.6, 0.42);
+    inlay.holes.push(circ(3.62, -0.575, 0));
+    kit.add(T, m('leather'), solid(inlay, 0.1, 0.03, 20, 2), { p: [0.575, 0, 3.62] });
     // corner screws, an AF-assist window and a function button on the cover
     for (const [x, y] of [[-3.5, 3.15], [4.65, 3.15], [-3.5, -3.15], [4.65, -3.15]]) kit.add(T, m('steel'), turn([[[0.16, 0], [0.14, 0.05], [0.08, 0.085], [0, 0.095]]], 24), { p: [x, y, 3.6] });
     kit.add(T, m('screen'), solid(rr(0.5, 0.86, 0.2), 0.12, 0.05, 8, 2), { p: [-3.35, 2.1, 3.6] });
