@@ -42,7 +42,7 @@ const GROUPS = {
 const DUR = 0.58;
 /* the pose: assembled 3/4 → the exploded diagonal (wide slots) or a steeper fall (tall slots) */
 const RIG = {
-  wide: { tilt: [0.1, 0.56], yaw: [0.86, 0.74], pitch: [0.2, 0.3], orbit: 0.12, fill: [0.6, 0.97], fl: 2.3 },
+  wide: { tilt: [0.1, 0.56], yaw: [0.86, 0.74], pitch: [0.2, 0.3], orbit: 0.12, fill: [0.7, 0.97], fl: 2.3 },
   tall: { tilt: [0.16, 0.92], yaw: [0.84, 0.66], pitch: [0.2, 0.28], orbit: 0.1, fill: [0.66, 1.0], fl: 2.1 },
 };
 
@@ -330,7 +330,7 @@ function makeTextures() {
   // the sensor die: blue-green colour filter with a fine pixel grid; gold bond pads round the edge
   const dc = cnv(384, 256), dg = dc.getContext('2d');
   const grad = dg.createLinearGradient(0, 0, 384, 256);
-  grad.addColorStop(0, '#1b2f63'); grad.addColorStop(0.55, '#1c4c66'); grad.addColorStop(1, '#1f5c55');
+  grad.addColorStop(0, '#2446a6'); grad.addColorStop(0.55, '#1f5f96'); grad.addColorStop(1, '#1d7f86');
   dg.fillStyle = grad; dg.fillRect(0, 0, 384, 256);
   dg.fillStyle = 'rgba(160,210,230,0.10)';
   for (let x = 14; x < 370; x += 3) dg.fillRect(x, 14, 1, 228);
@@ -383,17 +383,17 @@ function patch(mat, lift) {
 function baseMaterials(tx) {
   const std = (o) => new THREE.MeshStandardMaterial(o), phy = (o) => new THREE.MeshPhysicalMaterial(o);
   const glass = phy({
-    color: 0x0a0e0e, metalness: 0, roughness: 0.03, clearcoat: 1, clearcoatRoughness: 0.02,
-    iridescence: 0.9, iridescenceIOR: 1.8, iridescenceThicknessRange: [240, 560], envMapIntensity: 1.5,
-    transparent: true, opacity: 0.34, depthWrite: false,
+    color: 0x060808, metalness: 0, roughness: 0.03, clearcoat: 1, clearcoatRoughness: 0.02,
+    iridescence: 0.55, iridescenceIOR: 1.6, iridescenceThicknessRange: [330, 720], envMapIntensity: 2.4,
+    transparent: true, opacity: 0.42, depthWrite: false,
     // reflections add in full; what lies behind is dimmed by the opacity (glass without transmission)
     blending: THREE.CustomBlending, blendEquation: THREE.AddEquation,
     blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor, blendSrcAlpha: THREE.OneFactor, blendDstAlpha: THREE.OneMinusSrcAlphaFactor,
   });
   return {
-    satin: phy({ color: 0x1a1a1c, roughness: 0.48, metalness: 0.05, clearcoat: 0.5, clearcoatRoughness: 0.34, normalMap: tx.stipple, normalScale: new THREE.Vector2(0.22, 0.22) }),
-    leather: std({ color: 0x141414, roughness: 0.82, normalMap: tx.leather, normalScale: new THREE.Vector2(0.85, 0.85) }),
-    anod: std({ color: 0x19191b, metalness: 0.72, roughness: 0.36 }),
+    satin: phy({ color: 0x111113, roughness: 0.42, metalness: 0.05, clearcoat: 0.35, clearcoatRoughness: 0.2, normalMap: tx.stipple, normalScale: new THREE.Vector2(0.35, 0.35) }),
+    leather: std({ color: 0x0f0f10, roughness: 0.74, normalMap: tx.leather, normalScale: new THREE.Vector2(1, 1) }),
+    anod: std({ color: 0x151517, metalness: 0.8, roughness: 0.3 }),
     rubber: std({ color: 0x111111, roughness: 0.68 }),
     plastic: std({ color: 0x242426, roughness: 0.5 }),
     cream: std({ color: 0xcdc3ab, roughness: 0.55 }),
@@ -405,7 +405,7 @@ function baseMaterials(tx) {
     copper: std({ color: 0xc8784a, metalness: 1, roughness: 0.3 }),
     red: std({ color: 0x8e1b20, metalness: 0.55, roughness: 0.3 }),
     pcb: std({ map: tx.pcb, roughnessMap: tx.pcbRM, metalnessMap: tx.pcbRM, roughness: 1, metalness: 1 }),
-    die: phy({ map: tx.die, metalness: 0.45, roughness: 0.16, iridescence: 1, iridescenceIOR: 1.55, iridescenceThicknessRange: [260, 760], clearcoat: 1, clearcoatRoughness: 0.05 }),
+    die: phy({ map: tx.die, metalness: 0.3, roughness: 0.12, iridescence: 0.6, iridescenceIOR: 1.5, iridescenceThicknessRange: [300, 820], clearcoat: 1, clearcoatRoughness: 0.04 }),
     screen: phy({ color: 0x060708, roughness: 0.06, clearcoat: 1, clearcoatRoughness: 0.03 }),
     mic: std({ map: tx.mic, metalness: 0.5, roughness: 0.42 }),
     glass,
@@ -429,9 +429,9 @@ function buildModel(base) {
   /* body */
   {
     const B = G.body.obj, m = (k) => mat('body', k);
-    kit.add(B, m('satin'), solid(rr(12.3, 7.1, 0.45), 5.0, 0.45), { p: [-1.2, 0, -0.7] });
+    kit.add(B, m('satin'), solid(rr(12.72, 7.52, 0.66), 5.0, 0.24, 12, 5), { p: [-1.2, 0, -0.7] });
     kit.add(B, m('leather'), solid(fillet([[-7.25, -1.15], [-4.85, -1.15], [-4.85, -4.35], [-7.25, -4.35]], [0.2, 0.2, 0.8, 1.2]), 7.6, 0.55, 12), { p: [0, -0.2, 0], r: [RX, 0, 0] });
-    kit.add(B, m('satin'), solid(fillet([[3.3, 3.9], [3.3, 5.8], [-0.3, 5.8], [-1.6, 4.6], [-1.6, 3.9]], [0.1, 0.5, 0.45, 0.45, 0.1]), 5.6, 0.3, 10), { r: [0, Math.PI / 2, 0] });
+    kit.add(B, m('satin'), solid(fillet([[3.42, 3.9], [3.42, 5.92], [-0.24, 5.92], [-1.66, 4.62], [-1.66, 3.9]], [0.1, 0.42, 0.4, 0.4, 0.1]), 5.6, 0.18, 10, 4), { r: [0, Math.PI / 2, 0] });
     kit.add(B, m('leather'), rbox(4.4, 2.8, 1.4, 0.55, 4), { p: [0, 4.85, -3.95] });
     kit.add(B, m('screen'), rbox(2.9, 1.6, 0.1, 0.04), { p: [0, 4.85, -4.66] });
     kit.add(B, m('steel'), rbox(2.3, 0.16, 2.6, 0.05), { p: [0, 6.16, -1.4] });
@@ -480,6 +480,10 @@ function buildModel(base) {
     const cable = new THREE.CatmullRomCurve3([[0, 2.0, -3.75], [0.15, 1.85, -4.5], [1.4, 1.1, -5.0], [3.7, -0.7, -4.1], [5.55, -2.7, -2.0], [5.6, -3.84, 0.4], [5.62, -3.84, 0.9]].map((p) => new THREE.Vector3(...p)));
     kit.add(mic, m('rubber'), new THREE.TubeGeometry(cable, 72, 0.1, 8, false));
     kit.add(mic, m('anod'), rbox(0.5, 0.42, 0.42, 0.1), { p: [5.52, -3.84, 0.9] });
+    for (const x of [-7.86, 5.46]) {
+      kit.add(B, m('anod'), rbox(0.24, 0.9, 0.7, 0.1), { p: [x, 2.7, -1.6] });
+      kit.add(B, m('steel'), new THREE.TorusGeometry(0.46, 0.065, 8, 28), { p: [x + Math.sign(x) * 0.42, 2.7, -1.6], r: [0, 0, Math.PI / 2], s: [1, 0.72, 1] });
+    }
     G.body.anchor = { obj: mic, p: new THREE.Vector3(0, 2.62, 5.6) };
   }
 
@@ -521,9 +525,14 @@ function buildModel(base) {
   /* mount */
   {
     const T = G.mount.obj, m = (k) => mat('mount', k);
-    const slab = rr(9.05, 7.4, 0.6);
-    slab.holes.push(circ(2.6 + 0.3, -0.575, 0));
-    kit.add(T, m('satin'), solid(slab, 1.8, 0.3, 20), { p: [0.575, 0, 2.7] });
+    const slab = rr(9.29, 7.24, 0.62);
+    slab.holes.push(circ(2.6 + 0.18, -0.575, 0));
+    kit.add(T, m('satin'), solid(slab, 1.8, 0.18, 20, 4), { p: [0.575, 0, 2.7] });
+    // corner screws, an AF-assist window and a function button on the cover
+    for (const [x, y] of [[-3.5, 3.15], [4.65, 3.15], [-3.5, -3.15], [4.65, -3.15]]) kit.add(T, m('steel'), turn([[[0.16, 0], [0.14, 0.05], [0.08, 0.085], [0, 0.095]]], 24), { p: [x, y, 3.6] });
+    kit.add(T, m('screen'), solid(rr(0.5, 0.86, 0.2), 0.12, 0.05, 8, 2), { p: [-3.35, 2.1, 3.6] });
+    kit.add(T, m('anod'), ring(0.3, 0.52, 3.52, 3.66, 0.03, 40), { p: [4.25, 1.9, 0] });
+    kit.add(T, m('steel'), turn([...hard([0.28, 3.55], [0.28, 3.7]), [[0.28, 3.7], [0.22, 3.75], [0, 3.77]]], 40), { p: [4.25, 1.9, 0] });
     kit.add(T, m('steel'), ring(2.62, 3.28, 3.6, 3.98, 0.05), {});
     kit.add(T, m('steel'), ring(2.44, 2.68, 3.56, 3.74, 0.03), {});
     for (const a of [0.2, 2.3, 4.4]) kit.add(T, m('steel'), turn(hard([2.2, 3.64], [2.5, 3.64], [2.5, 3.76], [2.2, 3.76], [2.2, 3.64]), 16, a, a + 0.8, true));
@@ -580,6 +589,7 @@ function buildModel(base) {
       [3.9, 14.3], [3.82, 14.22], [3.82, 13.55], [3.6, 13.55], [3.6, 12.9], [3.05, 11.5], [3.05, 10.8], [3.2, 10.8]), 128));
     kit.add(F, m('red'), turn(hard([4.2, 13.2], [4.27, 13.25], [4.27, 13.5], [4.2, 13.55]), 128));
     kit.add(F, m('brass'), turn([[[3.8, 14.16], [3.8, 13.92]]], 128));
+    kit.add(F, m('cream'), turn([[[0.075, 0], [0, 0.012]]], 16), { p: [0, 4.2, 12.95], r: [-Math.PI / 2, 0, 0] });
     kit.add(F, m('rubber'), ring(2.9, 3.42, 12.92, 13.02, 0.02));
     kit.add(F, m('glass'), lens(3.22, 12.15, 12.6, -0.25, 0.3));
     kit.add(F, m('glass'), lens(3.72, 13.58, 14.0, 0.12, 0.72, 112, 12));
@@ -643,12 +653,13 @@ function studio(renderer) {
   const box = new THREE.BoxGeometry(34, 20, 34), bm = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.006, 0.005, 0.004), side: THREE.BackSide });
   s.add(new THREE.Mesh(box, bm)); disp.push(box, bm);
   const c = (r, g, b, k) => new THREE.Color(r * k, g * k, b * k);
-  add(new THREE.PlaneGeometry(10, 5.5), c(1, 0.84, 0.66, 5.2), [-9, 7, 7]);        // warm key softbox, upper left front
-  add(new THREE.PlaneGeometry(1.6, 12), c(0.7, 0.82, 1, 6.5), [11, 1.5, -7]);      // cool strip, back right (rims)
-  add(new THREE.PlaneGeometry(1.3, 9), c(1, 0.88, 0.74, 3.2), [-12, 0.5, -5]);     // warm strip, back left
-  add(new THREE.PlaneGeometry(16, 7), c(1, 0.95, 0.9, 1.1), [0, 9.8, 1]);          // soft top
-  add(new THREE.PlaneGeometry(2.4, 2.4), c(1, 0.78, 0.48, 8), [6, -2.5, 12]);      // low warm kicker, front right (glints)
-  add(new THREE.PlaneGeometry(26, 26), c(0.34, 0.21, 0.1, 0.45), [0, -9.8, 0]);    // umber floor bounce
+  add(new THREE.PlaneGeometry(6.5, 3.6), c(1, 0.85, 0.68, 9), [-9, 7, 7]);         // warm key softbox, upper left front
+  add(new THREE.PlaneGeometry(1.1, 12), c(0.72, 0.84, 1, 11), [11, 1.5, -7]);      // cool strip, back right (rims)
+  add(new THREE.PlaneGeometry(0.9, 9), c(1, 0.88, 0.74, 6), [-12, 0.5, -5]);       // warm strip, back left
+  add(new THREE.PlaneGeometry(9, 3.5), c(1, 0.95, 0.9, 0.7), [0, 9.8, 1]);         // soft top
+  add(new THREE.PlaneGeometry(2, 2), c(1, 0.78, 0.48, 11), [6, -2.5, 12]);         // low warm kicker, front right (glints)
+  add(new THREE.PlaneGeometry(0.7, 7), c(1, 0.9, 0.8, 4), [2, 3, 13]);             // thin front strip: a line down every curved face
+  add(new THREE.PlaneGeometry(26, 26), c(0.34, 0.21, 0.1, 0.22), [0, -9.8, 0]);    // umber floor bounce
   const pm = new THREE.PMREMGenerator(renderer);
   const rt = pm.fromScene(s, 0.025);
   pm.dispose();
@@ -699,7 +710,7 @@ function compositePass() {
         float band = 1.0 - smoothstep(0.0, 0.3, vUv.y);
         vec2 q = vec2((vUv.x - foot) * res.x / res.y, vUv.y + 0.12);
         float pool = exp(-dot(q, q) * 2.6);
-        vec3 bg = ink + vec3(0.17, 0.11, 0.055) * glow * (band * band * 0.5 + pool * 0.42);
+        vec3 bg = ink + vec3(0.17, 0.11, 0.055) * glow * (band * band * 0.34 + pool * 0.22);
         vec3 c = bg * (1.0 - s.a) + s.rgb;
         c += (hash(gl_FragCoord.xy) - 0.5) / 255.0;
         gl_FragColor = vec4(c, 1.0);
@@ -717,9 +728,9 @@ export default function register(stage) {
   const comp = compositePass();
   const floor = floorPass();
   scene.add(floor.mesh);
-  const key = new THREE.DirectionalLight(0xffe0bc, 2.4);
+  const key = new THREE.DirectionalLight(0xffe0bc, 3.0);
   key.position.set(-7, 10, 8);
-  const rim = new THREE.DirectionalLight(0xc2d6ff, 3.2);
+  const rim = new THREE.DirectionalLight(0xc2d6ff, 4.5);
   rim.position.set(9, 4, -10);
   scene.add(key, rim, key.target, rim.target);
   let M = null, rt = null, size = [1, 1];
@@ -898,7 +909,7 @@ export default function register(stage) {
     floor.mesh.position.set(T.x, fy, T.z);
     floor.mesh.updateMatrixWorld();
     floor.u.pool.value.set(T.x, T.z, Math.max(9, (box.max.z - box.min.z) * 0.55));
-    floor.u.lights.value = 0.9 * a;
+    floor.u.lights.value = 0.55 * a;
     PARTS.forEach((name, k) => {
       const f = G[name].fit[0], c = f.box.getCenter(V).applyMatrix4(f.obj.matrixWorld), h = Math.max(0, c.y - fy);
       const r = name === 'body' ? 6.2 : 3.6;
@@ -916,8 +927,8 @@ export default function register(stage) {
     M.root.updateMatrixWorld(true);
 
     // lights come up as it arrives
-    key.intensity = 2.4 * (0.12 + 0.88 * a);
-    rim.intensity = 3.2 * (0.3 + 0.7 * a);
+    key.intensity = 3.0 * (0.12 + 0.88 * a);
+    rim.intensity = 4.5 * (0.3 + 0.7 * a);
     scene.environmentIntensity = 0.12 + 0.88 * a;
     comp.u.glow.value = (0.55 + 0.45 * s.leave) * (0.4 + 0.6 * a);
     comp.u.foot.value = (sl.x + sl.w / 2) / ctx.vw;
