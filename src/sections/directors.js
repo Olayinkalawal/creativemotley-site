@@ -50,7 +50,9 @@ export function init() {
   const load = () => {
     poster();
     if (loaded || posterOnly) return;
-    loaded = true; video.preload = 'auto'; video.load();
+    // load() first: it re-runs source selection over the sources as they now stand (the parser already picked a
+    // candidate from the markup's order, and flipping preload first would start fetching that one)
+    loaded = true; video.load(); video.preload = 'auto';
   };
   const sync = () => {
     if (inView && !posterOnly) { load(); video.play().catch(() => {}); }
