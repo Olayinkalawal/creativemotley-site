@@ -99,7 +99,7 @@ main { position: relative; z-index: 2; overflow-x: clip; }
 /* drop cap: an oversized italic serif initial that hangs across two lines (Editions swash cap) */
 .dc {
   font-family: var(--serif); font-style: italic; font-weight: 400;
-  display: inline-block; font-size: 2.15em; line-height: 0.5;
+  display: inline; font-size: 2.15em; line-height: 0.5;
   vertical-align: -0.2em; margin-right: -0.04em; margin-left: -0.06em;
   letter-spacing: 0;
 }

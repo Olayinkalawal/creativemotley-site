@@ -30,7 +30,8 @@ html.gl-ready .td.is-drawn .td__still { opacity: 0; }
   font-size: 0.875rem; line-height: 1.32; font-weight: 600; letter-spacing: -0.005em;
 }
 .td__spec:last-child { box-shadow: inset 0 1px 0 rgba(244, 237, 223, 0.2), inset 0 -1px 0 rgba(244, 237, 223, 0.2); }
-.td__spec b { display: block; font-weight: 650; color: var(--cream); }
+.td__spec b { display: block; font-weight: 650; color: var(--cream); transition: color 0.3s; }
+.td__spec .td__l { display: block; }
 .td__spec .td__t { color: var(--th-mute); font-weight: 500; }
 .td__ic { width: 22px; height: 22px; color: var(--gold); margin-top: 1px; }
 .td__ic svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
@@ -45,7 +46,7 @@ html.gl-ready .td.is-drawn .td__still { opacity: 0; }
     display: flex; flex-direction: column; justify-content: center; background: none;
   }
   /* rows arrive with the explode (JS sets --on per row); without JS they are simply there */
-  html.js .td[data-td-ready] .td__spec { opacity: calc(0.28 + 0.72 * var(--on, 0)); transform: translateX(calc((1 - var(--on, 0)) * 10px)); transition: opacity 0.4s var(--ease-out), transform 0.5s var(--ease-out); }
+  html.js .td[data-td-ready] .td__spec { opacity: calc(0.28 + 0.72 * var(--on, 0)); transition: opacity 0.4s var(--ease-out); }
   html.js .td[data-td-ready] .td__spec.is-hot b { color: var(--gold); }
 }
 @media (max-width: 1023px) {
@@ -56,7 +57,7 @@ html.gl-ready .td.is-drawn .td__still { opacity: 0; }
   .td__specs { max-width: none; margin-top: 1rem; }
   .td__spec { padding: 7px 0 8px; font-size: 0.8125rem; gap: 10px; grid-template-columns: 20px minmax(0, 1fr); }
   .td__ic { width: 18px; height: 18px; }
-  .td[data-td-compact] .td__spec .td__t { display: none; }   /* long lists: titles only on phones */
+  .td[data-td-compact] .td__spec .td__l { display: none; }   /* long lists: titles only on phones */
   .td[data-td-compact] .td__specs { display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; }
   .td__spec--stat { grid-template-columns: minmax(4.2rem, auto) minmax(0, 1fr); }
   .td__num { font-size: 1.5rem; }

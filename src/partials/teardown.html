@@ -1,57 +1,20 @@
-<!-- IV · METHOD (continued) · THE INSTRUMENT · scene: instrument (three.js) · owner: builder F
-     Creative Motley's exploded hub: the camera from the Method film, rebuilt in real time, on a black stage.
-     One markup serves every mode:
-       - static (no JS, ?tier=0, reduced motion): the head and the seven steps beside a still of the painted
-         exploded camera (from the Method film), cover-cropped on black;
-       - .td-on (JS + a WebGL tier): a pinned run. WebGL draws the camera into the slot the CSS lays out; as you
-         scroll it separates into seven groups along the optical axis and each step lights its part.
-         The still stays in the slot until the instrument scene has drawn. -->
-<section class="teardown" id="instrument" data-theme="dark" data-scene="instrument" data-plate="ink" aria-labelledby="instrument-title">
-  <div class="td-run" data-td-run>
-    <div class="td-pin" data-td-pin>
-      <div class="td-grid col">
-        <div class="td-head" data-td-head>
-          <h2 class="td-title" id="instrument-title" data-reveal><span class="td-title__sans">Everything we make passes through one instrument,</span> <span class="td-title__serif">and one way of working.</span></h2>
-        </div>
-
-        <figure class="td-slot" data-td-slot aria-hidden="true">
-          <img class="td-still" src="/assets/teardown/instrument-still.webp" srcset="/assets/teardown/instrument-still-800.webp 800w, /assets/teardown/instrument-still.webp 1600w" sizes="(min-width: 820px) 60vw, 100vw" alt="" width="1600" height="1000" loading="lazy" decoding="async">
-        </figure>
-
-        <ol class="td-specs" data-td-list>
-          <li class="td-spec" data-part="sensor">
-            <svg class="td-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h7.5l4 4v13h-11.5z"/><path d="M14 3.5v4h4"/><path d="M9.5 2.6h5v2.2h-5z"/></svg>
-            <p class="td-spec__tx"><b class="td-spec__t">Blank page</b> <span class="td-spec__l">The channel as it stands — nothing assumed.</span></p>
-          </li>
-          <li class="td-spec" data-part="inner">
-            <svg class="td-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="7" width="7.5" height="12" rx="1"/><rect x="8.6" y="5.2" width="7.5" height="12" rx="1" transform="rotate(-9 12.35 11.2)"/><rect x="13.4" y="4" width="7.2" height="12" rx="1" transform="rotate(-18 17 10)"/><path d="M4.6 15.4h5.3M5.2 17.2h3.6"/></svg>
-            <p class="td-spec__tx"><b class="td-spec__t">Moodboard</b> <span class="td-spec__l">Look, palette, references. What it should feel like.</span></p>
-          </li>
-          <li class="td-spec" data-part="shutter">
-            <svg class="td-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M9 5v14M15 5v14M3 12h18"/></svg>
-            <p class="td-spec__tx"><b class="td-spec__t">Storyboard</b> <span class="td-spec__l">Series design and upload calendar, mapped out.</span></p>
-          </li>
-          <li class="td-spec" data-part="mount">
-            <svg class="td-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5h17v9h-17z"/><path d="M3.5 10.5l15.6-5.2 1 3-15.6 5.2"/><path d="M7.4 9.2l2.4 2.6M11.9 7.7l2.4 2.6M16.3 6.2l2.4 2.6"/></svg>
-            <p class="td-spec__tx"><b class="td-spec__t">Production</b> <span class="td-spec__l">Shoot days, kit, crew — or your own, better run.</span></p>
-          </li>
-          <li class="td-spec" data-part="body">
-            <svg class="td-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="8.5" width="15" height="4" rx="2"/><path d="M17.5 9.2l3.5-.9v4.4l-3.5-.9"/><path d="M6 10.5h1.4M9 10.5h1.4M12 10.5h1.4"/><path d="M9.5 12.5v3.5M7 16h5v1.6H7z"/></svg>
-            <p class="td-spec__tx"><b class="td-spec__t">Sound</b> <span class="td-spec__l">Because bad audio loses the audience first.</span></p>
-          </li>
-          <li class="td-spec" data-part="rings">
-            <svg class="td-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5h18M3 17.5h18"/><rect x="4" y="8.6" width="6.5" height="2.6" rx=".6"/><rect x="11.8" y="8.6" width="7.4" height="2.6" rx=".6"/><rect x="6.5" y="12.8" width="9" height="2.6" rx=".6"/><path d="M14 4v16"/></svg>
-            <p class="td-spec__tx"><b class="td-spec__t">Edit</b> <span class="td-spec__l">Thumbnails, titles, metadata, cut to retain.</span></p>
-          </li>
-          <li class="td-spec" data-part="front">
-            <svg class="td-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="3" width="15" height="18" rx="1"/><rect x="7" y="5.5" width="10" height="10"/><path d="M7 13.2l3-2.7 2.4 2 1.6-1.3 3 2.4"/><circle cx="14.4" cy="8.3" r="1.1"/></svg>
-            <p class="td-spec__tx"><b class="td-spec__t">Published</b> <span class="td-spec__l">Then measured, and done again.</span></p>
-          </li>
-        </ol>
-      </div>
-
-      <!-- the leader from the active step to its part (drawn only while WebGL draws the instrument) -->
-      <svg class="td-lead" data-td-lead aria-hidden="true" focusable="false"><path data-td-lead-path d=""/><circle data-td-lead-end r="4.5" cx="-20" cy="-20"/><circle data-td-lead-dot r="2" cx="-20" cy="-20"/></svg>
+<!-- IV · METHOD (continued) · THE INSTRUMENT · scene: td:camera (photoreal teardown, scroll-scrubbed) · owner: director
+     Creative Motley's exploded hub: the brand's own camera (one to one, unbranded), taken apart on a black stage.
+     The seven steps are the spec list: one instrument, and one way of working. -->
+<section class="td" id="instrument" data-theme="dark" data-scene="td:camera" data-plate="ink" aria-labelledby="instrument-h" style="--td-run:360svh" data-td-frame="0.98 0.01 0.01" data-td-frame-tall="1.0 0 0.03" data-td-compact>
+  <div class="td__run" data-td-run>
+    <div class="td__pin"><div class="td__slot" data-td-slot aria-hidden="true"><img class="td__still" src="/assets/teardown/camera/poster.webp" alt="" loading="lazy" decoding="async" width="1920" height="1080"></div></div>
+    <div class="td__copy">
+      <h3 class="td__head" id="instrument-h">Everything we make passes through one instrument, and one way of working.</h3>
+      <ol class="td__specs">
+          <li class="td__spec"><span class="td__ic" aria-hidden="true"><svg  viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h7.5l4 4v13h-11.5z"/><path d="M14 3.5v4h4"/><path d="M9.5 2.6h5v2.2h-5z"/></svg></span><span class="td__t"><b>Blank page</b> <span class="td__l">The channel as it stands — nothing assumed.</span></span></li>
+          <li class="td__spec"><span class="td__ic" aria-hidden="true"><svg  viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="7" width="7.5" height="12" rx="1"/><rect x="8.6" y="5.2" width="7.5" height="12" rx="1" transform="rotate(-9 12.35 11.2)"/><rect x="13.4" y="4" width="7.2" height="12" rx="1" transform="rotate(-18 17 10)"/><path d="M4.6 15.4h5.3M5.2 17.2h3.6"/></svg></span><span class="td__t"><b>Moodboard</b> <span class="td__l">Look, palette, references. What it should feel like.</span></span></li>
+          <li class="td__spec"><span class="td__ic" aria-hidden="true"><svg  viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M9 5v14M15 5v14M3 12h18"/></svg></span><span class="td__t"><b>Storyboard</b> <span class="td__l">Series design and upload calendar, mapped out.</span></span></li>
+          <li class="td__spec"><span class="td__ic" aria-hidden="true"><svg  viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 10.5h17v9h-17z"/><path d="M3.5 10.5l15.6-5.2 1 3-15.6 5.2"/><path d="M7.4 9.2l2.4 2.6M11.9 7.7l2.4 2.6M16.3 6.2l2.4 2.6"/></svg></span><span class="td__t"><b>Production</b> <span class="td__l">Shoot days, kit, crew — or your own, better run.</span></span></li>
+          <li class="td__spec"><span class="td__ic" aria-hidden="true"><svg  viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="8.5" width="15" height="4" rx="2"/><path d="M17.5 9.2l3.5-.9v4.4l-3.5-.9"/><path d="M6 10.5h1.4M9 10.5h1.4M12 10.5h1.4"/><path d="M9.5 12.5v3.5M7 16h5v1.6H7z"/></svg></span><span class="td__t"><b>Sound</b> <span class="td__l">Because bad audio loses the audience first.</span></span></li>
+          <li class="td__spec"><span class="td__ic" aria-hidden="true"><svg  viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5h18M3 17.5h18"/><rect x="4" y="8.6" width="6.5" height="2.6" rx=".6"/><rect x="11.8" y="8.6" width="7.4" height="2.6" rx=".6"/><rect x="6.5" y="12.8" width="9" height="2.6" rx=".6"/><path d="M14 4v16"/></svg></span><span class="td__t"><b>Edit</b> <span class="td__l">Thumbnails, titles, metadata, cut to retain.</span></span></li>
+          <li class="td__spec"><span class="td__ic" aria-hidden="true"><svg  viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="3" width="15" height="18" rx="1"/><rect x="7" y="5.5" width="10" height="10"/><path d="M7 13.2l3-2.7 2.4 2 1.6-1.3 3 2.4"/><circle cx="14.4" cy="8.3" r="1.1"/></svg></span><span class="td__t"><b>Published</b> <span class="td__l">Then measured, and done again.</span></span></li>
+      </ol>
     </div>
   </div>
 </section>

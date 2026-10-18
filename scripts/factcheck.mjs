@@ -12,7 +12,7 @@ const url = (A.url || 'http://127.0.0.1:5173/') + '?tier=0';
 const norm = (s) => s.replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
 const facts = JSON.parse(fs.readFileSync(new URL('../docs/facts.json', import.meta.url)));
 const ui = JSON.parse(fs.readFileSync(new URL('../docs/ui-strings.json', import.meta.url))).strings;
-const corpus = facts.flatMap((f) => [f.claim, f.source_sentence].filter(Boolean).map(norm));
+const corpus = facts.flatMap((f) => [f.claim, f.source_sentence, ...[...(f.note || '').matchAll(/alt text verbatim: '([^']+)'/g)].map((m) => m[1])].filter(Boolean).map(norm));
 const ok = (s) => {
   const t = norm(s);
   if (!t || /^[\s\p{P}\p{S}\d]*$/u.test(t) && t.length <= 2) return true;   // stray punctuation / a drop-cap letter

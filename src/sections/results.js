@@ -15,7 +15,7 @@ const ease = (t) => 1 - Math.pow(1 - t, 3);
 export function init() {
   const sec = document.getElementById('results');
   if (!sec) return;
-  bindCamKeys(sec);
+  bindCamKeys(sec.querySelector('[data-scene]') || sec);
   if (TIER === 0 || REDUCED) return;
   sec.classList.add('rx-on');
 
