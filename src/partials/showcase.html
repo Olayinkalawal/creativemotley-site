@@ -1,4 +1,9 @@
-<!-- V · SHOWCASE · scene: posters (three.js) · owner: builder C -->
+<!-- V · SHOWCASE · scene: posters (three.js) · owner: builder C
+     One list of seven poster buttons serves every mode:
+       - static (no JS, ?tier=0, reduced motion): a calm grid on desktop, a scroll-snap row on phones, captions under each;
+       - .sc-on (JS + a WebGL tier): a tall pinned run; the list becomes an exact CSS-3D proxy of the WebGL arc
+         (same camera, same positions), visible until the posters scene has drawn, then kept as invisible
+         focus / screen-reader targets over the WebGL posters. -->
 <section class="chapter" id="showcase" data-chapter data-theme="dark" data-scene="posters" data-plate="umber" aria-labelledby="showcase-title">
   <div class="opener col">
     <div class="scrim">
@@ -6,5 +11,55 @@
       <h2 class="giant" id="showcase-title" data-reveal>Showcase</h2>
     </div>
   </div>
-  <!-- builder C: poster arc run, caption (name + 01 / 07), poster modal; DOM list of the seven posters for no-WebGL -->
+
+  <div class="sc-run" data-sc-run>
+    <div class="sc-pin" data-sc-pin>
+      <div class="sc-stage">
+        <div class="sc-col col">
+          <ol class="sc-list" data-sc-list>
+            <li class="sc-item" data-slug="layi-wasabi">
+              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><img src="/assets/posters/layi-wasabi.webp" alt="Layi Wasabi — The Law" width="1200" height="1499" loading="lazy" decoding="async"></button>
+              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Layi Wasabi</span><span class="sc-item__n"><b>01</b><span> / 07</span></span></p>
+            </li>
+            <li class="sc-item" data-slug="omoni-oboli-tv">
+              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><img src="/assets/posters/omoni-oboli-tv.webp" alt="Omoni Oboli TV — Two exes. One wedding." width="1200" height="1876" loading="lazy" decoding="async"></button>
+              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Omoni Oboli TV</span><span class="sc-item__n"><b>02</b><span> / 07</span></span></p>
+            </li>
+            <li class="sc-item" data-slug="isbae-u">
+              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><img src="/assets/posters/isbae-u.webp" alt="Isbae U — Curiosity Made Me Ask" width="1200" height="1499" loading="lazy" decoding="async"></button>
+              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Isbae U</span><span class="sc-item__n"><b>03</b><span> / 07</span></span></p>
+            </li>
+            <li class="sc-item" data-slug="broda-shaggi">
+              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><img src="/assets/posters/broda-shaggi.webp" alt="Broda Shaggi — The Hustler" width="1200" height="1499" loading="lazy" decoding="async"></button>
+              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Broda Shaggi</span><span class="sc-item__n"><b>04</b><span> / 07</span></span></p>
+            </li>
+            <li class="sc-item" data-slug="diary-of-a-naija-girl">
+              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><img src="/assets/posters/diary-of-a-naija-girl.webp" alt="Diary of a Naija Girl — Dear DANG" width="1200" height="1876" loading="lazy" decoding="async"></button>
+              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Diary of a Naija Girl</span><span class="sc-item__n"><b>05</b><span> / 07</span></span></p>
+            </li>
+            <li class="sc-item" data-slug="kie-kie">
+              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><img src="/assets/posters/kie-kie.webp" alt="Kie Kie — The Crossover" width="1200" height="1499" loading="lazy" decoding="async"></button>
+              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Kie Kie</span><span class="sc-item__n"><b>06</b><span> / 07</span></span></p>
+            </li>
+            <li class="sc-item" data-slug="kunle-afolayan">
+              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><img src="/assets/posters/kunle-afolayan.webp" alt="Kunle Afolayan — New Nigerian Cinema" width="1200" height="1876" loading="lazy" decoding="async"></button>
+              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Kunle Afolayan</span><span class="sc-item__n"><b>07</b><span> / 07</span></span></p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- the pinned frame: the slot the centred poster fills (CSS sets its size; WebGL and the proxy follow it) and the live caption -->
+      <div class="sc-frame col" aria-hidden="true">
+        <div class="sc-slot" data-sc-slot></div>
+        <div class="sc-cap" data-sc-cap>
+          <div class="sc-cap__rule"><span class="sc-cap__ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="sc-cap__dot" data-sc-dot></span></div>
+          <div class="sc-cap__row">
+            <p class="sc-cap__names" data-sc-names><span class="is-on">Layi Wasabi</span><span>Omoni Oboli TV</span><span>Isbae U</span><span>Broda Shaggi</span><span>Diary of a Naija Girl</span><span>Kie Kie</span><span>Kunle Afolayan</span></p>
+            <p class="sc-cap__n"><b data-sc-num>01</b><span> / 07</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

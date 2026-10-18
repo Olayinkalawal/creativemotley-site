@@ -26,7 +26,7 @@ export default defineConfig({
   build: {
     target: 'es2020',
     assetsInlineLimit: 0,
-    rollupOptions: { output: { manualChunks: { three: ['three'] } } },
+    chunkSizeWarningLimit: 700,   // the lazy stage chunk is three.js (~137 kB gz), loaded after first paint
   },
   server: { port: 5173, strictPort: false },
 });

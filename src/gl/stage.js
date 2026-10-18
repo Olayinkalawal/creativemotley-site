@@ -76,6 +76,8 @@ export class Stage {
     onFrame((v) => this.frame(v));
   }
   frame(v) {
+    // apply a render-scale change before drawing (resizing after a draw clears the canvas for a frame)
+    if (this.pendingResize) { this.pendingResize = false; this.resize(); }
     const { y, vh } = v;
     const ctx = this.ctx;
     ctx.time = v.time; ctx.dt = v.dt; ctx.velocity = v.velocity; ctx.scrollY = y;
@@ -140,7 +142,7 @@ export class Stage {
     const f = this.frameTimes; f.push(this.ctx.dt * 1000); if (f.length < 120) return;
     f.sort((a, b) => a - b);
     const med = f[f.length >> 1]; f.length = 0;
-    if (med > 24 && this.scale > 0.6) { this.scale = Math.max(0.6, this.scale - 0.15); this.resize(); }
-    else if (med < 17.5 && this.scale < 1) { this.scale = Math.min(1, this.scale + 0.1); this.resize(); }
+    if (med > 24 && this.scale > 0.6) { this.scale = Math.max(0.6, this.scale - 0.15); this.pendingResize = true; }
+    else if (med < 17.5 && this.scale < 1) { this.scale = Math.min(1, this.scale + 0.1); this.pendingResize = true; }
   }
 }

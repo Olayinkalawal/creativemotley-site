@@ -1,1 +1,15 @@
-{"note":"Interface labels with no fact in facts.json. Everything else on the page must trace to facts.json.","strings":["Skip to content","Chapters","Menu","Close","Chapter II","Chapter III","Chapter IX"]}
+{
+ "note": "Interface labels with no fact in facts.json. Everything else on the page must trace to facts.json.",
+ "strings": [
+  "Skip to content",
+  "Chapters",
+  "Menu",
+  "Close",
+  "Chapter II",
+  "Chapter III",
+  "Chapter IX",
+  "Primary",
+  "Previous",
+  "Next"
+ ]
+}
