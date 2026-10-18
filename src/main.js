@@ -1,4 +1,3 @@
-import './styles/index.css';
 import { TIER, REDUCED } from './core/env.js';
 import { onFrame, view } from './core/scroll.js';
 import { geo } from './core/layout.js';

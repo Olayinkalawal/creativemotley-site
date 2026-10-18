@@ -1,5 +1,6 @@
 /* ── top bar ─────────────────────────────────────────────────────────── */
 .nav {
+  --th-pill-bg: var(--cream); --th-pill-fg: var(--ink); --th-pill-bg-h: var(--gold);
   position: fixed; inset: 0 0 auto 0; z-index: 50; height: var(--nav-h);
   display: flex; align-items: center; gap: clamp(16px, 2.6vw, 40px);
   padding-inline: clamp(12px, 1.2vw, 18px) clamp(10px, 1vw, 14px);
@@ -11,7 +12,7 @@
   transition: opacity 0.35s;
 }
 html.nav-light .nav { color: var(--paper-ink); }
-html.nav-light .nav::before { opacity: 0; }
+html.nav-light .nav::before { background: linear-gradient(180deg, rgba(232, 227, 212, 0.94) 0%, rgba(232, 227, 212, 0.86) 55%, rgba(232, 227, 212, 0)); }
 .nav a { text-decoration: none; }
 .nav__brand { display: flex; align-items: baseline; gap: 0.6em; font-weight: 650; font-size: 0.9375rem; letter-spacing: -0.01em; white-space: nowrap; }
 .nav__brand .ed { font-weight: 450; opacity: 0.62; }
