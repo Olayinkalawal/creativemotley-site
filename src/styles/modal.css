@@ -1,0 +1,11 @@
+.modal { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: clamp(16px, 4vw, 56px);
+  visibility: hidden; opacity: 0; transition: opacity 0.35s var(--ease-out), visibility 0s 0.35s; }
+.modal.open { visibility: visible; opacity: 1; transition: opacity 0.35s var(--ease-out); }
+.modal__scrim { position: absolute; inset: 0; background: rgba(11, 8, 5, 0.9); cursor: zoom-out; }
+.modal__body { position: relative; max-width: min(1100px, 100%); max-height: calc(100svh - 120px); color: var(--cream);
+  transform: translateY(18px) scale(0.985); transition: transform 0.5s var(--ease-out); }
+.modal.open .modal__body { transform: none; }
+.modal__close { position: absolute; top: 14px; right: 14px; z-index: 2; color: var(--cream);
+  font-weight: 650; font-size: var(--t-label); text-transform: uppercase; letter-spacing: 0.1em;
+  padding: 10px 14px; border-radius: 100px; box-shadow: inset 0 0 0 1px rgba(244, 237, 223, 0.4); }
+.modal__close:hover { background: rgba(244, 237, 223, 0.12); }

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Creative Motley — The New Pantheon</title>
+  <meta name="description" content="Creative Motley is Africa’s creator service provider — helping creators, filmmakers and media brands turn views into long-term revenue.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://creativemotley.com/">
+  <meta property="og:title" content="Creative Motley — The New Pantheon">
+  <meta property="og:description" content="Africa’s creators, run like media companies. 100M+ monthly views.">
+  <meta property="og:image" content="https://creativemotley.com/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://creativemotley.com/og.jpg">
+  <meta name="theme-color" content="#0B0805">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/plates/hero.webp" as="image" fetchpriority="high">
+  <script>document.documentElement.classList.add('js');</script>
+  <link rel="stylesheet" href="/src/styles/index.css">
+</head>
+<body>
+  <a class="skip" href="#storytellers">Skip to content</a>
+
+  <!-- top bar -->
+  <header class="nav" data-nav>
+    <a class="nav__brand" href="#top" data-scroll-to="#top">Creative Motley <span class="ed">Edition I</span></a>
+    <nav class="nav__links" aria-label="Primary">
+      <div class="chapters" data-chapters>
+        <button class="nav__chapters" type="button" aria-expanded="false" aria-controls="chapters-panel">Chapters
+          <svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1 3l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.4"/></svg>
+        </button>
+        <div class="chapters__panel" id="chapters-panel" data-index-clone></div>
+      </div>
+    </nav>
+    <div class="nav__right">
+      <a class="nav__mail" href="mailto:info@creativemotley.com">info@creativemotley.com</a>
+      <a class="pill pill--solid" href="mailto:info@creativemotley.com?subject=Application%20—%20Creative%20Motley">Apply to join</a>
+      <button class="nav__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle><span></span><b class="sr-only">Menu</b></button>
+    </div>
+  </header>
+
+  <!-- side rail (desktop): edition mark, chapter index, legal -->
+  <aside class="rail" aria-label="Chapters">
+    <a class="rail__mark mark" href="#top" data-scroll-to="#top" data-flip="mark">The <em>New</em><br>Pantheon<span class="mark__ed">Edition I</span></a>
+    <ol class="rail__index index" data-flip="index" data-index></ol>
+    <div class="rail__legal"><p>© 2026 Creative Motley Ltd</p></div>
+  </aside>
+
+  <!-- mobile menu -->
+  <div class="menu" id="menu" aria-hidden="true">
+    <ol class="index" data-index-clone></ol>
+    <div class="menu__foot">
+      <a href="mailto:info@creativemotley.com">info@creativemotley.com</a>
+      <div class="menu__social">
+        <a href="https://www.instagram.com/creativemotley" rel="noopener" target="_blank">Instagram</a>
+        <a href="https://www.youtube.com/@creativemotley" rel="noopener" target="_blank">YouTube</a>
+        <a href="https://www.tiktok.com/@creativemotley" rel="noopener" target="_blank">TikTok</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- the persistent stage: still plates (first paint + no-WebGL fallback) under one WebGL canvas -->
+  <div class="plates" aria-hidden="true">
+    <div class="plate is-on" data-plate="hero"><img src="/assets/plates/hero.webp" alt="" fetchpriority="high" width="1920" height="1080"></div>
+    <div class="plate" data-plate="storytellers" style="background-image:url(/assets/plates/storytellers.webp)"></div>
+    <div class="plate" data-plate="method" style="background-image:url(/assets/plates/method.webp)"></div>
+    <div class="plate" data-plate="results" style="background-image:url(/assets/plates/results.webp)"></div>
+    <div class="plate" data-plate="paper" style="background:var(--paper)"></div>
+    <div class="plate" data-plate="umber" style="background:radial-gradient(120% 90% at 60% 40%, #3a2814, #0b0805 70%)"></div>
+  </div>
+  <canvas id="stage" aria-hidden="true"></canvas>
+
+  <main id="main">
+    <!-- @include partials/hero.html -->
+    <!-- @include partials/storytellers.html -->
+    <!-- @include partials/creators.html -->
+    <!-- @include partials/brands.html -->
+    <!-- @include partials/method.html -->
+    <!-- @include partials/showcase.html -->
+    <!-- @include partials/process.html -->
+    <!-- @include partials/results.html -->
+    <!-- @include partials/directors.html -->
+    <!-- @include partials/apply.html -->
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modal-title" data-lenis-prevent>
+    <button class="modal__scrim" type="button" tabindex="-1" data-modal-close aria-hidden="true"></button>
+    <div class="modal__body" data-modal-body></div>
+    <button class="modal__close" type="button" data-modal-close>Close</button>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

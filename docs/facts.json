@@ -1,0 +1,1236 @@
+[
+ {
+  "id": "F01",
+  "claim": "Creative Motley",
+  "source_sentence": "Creative Motley",
+  "url": "https://creativemotley.com/",
+  "location": "header#chrome a.wordmark",
+  "kind": "name",
+  "note": "Wordmark: Archivo 700, uppercase, letter-spacing .2em; markup is 'Creative&nbsp;Motley' followed by span.edition 'Edition I'."
+ },
+ {
+  "id": "F02",
+  "claim": "Edition I",
+  "source_sentence": "Edition I",
+  "url": "https://creativemotley.com/",
+  "location": "header#chrome a.wordmark span.edition",
+  "kind": "name",
+  "note": "Instrument Serif italic at 66% opacity, sits right after the wordmark."
+ },
+ {
+  "id": "F03",
+  "claim": "Creative Motley — Edition I",
+  "source_sentence": "Creative Motley — Edition I",
+  "url": "https://creativemotley.com/",
+  "location": "#boot .boot-mark (loader)",
+  "kind": "name",
+  "note": "Loader mark above the progress rule; 11px Archivo 600, .34em tracking, uppercase."
+ },
+ {
+  "id": "F04",
+  "claim": "The New Pantheon",
+  "source_sentence": "Creative Motley — The New Pantheon",
+  "url": "https://creativemotley.com/",
+  "location": "<title>; meta[property=og:title]",
+  "kind": "name",
+  "note": "The commented-out title card set it as 'The New' + italic serif 'Pantheon' on its own line (see F10). Live only as page/OG title."
+ },
+ {
+  "id": "F05",
+  "claim": "Creative Motley Ltd",
+  "source_sentence": "Creative Motley Ltd",
+  "url": "https://creativemotley.com/",
+  "location": "nav#index .index-foot",
+  "kind": "name",
+  "note": "Also appears in the footer copyright line (F113)."
+ },
+ {
+  "id": "F06",
+  "claim": "Africa’s creator service provider",
+  "source_sentence": "Creative Motley is Africa’s creator service provider — helping creators, filmmakers and media brands turn views into long-term revenue.",
+  "url": "https://creativemotley.com/",
+  "location": "meta[name=description]",
+  "kind": "positioning",
+  "note": "Meta only — not rendered on the page. The safest sourced form of the positioning line."
+ },
+ {
+  "id": "F07",
+  "claim": "Turn views into long-term revenue.",
+  "source_sentence": "Creative Motley is Africa’s creator service provider — helping creators, filmmakers and media brands turn views into long-term revenue.",
+  "url": "https://creativemotley.com/",
+  "location": "meta[name=description]",
+  "kind": "positioning",
+  "note": "Same meta sentence as F06; the 'helping creators, filmmakers and media brands…' clause. Meta only, not rendered."
+ },
+ {
+  "id": "F08",
+  "claim": "Africa’s creators, run like media companies.",
+  "source_sentence": "Africa’s creators, run like media companies. 100M+ monthly views.",
+  "url": "https://creativemotley.com/",
+  "location": "meta[property=og:description]",
+  "kind": "positioning",
+  "note": "Meta only (social card text)."
+ },
+ {
+  "id": "F09",
+  "claim": "100M+ monthly views",
+  "source_sentence": "Africa’s creators, run like media companies. 100M+ monthly views.",
+  "url": "https://creativemotley.com/",
+  "location": "meta[property=og:description]",
+  "kind": "stat",
+  "note": "Same figure as the hero finale (F15) and Results counter (F99)."
+ },
+ {
+  "id": "F10",
+  "claim": "Africa’s Creator Service Provider",
+  "source_sentence": "Africa’s Creator Service Provider",
+  "url": "https://creativemotley.com/",
+  "location": "#beats .beat.titlecard .plate-eyebrow — INSIDE AN HTML COMMENT, not rendered",
+  "kind": "positioning",
+  "note": "AMBIGUOUS: the title card was 'PULLED at the user's request (2026-08-14); the hero opens on the painting alone until the real copy is written.' Not live copy. If the film needs this line, source it from the live meta description (F06) instead."
+ },
+ {
+  "id": "F11",
+  "claim": "creativemotley.com",
+  "source_sentence": "https://creativemotley.com/",
+  "url": "https://creativemotley.com/",
+  "location": "meta[property=og:url]",
+  "kind": "contact",
+  "note": "Canonical URL for the end card; render as 'creativemotley.com'."
+ },
+ {
+  "id": "F12",
+  "claim": "Africa’s stories were never the problem.",
+  "source_sentence": "Africa’s stories were never the problem.",
+  "url": "https://creativemotley.com/",
+  "location": "#film .beats .beat.align-l (beat II) p.beat-line",
+  "kind": "positioning",
+  "note": "Hero beat over the wide painting, film progress in .05 / peak .11 / out .19. Site markup uses &nbsp; here (between 'the problem.'); source_sentence normalises it to a plain space to match visible_text.txt — keep those two words together on screen."
+ },
+ {
+  "id": "F13",
+  "claim": "The distribution was.",
+  "source_sentence": "The distribution was.",
+  "url": "https://creativemotley.com/",
+  "location": "#film .beats .beat.align-c (beat III) p.beat-line",
+  "kind": "positioning",
+  "note": "'distribution' is wrapped in <em> — Instrument Serif italic; rest Archivo 600. Beat in .22 / peak .27 / out .325 as the lens fills frame."
+ },
+ {
+  "id": "F14",
+  "claim": "So we built the machine that carries them.",
+  "source_sentence": "So we built the machine that carries them.",
+  "url": "https://creativemotley.com/",
+  "location": "#film .beats .beat.align-c (beat IV) p.beat-line",
+  "kind": "positioning",
+  "note": "Beat 'through the glass', in .575 / peak .615 / out .665. Site markup uses &nbsp; here (between 'carries them.'); source_sentence normalises it to a plain space to match visible_text.txt — keep those two words together on screen."
+ },
+ {
+  "id": "F15",
+  "claim": "100M+ Monthly views",
+  "source_sentence": "100M+ Monthly views",
+  "url": "https://creativemotley.com/",
+  "location": "#film .beat.finale .finale-stats div:nth-child(1)",
+  "kind": "stat",
+  "note": "Static (no counter) in the hero finale: <b>100M+</b><span>Monthly views</span>; label uppercased by CSS."
+ },
+ {
+  "id": "F16",
+  "claim": "70+ Channels managed",
+  "source_sentence": "70+ Channels managed",
+  "url": "https://creativemotley.com/",
+  "location": "#film .beat.finale .finale-stats div:nth-child(2)",
+  "kind": "stat",
+  "note": "<b>70+</b><span>Channels managed</span>; static in the hero."
+ },
+ {
+  "id": "F17",
+  "claim": "13+ Past 1M subs",
+  "source_sentence": "13+ Past 1M subs",
+  "url": "https://creativemotley.com/",
+  "location": "#film .beat.finale .finale-stats div:nth-child(3)",
+  "kind": "stat",
+  "note": "<b>13+</b><span>Past 1M subs</span>; hero wording. Results chapter spells it 'channels past 1M subscribers' (F101)."
+ },
+ {
+  "id": "F18",
+  "claim": "16+ Years in media",
+  "source_sentence": "16+ Years in media",
+  "url": "https://creativemotley.com/",
+  "location": "#film .beat.finale .finale-stats div:nth-child(4)",
+  "kind": "stat",
+  "note": "<b>16+</b><span>Years in media</span>; static in the hero."
+ },
+ {
+  "id": "F19",
+  "claim": "Chapter I",
+  "source_sentence": "Chapter I",
+  "url": "https://creativemotley.com/",
+  "location": "#film .beat.chapter .ch-eyebrow",
+  "kind": "ui-copy"
+ },
+ {
+  "id": "F20",
+  "claim": "Storytellers",
+  "source_sentence": "Storytellers",
+  "url": "https://creativemotley.com/",
+  "location": "#film .beat.chapter p.beat-line",
+  "kind": "ui-copy",
+  "note": "Chapter I title."
+ },
+ {
+  "id": "F21",
+  "claim": "Creators, media owners and brands — three ways in, one machine behind them.",
+  "source_sentence": "Creators, media owners and brands — three ways in, one machine behind them.",
+  "url": "https://creativemotley.com/",
+  "location": "#film .beat.chapter p.beat-note",
+  "kind": "positioning",
+  "note": "Serif beat-note under 'Storytellers'."
+ },
+ {
+  "id": "F22",
+  "claim": "Creators — audience, no system",
+  "source_sentence": "audience, no system",
+  "url": "https://creativemotley.com/",
+  "location": ".mach .mn[data-at=0.10] (b 'Creators' + span)",
+  "kind": "positioning",
+  "note": "Machine input node 1: label <b>Creators</b>, sub-line <span>audience, no system</span>. A line draws from its gold dot into the hub."
+ },
+ {
+  "id": "F23",
+  "claim": "Media owners — library, no engine",
+  "source_sentence": "library, no engine",
+  "url": "https://creativemotley.com/",
+  "location": ".mach .mn[data-at=0.22] (b 'Media owners' + span)",
+  "kind": "positioning",
+  "note": "Machine input node 2: label <b>Media owners</b> (lower-case 'o' here; the editorial label is 'Media Owners')."
+ },
+ {
+  "id": "F24",
+  "claim": "Brands — budget, no voice",
+  "source_sentence": "budget, no voice",
+  "url": "https://creativemotley.com/",
+  "location": ".mach .mn[data-at=0.34] (b 'Brands' + span)",
+  "kind": "positioning",
+  "note": "Machine input node 3: label <b>Brands</b>."
+ },
+ {
+  "id": "F25",
+  "claim": "One machine",
+  "source_sentence": "One machine",
+  "url": "https://creativemotley.com/",
+  "location": ".mach .mn.hub[data-at=0.56]",
+  "kind": "positioning",
+  "note": "Hub node the three lines converge on; gold uppercase .18em, magenta pulsing dot below it."
+ },
+ {
+  "id": "F26",
+  "claim": "Retention dips at 0:42 — recut the cold open",
+  "source_sentence": "Retention dips at 0:42 — recut the cold open",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost:nth-child(1)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.26 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Timestamp/schedule detail is illustrative UI, not a claim. Position left:63%;top:2.5%."
+ },
+ {
+  "id": "F27",
+  "claim": "Thumbnail B outperformed A by 34%",
+  "source_sentence": "Thumbnail B outperformed A by 34%",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost:nth-child(2)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.15 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Contains a figure (34%): show it only as feed UI exactly as written; never as a headline stat, result or client claim. Position left:68%;top:9.6%."
+ },
+ {
+  "id": "F28",
+  "claim": "/retention-check",
+  "source_sentence": "/retention-check",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost.solid:nth-child(3)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at .3 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Slash-command chip (.ghost.solid: dark fill, white 12px Archivo 600). Position left:50%;top:16.7%."
+ },
+ {
+  "id": "F29",
+  "claim": "Upload Thursday, 18:00 WAT",
+  "source_sentence": "Upload Thursday, 18:00 WAT",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost:nth-child(4)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.11 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Timestamp/schedule detail is illustrative UI, not a claim. Position left:66%;top:23.8%."
+ },
+ {
+  "id": "F30",
+  "claim": "Rights claim cleared on 3 uploads",
+  "source_sentence": "Rights claim cleared on 3 uploads",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost:nth-child(5)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.22 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Contains a figure (3 uploads): show it only as feed UI exactly as written; never as a headline stat, result or client claim. Position left:42%;top:30.9%."
+ },
+ {
+  "id": "F31",
+  "claim": "Catalogue: 212 titles matched",
+  "source_sentence": "Catalogue: 212 titles matched",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost:nth-child(6)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.13 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Contains a figure (212 titles): show it only as feed UI exactly as written; never as a headline stat, result or client claim. Position left:68%;top:38.0%."
+ },
+ {
+  "id": "F32",
+  "claim": "/thumbnail-test",
+  "source_sentence": "/thumbnail-test",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost.solid:nth-child(7)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at .3 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Slash-command chip (.ghost.solid: dark fill, white 12px Archivo 600). Position left:46%;top:45.1%."
+ },
+ {
+  "id": "F33",
+  "claim": "Series bible approved",
+  "source_sentence": "Series bible approved",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost:nth-child(8)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.1 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Position left:64%;top:52.2%."
+ },
+ {
+  "id": "F34",
+  "claim": "Watch time up 3.1× since March",
+  "source_sentence": "Watch time up 3.1× since March",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost:nth-child(9)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.2 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Contains a figure (3.1×): show it only as feed UI exactly as written; never as a headline stat, result or client claim. Position left:44%;top:59.3%."
+ },
+ {
+  "id": "F35",
+  "claim": "End screens added to 40 videos",
+  "source_sentence": "End screens added to 40 videos",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost:nth-child(10)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.12 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Contains a figure (40 videos): show it only as feed UI exactly as written; never as a headline stat, result or client claim. Position left:68%;top:66.4%."
+ },
+ {
+  "id": "F36",
+  "claim": "/upload-calendar",
+  "source_sentence": "/upload-calendar",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost.solid:nth-child(11)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at .3 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Slash-command chip (.ghost.solid: dark fill, white 12px Archivo 600). Position left:52%;top:73.5%."
+ },
+ {
+  "id": "F37",
+  "claim": "Content ID match resolved",
+  "source_sentence": "Content ID match resolved",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost:nth-child(12)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.16 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Position left:62%;top:80.6%."
+ },
+ {
+  "id": "F38",
+  "claim": "Brand brief received — Lagos",
+  "source_sentence": "Brand brief received — Lagos",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ghosts .ghost:nth-child(13)",
+  "kind": "ui-copy",
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.1 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Position left:45%;top:87.7%."
+ },
+ {
+  "id": "F39",
+  "claim": "Built for serious storytellers.",
+  "source_sentence": "Built for serious storytellers.",
+  "url": "https://creativemotley.com/",
+  "location": "#next .page-inner h2.ed-head",
+  "kind": "positioning",
+  "note": "Instrument Serif italic; markup '<span class=\"cap\">B</span>uilt…' — oversized drop-cap B (1.85em)."
+ },
+ {
+  "id": "F40",
+  "claim": "Creators",
+  "source_sentence": "Creators",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-row .ed-label#creators",
+  "kind": "ui-copy",
+  "note": "Audience label, 13px Archivo 700 uppercase .14em."
+ },
+ {
+  "id": "F41",
+  "claim": "Move from creator to media company.",
+  "source_sentence": "Move from creator to media company. Systems, not chaos.",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-row:nth-of-type(1) .ed-body p",
+  "kind": "positioning",
+  "note": "Creators one-liner (two sentences; either works alone)."
+ },
+ {
+  "id": "F42",
+  "claim": "Systems, not chaos.",
+  "source_sentence": "Move from creator to media company. Systems, not chaos.",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-row:nth-of-type(1) .ed-body p",
+  "kind": "positioning",
+  "note": "Second sentence of the Creators line."
+ },
+ {
+  "id": "F43",
+  "claim": "Join the network ↗",
+  "source_sentence": "Join the network ↗",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-row:nth-of-type(1) a.ed-link",
+  "kind": "cta",
+  "note": "mailto:info@creativemotley.com?subject=Creator%20network. Chip: 1px outline, radius 5px."
+ },
+ {
+  "id": "F44",
+  "claim": "Media Owners",
+  "source_sentence": "Media Owners",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-row:nth-of-type(2) .ed-label",
+  "kind": "ui-copy",
+  "note": "Audience label."
+ },
+ {
+  "id": "F45",
+  "claim": "Film, TV and digital IP, earning every month.",
+  "source_sentence": "Film, TV and digital IP, earning every month.",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-row:nth-of-type(2) .ed-body p",
+  "kind": "positioning",
+  "note": "Media Owners one-liner."
+ },
+ {
+  "id": "F46",
+  "claim": "Monetize your catalogue ↗",
+  "source_sentence": "Monetize your catalogue ↗",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-row:nth-of-type(2) a.ed-link",
+  "kind": "cta",
+  "note": "mailto subject 'Catalogue'. Mixed spelling (US 'Monetize', UK 'catalogue') — reproduce exactly."
+ },
+ {
+  "id": "F47",
+  "claim": "Brands",
+  "source_sentence": "Brands",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-row .ed-label#brands",
+  "kind": "ui-copy",
+  "note": "Audience label."
+ },
+ {
+  "id": "F48",
+  "claim": "Africa’s most trusted creators. One contract.",
+  "source_sentence": "Africa’s most trusted creators. One contract.",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-row:nth-of-type(3) .ed-body p",
+  "kind": "positioning",
+  "note": "Brands one-liner. 'Most trusted' is the site's own superlative — use verbatim only, never extend it."
+ },
+ {
+  "id": "F49",
+  "claim": "Brief our team ↗",
+  "source_sentence": "Brief our team ↗",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-row:nth-of-type(3) a.ed-link",
+  "kind": "cta",
+  "note": "mailto subject 'Brief'."
+ },
+ {
+  "id": "F50",
+  "claim": "The room",
+  "source_sentence": "The room",
+  "url": "https://creativemotley.com/",
+  "location": "#next .band figure:nth-child(1) figcaption",
+  "kind": "ui-copy",
+  "note": "Caption on photos/room.jpg."
+ },
+ {
+  "id": "F51",
+  "claim": "The team around a table of storyboards and colour swatches, mid-discussion",
+  "source_sentence": "The team around a table of storyboards and colour swatches, mid-discussion",
+  "url": "https://creativemotley.com/",
+  "location": "#next .band figure:nth-child(1) img[alt]",
+  "kind": "ui-copy",
+  "note": "Alt text (not visible) for room.jpg."
+ },
+ {
+  "id": "F52",
+  "claim": "The set",
+  "source_sentence": "The set",
+  "url": "https://creativemotley.com/",
+  "location": "#next .band figure:nth-child(2) figcaption",
+  "kind": "ui-copy",
+  "note": "Caption on photos/set.jpg."
+ },
+ {
+  "id": "F53",
+  "claim": "A director giving direction on set, camera and boom operator working behind him",
+  "source_sentence": "A director giving direction on set, camera and boom operator working behind him",
+  "url": "https://creativemotley.com/",
+  "location": "#next .band figure:nth-child(2) img[alt]",
+  "kind": "ui-copy",
+  "note": "Alt text (not visible) for set.jpg. Does not name the director — do not label him."
+ },
+ {
+  "id": "F54",
+  "claim": "Leadership experience from",
+  "source_sentence": "Leadership experience from",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-credits .ed-label",
+  "kind": "credential",
+  "note": "Label for the five names below. Keep the label attached: these are where the leadership's experience comes from — NOT clients, partners or endorsements. Type only, no logos."
+ },
+ {
+  "id": "F55",
+  "claim": "YouTube",
+  "source_sentence": "YouTube",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-credits ul li:nth-child(1)",
+  "kind": "credential",
+  "note": "Leadership-experience name 1 of 5; only valid under the 'Leadership experience from' label (F54)."
+ },
+ {
+  "id": "F56",
+  "claim": "Paramount",
+  "source_sentence": "Paramount",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-credits ul li:nth-child(2)",
+  "kind": "credential",
+  "note": "Leadership-experience name 2 of 5; only valid under the 'Leadership experience from' label (F54)."
+ },
+ {
+  "id": "F57",
+  "claim": "Multichoice",
+  "source_sentence": "Multichoice",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-credits ul li:nth-child(3)",
+  "kind": "credential",
+  "note": "Leadership-experience name 3 of 5; only valid under the 'Leadership experience from' label (F54). Site spells it 'Multichoice' — reproduce as written."
+ },
+ {
+  "id": "F58",
+  "claim": "Africa Magic",
+  "source_sentence": "Africa Magic",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-credits ul li:nth-child(4)",
+  "kind": "credential",
+  "note": "Leadership-experience name 4 of 5; only valid under the 'Leadership experience from' label (F54)."
+ },
+ {
+  "id": "F59",
+  "claim": "Circo Live",
+  "source_sentence": "Circo Live",
+  "url": "https://creativemotley.com/",
+  "location": "#next .ed-credits ul li:nth-child(5)",
+  "kind": "credential",
+  "note": "Leadership-experience name 5 of 5; only valid under the 'Leadership experience from' label (F54)."
+ },
+ {
+  "id": "F60",
+  "claim": "Chapter IV",
+  "source_sentence": "Chapter IV",
+  "url": "https://creativemotley.com/",
+  "location": "#method .method-copy .ch-eyebrow",
+  "kind": "ui-copy"
+ },
+ {
+  "id": "F61",
+  "claim": "Method",
+  "source_sentence": "Method",
+  "url": "https://creativemotley.com/",
+  "location": "#method .method-copy h2",
+  "kind": "ui-copy"
+ },
+ {
+  "id": "F62",
+  "claim": "Everything we make passes through one instrument, and one way of working.",
+  "source_sentence": "Everything we make passes through one instrument, and one way of working.",
+  "url": "https://creativemotley.com/",
+  "location": "#method .method-copy p",
+  "kind": "positioning",
+  "note": "Serif line over the rotunda film."
+ },
+ {
+  "id": "F63",
+  "claim": "Chapter V · Showcase",
+  "source_sentence": "Chapter V · Showcase",
+  "url": "https://creativemotley.com/",
+  "location": "#showcase .pw-meta .ed-label",
+  "kind": "ui-copy",
+  "note": "Markup 'Chapter V &middot; Showcase'; kept on one line."
+ },
+ {
+  "id": "F64",
+  "claim": "Layi Wasabi — The Law",
+  "source_sentence": "Layi Wasabi — The Law",
+  "url": "https://creativemotley.com/",
+  "location": "#showcase .pw-stage figure.pw:nth-child(1) img[alt]",
+  "kind": "name",
+  "note": "Poster 1 of 7, alt text. Creator name = text before '—' (shown live as the #pwName caption); tagline = poster title after '—'. Showcase only: the site attaches no stats, results or client wording to any individual creator — do not add any. Art: film/assets/img/posters/layi-wasabi.jpg."
+ },
+ {
+  "id": "F65",
+  "claim": "Omoni Oboli TV — Two exes. One wedding.",
+  "source_sentence": "Omoni Oboli TV — Two exes. One wedding.",
+  "url": "https://creativemotley.com/",
+  "location": "#showcase .pw-stage figure.pw:nth-child(2) img[alt]",
+  "kind": "name",
+  "note": "Poster 2 of 7, alt text. Creator name = text before '—' (shown live as the #pwName caption); tagline = poster title after '—'. Showcase only: the site attaches no stats, results or client wording to any individual creator — do not add any. Art: film/assets/img/posters/omoni-oboli-tv.jpg."
+ },
+ {
+  "id": "F66",
+  "claim": "Isbae U — Curiosity Made Me Ask",
+  "source_sentence": "Isbae U — Curiosity Made Me Ask",
+  "url": "https://creativemotley.com/",
+  "location": "#showcase .pw-stage figure.pw:nth-child(3) img[alt]",
+  "kind": "name",
+  "note": "Poster 3 of 7, alt text. Creator name = text before '—' (shown live as the #pwName caption); tagline = poster title after '—'. Showcase only: the site attaches no stats, results or client wording to any individual creator — do not add any. Art: film/assets/img/posters/isbae-u.jpg."
+ },
+ {
+  "id": "F67",
+  "claim": "Broda Shaggi — The Hustler",
+  "source_sentence": "Broda Shaggi — The Hustler",
+  "url": "https://creativemotley.com/",
+  "location": "#showcase .pw-stage figure.pw:nth-child(4) img[alt]",
+  "kind": "name",
+  "note": "Poster 4 of 7, alt text. Creator name = text before '—' (shown live as the #pwName caption); tagline = poster title after '—'. Showcase only: the site attaches no stats, results or client wording to any individual creator — do not add any. Art: film/assets/img/posters/broda-shaggi.jpg."
+ },
+ {
+  "id": "F68",
+  "claim": "Diary of a Naija Girl — Dear DANG",
+  "source_sentence": "Diary of a Naija Girl — Dear DANG",
+  "url": "https://creativemotley.com/",
+  "location": "#showcase .pw-stage figure.pw:nth-child(5) img[alt]",
+  "kind": "name",
+  "note": "Poster 5 of 7, alt text. Creator name = text before '—' (shown live as the #pwName caption); tagline = poster title after '—'. Showcase only: the site attaches no stats, results or client wording to any individual creator — do not add any. Art: film/assets/img/posters/diary-of-a-naija-girl.jpg."
+ },
+ {
+  "id": "F69",
+  "claim": "Kie Kie — The Crossover",
+  "source_sentence": "Kie Kie — The Crossover",
+  "url": "https://creativemotley.com/",
+  "location": "#showcase .pw-stage figure.pw:nth-child(6) img[alt]",
+  "kind": "name",
+  "note": "Poster 6 of 7, alt text. Creator name = text before '—' (shown live as the #pwName caption); tagline = poster title after '—'. Showcase only: the site attaches no stats, results or client wording to any individual creator — do not add any. Art: film/assets/img/posters/kie-kie.jpg."
+ },
+ {
+  "id": "F70",
+  "claim": "Kunle Afolayan — New Nigerian Cinema",
+  "source_sentence": "Kunle Afolayan — New Nigerian Cinema",
+  "url": "https://creativemotley.com/",
+  "location": "#showcase .pw-stage figure.pw:nth-child(7) img[alt]",
+  "kind": "name",
+  "note": "Poster 7 of 7, alt text. Creator name = text before '—' (shown live as the #pwName caption); tagline = poster title after '—'. Showcase only: the site attaches no stats, results or client wording to any individual creator — do not add any. Art: film/assets/img/posters/kunle-afolayan.jpg. HTML comment: 'last on purpose: the only sheet that argues for the company rather than describing a channel, so it closes the chapter'."
+ },
+ {
+  "id": "F71",
+  "claim": "Layi Wasabi",
+  "source_sentence": "Layi Wasabi",
+  "url": "https://creativemotley.com/",
+  "location": "#showcase p#pwName",
+  "kind": "ui-copy",
+  "note": "Live caption; JS swaps it to the current poster's creator name (alt split on '—')."
+ },
+ {
+  "id": "F72",
+  "claim": "01 / 07",
+  "source_sentence": "/ 07",
+  "url": "https://creativemotley.com/",
+  "location": "#showcase .pw-count (b#pwNum + span#pwTot)",
+  "kind": "ui-copy",
+  "note": "AMBIGUOUS: static markup reads '01' + '/ 06', but JS overwrites #pwTot with the real sheet count ('/ ' + 7 padded) → live site shows '01 / 07'. Use '/ 07'; '/ 06' is stale markup. source_sentence is the JS-rendered value."
+ },
+ {
+  "id": "F73",
+  "claim": "Chapter VI · Process",
+  "source_sentence": "Chapter VI · Process",
+  "url": "https://creativemotley.com/",
+  "location": "#process .ed-label.proc-eyebrow",
+  "kind": "ui-copy"
+ },
+ {
+  "id": "F74",
+  "claim": "Seven steps, every time.",
+  "source_sentence": "Seven steps, every time.",
+  "url": "https://creativemotley.com/",
+  "location": "#process h2.ed-head",
+  "kind": "positioning",
+  "note": "Serif italic with drop-cap S ('<span class=\"cap\">S</span>even'). Site markup uses &nbsp; here (between 'every time.'); source_sentence normalises it to a plain space to match visible_text.txt — keep those two words together on screen."
+ },
+ {
+  "id": "F75",
+  "claim": "Blank page",
+  "source_sentence": "Blank page",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(1) .flow-cap b",
+  "kind": "service",
+  "note": "Process step 1 of 7 title. Object: objects/01-blank-page.png, alt text verbatim: 'A blank sheet of paper held by a bulldog clip'. The site does not number the steps on screen."
+ },
+ {
+  "id": "F76",
+  "claim": "The channel as it stands — nothing assumed.",
+  "source_sentence": "The channel as it stands — nothing assumed.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(1) .flow-cap span:not(.flow-more)",
+  "kind": "service",
+  "note": "Step 1 ('Blank page') caption line — always visible."
+ },
+ {
+  "id": "F77",
+  "claim": "We audit what is already there — watch time, retention, the shape of the back catalogue.",
+  "source_sentence": "We audit what is already there — watch time, retention, the shape of the back catalogue.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(1) .flow-cap span.flow-more",
+  "kind": "service",
+  "note": "Step 1 ('Blank page') detail line — revealed on hover/focus."
+ },
+ {
+  "id": "F78",
+  "claim": "Moodboard",
+  "source_sentence": "Moodboard",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(2) .flow-cap b",
+  "kind": "service",
+  "note": "Process step 2 of 7 title. Object: objects/02-moodboard.png, alt text verbatim: 'Fabric swatches and colour cards with a printed portrait'. The site does not number the steps on screen."
+ },
+ {
+  "id": "F79",
+  "claim": "Look, palette, references. What it should feel like.",
+  "source_sentence": "Look, palette, references. What it should feel like.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(2) .flow-cap span:not(.flow-more)",
+  "kind": "service",
+  "note": "Step 2 ('Moodboard') caption line — always visible."
+ },
+ {
+  "id": "F80",
+  "claim": "Palette, typography, thumbnail language. Agreed before a frame is shot.",
+  "source_sentence": "Palette, typography, thumbnail language. Agreed before a frame is shot.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(2) .flow-cap span.flow-more",
+  "kind": "service",
+  "note": "Step 2 ('Moodboard') detail line — revealed on hover/focus."
+ },
+ {
+  "id": "F81",
+  "claim": "Storyboard",
+  "source_sentence": "Storyboard",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(3) .flow-cap b",
+  "kind": "service",
+  "note": "Process step 3 of 7 title. Object: objects/03-storyboard.png, alt text verbatim: 'A storyboard sheet of six hand-drawn panels'. The site does not number the steps on screen."
+ },
+ {
+  "id": "F82",
+  "claim": "Series design and upload calendar, mapped out.",
+  "source_sentence": "Series design and upload calendar, mapped out.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(3) .flow-cap span:not(.flow-more)",
+  "kind": "service",
+  "note": "Step 3 ('Storyboard') caption line — always visible."
+ },
+ {
+  "id": "F83",
+  "claim": "Series design and an upload calendar you can actually keep to.",
+  "source_sentence": "Series design and an upload calendar you can actually keep to.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(3) .flow-cap span.flow-more",
+  "kind": "service",
+  "note": "Step 3 ('Storyboard') detail line — revealed on hover/focus."
+ },
+ {
+  "id": "F84",
+  "claim": "Production",
+  "source_sentence": "Production",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(4) .flow-cap b",
+  "kind": "service",
+  "note": "Process step 4 of 7 title. Object: objects/04-clapperboard.png, alt text verbatim: 'A well-used yellow film clapperboard'. The site does not number the steps on screen."
+ },
+ {
+  "id": "F85",
+  "claim": "Shoot days, kit, crew — or your own, better run.",
+  "source_sentence": "Shoot days, kit, crew — or your own, better run.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(4) .flow-cap span:not(.flow-more)",
+  "kind": "service",
+  "note": "Step 4 ('Production') caption line — always visible."
+ },
+ {
+  "id": "F86",
+  "claim": "Crew and kit where you need them, or your own team run properly.",
+  "source_sentence": "Crew and kit where you need them, or your own team run properly.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(4) .flow-cap span.flow-more",
+  "kind": "service",
+  "note": "Step 4 ('Production') detail line — revealed on hover/focus."
+ },
+ {
+  "id": "F87",
+  "claim": "Sound",
+  "source_sentence": "Sound",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(5) .flow-cap b",
+  "kind": "service",
+  "note": "Process step 5 of 7 title. Object: objects/05-boom.png, alt text verbatim: 'A shotgun microphone on a boom pole'. The site does not number the steps on screen."
+ },
+ {
+  "id": "F88",
+  "claim": "Because bad audio loses the audience first.",
+  "source_sentence": "Because bad audio loses the audience first.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(5) .flow-cap span:not(.flow-more)",
+  "kind": "service",
+  "note": "Step 5 ('Sound') caption line — always visible."
+ },
+ {
+  "id": "F89",
+  "claim": "Mixed and mastered for phone speakers, because that is where it is heard.",
+  "source_sentence": "Mixed and mastered for phone speakers, because that is where it is heard.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(5) .flow-cap span.flow-more",
+  "kind": "service",
+  "note": "Step 5 ('Sound') detail line — revealed on hover/focus."
+ },
+ {
+  "id": "F90",
+  "claim": "Edit",
+  "source_sentence": "Edit",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(6) .flow-cap b",
+  "kind": "service",
+  "note": "Process step 6 of 7 title. Object: objects/06-timeline.png, alt text verbatim: 'A tablet showing a video editing timeline'. The site does not number the steps on screen."
+ },
+ {
+  "id": "F91",
+  "claim": "Thumbnails, titles, metadata, cut to retain.",
+  "source_sentence": "Thumbnails, titles, metadata, cut to retain.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(6) .flow-cap span:not(.flow-more)",
+  "kind": "service",
+  "note": "Step 6 ('Edit') caption line — always visible."
+ },
+ {
+  "id": "F92",
+  "claim": "Titles, tags, chapters and thumbnails — cut for retention, not for us.",
+  "source_sentence": "Titles, tags, chapters and thumbnails — cut for retention, not for us.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(6) .flow-cap span.flow-more",
+  "kind": "service",
+  "note": "Step 6 ('Edit') detail line — revealed on hover/focus."
+ },
+ {
+  "id": "F93",
+  "claim": "Published",
+  "source_sentence": "Published",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(7) .flow-cap b",
+  "kind": "service",
+  "note": "Process step 7 of 7 title. Object: objects/07-published.png, alt text verbatim: 'An instant photo of a finished frame'. The site does not number the steps on screen."
+ },
+ {
+  "id": "F94",
+  "claim": "Then measured, and done again.",
+  "source_sentence": "Then measured, and done again.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(7) .flow-cap span:not(.flow-more)",
+  "kind": "service",
+  "note": "Step 7 ('Published') caption line — always visible."
+ },
+ {
+  "id": "F95",
+  "claim": "Then measured against the audit, and the loop starts again.",
+  "source_sentence": "Then measured against the audit, and the loop starts again.",
+  "url": "https://creativemotley.com/",
+  "location": "#process .flow-items li:nth-child(7) .flow-cap span.flow-more",
+  "kind": "service",
+  "note": "Step 7 ('Published') detail line — revealed on hover/focus."
+ },
+ {
+  "id": "F96",
+  "claim": "Chapter VII",
+  "source_sentence": "Chapter VII",
+  "url": "https://creativemotley.com/",
+  "location": "#results .rx-copy .ch-eyebrow",
+  "kind": "ui-copy"
+ },
+ {
+  "id": "F97",
+  "claim": "Results",
+  "source_sentence": "Results",
+  "url": "https://creativemotley.com/",
+  "location": "#results .rx-copy h2",
+  "kind": "ui-copy"
+ },
+ {
+  "id": "F98",
+  "claim": "The work went out. The world watched.",
+  "source_sentence": "The work went out. The world watched.",
+  "url": "https://creativemotley.com/",
+  "location": "#results .rx-copy p",
+  "kind": "positioning",
+  "note": "Serif line over the TV painting; fades out (p .16–.26) before the counters arrive."
+ },
+ {
+  "id": "F99",
+  "claim": "100M+ monthly views",
+  "source_sentence": "<b data-n=\"100\" data-suf=\"M+\">0</b><span>monthly views</span>",
+  "url": "https://creativemotley.com/",
+  "location": "#results .rx-stats .rx-stat:nth-child(1)",
+  "kind": "stat",
+  "note": "Counter: integers 0→100 with cubic ease-out over 0.07 of section progress, suffix 'M+' appended ONLY when the count completes (shows '100M+'). One stat at a time, visible p 0.30–0.48. Number Archivo 600 huge tabular-nums; label lowercase Instrument Serif. source_sentence is the exact markup (the number is JS-driven).",
+  "counter": {
+   "from": 0,
+   "to": 100,
+   "suffix": "M+",
+   "label": "monthly views",
+   "final_display": "100M+"
+  }
+ },
+ {
+  "id": "F100",
+  "claim": "70+ channels managed",
+  "source_sentence": "<b data-n=\"70\" data-suf=\"+\">0</b><span>channels managed</span>",
+  "url": "https://creativemotley.com/",
+  "location": "#results .rx-stats .rx-stat:nth-child(2)",
+  "kind": "stat",
+  "note": "Counter: integers 0→70 with cubic ease-out over 0.07 of section progress, suffix '+' appended ONLY when the count completes (shows '70+'). One stat at a time, visible p 0.48–0.64. Number Archivo 600 huge tabular-nums; label lowercase Instrument Serif. source_sentence is the exact markup (the number is JS-driven).",
+  "counter": {
+   "from": 0,
+   "to": 70,
+   "suffix": "+",
+   "label": "channels managed",
+   "final_display": "70+"
+  }
+ },
+ {
+  "id": "F101",
+  "claim": "13+ channels past 1M subscribers",
+  "source_sentence": "<b data-n=\"13\" data-suf=\"+\">0</b><span>channels past 1M subscribers</span>",
+  "url": "https://creativemotley.com/",
+  "location": "#results .rx-stats .rx-stat:nth-child(3)",
+  "kind": "stat",
+  "note": "Counter: integers 0→13 with cubic ease-out over 0.07 of section progress, suffix '+' appended ONLY when the count completes (shows '13+'). One stat at a time, visible p 0.64–0.80. Number Archivo 600 huge tabular-nums; label lowercase Instrument Serif. source_sentence is the exact markup (the number is JS-driven).",
+  "counter": {
+   "from": 0,
+   "to": 13,
+   "suffix": "+",
+   "label": "channels past 1M subscribers",
+   "final_display": "13+"
+  }
+ },
+ {
+  "id": "F102",
+  "claim": "16+ years in media",
+  "source_sentence": "<b data-n=\"16\" data-suf=\"+\">0</b><span>years in media</span>",
+  "url": "https://creativemotley.com/",
+  "location": "#results .rx-stats .rx-stat:nth-child(4)",
+  "kind": "stat",
+  "note": "Counter: integers 0→16 with cubic ease-out over 0.07 of section progress, suffix '+' appended ONLY when the count completes (shows '16+'). One stat at a time, visible p 0.80–1.01. Number Archivo 600 huge tabular-nums; label lowercase Instrument Serif. source_sentence is the exact markup (the number is JS-driven).",
+  "counter": {
+   "from": 0,
+   "to": 16,
+   "suffix": "+",
+   "label": "years in media",
+   "final_display": "16+"
+  }
+ },
+ {
+  "id": "F103",
+  "claim": "Chapter VIII",
+  "source_sentence": "Chapter VIII",
+  "url": "https://creativemotley.com/",
+  "location": "#directors .dirs-title .ch-eyebrow",
+  "kind": "ui-copy"
+ },
+ {
+  "id": "F104",
+  "claim": "Directors",
+  "source_sentence": "Directors",
+  "url": "https://creativemotley.com/",
+  "location": "#directors .dirs-title h2",
+  "kind": "ui-copy"
+ },
+ {
+  "id": "F105",
+  "claim": "The two people answerable for all of it.",
+  "source_sentence": "The two people answerable for all of it.",
+  "url": "https://creativemotley.com/",
+  "location": "#directors .dirs-title p",
+  "kind": "positioning",
+  "note": "Serif line under 'Directors'."
+ },
+ {
+  "id": "F106",
+  "claim": "Olayinka Lawal",
+  "source_sentence": "Olayinka Lawal ✦ Gbenga Sosanya ✦ ",
+  "url": "https://creativemotley.com/",
+  "location": "#directors #dirsTrack[data-text], #dirsFront[data-text]",
+  "kind": "name",
+  "note": "Director name from the arcing marquee (markup 'Olayinka Lawal &#10022; Gbenga Sosanya &#10022; '; the ✦ glyphs render magenta at .62em). The site gives no title/role beyond 'Directors' — no 'Founder', 'CEO' etc. The site never says which portrait is which: confirm against the plate before captioning a face."
+ },
+ {
+  "id": "F107",
+  "claim": "Gbenga Sosanya",
+  "source_sentence": "Olayinka Lawal ✦ Gbenga Sosanya ✦ ",
+  "url": "https://creativemotley.com/",
+  "location": "#directors #dirsTrack[data-text], #dirsFront[data-text]",
+  "kind": "name",
+  "note": "Second director name; same caveats as F106."
+ },
+ {
+  "id": "F108",
+  "claim": "Apply to join",
+  "source_sentence": "Apply to join",
+  "url": "https://creativemotley.com/",
+  "location": "header#chrome a.pill span",
+  "kind": "cta",
+  "note": "Header CTA pill: 1px outline, radius 100px, Archivo 600 12px uppercase .07em. href mailto:info@creativemotley.com?subject=Application%20—%20Creative%20Motley."
+ },
+ {
+  "id": "F109",
+  "claim": "info@creativemotley.com",
+  "source_sentence": "info@creativemotley.com",
+  "url": "https://creativemotley.com/",
+  "location": "header#chrome a.chrome-mail; #foot a.ct-mail",
+  "kind": "contact",
+  "note": "Header (12px, .72 opacity) and footer (huge Instrument Serif, cream 50%). The only email on the site."
+ },
+ {
+  "id": "F110",
+  "claim": "Contact ✦",
+  "source_sentence": "Contact ✦",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-marquee #ctTrack span (×4)",
+  "kind": "ui-copy",
+  "note": "Giant serif marquee, markup 'Contact&nbsp;&#10022;&nbsp;' repeated 4×, scroll-linked. source_sentence normalises &nbsp; to spaces."
+ },
+ {
+  "id": "F111",
+  "claim": "We turn channels into media companies.",
+  "source_sentence": "We turn channels into media companies.",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-cols p:nth-child(1)",
+  "kind": "positioning",
+  "note": "Markup breaks after 'into' (<br>). 12px Archivo 700 uppercase .1em."
+ },
+ {
+  "id": "F112",
+  "claim": "Just drop us a line",
+  "source_sentence": "Just drop us a line",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-cols p:nth-child(2)",
+  "kind": "cta",
+  "note": "Markup breaks after 'drop' (<br>). No full stop."
+ },
+ {
+  "id": "F113",
+  "claim": "© 2026 Creative Motley Ltd",
+  "source_sentence": "© 2026 Creative Motley Ltd All rights reserved",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-cols p:nth-child(3)",
+  "kind": "name",
+  "note": "Markup '&copy; 2026 Creative Motley Ltd<br>All rights reserved'; right-aligned column."
+ },
+ {
+  "id": "F114",
+  "claim": "Instagram",
+  "source_sentence": "Instagram",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-stickers a.st-pill:nth-child(2) .st-body",
+  "kind": "ui-copy",
+  "note": "Draggable pill sticker label; links to F120."
+ },
+ {
+  "id": "F115",
+  "claim": "YouTube",
+  "source_sentence": "YouTube",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-stickers a.st-pill:nth-child(3) .st-body",
+  "kind": "ui-copy",
+  "note": "Draggable pill sticker label; links to F121."
+ },
+ {
+  "id": "F116",
+  "claim": "TikTok",
+  "source_sentence": "TikTok",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-stickers a.st-pill:nth-child(4) .st-body",
+  "kind": "ui-copy",
+  "note": "Draggable pill sticker label; links to F122."
+ },
+ {
+  "id": "F117",
+  "claim": "IG",
+  "source_sentence": "IG",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-stickers a.st-badge:nth-child(1) b",
+  "kind": "ui-copy",
+  "note": "Scalloped badge sticker centre text (sr-only label 'Instagram')."
+ },
+ {
+  "id": "F118",
+  "claim": "Email us",
+  "source_sentence": "Email us",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-stickers a.st-badge:nth-child(5) .sr-only",
+  "kind": "ui-copy",
+  "note": "Screen-reader label of the ✉ badge (visible glyph is '✉', &#9993;); mailto:info@creativemotley.com."
+ },
+ {
+  "id": "F119",
+  "claim": "Drag me · Drag me · Drag me ·",
+  "source_sentence": "Drag me · Drag me · Drag me · ",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-stickers .st-badge svg textPath",
+  "kind": "ui-copy",
+  "note": "Circular arc text on both badge stickers (markup uses &#183;)."
+ },
+ {
+  "id": "F120",
+  "claim": "@creativemotley — Instagram",
+  "source_sentence": "https://www.instagram.com/creativemotley",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-stickers a.st[href] (IG badge + Instagram pill)",
+  "kind": "contact",
+  "note": "Handle is 'creativemotley' (the URL has no '@'); '@creativemotley' is the conventional on-screen form."
+ },
+ {
+  "id": "F121",
+  "claim": "@creativemotley — YouTube",
+  "source_sentence": "https://www.youtube.com/@creativemotley",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-stickers a.st-pill[href*=youtube]",
+  "kind": "contact"
+ },
+ {
+  "id": "F122",
+  "claim": "@creativemotley — TikTok",
+  "source_sentence": "https://www.tiktok.com/@creativemotley",
+  "url": "https://creativemotley.com/",
+  "location": "#foot .ct-stickers a.st-pill[href*=tiktok]",
+  "kind": "contact",
+  "note": "Only three socials are live. HTML comment: LinkedIn and X stickers were removed because linkedin.com/company/creativemotley and x.com/creativemotley return 404 — never show LinkedIn or X."
+ },
+ {
+  "id": "F123",
+  "claim": "Storytellers  I",
+  "source_sentence": "Storytellers",
+  "url": "https://creativemotley.com/",
+  "location": "nav#index ol li:nth-child(1) (a href=#next + span.num 'I')",
+  "kind": "ui-copy",
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'I' Instrument Serif 11px right-aligned at 42% opacity."
+ },
+ {
+  "id": "F124",
+  "claim": "Creators  II",
+  "source_sentence": "Creators",
+  "url": "https://creativemotley.com/",
+  "location": "nav#index ol li:nth-child(2) (a href=#creators + span.num 'II')",
+  "kind": "ui-copy",
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'II' Instrument Serif 11px right-aligned at 42% opacity."
+ },
+ {
+  "id": "F125",
+  "claim": "Brands  III",
+  "source_sentence": "Brands",
+  "url": "https://creativemotley.com/",
+  "location": "nav#index ol li:nth-child(3) (a href=#brands + span.num 'III')",
+  "kind": "ui-copy",
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'III' Instrument Serif 11px right-aligned at 42% opacity."
+ },
+ {
+  "id": "F126",
+  "claim": "Method  IV",
+  "source_sentence": "Method",
+  "url": "https://creativemotley.com/",
+  "location": "nav#index ol li:nth-child(4) (a href=#method + span.num 'IV')",
+  "kind": "ui-copy",
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'IV' Instrument Serif 11px right-aligned at 42% opacity."
+ },
+ {
+  "id": "F127",
+  "claim": "Showcase  V",
+  "source_sentence": "Showcase",
+  "url": "https://creativemotley.com/",
+  "location": "nav#index ol li:nth-child(5) (a href=#showcase + span.num 'V')",
+  "kind": "ui-copy",
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'V' Instrument Serif 11px right-aligned at 42% opacity."
+ },
+ {
+  "id": "F128",
+  "claim": "Process  VI",
+  "source_sentence": "Process",
+  "url": "https://creativemotley.com/",
+  "location": "nav#index ol li:nth-child(6) (a href=#process + span.num 'VI')",
+  "kind": "ui-copy",
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'VI' Instrument Serif 11px right-aligned at 42% opacity."
+ },
+ {
+  "id": "F129",
+  "claim": "Results  VII",
+  "source_sentence": "Results",
+  "url": "https://creativemotley.com/",
+  "location": "nav#index ol li:nth-child(7) (a href=#results + span.num 'VII')",
+  "kind": "ui-copy",
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'VII' Instrument Serif 11px right-aligned at 42% opacity."
+ },
+ {
+  "id": "F130",
+  "claim": "Directors  VIII",
+  "source_sentence": "Directors",
+  "url": "https://creativemotley.com/",
+  "location": "nav#index ol li:nth-child(8) (a href=#directors + span.num 'VIII')",
+  "kind": "ui-copy",
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'VIII' Instrument Serif 11px right-aligned at 42% opacity."
+ },
+ {
+  "id": "F131",
+  "claim": "Apply  IX",
+  "source_sentence": "Apply",
+  "url": "https://creativemotley.com/",
+  "location": "nav#index ol li:nth-child(9) (a href=#foot + span.num 'IX')",
+  "kind": "ui-copy",
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'IX' Instrument Serif 11px right-aligned at 42% opacity."
+ },
+ {
+  "id": "F132",
+  "claim": "Scroll",
+  "source_sentence": "Scroll",
+  "url": "https://creativemotley.com/",
+  "location": "#cue span",
+  "kind": "ui-copy",
+  "note": "Scroll cue, bottom-right, with a pulsing 1px vertical line."
+ },
+ {
+  "id": "F133",
+  "claim": "(plate art) camera-body lettering in the hero film: 'SONY', 'α 7', and a mirrored maker mark",
+  "source_sentence": "hero film frames video/hero-1080.mp4 / frames/f_0230–f_0340.webp",
+  "url": "https://creativemotley.com/frames/",
+  "location": "hero film (brand's own art)",
+  "kind": "plate-art",
+  "note": "Third-party mark painted into the brand's own film. Shown only in motion: the remap passes f300–f342 in ~0.45 s. Not a claim; never held."
+ },
+ {
+  "id": "F134",
+  "claim": "(plate art) printed straplines and small print on the seven showcase posters, e.g. 'HIS OFFICE IS UNDER A TREE', 'TWO EXES. ONE WEDDING.', 'CURIOSITY MADE ME ASK', an award line on the Broda Shaggi poster, 'SKITS, FASHION, AND NOW FEATURES.', 'CELLULOID TO YOUTUBE, IN ONE FAMILY.', 'MANAGED BY CREATIVE MOTLEY'",
+  "source_sentence": "work/posters/*.jpg (the site's Showcase images)",
+  "url": "https://creativemotley.com/work/posters/",
+  "location": "#showcase poster images",
+  "kind": "plate-art",
+  "note": "Art printed on the site's own poster images. In the film the posters run at speed and the held one is at most 0.42 of frame height, so this print is illegible. None of it is used as a claim."
+ },
+ {
+  "id": "F135",
+  "claim": "(plate art) YouTube-style thumbnail titles shown on the TV inside the Results painting (e.g. 'WOLI SHAGGI', 'OUR OYINBO WIFE', 'I SAID NO TO 3 PEOPLE', 'LOVE STOOD STILL')",
+  "source_sentence": "results/results_stage.mp4 (the site's Results chapter film)",
+  "url": "https://creativemotley.com/results/results_stage.mp4",
+  "location": "#results stage film",
+  "kind": "plate-art",
+  "note": "Inside the TV (≈7% of the frame); illegible at film size. Not used as claims."
+ }
+]
