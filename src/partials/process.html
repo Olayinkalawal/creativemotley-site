@@ -1,8 +1,91 @@
-<!-- VI · PROCESS · scene: objects (three.js, on paper) · owner: builder D -->
-<section class="chapter" id="process" data-chapter data-theme="light" data-scene="objects" data-plate="paper" aria-labelledby="process-title">
-  <div class="col proc-head">
-    <p class="kicker" data-reveal>Chapter VI · Process</p>
-    <h2 class="head" id="process-title" data-reveal><span class="dc">S</span>even steps, every time.</h2>
+<!-- VI · PROCESS · scene: objects (three.js, on paper) · owner: builder D
+     One ordered list of the seven steps (object + title + short line) serves every mode:
+       - static (no JS, ?tier=0, reduced motion): the section is one paper sheet with a torn top edge; the steps are a
+         calm grid on desktop and a list on phones, captions under / beside each object;
+       - .proc-on (JS + a WebGL tier): a tall pinned run. The list becomes an exact CSS-3D proxy of the WebGL desk
+         (same camera, same poses), shown until the objects scene has drawn, then kept as screen-reader text; the
+         live caption follows the active step. The pin's own paper (torn top edge) covers the stage while it
+         dissolves from the umber room, then clears to show the WebGL desk.
+     Then the dense two-column grid (title | long line) on a paper sheet that lies over the desk and tears off into
+     Results. data-plate="umber": with WebGL off the still behind this opaque chapter stays the dark room, so both
+     torn edges read against it. -->
+<section class="chapter proc" id="process" data-chapter data-theme="light" data-scene="objects" data-plate="umber" aria-labelledby="process-title">
+  <div class="proc-run" data-proc-run>
+    <div class="proc-pin" data-proc-pin>
+      <div class="proc-bg" data-proc-bg aria-hidden="true"><div class="paper-grain"></div></div>
+
+      <div class="proc-head col">
+        <p class="kicker" data-reveal>Chapter VI · Process</p>
+        <h2 class="head" id="process-title" data-reveal><span class="dc">S</span>even steps, every&nbsp;time.</h2>
+      </div>
+
+      <div class="proc-desk col">
+        <ol class="proc-list" data-proc-list>
+          <li class="proc-step">
+            <div class="proc-step__obj"><img src="/assets/objects/01-blank-page.webp" alt="A blank sheet of paper under a black bulldog clip" width="700" height="551" loading="lazy" decoding="async"></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Blank page</h3><p class="proc-step__s">The channel as it stands — nothing assumed.</p></div>
+          </li>
+          <li class="proc-step">
+            <div class="proc-step__obj"><img src="/assets/objects/02-moodboard.webp" alt="Fabric swatches and colour cards around a black-and-white portrait photo" width="700" height="468" loading="lazy" decoding="async"></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Moodboard</h3><p class="proc-step__s">Look, palette, references. What it should feel like.</p></div>
+          </li>
+          <li class="proc-step">
+            <div class="proc-step__obj"><img src="/assets/objects/03-storyboard.webp" alt="A storyboard sheet of six pencil-drawn panels" width="700" height="504" loading="lazy" decoding="async"></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Storyboard</h3><p class="proc-step__s">Series design and upload calendar, mapped out.</p></div>
+          </li>
+          <li class="proc-step">
+            <div class="proc-step__obj"><img src="/assets/objects/04-clapperboard.webp" alt="A worn yellow film clapperboard" width="700" height="742" loading="lazy" decoding="async"></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Production</h3><p class="proc-step__s">Shoot days, kit, crew — or your own, better run.</p></div>
+          </li>
+          <li class="proc-step">
+            <div class="proc-step__obj"><img src="/assets/objects/05-boom.webp" alt="A shotgun microphone in a furry windshield on a boom pole" width="700" height="482" loading="lazy" decoding="async"></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Sound</h3><p class="proc-step__s">Because bad audio loses the audience first.</p></div>
+          </li>
+          <li class="proc-step">
+            <div class="proc-step__obj"><img src="/assets/objects/06-timeline.webp" alt="A tablet showing a video editing timeline" width="700" height="497" loading="lazy" decoding="async"></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Edit</h3><p class="proc-step__s">Thumbnails, titles, metadata, cut to retain.</p></div>
+          </li>
+          <li class="proc-step">
+            <div class="proc-step__obj"><img src="/assets/objects/07-published.webp" alt="An instant photo, taped down, of a dark frame lit by one small lamp" width="700" height="605" loading="lazy" decoding="async"></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Published</h3><p class="proc-step__s">Then measured, and done again.</p></div>
+          </li>
+        </ol>
+      </div>
+
+      <!-- the pinned frame: the slot the active object lifts into (CSS sets its size; WebGL and the proxy follow it)
+           and the live caption (a duplicate of the list's text, so hidden from screen readers) -->
+      <div class="proc-frame col" aria-hidden="true">
+        <div class="proc-slot" data-proc-slot></div>
+        <div class="proc-cap" data-proc-cap>
+          <div class="proc-cap__items" data-proc-items>
+            <p class="proc-cap__item"><b class="proc-cap__t">Blank page</b><span class="proc-cap__s">The channel as it stands — nothing assumed.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Moodboard</b><span class="proc-cap__s">Look, palette, references. What it should feel like.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Storyboard</b><span class="proc-cap__s">Series design and upload calendar, mapped out.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Production</b><span class="proc-cap__s">Shoot days, kit, crew — or your own, better run.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Sound</b><span class="proc-cap__s">Because bad audio loses the audience first.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Edit</b><span class="proc-cap__s">Thumbnails, titles, metadata, cut to retain.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Published</b><span class="proc-cap__s">Then measured, and done again.</span></p>
+          </div>
+          <div class="proc-cap__ticks" data-proc-ticks><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- builder D: pinned object track (seven steps, short lines), then the dense two-column grid (long lines) -->
+
+  <!-- the long lines: a calm sheet laid over the desk (torn top, with a soft shadow), torn off at the bottom into Results -->
+  <div class="paper proc-more" data-theme="light" data-opaque>
+    <div class="proc-more__shade" aria-hidden="true"><i></i></div>
+    <div class="paper-grain" aria-hidden="true"></div>
+    <div class="col">
+      <dl class="dense proc-dense">
+        <div class="dense__row" data-reveal><dt class="dense__t">Blank page</dt><dd class="dense__d">We audit what is already there — watch time, retention, the shape of the back catalogue.</dd></div>
+        <div class="dense__row" data-reveal="0.06"><dt class="dense__t">Moodboard</dt><dd class="dense__d">Palette, typography, thumbnail language. Agreed before a frame is shot.</dd></div>
+        <div class="dense__row" data-reveal><dt class="dense__t">Storyboard</dt><dd class="dense__d">Series design and an upload calendar you can actually keep to.</dd></div>
+        <div class="dense__row" data-reveal="0.06"><dt class="dense__t">Production</dt><dd class="dense__d">Crew and kit where you need them, or your own team run properly.</dd></div>
+        <div class="dense__row" data-reveal><dt class="dense__t">Sound</dt><dd class="dense__d">Mixed and mastered for phone speakers, because that is where it is heard.</dd></div>
+        <div class="dense__row" data-reveal="0.06"><dt class="dense__t">Edit</dt><dd class="dense__d">Titles, tags, chapters and thumbnails — cut for retention, not for us.</dd></div>
+        <div class="dense__row" data-reveal><dt class="dense__t">Published</dt><dd class="dense__d">Then measured against the audit, and the loop starts again.</dd></div>
+      </dl>
+    </div>
+  </div>
 </section>
