@@ -32,3 +32,18 @@
   letter-spacing: -0.04em; line-height: 1;
 }
 @media (min-width: 900px) { .credits { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+/* the sheet tears off at the bottom onto chapter IV's black stage (the camera), as Process tears off onto the Kit's:
+   the bottom tear (the shell's tear, flipped), paper + the shell's grain at half strength in one layer, so the rim is
+   the same grained paper as the sheet. z-index: above the Method stage's edge glow (z 1) and its pinned copy (z 2),
+   so the rim that reaches 22px into it lies on top cleanly. */
+#brands > .paper { z-index: 3; isolation: isolate; }
+#brands > .paper::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -22px; height: 24px; pointer-events: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42  0 0 0 0 .36  0 0 0 0 .26  0 0 0 .275 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E") 0 0 / 220px 220px,
+    linear-gradient(var(--paper), var(--paper));
+  background-blend-mode: multiply, normal; transform: scaleY(-1);
+  -webkit-mask: var(--tear) top / 1200px 24px repeat-x; mask: var(--tear) top / 1200px 24px repeat-x;
+  -webkit-mask-position: 71% 0; mask-position: 71% 0;
+}

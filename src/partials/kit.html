@@ -7,10 +7,14 @@
      and part names are UI strings (docs/ui-strings.json) naming what each exploded render shows.
      Framing ("zoom shiftX shiftY", frame uv): data-td-hero / -hero-tall (full screen), data-td-frame0 / -frame0-tall
      (the column as the hand-off lands, whole device) → data-td-frame / -frame-tall (fully exploded). data-td-box / data-td-pbox: the device's box at the hero angle / fully exploded (uv; for the lines and the fit clamp). data-anchor on each part: "u v depth [leader]"
-     on poster.webp. data-dissolve: runs 2–4 meet the one before at black, so the stage cuts rather than dissolves. -->
+     on poster.webp. data-wipe: each run is a black sheet; the stage splits it from what follows at its bottom edge, so a
+     device leaves with its list while the next run slides in beneath it (and the phone's sheet scrolls off Results).
+     data-td-orbit / -orbit-tall ("a-b"): the orbit frames played (one clean move; on portrait screens, the frames where
+     the device stays inside its 16:9 render). data-td-xmap: the mic's explode re-timed (its render pushes in on the
+     capsule mid-way: that stretch is crossed quickly, so the whole mic is back as its lower rows light). -->
 <section class="chapter kit" id="kit" data-chapter data-theme="dark" data-plate="ink" aria-labelledby="kit-title">
 
-  <section class="td td--open" id="td-console" data-td data-td-open data-theme="dark" data-scene="td:mixer" data-plate="ink"
+  <section class="td td--open" id="td-console" data-td data-td-open data-wipe data-theme="dark" data-scene="td:mixer" data-plate="ink"
     aria-labelledby="td-console-h" style="--td-run:400svh; --td-run-m:330svh"
     data-td-hero="1.1 -0.083 0.062" data-td-hero-tall="1.3 0 0.01" data-td-frame0="1.15 0.008 -0.016" data-td-frame0-tall="1.22 0.008 -0.016" data-td-frame="1.78 0 0" data-td-frame-tall="1.72 0 0.005"
     data-td-box="0.109 0.184 0.907 0.849" data-td-pbox="0.227 0.051 0.767 0.956">
@@ -44,10 +48,10 @@
     </div>
   </section>
 
-  <section class="td" id="td-mic" data-td data-theme="dark" data-scene="td:mic" data-plate="ink" data-dissolve="0.05"
+  <section class="td" id="td-mic" data-td data-wipe data-theme="dark" data-scene="td:mic" data-plate="ink"
     aria-labelledby="td-mic-h" style="--td-run:400svh; --td-run-m:330svh"
     data-td-hero="1.22 -0.095 0.045" data-td-hero-tall="1.55 0.008 0" data-td-frame0="1.21 0.008 -0.004" data-td-frame0-tall="1.36 0.008 -0.004" data-td-frame="1.02 0.01 0" data-td-frame-tall="1.02 0.01 0"
-    data-td-box="0.161 0.139 0.856 0.869" data-td-pbox="0.071 0.06 0.948 0.943">
+    data-td-box="0.161 0.139 0.856 0.869" data-td-pbox="0.071 0.06 0.948 0.943" data-td-xmap="0 0 0.12 0.12 0.42 0.62 1 1">
     <div class="td__run" data-td-run>
       <div class="td__pin">
         <div class="td__slot" data-td-slot aria-hidden="true">
@@ -74,9 +78,9 @@
     </div>
   </section>
 
-  <section class="td" id="td-headphones" data-td data-theme="dark" data-scene="td:headphones" data-plate="ink" data-dissolve="0.05"
+  <section class="td" id="td-headphones" data-td data-wipe data-theme="dark" data-scene="td:headphones" data-plate="ink"
     aria-labelledby="td-headphones-h" style="--td-run:400svh; --td-run-m:330svh"
-    data-td-hero="1.4 -0.107 0.024" data-td-hero-tall="2.3 0.007 0" data-td-frame0="1.9 0.007 0.006" data-td-frame0-tall="2.3 0.007 0.006" data-td-frame="1.04 -0.01 0.02" data-td-frame-tall="1.0 -0.01 0.02"
+    data-td-hero="1.4 -0.13 0.024" data-td-hero-tall="2.3 0.007 0" data-td-frame0="1.9 0.007 0.006" data-td-frame0-tall="2.3 0.007 0.006" data-td-frame="1.04 -0.01 0.02" data-td-frame-tall="1.0 -0.01 0.02"
     data-td-box="0.311 0.075 0.703 0.913" data-td-pbox="0.033 0.047 0.946 0.913">
     <div class="td__run" data-td-run>
       <div class="td__pin">
@@ -104,10 +108,10 @@
     </div>
   </section>
 
-  <section class="td" id="td-phone" data-td data-theme="dark" data-scene="td:phone" data-plate="ink" data-dissolve="0.05"
+  <section class="td" id="td-phone" data-td data-wipe data-theme="dark" data-scene="td:phone" data-plate="ink"
     aria-labelledby="td-phone-h" style="--td-run:400svh; --td-run-m:330svh"
     data-td-hero="1.3 -0.113 0.006" data-td-hero-tall="2.0 0.006 0" data-td-frame0="1.8 -0.006 -0.004" data-td-frame0-tall="2.0 -0.006 -0.004" data-td-frame="1.02 0 0.01" data-td-frame-tall="1.0 0 0.01"
-    data-td-box="0.259 0.078 0.728 0.929" data-td-pbox="0.071 0.067 0.927 0.972">
+    data-td-box="0.259 0.078 0.728 0.929" data-td-pbox="0.071 0.067 0.927 0.972" data-td-orbit="47-97" data-td-orbit-tall="59-97">
     <div class="td__run" data-td-run>
       <div class="td__pin">
         <div class="td__slot" data-td-slot aria-hidden="true">
