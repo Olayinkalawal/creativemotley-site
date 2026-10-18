@@ -5,7 +5,10 @@
 //    falling back to each direct text node on its own;
 //  - alt text, aria-label and title attributes, and the document title / meta description.
 // A string passes if it is a substring of a fact's claim or source sentence, or a listed UI string.
-import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
+import fs_ from 'node:fs';
+// Playwright: the project's own (npm i -D playwright) or, in the cloud container, the preinstalled copy
+const { chromium } = await import('playwright').catch(() => import('/opt/node22/lib/node_modules/playwright/index.mjs'));
+const CHROME = ['/opt/pw-browsers/chromium-1194/chrome-linux/chrome'].find((p) => fs_.existsSync(p));
 import fs from 'fs';
 const A = Object.fromEntries(process.argv.slice(2).reduce((a, v, i, arr) => (v.startsWith('--') ? [...a, [v.slice(2), arr[i + 1]]] : a), []));
 const url = (A.url || 'http://127.0.0.1:5173/') + '?tier=0';
@@ -19,7 +22,7 @@ const ok = (s) => {
   if (ui.some((u) => norm(u) === t)) return true;
   return corpus.some((c) => c.includes(t));
 };
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+const browser = await chromium.launch({ ...(CHROME ? { executablePath: CHROME } : {}) });
 const ctx = await browser.newContext(A.mode === 'mobile' ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true } : { viewport: { width: 1440, height: 900 } });
 const page = await ctx.newPage();
 await page.goto(url, { waitUntil: 'load' });
