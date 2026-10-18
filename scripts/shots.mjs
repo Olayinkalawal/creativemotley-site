@@ -14,6 +14,7 @@ const vp = mode === 'mobile' ? { width: 390, height: 844 } : { width: +(A.w || 1
 const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'] });
 const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: mode === 'mobile' ? 2 : 1, isMobile: mode === 'mobile', hasTouch: mode === 'mobile', reducedMotion: A.reduced ? 'reduce' : 'no-preference' });
 const page = await ctx.newPage();
+await page.routeWebSocket(/.*/, () => {}); // mute Vite HMR reloads during capture (other builders edit files)
 const errors = [];
 page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`${m.type()}: ${m.text().slice(0, 200)}`); });
 page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));

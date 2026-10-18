@@ -1,0 +1,11 @@
+/* II · Creators paper: generous Editions rhythm in the right 4/5 column */
+.cr { display: flex; flex-direction: column; }
+.cr__head { max-width: 15em; }
+.cr__block { margin-top: clamp(40px, 7vh, 76px); }
+.cr__fan { margin-top: clamp(28px, 5vh, 64px); }
+.cr__cloud { margin-top: clamp(64px, 14vh, 160px); }
+.cr__block--owners { margin-top: clamp(64px, 12vh, 150px); }
+.cr__fan--owners { margin-top: clamp(32px, 6vh, 72px); }
+@media (min-width: 1024px) {
+  .cr__fan { margin-inline: -2%; }
+}

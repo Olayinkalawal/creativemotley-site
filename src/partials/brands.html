@@ -1,7 +1,11 @@
-<!-- III · BRANDS · scene: plate:storytellers (pan to the right figure and the neon megaphone) · owner: builder A -->
-<section class="chapter" id="brands" data-chapter data-theme="dark" data-scene="plate:storytellers" data-plate="storytellers"
-  data-cam-from="1.18 0.6 0.5 0.04" data-cam-to="1.36 0.8 0.52 0.12" aria-labelledby="brands-title">
-  <div class="opener col">
+<!-- III · BRANDS · scene: plate:storytellers (pan to the right-hand figure and the pink megaphone) · owner: builder A
+     Same scene as Creators, so the stage does not dissolve between them: it switches keys when this opener's top
+     crosses mid-screen (pass progress ≈ .21). The "from" keys are solved so that, at that moment, this camera sits
+     exactly where Creators' "to" landed; from there it pans right. -tall keys: portrait screens. -->
+<section class="chapter" id="brands" data-chapter data-theme="dark" aria-labelledby="brands-title">
+  <div class="opener col" data-scene="plate:storytellers" data-plate="storytellers"
+    data-cam-from="1.4437 0.4914 0.4049 0.0975" data-cam-to="1.5 0.88 0.45 0.12"
+    data-cam-from-tall="1.5 0.7118 0.3937 0.1063" data-cam-to-tall="1.5 1.32 0.45 0.05">
     <div class="scrim">
       <p class="kicker" data-reveal>Chapter III</p>
       <h2 class="giant" id="brands-title" data-reveal>Brands</h2>
@@ -10,8 +14,53 @@
   </div>
   <div class="paper" data-theme="light" data-opaque>
     <div class="paper-grain" aria-hidden="true"></div>
-    <div class="col">
-      <!-- builder A: Brands block, notes fan, The room / The set photo cards, leadership row -->
+    <div class="col br">
+      <div class="br__intro">
+        <div class="pf br__block" data-reveal>
+          <h3 class="pf__label">Brands</h3>
+          <p class="pf__body">Africa’s most trusted creators. One contract.</p>
+          <a class="boxlink" href="mailto:info@creativemotley.com?subject=Brief">Brief our team <span class="ar">↗</span></a>
+        </div>
+        <!-- production notes (illustrative, from the live site's feed) -->
+        <ul class="fan br__fan" data-fan>
+          <li class="fan__card">
+            <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/storytellers.webp);--cx:.83;--cy:.8;--zoom:5.6"></span>
+            <p class="fan__note">Brand brief received — Lagos</p>
+          </li>
+          <li class="fan__card">
+            <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/hero.webp);--cx:.703;--cy:.64;--zoom:6.4"></span>
+            <p class="fan__note">Upload Thursday, 18:00 WAT</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="br__photos">
+        <figure class="pc br__pc br__pc--room" data-pc>
+          <div class="pc__frame">
+            <div class="pc__mat" aria-hidden="true"><div class="pc__paint crop"></div></div>
+            <img class="pc__img" src="/assets/photos/room.webp" alt="The team around a table of storyboards and colour swatches, mid-discussion" width="1600" height="1073" loading="lazy" decoding="async">
+          </div>
+          <figcaption class="pc__cap">The room</figcaption>
+        </figure>
+        <figure class="pc br__pc br__pc--set" data-pc>
+          <div class="pc__frame">
+            <div class="pc__mat" aria-hidden="true"><div class="pc__paint crop"></div></div>
+            <img class="pc__img" src="/assets/photos/set.webp" alt="A director giving direction on set, camera and boom operator working behind him" width="1600" height="1073" loading="lazy" decoding="async">
+          </div>
+          <figcaption class="pc__cap">The set</figcaption>
+        </figure>
+      </div>
+
+      <div class="br__credits" data-reveal>
+        <p class="pf__label" id="brands-credits">Leadership experience from</p>
+        <ul class="credits" aria-labelledby="brands-credits">
+          <li>YouTube</li>
+          <li>Paramount</li>
+          <li>Multichoice</li>
+          <li>Africa Magic</li>
+          <li>Circo Live</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>

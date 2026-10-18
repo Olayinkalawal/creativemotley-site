@@ -15,11 +15,15 @@ function collect() {
   chapters = [...document.querySelectorAll('[data-chapter]')];
   themes = [...document.querySelectorAll('[data-theme]')].map((el) => {
     let depth = 0; for (let n = el; n; n = n.parentElement) depth++;
-    return { el, depth };
+    const r = el.getBoundingClientRect();   // horizontal extent (the page never scrolls sideways)
+    return { el, depth, x0: r.left, x1: r.right, wide: r.width >= window.innerWidth * 0.9 };
   }).sort((a, b) => b.depth - a.depth);
 }
-function themeAt(y) {
+/* x given: only regions covering that x count (a dark card in the column never flips a rail item over paper);
+   x omitted (the nav, which spans the page): only full-width regions count */
+function themeAt(y, x) {
   for (const t of themes) {
+    if (x === undefined ? !t.wide : x < t.x0 || x > t.x1) continue;
     const g = geo(t.el);
     if (y >= g.top && y < g.bottom) return t.el.dataset.theme;
   }
@@ -30,10 +34,10 @@ function themeAt(y) {
    the region under its centre is light, so a torn edge passing under the rail splits it cleanly */
 let probes = [];
 export function registerProbes(els) {
-  probes = [...els].map((el) => ({ el, y: 0, light: null }));
+  probes = [...els].map((el) => ({ el, x: 0, y: 0, light: null }));
   measureProbes();
 }
-function measureProbes() { for (const p of probes) { const r = p.el.getBoundingClientRect(); p.y = r.top + r.height / 2; } }
+function measureProbes() { for (const p of probes) { const r = p.el.getBoundingClientRect(); p.x = r.left + r.width / 2; p.y = r.top + r.height / 2; } }
 
 export function initChapters() {
   onLayout(measureProbes);
@@ -45,11 +49,11 @@ export function initChapters() {
     let cur = null;
     for (const el of chapters) if (geo(el).top <= line) cur = el.id;
     if (cur !== active) { active = cur; for (const fn of listeners) fn(active); }
-    const nav = themeAt(v.y + 28), rail = themeAt(v.y + v.vh - 150);
+    const nav = themeAt(v.y + 28), rail = themeAt(v.y + v.vh - 150, 16);
     if (nav !== lastNav) { root.classList.toggle('nav-light', nav === 'light'); lastNav = nav; }
     if (rail !== lastRail) { root.classList.toggle('rail-light', rail === 'light'); lastRail = rail; }
     for (const p of probes) {
-      const light = themeAt(v.y + p.y) === 'light';
+      const light = themeAt(v.y + p.y, p.x) === 'light';
       if (light !== p.light) { p.el.classList.toggle('is-light', light); p.light = light; }
     }
   });

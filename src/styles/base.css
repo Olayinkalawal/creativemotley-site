@@ -80,8 +80,21 @@ main { position: relative; z-index: 2; overflow-x: clip; }
 .lead { font-family: var(--serif); font-size: var(--t-lead); line-height: 1.16; letter-spacing: -0.005em; }
 .label { font-family: var(--sans); font-weight: 650; font-size: var(--t-small); letter-spacing: -0.005em; line-height: 1.25; }
 .body { font-size: var(--t-body); line-height: 1.45; max-width: 34em; }
-.mute { color: var(--paper-mute); }
-[data-theme='dark'] .mute { color: var(--cream-mute); }
+/* theme colours as inherited custom properties, so the innermost [data-theme] region wins
+   (paper inside a dark chapter, a dark card on paper) without ancestry selectors */
+:root, [data-theme='light'] {
+  --th-fg: var(--paper-ink); --th-mute: var(--paper-mute);
+  --th-box-bg: var(--paper-2); --th-box-fg: var(--paper-ink); --th-box-ring: rgba(20, 16, 10, 0.14);
+  --th-box-bg-h: var(--cream); --th-box-ring-h: rgba(20, 16, 10, 0.4);
+  --th-pill-bg: var(--ink); --th-pill-fg: var(--cream); --th-pill-bg-h: var(--accent-ink);
+}
+[data-theme='dark'] {
+  --th-fg: var(--cream); --th-mute: var(--cream-mute);
+  --th-box-bg: rgba(244, 237, 223, 0.1); --th-box-fg: var(--cream); --th-box-ring: rgba(244, 237, 223, 0.28);
+  --th-box-bg-h: rgba(244, 237, 223, 0.18); --th-box-ring-h: rgba(244, 237, 223, 0.5);
+  --th-pill-bg: var(--cream); --th-pill-fg: var(--ink); --th-pill-bg-h: var(--gold);
+}
+.mute { color: var(--th-mute); }
 
 /* drop cap: an oversized italic serif initial that hangs across two lines (Editions swash cap) */
 .dc {
@@ -96,14 +109,12 @@ main { position: relative; z-index: 2; overflow-x: clip; }
   display: inline-flex; align-items: center; gap: 0.45em;
   font-family: var(--sans); font-weight: 650; font-size: var(--t-label);
   text-decoration: none; padding: 0.42em 0.6em 0.4em; border-radius: 3px;
-  background: var(--paper-2); color: var(--paper-ink);
-  box-shadow: inset 0 0 0 1px rgba(20, 16, 10, 0.14);
+  background: var(--th-box-bg); color: var(--th-box-fg);
+  box-shadow: inset 0 0 0 1px var(--th-box-ring);
   transition: background 0.2s, box-shadow 0.2s, transform 0.2s var(--ease-out);
 }
-.boxlink:hover { background: var(--cream); box-shadow: inset 0 0 0 1px rgba(20, 16, 10, 0.4); }
+.boxlink:hover { background: var(--th-box-bg-h); box-shadow: inset 0 0 0 1px var(--th-box-ring-h); }
 .boxlink .ar { font-size: 0.9em; }
-[data-theme='dark'] .boxlink { background: rgba(244, 237, 223, 0.1); color: var(--cream); box-shadow: inset 0 0 0 1px rgba(244, 237, 223, 0.28); }
-[data-theme='dark'] .boxlink:hover { background: rgba(244, 237, 223, 0.18); }
 
 /* brand pill */
 .pill {
@@ -114,10 +125,8 @@ main { position: relative; z-index: 2; overflow-x: clip; }
   box-shadow: inset 0 0 0 1px currentColor;
   transition: background 0.25s, color 0.25s, box-shadow 0.25s;
 }
-.pill--solid { background: var(--cream); color: var(--ink); box-shadow: none; }
-.pill--solid:hover { background: var(--gold); }
-[data-theme='light'] .pill--solid, .is-light .pill--solid { background: var(--ink); color: var(--cream); }
-[data-theme='light'] .pill--solid:hover, .is-light .pill--solid:hover { background: var(--accent-ink); }
+.pill--solid { background: var(--th-pill-bg); color: var(--th-pill-fg); box-shadow: none; }
+.pill--solid:hover { background: var(--th-pill-bg-h); }
 
 /* ── layout: right 4/5 column (Editions grid) ────────────────────────── */
 .col { position: relative; width: 100%; padding-inline: var(--col-pad); }

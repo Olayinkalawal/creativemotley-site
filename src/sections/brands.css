@@ -1,0 +1,34 @@
+/* III · Brands paper */
+.br { display: flex; flex-direction: column; }
+.br__intro { display: grid; gap: clamp(20px, 4vh, 40px); }
+@media (min-width: 900px) { .br__fan { --fan-w: clamp(204px, 16.5vw, 238px); } }
+@media (min-width: 1024px) {
+  .br__intro { grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); align-items: center; min-height: 52svh; }
+}
+
+/* two XXL photo cards in painted mats (crops of the hero plate): the room full width, the set offset right */
+.br__photos { display: grid; gap: clamp(56px, 10vh, 120px); margin-top: clamp(56px, 10vh, 128px); }
+.br__pc { --plate: url(/assets/plates/hero.webp); }
+.br__pc--room { --pc-ar: 0.6; --pc-inset: 0.76; --cx: 0.42; --cy: 0.25; --zoom: 2.4; }   /* sky and floating kit */
+.br__pc--set { --pc-ar: 0.66; --pc-inset: 0.8; --cx: 0.21; --cy: 0.72; --zoom: 2.4; }    /* silk and cypresses */
+@media (min-width: 1024px) {
+  .br__photos { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 16px; }
+  .br__pc--room { grid-column: 1 / 12; }
+  .br__pc--set { grid-column: 3 / 13; }
+}
+@media (max-width: 639px) {
+  .br__pc--room, .br__pc--set { --pc-ar: 0.9; --pc-inset: 0.86; --zoom: 3.2; }
+  .br__pc--room { --cy: 0.3; }
+  .br__pc--set { --cy: 0.7; }
+}
+
+/* leadership experience: type only, a dense row of names under its label */
+.br__credits { margin-top: clamp(80px, 15vh, 180px); }
+.br__credits .pf__label { margin-bottom: clamp(14px, 2.4vh, 22px); }
+.credits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(16px, 2.4vw, 32px); }
+.credits li {
+  padding-block: 12px 18px; box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.2);
+  font-family: var(--sans); font-weight: 620; font-size: clamp(1.35rem, 2.15vw, 2.15rem);
+  letter-spacing: -0.04em; line-height: 1;
+}
+@media (min-width: 900px) { .credits { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
