@@ -21,6 +21,10 @@
     calc((var(--cy, 0.5) * var(--sy) - 0.5) / (var(--sy) - 1) * 100%);
 }
 
+/* a crop's plate loads only once its chapter is within ~1.5 viewports (src/main.js adds .is-near), so the paintings
+   behind the paper cards cost nothing on the first load (without JS they load as usual) */
+.js [data-chapter]:not(.is-near) .crop { background-image: none; }
+
 /* theme-aware tones: custom properties inherit, so the innermost [data-theme] wins (a light paper inside a
    dark chapter, a dark card on that paper) */
 [data-theme='light'] { --pp-ink: var(--paper-ink); --pp-mute: var(--paper-mute); --pp-rule: rgba(20, 16, 10, 0.18); }

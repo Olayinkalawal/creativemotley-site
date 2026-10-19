@@ -3,7 +3,7 @@
 Every builder reads this, `docs/concept.md` (what each chapter is) and `docs/reference-study.md` (the Editions patterns) before writing code. The shell is done and committed: chrome, rail, hero, chapter I, the stage and the skeleton partials. Use it as the house style; `src/partials/storytellers.html` and `src/sections/storytellers.*` are the worked example.
 
 ## Stack and commands
-- Vite 8 + plain ES modules (no framework), `three@0.186.1`, `gsap@3.15.0` (+ScrollTrigger), `lenis@1.3.27`. No new dependencies without a reason written in your report.
+- Vite 8 + plain ES modules (no framework), `three@0.186.1`, `lenis@1.3.27` (driven from our own rAF in `core/scroll.js`). **GSAP and ScrollTrigger are uninstalled (v3)**: scroll-driven values are pure functions of `onFrame`'s `view`, and timed tweens are CSS transitions or the keyframe player (`gl/timeline.js`). No new dependencies without a reason written in your report.
 - Dev server: `npx vite --host 127.0.0.1 --port <your port>`. The shell's server is on 5173; builders use 5174, 5175 and so on. Production check: `npx vite build` must pass with no warnings from your files.
 - Screenshots: `node scripts/shots.mjs --url http://127.0.0.1:<port>/ --out qa/shots/<you> --at "#creators,#creators+0.4" --wait 2200 --boot 6000 [--mode mobile] [--tier 0|1|2] [--reduced]`. Contact sheet: `python3 -I scripts/sheet.py qa/shots/<you> qa/shots/<you>_sheet 4 480 16`. Look at every shot at full size before you report.
   - WebGL here is software (SwiftShader): it is slow but correct. Allow `--wait 2000+`.
@@ -24,23 +24,25 @@ Every builder reads this, `docs/concept.md` (what each chapter is) and `docs/ref
 - Files starting with `_` in `src/sections/` are helpers. They are still auto-imported, so give them a harmless `export function init() {}` or no `init`.
 
 ## Copy: the hard rule
-- Every visible word comes from `docs/facts.json`, verbatim. Splitting a fact into parts is fine, e.g. "Creators" + "audience, no system" from F22. Use the F-ids `docs/concept.md` gives your chapter.
+- Every visible word comes from `docs/facts.json`, verbatim. Drafted copy awaiting the client (`docs/copy-drafts.md`) is in facts.json with `kind: "draft"`: it traces, but the fact check lists each draft on the page as a warning (`⚠ draft F…`), and `--strict` fails on them. Splitting a fact into parts is fine, e.g. "Creators" + "audience, no system" from F22. Use the F-ids `docs/concept.md` gives your chapter.
 - No new claims, numbers, names, testimonials or invented UI notes.
-- Interface labels with no fact ("Close", "Next", "Previous", "Play", "Pause", "Menu", "Chapters", "Skip to content", "Chapter II", "Chapter III", "Chapter IX") must be listed in your report. The director adds them to `docs/ui-strings.json`.
+- Interface labels with no fact ("Close", "Next", "Previous", "Play", "Pause", "Menu", "Chapters", "Skip to content") must be listed in your report. There are no "Chapter N" kickers in v3: the rail numbers the chapters. The director adds them to `docs/ui-strings.json`.
 - Alt text: use the facts' descriptions where they exist (F51, F53, F64–F70). Otherwise describe the painted art plainly ("Painted portrait of …"); names only from facts.
 - `scripts/factcheck.mjs` (director) walks every text node and fails on anything that is not a fact substring or a listed UI string.
 
 ## Design system (use these; don't restyle the shell's classes)
-- **Tokens** live in `src/styles/tokens.css`: `--ink --ink-soft --umber --bronze --ochre --gold --cream --accent --accent-ink --paper --paper-2 --paper-ink --paper-mute`, `--sans` (Archivo) and `--serif` (Instrument Serif), plus the type scale `--t-giant --t-display --t-dek --t-head --t-lead --t-body --t-small --t-label`, `--rail-w --col-pad --nav-h`, `--ease-out --ease-io`.
+- **Tokens** live in `src/styles/tokens.css`: `--ink --ink-soft --umber --bronze --ochre --gold --cream --cream-mute --hair --accent --accent-ink --paper --paper-2 --paper-ink --paper-mute`, `--sans` (Archivo), `--serif` (Instrument Serif), `--script` (Imperial Script, drop caps only), `--rail-w --col-pad --nav-h`, `--ease-out --ease-io`.
+- **Type scale (v3, the only sizes on the page):** ten roles, each a `--f-<role>` font shorthand plus `--ls-<role>` tracking (and `--t-<role>` size, `--lh-<role>` line height): `title` (Archivo 700, 190 / 71 px), `numeral` (= title), `display` (serif 121 / 56), `dek` (serif 44 / 28, lh 0.96, −0.04em), `cap` (Imperial Script, 2.6 × dek), `head` (Archivo 700, 28), `lead` (serif 28 / 24), `label` (Archivo 600, 18), `body` (Archivo 500, 16), `small` (Archivo 600, 12; caps take `--ls-caps`). Write `font: var(--f-label); letter-spacing: var(--ls-label);` and nothing else. The v2 tokens `--t-giant` and `.kicker` are gone.
 - **Classes** (in `base.css`):
-  - Type: `.kicker` (Chapter labels), `.giant` (chapter titles), `.display`, `.dek` (serif deck over scenes), `.head` (serif editorial head on paper), `.lead` (serif body), `.label` (small bold sans), `.body`, `.mute`.
-  - `.dc` is the drop cap: wrap the first letter, `<span class="dc">B</span>uilt …`.
+  - Type roles: `.giant` (chapter titles: the title role), `.numeral`, `.display`, `.dek` (serif deck over scenes), `.head` (serif head on paper, the dek's size), `.t-head` (sans head), `.lead` (serif body), `.label`, `.body`, `.small`, `.mute`.
+  - `.dc` is the drop cap (Imperial Script, self-hosted A–Z subset): wrap the first letter, `<span class="dc">B</span>uilt …`.
   - `.boxlink` is the "Read help doc ↗" pattern: `<a class="boxlink" href="…">Join the network <span class="ar">↗</span></a>`. Mind F43, F46 and F49: the ↗ is part of the fact.
   - `.pill` / `.pill--solid`.
 - **Layout:**
   - `.col` is the Editions right 4/5 column on desktop and full width on mobile.
   - `.opener` is a transparent ≥140svh region; the stage shows through it.
   - `.scrim` puts a soft dark halo behind opener text.
+  - `.opener--light`: an opener over a light painting (its manifest's `titleInk` is `"dark"`): ink type and a pale halo. Wrap it in a **full-width** `<div data-theme="light">` (the rail reads themes across the page width, and `.col` does not reach under the rail). X Apply is the example.
   - `.paper` is an opaque reading panel with a torn top edge. **Always** give it `data-theme="light" data-opaque`. `data-opaque` lets the stage stop rendering while paper covers the screen.
   - `.paper-grain` is a texture layer.
 - **Reveal:** `data-reveal` (optionally `data-reveal="0.1"` for a delay) rises an element in once. Don't animate giant type per letter; move it as a block.
@@ -52,27 +54,39 @@ Every builder reads this, `docs/concept.md` (what each chapter is) and `docs/ref
   - Read cached geometry with `geo(el)` → `{ top, height, bottom }` (document space). It is re-measured on resize, font load and body resize.
   - **Never call getBoundingClientRect in onFrame for scrolling elements.** Exception: fixed elements, once per resize.
 - `onResize(fn)`, `onLayout(fn)`, and the helpers `clamp`, `lerp`, `smooth`, `seg(v, a, b)`.
-- `scrollTo(target)`, `lockScroll(bool)`, plus `gsap` and `ScrollTrigger` re-exported from `core/scroll.js`.
-- `REDUCED`, `TIER` (0 = no WebGL, 1 = light, 2 = full), `FINE` (fine pointer), `isDesktop()` from `core/env.js`.
+- `scrollTo(target)`, `lockScroll(bool)`, `lenis`, `input.trackpad` from `core/scroll.js` (no `gsap` / `ScrollTrigger` any more).
+- `REDUCED`, `TIER` (0 = no WebGL, 1 = light, 2 = full), `FINE` (fine pointer), `isDesktop()` from `core/env.js`, plus (v3) `STILL` (the phone still path: touch screens under 900 px on their short side and windows under 640 px; `?still=1|0`) and `QUALITY` (the stage's starting level `min | low | medium | high`; `?q=`).
+- Chapter intent: hovering or focusing a chapter in the rail or dropdown dispatches `cm:chapter-intent` on `document` (`detail` = chapter id); the stage preloads that chapter's scene.
 - `openModal(node, { onClose })` / `closeModal()` from `ui/modal.js`: one shared, accessible dialog (focus trap, Esc, scrim). Put a heading with `id="modal-title"` in your node.
 
 ## The stage (WebGL): how to add a scene
 - One fixed canvas renders the scene named by the `data-scene` of the section under the reading line. It dissolves across boundaries between different scenes.
-- Your section needs `data-scene="<id>"` and `data-plate="<id>"`; the plate is the still shown when WebGL is off. Plates exist for `hero`, `storytellers`, `method`, `results`, `paper` and `umber`; ask the director for more.
-- A scene module calls `stage.add({ id, scene, camera, load, update, render?, resize, activate?, deactivate?, post? })`. The full contract is in the header of `src/gl/stage.js`. `update(ctx, seg)` gets:
-  - `ctx = { time, dt, vw, vh, w, h, dpr, pointer (eased, -1..1), velocity, tier, reduced, scrollY, renderer }`
+- **Lifecycle (v3):** each scene module is its own chunk, imported the first time one of its ids enters the mount window (the active run ±1, plus a hovered or announced chapter). Scenes outside the window are disposed after ~2.5 s; programs compile at idle (`compileAsync` where parallel) and textures upload at idle, before the first draw. The loop draws only while something changes and stops ~300 ms after the last change. Pixel budget: longest side 1280 / 1920 / 2880 px, DPR ≤ 2 (phones 2560, DPR ≤ 3); a frame-rate governor steps down below 45 fps, and "low" caps at 30 fps.
+- Your section needs `data-scene="<id>"` and `data-plate="<id>"`; the plate is the still shown when WebGL is off (and the first paint). CSS plates exist in `index.html` for `hero`, `storytellers`, `creators`, `brands`, `results`, `directors`, `apply`, `paper`, `ink` and `umber`; a plate other than the hero is marked `data-bg` (+ `data-bg-phone` for portrait screens) and loads when first shown.
+- **Painted chapters:** `plate:<chapter>` exists for every painting in `public/assets/scenes/<chapter>/manifest.json` (the art track's encodes, `scripts/art.py`): AVIF where it decodes, else WebP, at the smallest width that covers the canvas, plus the depth map listed in `gl/scenes/plates.js` (`public/assets/scenes/<chapter>/depth.webp`, made with `scripts/depth.py`). In use: `plate:creators`, `plate:brands`, `plate:results`, `plate:directors`, `plate:apply`; `plate:umber` is the shader-only room. Phones draw each chapter's portrait recomposition from the same manifest (`gl/scenes/stills.js`).
+- **Camera keys** live in `src/gl/keys/*.json` (one sheet per chapter, played by `gl/timeline.js`: per-channel keyframes in viewports of the section's pass, cubic-bezier eases). A plate chapter without a sheet falls back to `data-cam-from` / `data-cam-to` on the section.
+- **New scene module:** add a line to the `KNOWN` list in `src/gl/boot.js` (which ids it answers), so the stage can import it on demand.
+- A scene module calls `stage.add({ id, scene, camera, load, dispose?, update, render?, resize, activate?, deactivate?, ambient?, device?, post? })`. The full contract is in the header of `src/gl/stage.js`.
+  - `dispose(ctx)` frees what `load()` made (textures, streams, videos); `load()` runs again on return.
+  - `ambient(ctx)` returns true while the scene moves on its own (dust, a playing video): the loop keeps drawing at ≤ 30 fps.
+  - `device: true` marks a teardown scene (the device stills show in its section on the still path).
+  - Call `ctx.stage.invalidate()` when something lands between scrolls (a texture, a stream frame) so the loop draws it.
+- `update(ctx, seg)` gets:
+  - `ctx = { stage, time, dt, frame, vw, vh, w, h, dpr, pointer (eased, -1..1), velocity, tier, still, quality, reduced, scrollY, renderer }`
   - `seg = { el, p (pin progress), pe (pass progress), top, height }`
 - Reusable pieces in `src/gl/lib/`:
   - `plate.js`: `plateMaterial()` (cover-fit painting + depth parallax / push / zoom) and `fullscreenQuad()`.
-  - `frameStream.js`: `FrameStream` (windowed frame-sequence → texture).
-  - `loaders.js`: `loadTexture(url)`, `videoTexture(sources)`, `bitmap(url)`.
+  - `frameStream.js`: `FrameStream` (frame-sequence → texture; keeps a ±24-frame window and frees the rest).
+  - `video.js` / `codecStream.js`: scrubbed video (`<video>` seek, or WebCodecs on a hardware decoder) for the film.
+  - `loaders.js`: `loadTexture(url)`, `videoTexture(sources)`, `bitmap(url)`, `avifOK()` (a promise: AVIF decodes here).
   - `sparks.js`: GPU sparks.
-  - Film helpers `filmRanges(name)` and `frameAt(ranges, y, vh)` in `gl/scenes/film.js`: mark scroll ranges in markup with `data-film="<name>" data-frames="a-b"`.
+  - Film helpers `filmRanges(name)` and `frameAt(ranges, y, vh)` in `gl/lib/filmRanges.js`: mark scroll ranges in markup with `data-film="<name>" data-frames="a-b"`.
 - **Texture rule:** every texture is uploaded with `flipY = false` and sampled with `v` flipped (`vec2(uv.x, 1.0 - uv.y)`). The loaders already set this up.
 - **Colour:** pass-through display sRGB (`NoColorSpace` textures, `LinearSRGBColorSpace` output). If you light anything, keep it subtle and check the result against the paper and ink tokens.
 - **Performance:**
   - Load in `load()`, not at import.
-  - Textures ≤ 2048 px. Phones (`ctx.vw < 900`) get smaller sources.
+  - Textures sized to the pixel budget (≤ 2048 px at 1×, 2880 at 2×); AVIF/WebP, depth maps as WebP. Phones are on the still path and never fetch desktop assets.
+  - Smoothness rules: no `filter` / `backdrop-filter` / blurred SVG animated per frame; transforms and opacity only; read rects once per resize (`geo()`), write styles only when they change; no canvas reallocation mid-scene.
   - Geometry modest. No per-frame allocations. Pause videos in `deactivate()`.
   - Pick the phone frame tier from the viewport.
 - **Fallbacks:** `TIER === 0` or `REDUCED` means the stage never boots. Your chapter must still read well with its CSS plate and DOM content: posters and objects as plain images, counters showing their final values.

@@ -1,5 +1,8 @@
-<!-- IX · DIRECTORS · scene: plate:umber (shader-only dark umber stage: a warm pool of light, slow dust) · owner: builder B
-     The Results painting dissolves into the umber room at this chapter's top. The opener, then a pinned stage that
+<!-- IX · DIRECTORS · scenes: plate:directors on the opener ("The Empty Set", public/assets/scenes/directors: two empty
+     director's chairs under a tungsten beam; keys in src/gl/keys/plates.json "directors"), then plate:umber on the run
+     (shader-only dark umber stage: a warm pool of light, slow dust) · owner: builder B
+     The Results painting dissolves into the empty set at this chapter's top; the set dissolves into the umber room
+     as the run starts. The opener, then a pinned stage that
      starts under the opener's tail: the directors' alpha film (two painted portraits on transparency, their foot torn
      like paper) rises from the foot of the screen as the dek leaves; the names glide behind their heads on a serif
      line that fades in as it rises and runs with scroll. On phones the film is taller than the screen is wide, so
@@ -9,7 +12,7 @@
      src/gl/scenes/umber.js): a dim, low pool on the opener, a bright one behind the heads on the run.
      Sources: phones (narrow, not WebKit) get a 1280px VP9-alpha encode (data-dr-sm, dropped elsewhere by
      directors.js); WebKit gets the HEVC-alpha mp4 (moved first by directors.js). -->
-<section class="chapter" id="directors" data-chapter data-theme="dark" data-scene="plate:umber" data-plate="umber"
+<section class="chapter" id="directors" data-chapter data-theme="dark" data-scene="plate:directors" data-plate="directors"
   data-umber="-0.12 0.3 0.42 0.5 0.55" aria-labelledby="directors-title">
   <div class="opener col dr-open">
     <div class="scrim">
@@ -17,7 +20,7 @@
       <p class="dek" data-reveal="0.08"><span class="dc">T</span>he two people answerable for all of it.</p>
     </div>
   </div>
-  <div class="dr-run" data-dr-run data-umber="0 0.54 0.74 1 1">
+  <div class="dr-run" data-dr-run data-scene="plate:umber" data-plate="umber" data-umber="0 0.54 0.74 1 1">
     <ul class="sr-only"><li>Olayinka Lawal</li><li>Gbenga Sosanya</li></ul>
     <div class="dr-pin">
       <div class="dr-band" data-dr-band aria-hidden="true">

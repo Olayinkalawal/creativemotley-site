@@ -172,18 +172,22 @@ export class Stage {
     }
   }
   watchHover() {
-    const on = (e) => {
-      const a = e.target.closest?.('a[href^="#"]');
-      if (!a || !a.closest('.rail, .chapters, .menu, .index, .nav')) return;
-      const ch = document.getElementById(a.getAttribute('href').slice(1));
+    const want = (ch) => {
       if (!ch) return;
       const seg = this.segs.find((s) => ch === s.el || ch.contains(s.el));
       if (!seg) return;
       this.hover = { id: seg.id, until: performance.now() + 6000 };
       this.ensure(seg.id);
     };
+    const on = (e) => {
+      const a = e.target.closest?.('a[href^="#"]');
+      if (!a || !a.closest('.rail, .chapters, .menu, .index, .nav')) return;
+      want(document.getElementById(a.getAttribute('href').slice(1)));
+    };
     document.addEventListener('pointerover', on, { passive: true });
     document.addEventListener('focusin', on);
+    // the chrome's announcement (ui/chrome.js: rail and dropdown hover or focus; detail = the chapter id)
+    document.addEventListener('cm:chapter-intent', (e) => want(document.getElementById(String(e.detail || '').replace(/^#/, ''))));
   }
 
   /* ── size: one canvas per quality level ──────────────────────────────────────────────────────── */
