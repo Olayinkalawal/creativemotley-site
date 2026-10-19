@@ -181,3 +181,151 @@ Re-running: `python3 scripts/art.py` downloads the masters from d8j0ntlcm91z4.cl
   the WebP; the PNGs are unused.
 - Poster cards: 640 and 960 px WebP q80 variants (`public/assets/posters/*-{640,960}.webp`) for the phone carousel's
   srcset; WebGL and the modal keep the 1200 px files.
+
+## Masters, modernised (client request)
+**Request (2026-10-19):** "the pictures u did, or used — i would prefer renaissance popular ones but make them modern."
+So every chapter painting after the hero becomes a famous Renaissance masterpiece, recognisable at a glance, re-staged
+with young Black African creators and modern media kit and painted as a museum oil. The hero (a modern Creation of
+Adam) stays. Everything below is **staged, not live**: masters and encodes are in the session scratchpad
+(`.../scratchpad/masters/<chapter>/` and `.../scratchpad/masters/encoded/<chapter>/`), and
+`.../scratchpad/masters/swap-plan.md` lists what the director changes to put them live.
+
+### Chapter → masterpiece
+| Chapter | Masterpiece | Desktop pick (16:9) | Phone pick (9:16) |
+|---|---|---|---|
+| I Storytellers | Raphael, *The School of Athens* (1509-11) | `storytellers/d7_r3.png`: job `cbee6a1a` + local retouch | `storytellers/p1_r3.png`: job `d32e86f3` + local retouch |
+| II Creators | Leonardo, *Mona Lisa* (c. 1503-19) | `creators/d7_r3.png`: job `506535aa` + local retouch | `creators/p1_r3.png`: job `5f92e37c` + local retouch |
+| III Brands | Van Eyck, *The Arnolfini Portrait* (1434) | `brands/d5_r3.png`: job `322047e0` + local retouch | `brands/p1_r3.png`: job `b5fd8ac6` + local retouch |
+| VIII Results | Mantegna, oculus of the *Camera degli Sposi* (1465-74) | `results/d9.png`: job `922b10cb` + local retouch and grade | `results/p3.png`: job `9bc59196` + grade |
+| IX Directors | Holbein, *The Ambassadors* (1533), the ambassadors' places left to two empty director's chairs | `directors/d8.png`: job `da8b8160` + local retouch | `directors/p3.png`: job `add24dd7` + local retouch |
+| X Apply | Botticelli, *The Birth of Venus* (c. 1484-86) | `apply/d8.png`: job `e47abfe4` + local retouch | `apply/p3.png`: built in post from d8 (no model phone passed) |
+
+### Prompts (short; full text in each chapter's `log.md`)
+Model: Nano Banana Pro 4K (`nano_banana_pro`, 5504 x 3072 or 3072 x 5504), 4 credits per image. Every prompt names
+the masterpiece and fixes its composition in words, recasts every figure as a young Black African creator in the
+original's garments with modern touches, asks for museum oil (glazes, visible brushwork, craquelure, aged varnish),
+names a calm title zone, and bans text, logos and frames. What worked: text-to-image to get the composition, then
+EDITS of our own job ids ("Edit this painting. Keep ... Change only ...") for the recast and the kit; the phone is a
+9:16 recomposition with the chosen 16:9 job as the image input. Text-to-image alone reproduced the famous original
+(European faces, no kit) for the School of Athens and the Mona Lisa.
+- **Storytellers:** "...instantly recognisable as Raphael's The School of Athens... every figure a young Black African
+  man or woman... central figure holds a smartphone aloft, the other carries a closed laptop... the editor on a
+  laptop with headphones... the upper 35% only the coffered vault, dim warm shadow". Chain: `e5dca105` (t2i) →
+  `ecb56a24` (recast edit) → `69bf0b47` (people/statues/kit edit) → `cbee6a1a` (lighting + re-varnish edit);
+  phone `d32e86f3` ("recompose as a new vertical 9:16 painting... top 30% the coffered vault in deep umber shadow").
+- **Creators:** "...re-stages Leonardo's Mona Lisa with a new present-day sitter... a young Black African woman...
+  lavalier mic, plain phone in her folded hands, gold hoops, a small mirrorless camera with a red tally on the
+  parapet... the left 45% calm hazy landscape". Chain: `88f177c9` (t2i) → `f931edb0` (edit) → `506535aa` (seam +
+  detail edit); phone `5f92e37c`.
+- **Brands:** "...Jan van Eyck's The Arnolfini Portrait... he a young creator in a black wide-brim hat, velvet
+  blazer and white sneakers; she the brand's patron in the emerald gown; their joined hands hold a contract with a
+  blank red wax seal; the convex mirror reflects a tiny film crew". Chain: `2c6c6c5e` (t2i) → `322047e0` (edit:
+  inscription out, crew in the mirror, blank seal); phone `b5fd8ac6`.
+- **Results:** "...Mantegna's painted ceiling oculus... we look straight up... people lean over the parapet with
+  phones, a camcorder and a ring light... potted orange tree on a pole". Chain: `e04207f9` (t2i) → `922b10cb`
+  (edit: camcorder blanked, ring light moved, branch shortened); phone `9bc59196` (tall oval ring).
+- **Directors:** "...Holbein's The Ambassadors, but with the two ambassadors absent... green damask, the two-tier
+  table and carpet, the instruments... two empty black director's chairs... the anamorphic smear on the floor".
+  Chain: `c07d697d` (t2i) → `da8b8160` (edit: modern cinema camera, monitor, de-lettering, darker upper damask; hero
+  `70d440b1` passed for technique only); phone `add24dd7`.
+- **Apply:** "...Botticelli's The Birth of Venus... Venus elegantly clothed in rose silk, white sneakers, a phone on a
+  gimbal; the wind pair as two young creators flying in with a boom mic; the attendant with a small camera". Chain:
+  `5f652579` (t2i) → `e47abfe4` (edit, hero for technique only). Both model phones (`493260e7`, `bafadb4e`) came
+  back as a letterboxed paste with a hard sky seam, so the phone is a post build from d8.
+
+### Spend (Higgsfield credits)
+| Round (UTC) | Who | Jobs (credits) | Credits |
+|---|---|---|---|
+| 20:15-20:23 round 1 | painter A | storytellers `66c3b7f9` (failed, refunded) `0b9ccb87` `d99d5df9` `e5dca105` `584b5080` `ecb56a24`; creators `b99b857d` `393a615d` `8772387a` `a953d847` `88f177c9` `f931edb0`; brands `909b9a48` `2c6c6c5e` `6e037fc9` `8d6735e7` | 60 |
+| 20:16-20:22 round 1 | painter B | results `0bcc2eae` `c2e4b846` `2353258a` `e7977179` `e04207f9` `12237d44`; directors `6be15cf2` `f61d0ddb` `c07d697d` `fa2e6bce`; apply `9c1f4669` `6d867c67` `c99068d1` `b1585640` `5f652579` | 60 |
+| 20:51-20:59 round 2 | painter A | storytellers `69bf0b47` `cbee6a1a` `d32e86f3`; creators `cbb41d1e` `506535aa` `70ffb7b5` (outpaint, 2) `ebcad88c` `5f92e37c`; brands `322047e0` `4c1aace6` `b5fd8ac6` | 42 |
+| 20:45-20:55 round 2 | painter B | results `922b10cb` `9f8c2d62` `9bc59196` `a482c4e7`; directors `e155f489` `400e896f` `da8b8160` `add24dd7` `b15c5190`; apply `e47abfe4` `c2b6db7a` `493260e7` `bafadb4e` | 52 |
+| 21:25-22:30 round 3 | both painters | local retouch only (OpenCV/numpy, scripts in the scratchpad `_workA3/`, `_workB3/`) | 0 |
+| 22:36-23:00 encode | encoder | `scripts/art.py --config ... --out ...`, MiDaS depth | 0 |
+| | **total** | 53 images charged + 1 outpaint, 1 refund | **214** |
+
+By chapter: Storytellers 32, Creators 42, Brands 28, Results 40, Directors 36, Apply 36. Balance: **515.03 before,
+301.03 after** (checked with `balance` and `transactions`: the 214 is exactly the Nano Banana Pro and Outpaint spends
+from 20:15:26 to 20:59:47 less the 20:17:52 refund; nothing has been spent since 20:59:47). The account floor is 300,
+so no further image could be made (the cheapest, Nano Banana Pro 1K, costs 2): the judges' retake and edit specs in
+each `log.md` were not run.
+
+### Picks and why
+- **Storytellers** d7_r3: the only candidate that is both the School of Athens at a glance and fully recast (the
+  text-to-image tries were the original fresco with European faces; one had a gilt frame and a lettered plaque).
+  d7_r3 is d7 plus a crisper finish, fine craquelure, smoky sunglasses and two odd faces glazed down. Phone p1_r3:
+  a true vertical School of Athens (central pair under the arch, the sprawled man with the gimbal, the brooder with
+  the podcast mic), book-spine pseudo-letters removed, painted skin, terracotta robe, warmer varnish.
+- **Creators** d7_r3: the clearest Mona Lisa with a new sitter (braids, hoops, veil), a calm hazy valley on the left;
+  neckline glyph band repainted as plain pleats, camera badge removed, lavalier added, sky seam colour step removed
+  (dE 14.4 to 1.1). Phone p1_r3: Leonardo's classic vertical framing; neckline, specks, path and sleeves fixed.
+- **Brands** d5_r3: the only desktop with the film crew in the convex mirror and no inscription; neat blank seal,
+  plain chair back, softened mirror, painted skin, window wall glazed into shadow (title box mean L 95 to 58). d6
+  (darker wall) misses the crew. Phone p1_r3: very close to the original vertical Arnolfini; inscription removed.
+- **Results** d9: d7 with the tub's relief band and letter-like marks flattened, the orange branch kept right of
+  u 0.64, the oculus sky graded to mid cerulean (L 190 to 144) so a cream title can hold, varnish and canvas grain.
+  Phone p3 (graded p1) over p2: p2's parapets melt into smears and its pole runs into the sky.
+- **Directors** d8: the only candidate with modern kit in Holbein's layout; screens, light meter, sundial numerals
+  and book lines blanked. Phone p3 (retouched p1): the best Directors finish of the set; monitor, displays, sundial
+  and hymn book cleaned; the clapperboard is plain stripes.
+- **Apply** d8: d6 with the second camera removed, Botticelli's roses restored, the far-left drapery made silk, the
+  fourth foot added, the neck coil turned into hair. Phone p3 over p1/p2: both model phones have a hard horizontal
+  seam where a flat outpainted sky meets the painting.
+
+### Encodes (staged; `scripts/art.py`, now with `--out`, `--config`, `--sheet-path`, `--depth`)
+Run: `python3 scripts/art.py --config <scratchpad>/_enc/masters.json --out <scratchpad>/masters/encoded
+--sheet-path qa/shots/v3-masters-sheet.jpg --depth /home/user/models/midas_small.onnx`. The default run (no flags)
+is unchanged. Same codecs, budgets and ceilings as the live set (AVIF q72 / WebP q86 ceilings, byte budgets as in
+the plan, triangular dither before encoding). Sizes in KB (quality):
+
+| Chapter | desktop AVIF 2048 / 2880 | desktop WebP 2048 / 2880 | phone AVIF 1170 / 828 | phone WebP 1170 / 828 | thumb AVIF / WebP | depth |
+|---|---|---|---|---|---|---|
+| storytellers | 211 (q72) / 310 (q72) | 274 (q86) / 434 (q86) | 174 (q64) / 94 (q61) | 261 (q85) / 145 (q84) | 13.0 / 13.1 | 11.6 |
+| creators | 108 (q72) / 172 (q72) | 153 (q86) / 268 (q86) | 162 (q72) / 93 (q72) | 221 (q86) / 126 (q86) | 5.2 / 6.0 | 11.3 |
+| brands | 100 (q72) / 151 (q72) | 143 (q86) / 222 (q86) | 143 (q72) / 90 (q72) | 201 (q86) / 121 (q86) | 6.3 / 6.8 | 12.3 |
+| results | 239 (q62) / 439 (q65) | 368 (q84) / 668 (q85) | 172 (q57) / 98 (q54) | 258 (q80) / 148 (q79) | 13.7 / 13.7 | 12.7 |
+| directors | 202 (q72) / 330 (q72) | 258 (q86) / 444 (q86) | 171 (q61) / 99 (q59) | 265 (q84) / 148 (q83) | 9.8 / 10.4 | 10.2 |
+| apply | 245 (q70) / 393 (q72) | 313 (q86) / 507 (q86) | 178 (q69) / 99 (q65) | 249 (q86) / 146 (q86) | 13.1 / 12.9 | 13.1 |
+
+Checked by eye at 1:1 and with levels stretched 4-5x (AVIF vs WebP vs the master resized): no banding in any sky
+(the craquelure and grain carry the gradients). Under the stretch only, the Apply phone sky and the Results sky show
+AV1 block patches and the Directors damask some smearing; at normal levels they are clean. Results is the heaviest
+file because d9's canvas grain is expensive: a light denoise before encoding only bought q62 to q67, so the grain was
+kept. Depth maps: MiDaS small via `scripts/depth.py` on desktop-2048, 1920 x 1080 greyscale WebP q85, now written by
+`art.py --depth` (Storytellers and Results get their own maps for the first time).
+
+Each staged manifest carries the live fields (desktop/phone lists, thumb, focus, phoneFocus, titleSide, phoneTitle,
+titleBox, key, titleBg, titleInk, titleContrast, placeholder, credit) plus `masterpiece`, `artNote`, `depth` and
+`titleScrim` (the scrim alpha needed for 3:1 title and 4.5:1 dek contrast in the zone's worst decile, the zone's
+luma sd, and the art direction's calming scrim where one is asked for).
+
+| Chapter | focus (16:9) | phoneFocus (9:16) | desktop titleBox, ink | phone titleBox, ink | key |
+|---|---|---|---|---|---|
+| storytellers | 0.51, 0.48 | 0.55, 0.55 | 0.06 0.04 0.50 0.32, light over a ~0.6 dark scrim (the Apollo statue) | 0.05 0.03 0.95 0.19, light | #A62A16 |
+| creators | 0.69, 0.30 | 0.56, 0.50 | 0.04 0.04 0.46 0.28, dark (moved up from the judge's mid-height 0.06 0.22 0.46 0.56 to match the opener's near-top title: luma sd 12 vs 34, worst decile 8.9:1 vs 3.9:1) | 0.05 0.03 0.95 0.20, dark | #9A6A2A |
+| brands | 0.69, 0.36 | 0.52, 0.55 | 0.07 0.08 0.36 0.40, light (~0.3-0.45 dark scrim) | 0.05 0.02 0.95 0.19, light | #6E1418 |
+| results | 0.50, 0.52 | 0.50, 0.50 | 0.31 0.05 0.60 0.30, light (cream needs a ~0.1 halo for 3:1, ~0.3 for the dek) | 0.12 0.165 0.86 0.30, dark | #7298A6 |
+| directors | 0.66, 0.40 | 0.58, 0.58 | 0.03 0.04 0.50 0.34, light | 0.08 0.06 0.92 0.34, light | #3F4D1F |
+| apply | 0.62, 0.42 | 0.50, 0.68 | 0.05 0.06 0.45 0.33, dark | 0.08 0.04 0.92 0.30, dark | #DFAFA0 |
+
+(x, y from the top-left; the camera key sheets use y from the bottom.) Keys are sampled from each painting's
+identity hue (Raphael's vermilion robe, the Mona Lisa's ochre, the Arnolfini bed's crimson, Mantegna's sky,
+Holbein's damask, Botticelli's rose). Contact sheets: `qa/shots/v3-masters-sheet.jpg` (each chapter, title zones in
+magenta, sizes, ink and scrim) and `qa/shots/v3-masters-vs-current.jpg` (live painting beside the new one).
+
+### Known limits (no credits were left to fix these; the judges' specs are in each `log.md`)
+- **Storytellers desktop** is soft at 1:1 (faces), still has two camcorders in the director group, and the Apollo
+  niche statue sits in the title zone, so the site must lay the ~0.6 dark scrim. Phone: the blue-robed figure's palm
+  is open, not turned down; the gimbal is about 6% from the right edge (phoneFocus 0.55 keeps it in).
+- **Creators**: the sky seam is now a texture change, not a colour step (smooth sky left of u 0.50, weathered panel
+  right of it); the face is smooth rather than sfumato with craquelure. Phone: the camera sits near the right edge.
+- **Brands**: faces are painterly but not true Van Eyck glazes; the chandelier arms are irregular. Phone: a faint
+  translucent duplicate of her fingers on the contract, a cog-shaped mirror frame, the phone and podcast mic out of
+  frame, the pattens near the left edge.
+- **Results**: the heaviest scene (AVIF q62 desktop, q54-57 phone, inside budget). Phone: the terracotta tub and its
+  pole sit in the lower right corner of the title box (keep the dek left of u 0.76). The painting no longer has a TV,
+  so the Results video backdrop goes (see the swap plan).
+- **Directors**: the finish is still short of Holbein's hard-edged panel; a faint, illegible smudge remains on the
+  monitor's lower bezel. The judge's text-only retake is the fix.
+- **Apply phone** is a post build (a scaled crop of d8 under a painted-sky extension): Venus is ~48% of the frame
+  height and the wind pair is out of frame, so only their boom mic enters from the left edge.
