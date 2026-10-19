@@ -1,16 +1,28 @@
 <!-- X · APPLY · scene: plate:apply ("The Open Gate", public/assets/scenes/apply: dawn through an open gate; keys in
-     src/gl/keys/apply.json) · owner: director
+     src/gl/keys/apply.json) · owner: track O2
      The only light painting: its manifest's titleInk is "dark", so the opener sits in a full-width light region (the
-     rail reads themes across the whole width, so the region spans it): ink type, a pale halo instead of the dark
-     scrim, and the rail items flip to ink over it. -->
+     rail reads themes across the whole width, so the region spans it): ink type and a pale halo instead of the dark
+     scrim, and the rail items flip to ink over it.
+     - Title and dek near the top, over the pink wall and the sky (the calm band; the woman in the gateway stays
+       clear). data-rise: the painting rises with the opener, then holds; the keys land still at its rest.
+     - Who we work with (DC100) and how applying works (DC101), above "Apply to join". On wide screens they sit on the
+       calm wall under the dek, on a pale local halo. On upright screens the painting's middle is the gateway and the
+       woman, so the block sits at the opener's foot on an ink field that runs into the contact footer (cream type;
+       phones have no rail, so the light region's theme only matters on wide screens).
+     - The contact footer (ported from the live site): the marquee, the line, the stickers and the address. Its
+       first column ("We turn channels into media companies.") is the dek now, so the sentence appears once. -->
 <section class="chapter" id="apply" data-chapter data-theme="dark" data-scene="plate:apply" data-plate="apply"
-  data-cam-from="1.06 0.7 0.5 0" data-cam-to="1.3 0.74 0.55 0.1" aria-labelledby="apply-title">
-  <div data-theme="light"><div class="opener col apply-open opener--light">
+  data-rise aria-labelledby="apply-title">
+  <div data-theme="light" class="apply-light"><div class="opener col apply-open opener--light">
     <div class="scrim">
       <h2 class="giant" id="apply-title" data-reveal>Apply</h2>
       <p class="dek" data-reveal="0.08"><span class="dc">W</span>e turn channels into media companies.</p>
     </div>
-    <p class="apply-cta" data-reveal="0.16"><a class="pill pill--solid" href="mailto:info@creativemotley.com?subject=Application%20—%20Creative%20Motley">Apply to join</a></p>
+    <div class="apply-join" data-reveal="0.14">
+      <p class="apply-who" data-draft="DC100">We work with established creators, filmmakers, media companies and content owners who already have traction and want to build a sustainable business.</p>
+      <p class="apply-how" data-draft="DC101">Apply with your channel details. We review each application and, if there is a fit, book a discovery call.</p>
+      <p class="apply-cta"><a class="pill pill--solid" href="mailto:info@creativemotley.com?subject=Application%20—%20Creative%20Motley">Apply to join</a></p>
+    </div>
   </div></div>
   <footer class="contact" data-theme="dark" data-opaque>
     <div class="ct-marquee" aria-hidden="true"><div class="ct-track" data-ct-track>
@@ -18,7 +30,6 @@
     </div></div>
     <div class="ct-rule"></div>
     <div class="ct-cols">
-      <p>We turn channels into<br>media companies.</p>
       <p>Just drop<br>us a line</p>
       <p>© 2026 Creative Motley Ltd<br>All rights reserved</p>
     </div>
@@ -28,8 +39,8 @@
       </a>
       <a class="st st-pill" style="--x:21%;--y:22%;--rot:-7deg" href="https://www.instagram.com/creativemotley" target="_blank" rel="noopener"><span class="st-body">Instagram</span><span class="st-peel"></span></a>
       <a class="st st-pill" style="--x:50%;--y:6%;--rot:5deg" href="https://www.youtube.com/@creativemotley" target="_blank" rel="noopener"><span class="st-body">YouTube</span><span class="st-peel"></span></a>
-      <a class="st st-pill" style="--x:8%;--y:58%;--rot:6deg" href="https://www.tiktok.com/@creativemotley" target="_blank" rel="noopener"><span class="st-body">TikTok</span><span class="st-peel"></span></a>
-      <a class="st st-badge" style="--x:74%;--y:50%;--rot:11deg" href="mailto:info@creativemotley.com">
+      <a class="st st-pill" style="--x:9%;--y:68%;--rot:6deg" href="https://www.tiktok.com/@creativemotley" target="_blank" rel="noopener"><span class="st-body">TikTok</span><span class="st-peel"></span></a>
+      <a class="st st-badge" style="--x:74%;--y:42%;--rot:11deg" href="mailto:info@creativemotley.com">
         <span class="st-body"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><path id="ctc2" d="M60,60 m-42,0 a42,42 0 1,1 84,0 a42,42 0 1,1 -84,0"/></defs><text class="st-arc"><textPath href="#ctc2">Drag me · Drag me · Drag me · </textPath></text></svg><b aria-hidden="true">✉</b></span><span class="st-peel"></span><span class="sr-only">Email us</span>
       </a>
     </div>

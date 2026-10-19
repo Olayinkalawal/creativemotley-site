@@ -1,20 +1,21 @@
-<!-- VIII · RESULTS · scene: plate:results · owner: builder B
-     One painting for the whole chapter: the watchers on the grass, the TV playing. The camera drifts down from the
-     watchers onto the grass and the TV band as you read (data-cam-*, over the chapter's pass; portrait screens end on
-     the whole TV, at a modest zoom so the phones' 1100px plate is not stretched), and the four counters arrive over
-     it under an ink veil, the figures on the left and the TV on the right.
+<!-- VIII · RESULTS · scene: plate:results (the watchers on the grass, the TV playing: a video texture over the
+     painting; keys in src/gl/keys/results.json) · owner: track O2
+     Opener: the title and the dek near the top, over the sky (the manifest's titleBox, the calm top band); the keys
+     land on a framing pushed into the sky above the watchers' heads at the opener's rest, then drift down onto the
+     grass and the TV as the counters arrive. data-rise: the painting rises with the opener, then holds.
      F98 is split across the hand-over: the Kit's last teardown (the phone, chapter VII) says "The work went out.",
      and this opener answers "The world watched."
-     Each counter's value is a pure function of scroll; the final figure is laid out from the start (tabular lining
-     figures), so digits never shift. The unit (M) always shows, since it carries the magnitude; only the + waits.
+     The four counters (F99–F102) form a ledger under an ink veil, figures left, the TV clear on the right. Each one
+     counts once when it comes into view (a short, time-based ease-out), so at rest a figure is always settled;
+     it resets only once it is below the fold again. The final figure is laid out from the start (tabular lining
+     figures), so digits never shift; the unit (M) always shows, only the + waits.
      Without JS, at ?tier=0 and with reduced motion the final values simply show. -->
 <section class="chapter" id="results" data-chapter data-theme="dark" data-scene="plate:results" data-plate="results"
-  data-cam-from="1.06 0.5 0.52 0" data-cam-to="1.4 0.62 0.24 0.14"
-  data-cam-from-tall="1.06 0.34 0.5 0" data-cam-to-tall="1.18 2.53 0.3 0.017" aria-labelledby="results-title">
+  data-rise aria-labelledby="results-title">
   <div class="opener col rx-open">
     <div class="scrim">
       <h2 class="giant" id="results-title" data-reveal>Results</h2>
-      <p class="dek" data-reveal="0.08"><span class="dc">T</span>he work went out. The world watched.</p>
+      <p class="dek" data-reveal="0.08"><span class="dc">T</span>he world watched.</p>
     </div>
   </div>
   <div class="rx">

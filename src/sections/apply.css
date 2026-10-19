@@ -1,10 +1,50 @@
-/* X · Apply: the opener over the hands, then the dark contact footer (ported from the live site) */
-.apply-cta { margin-top: clamp(1.6rem, 4vh, 2.6rem); }
-.apply-open { min-height: 120svh; }
+/* X · Apply: the opener over the open gate (title, dek, who we work with, how applying works, the pill), then the
+   dark contact footer (ported from the live site).
+   Wide screens: everything sits in the left of the column, over the calm pink wall (ink type, pale local halos);
+   the woman in the gateway stays clear on the right.
+   Upright screens: title and dek in the sky band at the top; the join block sits at the opener's foot on an ink
+   field that runs on into the footer (cream type), so the gateway and the woman stay clean at the opener's rest. */
+.opener.apply-open {
+  min-height: 66svh; justify-content: flex-start;
+  padding-top: calc(var(--nav-h) + 4svh); padding-bottom: clamp(20px, 3svh, 36px);
+}
+.apply-open .giant { margin-bottom: 0.3em; }   /* "Apply" has descenders: the dek's swash cap needs the room */
+.apply-open .dek { max-width: 11.5em; }
+.apply-join { position: relative; margin-top: clamp(1.2rem, 3vh, 2.2rem); max-width: 32rem; }
+.apply-who { font: var(--f-lead); letter-spacing: var(--ls-lead); max-width: 17em; text-wrap: pretty; }
+.apply-how { margin-top: 1em; font: var(--f-body); letter-spacing: var(--ls-body); max-width: 27em; }
+.apply-cta { margin-top: clamp(1.2rem, 3vh, 2rem); }
+/* wide screens: the footer meets the painting on the brand's torn edge (ink teeth rising into the painting) */
+@media (min-width: 1024px) {
+  .apply-light { position: relative; }
+  .apply-light::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 24px; pointer-events: none;
+    background: var(--ink); -webkit-mask: var(--tear) bottom / 1200px 24px repeat-x; mask: var(--tear) bottom / 1200px 24px repeat-x;
+  }
+}
+@media (min-width: 1024px) {
+  /* a pale local halo under the block (the wall is light already; it evens out the plaster's texture) */
+  .apply-join::before {
+    content: ''; position: absolute; z-index: -1; inset: -22% -16% -24% -12%; pointer-events: none;
+    background: radial-gradient(closest-side, rgba(244, 237, 223, 0.46), rgba(244, 237, 223, 0.22) 60%, rgba(244, 237, 223, 0));
+  }
+}
+@media (max-width: 1023px) {
+  .opener.apply-open { min-height: 0; padding-top: calc(var(--nav-h) + 3.5svh); padding-bottom: 0; }
+  .apply-open .dek { max-width: 10em; }
+  /* the join block: full bleed at the opener's foot, on an ink field rising from the footer; cream type */
+  .apply-join {
+    max-width: none; margin: 34svh calc(-1 * var(--col-pad)) 0; padding: 12svh var(--col-pad) 1svh;
+    color: var(--cream); text-shadow: none;
+    background: linear-gradient(180deg, rgba(11, 8, 5, 0), rgba(11, 8, 5, 0.72) 6svh, rgba(11, 8, 5, 0.96) 10svh, var(--ink) 12svh);
+    --th-pill-bg: var(--cream); --th-pill-fg: var(--ink); --th-pill-bg-h: var(--gold);
+  }
+  .apply-how { color: rgba(244, 237, 223, 0.84); }
+}
 
 .contact {
   position: relative; background: var(--ink); color: var(--cream); overflow: hidden;
-  padding: clamp(70px, 11vh, 140px) 0 clamp(30px, 5vh, 60px);
+  padding: clamp(40px, 5vh, 80px) 0 clamp(24px, 3.4vh, 44px);
   --gut: var(--col-pad);
 }
 @media (min-width: 1024px) { .contact { --gut: clamp(24px, 4.4vw, 72px); } }
@@ -13,12 +53,12 @@
   display: flex; width: max-content; will-change: transform;
   font: 400 var(--t-title) / 1 var(--serif); letter-spacing: var(--ls-display); white-space: nowrap;   /* the serif at the title size */
 }
-.ct-rule { height: 1px; background: rgba(244, 237, 223, 0.28); margin: clamp(26px, 4.5vh, 54px) var(--gut) clamp(14px, 2vh, 22px); }
-.ct-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 3vw, 40px); padding: 0 var(--gut); }
+.ct-rule { height: 1px; background: rgba(244, 237, 223, 0.28); margin: clamp(22px, 3.6vh, 44px) var(--gut) clamp(14px, 2vh, 22px); }
+.ct-cols { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(16px, 3vw, 40px); padding: 0 var(--gut); }
 .ct-cols p { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: rgba(244, 237, 223, 0.82); }
-.ct-cols p:nth-child(3) { text-align: right; }
+.ct-cols p:nth-child(2) { text-align: right; }
 
-.ct-field { position: relative; height: clamp(320px, 46vh, 500px); margin: clamp(24px, 4vh, 52px) var(--gut) 0; touch-action: pan-y; perspective: 1100px; perspective-origin: 50% 42%; }
+.ct-field { position: relative; height: clamp(262px, 29vh, 360px); margin: clamp(20px, 3vh, 40px) var(--gut) 0; touch-action: pan-y; perspective: 1100px; perspective-origin: 50% 42%; }
 .st { position: absolute; left: var(--x); top: var(--y); transform: rotate(var(--rot)); transform-origin: 50% 50%; cursor: grab; user-select: none; -webkit-user-select: none; text-decoration: none; touch-action: none; }
 .st:active { cursor: grabbing; }
 .st:focus-visible { outline-offset: 6px; }
@@ -44,20 +84,21 @@
 }
 .st-badge .st-peel { right: auto; left: 6%; bottom: 8%; width: 17%; height: 17%; clip-path: polygon(0 0, 0 100%, 100% 100%); background: linear-gradient(222deg, #fff 0%, #f6f1e4 38%, #ded6c4 66%, #b3ab9a 100%); filter: drop-shadow(2px -2px 3px rgba(0, 0, 0, 0.32)); }
 .ct-mail {
-  display: block; margin-top: clamp(16px, 3vh, 40px); padding: 0 var(--gut);
+  display: block; margin-top: clamp(12px, 2vh, 28px); padding: 0 var(--gut);
   font: var(--f-display); letter-spacing: var(--ls-display); text-decoration: none; color: rgba(244, 237, 223, 0.62); white-space: nowrap; transition: color 0.35s var(--ease-out);
 }
 .ct-mail:hover, .ct-mail:focus-visible { color: var(--cream); }
 
 @media (max-width: 720px) {
-  .ct-cols { grid-template-columns: 1fr 1fr; gap: 14px 18px; }
-  .ct-cols p:nth-child(3) { grid-column: 1 / -1; text-align: left; }
-  .ct-field { height: clamp(340px, 50vh, 430px); }
-  .st:nth-child(1) { --x: 4% !important; --y: 3% !important; }
-  .st:nth-child(2) { --x: 32% !important; --y: 18% !important; }
-  .st:nth-child(3) { --x: 4% !important; --y: 40% !important; }
-  .st:nth-child(4) { --x: 36% !important; --y: 56% !important; }
-  .st:nth-child(5) { --x: 6% !important; --y: 70% !important; }
+  .ct-cols { gap: 14px 18px; }
+  /* a tighter scatter on phones: two loose rows in a short field */
+  .contact { padding-top: clamp(36px, 5svh, 56px); }
+  .ct-field { height: clamp(250px, 31svh, 290px); }
+  .st:nth-child(1) { --x: 0% !important; --y: 0% !important; }
+  .st:nth-child(2) { --x: 33% !important; --y: 6% !important; }
+  .st:nth-child(3) { --x: 30% !important; --y: 33% !important; }
+  .st:nth-child(4) { --x: 2% !important; --y: 60% !important; }
+  .st:nth-child(5) { --x: 64% !important; --y: 52% !important; }
   .ct-mail { font: var(--f-dek); letter-spacing: var(--ls-dek); }   /* the address fits a phone at the dek's size */
 }
 /* the rail steps aside over the full-bleed footer */

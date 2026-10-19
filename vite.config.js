@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import fs from 'node:fs';
 import path from 'node:path';
+import threeSlim from './scripts/three-slim.mjs';
 
 /* <!-- @include partials/name.html --> in index.html is replaced by src/partials/name.html,
    so each chapter's markup lives in its own file (one owner per file). */
@@ -22,7 +23,7 @@ function includes() {
 }
 
 export default defineConfig({
-  plugins: [includes()],
+  plugins: [includes(), threeSlim()],   // threeSlim: build only (scripts/three-slim.mjs)
   build: {
     target: 'es2020',
     assetsInlineLimit: 0,

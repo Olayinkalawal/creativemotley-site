@@ -1,59 +1,20 @@
 {
- "//": "Camera keys for plate:directors (gl/timeline.js). One file per chapter.",
+ "//": "Camera keys for plate:directors (gl/timeline.js; t in viewports of the section's pass, focus is the zoom anchor in uv, y up). Entry (t 0-1, with data-rise): an ease-out push that lands at the opener's rest (t 1), the chairs and the camera low in the frame, the beam and the proscenium above them for the title and dek. Then a slow push toward the chairs until the set dissolves into the umber room.",
  "camera": {
   "zoom": [
-   {
-    "t": 0,
-    "v": 1.04,
-    "ease": [
-     0.3333,
-     0,
-     0.6667,
-     1
-    ]
-   },
-   {
-    "t": 2.2,
-    "v": 1.18
-   }
+   { "t": 0, "v": 1.07, "ease": "out" },
+   { "t": 1.0, "v": 1.1, "ease": "inOut" },
+   { "t": 1.9, "v": 1.17 }
   ],
   "focus": [
-   {
-    "t": 0,
-    "v": [
-     0.62,
-     0.6
-    ],
-    "ease": [
-     0.3333,
-     0,
-     0.6667,
-     1
-    ]
-   },
-   {
-    "t": 2.2,
-    "v": [
-     0.64,
-     0.7
-    ]
-   }
+   { "t": 0, "v": [0.62, 0.63], "ease": "out" },
+   { "t": 1.0, "v": [0.63, 0.645], "ease": "inOut" },
+   { "t": 1.9, "v": [0.64, 0.7] }
   ],
   "push": [
-   {
-    "t": 0,
-    "v": 0.02,
-    "ease": [
-     0.3333,
-     0,
-     0.6667,
-     1
-    ]
-   },
-   {
-    "t": 2.2,
-    "v": 0.08
-   }
+   { "t": 0, "v": 0.02, "ease": "out" },
+   { "t": 1.0, "v": 0.035, "ease": "inOut" },
+   { "t": 1.9, "v": 0.08 }
   ]
  }
 }

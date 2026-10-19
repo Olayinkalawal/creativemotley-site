@@ -1,6 +1,6 @@
 // QA screenshots of the local site.
 //   node scripts/shots.mjs [--url http://localhost:5173] [--mode desktop|mobile] [--out qa/shots/x]
-//        [--at "top,#storytellers,#storytellers+0.5,12000"] [--tier 2] [--wait 1400] [--full]
+//        [--at "top,#storytellers,#storytellers+0.5,12000"] [--tier 2] [--wait 1400] [--full] [--q "drafts=0&q=high"]
 // "--at" items: a CSS selector (scrolls its top to the viewport top), selector+frac (adds frac
 // of the element's height), or a raw scrollY. Without --at it walks the page every 0.75 viewport.
 import fs_ from 'node:fs';
@@ -21,7 +21,7 @@ await page.routeWebSocket(/.*/, () => {}); // mute Vite HMR reloads during captu
 const errors = [];
 page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') errors.push(`${m.type()}: ${m.text().slice(0, 200)}`); });
 page.on('pageerror', (e) => errors.push('pageerror: ' + e.message));
-const q = A.tier !== undefined ? `?tier=${A.tier}` : '';
+const q = [A.tier !== undefined ? `tier=${A.tier}` : '', A.q && A.q !== true ? A.q : ''].filter(Boolean).join('&').replace(/^/, '?').replace(/^\?$/, '');
 await page.goto(url + q, { waitUntil: 'load', timeout: 90000 });
 await page.waitForTimeout(+(A.boot || 3500));
 const H = await page.evaluate(() => document.documentElement.scrollHeight);

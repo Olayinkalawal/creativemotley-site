@@ -7,6 +7,18 @@ Usage
   python3 scripts/art.py --sheet          rebuild only the contact sheet from the files on disk
   python3 scripts/art.py --fast           quicker encoder speed (for trying settings; ship without it)
 
+Staging (none of these change the default run above)
+  --out DIR          write <DIR>/<chapter>/..., <DIR>/index.json and the sheet (<DIR>/art-sheet.jpg) there instead
+                     of public/assets/scenes and qa/shots/v3-art-sheet.jpg. Manifest URLs stay /assets/scenes/...,
+                     so a staged chapter folder can be copied into public/assets/scenes as it is.
+  --config FILE      JSON {chapter: cfg} whose entries replace the built-in CHAPTERS entries (same fields as below,
+                     plus the optional extras listed after CHAPTERS). With --config and no chapter names, only the
+                     config's chapters are encoded and put on the sheet. A src may be a local file path.
+  --sheet-path FILE  where to write the contact sheet.
+  --depth MODEL      also write <chapter>/depth.webp: MiDaS (scripts/depth.py with this ONNX model) on desktop-2048,
+                     stored as a 1920x1080 greyscale WebP q85, as the live set's depth maps were made by hand.
+  e.g. python3 scripts/art.py --config masters.json --out /tmp/encoded --sheet-path qa/shots/x.jpg --depth m.onnx
+
 Inputs
   The 4K masters are Higgsfield results on d8j0ntlcm91z4.cloudfront.net (job ids in docs/art-log.md);
   Results' desktop master is the existing 1920 px plate in the repo. Downloads are cached in $ART_CACHE
@@ -46,6 +58,8 @@ SHEET = ROOT / 'qa' / 'shots' / 'v3-art-sheet.jpg'
 CACHE = Path(os.environ.get('ART_CACHE', Path.home() / '.cache' / 'cm-art'))
 CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3E2nAh6VQJhvRG2v3D2ZPRAoWM4/'
 URL_ROOT = '/assets/scenes'
+STAGED = False        # --config: also report scrims and the art notes in each manifest
+DEPTH_MODEL = None    # --depth: the MiDaS ONNX model, when depth maps are wanted
 
 DESKTOP = (16, 9)
 PHONE = (9, 16)       # see below: phones get the whole 9:16 portrait master, 1170x2080 and 828x1472
@@ -138,12 +152,35 @@ CHAPTERS = {
         focus=[0.74, 0.55], phoneFocus=[0.56, 0.72], phoneTitle='top', key='#DFAFA0',
         titleBox=(0.0, 0.08, 0.40, 0.46)),   # the sky only; the parapet below is darker stone
 }
+# Optional extras a --config entry may carry (all recorded in the manifest when present):
+#   masterpiece    the painting it re-stages ("Raphael, The School of Athens (1509-11)")
+#   phoneTitleBox  phone title zone as (x0, y0, x1, y1), in place of a named phoneTitle box
+#   titleInk       {"desktop": "light" | "dark", "phone": ...}: the ink the art direction asks for, when it differs
+#                  from the zone's best raw ink (a scrim is then needed; titleScrim says how much)
+#   note           free text for the director (manifest "artNote")
+
+
+def load_config(path: str) -> dict:
+    """--config: {chapter: cfg}; lists become tuples where the code expects boxes."""
+    raw = json.loads(Path(path).read_text())
+    out = {}
+    for ch, cfg in raw.items():
+        if ch.startswith('//'):
+            continue
+        for k in ('titleBox', 'phoneTitleBox'):
+            if k in cfg:
+                cfg[k] = tuple(cfg[k])
+        cfg.setdefault('phoneTitle', 'top')
+        out[ch] = cfg
+    return out
 
 
 # ---------------------------------------------------------------- sources
 def fetch(src: str) -> Path:
     if src.startswith('repo:'):
         return ROOT / src[5:]
+    if not src.startswith(('http://', 'https://')):   # a local master (--config staging)
+        return Path(src)
     CACHE.mkdir(parents=True, exist_ok=True)
     dst = CACHE / src.rsplit('/', 1)[-1]
     if not dst.exists() or dst.stat().st_size == 0:
@@ -255,6 +292,33 @@ def zone_tone(im: Image.Image, box) -> dict:
                 contrast=round(max(cw, ci), 2), worst=round(float(worst), 2))
 
 
+PAPER = (232, 227, 212)   # --paper, the light scrim for dark ink
+
+
+def scrim_need(im: Image.Image, box, ink: str) -> dict:
+    """Staging only: for the given ink, the worst-decile contrast with no scrim, and the smallest flat scrim alpha
+    over the zone (dark --ink under light type, --paper under dark type, mixed in sRGB as CSS does) that brings the
+    worst 10% of the zone to 3:1 (the giant title) and to 4.5:1 (the dek)."""
+    W, H = im.size
+    z = np.asarray(im.crop((int(box[0] * W), int(box[1] * H), int(box[2] * W), int(box[3] * H))), np.float32)
+    px = z.reshape(-1, 3)[::7]
+    s = np.array(INK if ink == 'light' else PAPER, np.float32)
+
+    def worst(a):
+        c = (px * (1 - a) + s * a) / 255
+        lin = np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+        L = lin @ np.array([0.2126, 0.7152, 0.0722], np.float32)
+        if ink == 'light':
+            return 1.05 / (np.percentile(L, 90) + 0.05)
+        return (np.percentile(L, 10) + 0.05) / (lum(INK) + 0.05)
+
+    out = {'worst10': round(float(worst(0.0)), 2)}
+    for name, target in (('title3', 3.0), ('dek4.5', 4.5)):
+        need = next((a for a in np.arange(0, 0.91, 0.05) if worst(a) >= target), None)
+        out[name] = None if need is None else round(float(need), 2)
+    return out
+
+
 def placeholder(im: Image.Image, w: int, h: int) -> str:
     buf = io.BytesIO()
     im.resize((w, h), Image.LANCZOS).save(buf, 'WEBP', quality=40, method=6)
@@ -265,7 +329,7 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
     out = OUT / ch
     out.mkdir(parents=True, exist_ok=True)
     man = {'chapter': ch, 'name': cfg['name']}
-    tones, ph = {}, {}
+    tones, ph, scrims = {}, {}, {}
 
     d = cfg['desktop']
     dm = cut(load(d['src']), DESKTOP[0] / DESKTOP[1], *d.get('center', (0.5, 0.5)))
@@ -276,6 +340,10 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
         im = shrink(dm, w, h)
         if w == widths[0]:
             tones['desktop'] = zone_tone(im, cfg.get('titleBox', TITLE_BOX[cfg.get('titleSide', 'left')]))
+            if STAGED:
+                ink = cfg.get('titleInk', {}).get('desktop', tones['desktop']['ink'])
+                scrims['desktop'] = dict(ink=ink, **scrim_need(
+                    im, cfg.get('titleBox', TITLE_BOX[cfg.get('titleSide', 'left')]), ink))
             ph['desktop'] = placeholder(im, 32, 18)
             thumb = im.resize((320, 180), Image.LANCZOS)   # menu / rail thumbnail (plan section 3.7)
             man['thumb'] = []
@@ -300,6 +368,10 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
             im = shrink(pm, w, h)
             if w == 1170:
                 tones['phone'] = zone_tone(im, cfg.get('phoneTitleBox', TITLE_BOX['phone-' + cfg['phoneTitle']]))
+                if STAGED:
+                    ink = cfg.get('titleInk', {}).get('phone', tones['phone']['ink'])
+                    scrims['phone'] = dict(ink=ink, **scrim_need(
+                        im, cfg.get('phoneTitleBox', TITLE_BOX['phone-' + cfg['phoneTitle']]), ink))
                 ph['phone'] = placeholder(im, 12, 26)
             for fmt in ('avif', 'webp'):
                 data, q = fit(im, fmt, BUDGET[('phone', fmt, w)], speed)
@@ -321,8 +393,34 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
         placeholder=ph,
         credit={'desktop': d['note'], 'phone': p['note']},
     )
+    if STAGED:
+        # the art direction's ink wins over the zone's raw best ink; titleScrim says what it costs
+        man['titleInk'] = {k: scrims[k]['ink'] for k in scrims}
+        man['titleScrim'] = {k: {'colour': 'ink' if v['ink'] == 'light' else 'paper', 'worst10Bare': v['worst10'],
+                                 'alphaForTitle3': v['title3'], 'alphaForDek4_5': v['dek4.5']}
+                             for k, v in scrims.items()}
+        for k in ('masterpiece', 'note'):
+            if cfg.get(k):
+                man['artNote' if k == 'note' else k] = cfg[k]
+    if DEPTH_MODEL:
+        man['depth'] = depth_map(out, ch)
     (out / 'manifest.json').write_text(json.dumps(man, indent=1, ensure_ascii=False) + '\n')
     return man
+
+
+def depth_map(out: Path, ch: str) -> dict:
+    """--depth: MiDaS small via scripts/depth.py on desktop-2048.webp, then 1920x1080 greyscale WebP q85."""
+    import subprocess
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        png = Path(tmp) / 'depth.png'
+        subprocess.run([sys.executable, '-I', str(ROOT / 'scripts' / 'depth.py'), DEPTH_MODEL,
+                        str(out / 'desktop-2048.webp'), str(png), '3'], check=True)
+        g = Image.open(png).convert('L').resize((1920, 1080), Image.LANCZOS)
+    g.save(out / 'depth.webp', 'WEBP', quality=85, method=6)
+    n = (out / 'depth.webp').stat().st_size
+    print(f'  {ch:13s} depth.webp         1920x1080  q85  {n / 1024:7.1f} KB')
+    return dict(src=f'{URL_ROOT}/{ch}/depth.webp', w=1920, h=1080, bytes=n)
 
 
 # ---------------------------------------------------------------- contact sheet
@@ -337,14 +435,16 @@ def font(size: int, bold: bool = False):
 
 def sheet() -> None:
     rows = [ch for ch in CHAPTERS if (OUT / ch / 'manifest.json').exists()]
+    title = 'Creative Motley v3: chapter paintings (decoded from the shipped AVIFs; magenta = title zone)'
+    if STAGED:
+        title = 'Masters, modernised (staged): decoded from the AVIFs; magenta = title zone'
     DW, DH, PW = 1024, 576, 324           # desktop thumb, row height, phone thumb width (9:16)
     TW, M = 470, 24
     W = M + DW + M + PW + M + TW + M
     H = 96 + len(rows) * (DH + M) + M
     s = Image.new('RGB', (W, H), (20, 16, 12))
     g = ImageDraw.Draw(s)
-    g.text((M, 28), 'Creative Motley v3: chapter paintings (decoded from the shipped AVIFs; magenta = title zone)',
-           font=font(26, True), fill=(236, 226, 208))
+    g.text((M, 28), title, font=font(26, True), fill=(236, 226, 208))
     y = 96
     for ch in rows:
         man = json.loads((OUT / ch / 'manifest.json').read_text())
@@ -364,6 +464,9 @@ def sheet() -> None:
                         outline=(255, 0, 255), width=2)
         tx, ty = x + PW + M, y
         g.text((tx, ty), man['name'], font=font(22, True), fill=(236, 226, 208))
+        if man.get('masterpiece'):
+            ty += 32
+            g.text((tx, ty), man['masterpiece'], font=font(17), fill=(220, 200, 160))
         g.rectangle([tx, ty + 38, tx + 34, ty + 72], fill=man['key'])
         g.text((tx + 46, ty + 44), f"key {man['key']}", font=font(18), fill=(200, 190, 170))
         ty += 92
@@ -375,6 +478,12 @@ def sheet() -> None:
             g.text((tx, ty), f"{kind}  (title ink {ink}: {tc.get('mean')}:1, worst 10% {tc.get('worst10')}:1)",
                    font=font(17, True), fill=(220, 205, 180))
             ty += 28
+            sc = man.get('titleScrim', {}).get(kind)
+            if sc:
+                need = lambda a: 'none' if a == 0 else ('>0.9' if a is None else f'{a:.2f}')
+                g.text((tx + 12, ty), f"{sc['colour']} scrim: title 3:1 {need(sc['alphaForTitle3'])}, "
+                                      f"dek 4.5:1 {need(sc['alphaForDek4_5'])}", font=font(16), fill=(230, 170, 120))
+                ty += 24
             for fmt in ('avif', 'webp'):
                 for f in man[kind][fmt]:
                     g.text((tx + 12, ty), f"{fmt} {f['w']}x{f['h']}  q{f['q']}  {f['bytes'] / 1024:.0f} KB",
@@ -384,7 +493,7 @@ def sheet() -> None:
         y += DH + M
     SHEET.parent.mkdir(parents=True, exist_ok=True)
     s.save(SHEET, quality=86, optimize=True)
-    print(f'sheet: {SHEET.relative_to(ROOT)} ({SHEET.stat().st_size / 1024:.0f} KB)')
+    print(f'sheet: {SHEET} ({SHEET.stat().st_size / 1024:.0f} KB)')
 
 
 def index() -> None:
@@ -404,7 +513,23 @@ def main() -> None:
     ap.add_argument('chapters', nargs='*')
     ap.add_argument('--sheet', action='store_true', help='only rebuild the contact sheet')
     ap.add_argument('--fast', action='store_true', help='AVIF speed 8 (try-outs only)')
+    ap.add_argument('--out', help='staging root instead of public/assets/scenes')
+    ap.add_argument('--config', help='JSON {chapter: cfg} replacing the built-in entries')
+    ap.add_argument('--sheet-path', help='contact sheet file')
+    ap.add_argument('--depth', metavar='MODEL', help='MiDaS ONNX model: also write depth.webp')
     a = ap.parse_args()
+    global OUT, SHEET, CHAPTERS, STAGED, DEPTH_MODEL
+    if a.out:
+        OUT = Path(a.out).resolve()
+        SHEET = OUT / 'art-sheet.jpg'
+    if a.sheet_path:
+        SHEET = Path(a.sheet_path).resolve()
+    if a.config:
+        cfgs = load_config(a.config)
+        STAGED = True
+        # the config's chapters, in its order (the sheet and index follow CHAPTERS)
+        CHAPTERS = cfgs if not a.chapters else {**CHAPTERS, **cfgs}
+    DEPTH_MODEL = a.depth
     if not a.sheet:
         names = a.chapters or list(CHAPTERS)
         bad = [n for n in names if n not in CHAPTERS]

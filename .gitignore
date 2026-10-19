@@ -5,3 +5,4 @@ qa/shots
 *.log
 .lab
 __pycache__/
+qa/perf

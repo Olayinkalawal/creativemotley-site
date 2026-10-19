@@ -1,59 +1,20 @@
 {
- "//": "Camera keys for plate:apply (gl/timeline.js). One file per chapter.",
+ "//": "Camera keys for plate:apply (gl/timeline.js; t in viewports of the section's pass, focus is the zoom anchor in uv, y up). Entry (t 0-1, with data-rise): an ease-out settle that lands at the opener's rest (t 1), anchored top-left of centre so the pink wall fills the left of the column (title, dek and the join block) and the woman in the gateway stands whole on the right. Then a slow push toward her as the footer arrives.",
  "camera": {
   "zoom": [
-   {
-    "t": 0,
-    "v": 1.06,
-    "ease": [
-     0.3333,
-     0,
-     0.6667,
-     1
-    ]
-   },
-   {
-    "t": 3.3367,
-    "v": 1.3
-   }
+   { "t": 0, "v": 1.09, "ease": "out" },
+   { "t": 1.0, "v": 1.06, "ease": "inOut" },
+   { "t": 2.4, "v": 1.2 }
   ],
   "focus": [
-   {
-    "t": 0,
-    "v": [
-     0.7,
-     0.5
-    ],
-    "ease": [
-     0.3333,
-     0,
-     0.6667,
-     1
-    ]
-   },
-   {
-    "t": 3.3367,
-    "v": [
-     0.74,
-     0.55
-    ]
-   }
+   { "t": 0, "v": [0.3, 1.0], "ease": "out" },
+   { "t": 1.0, "v": [0.3, 1.0], "ease": "inOut" },
+   { "t": 2.4, "v": [0.8, 0.6] }
   ],
   "push": [
-   {
-    "t": 0,
-    "v": 0,
-    "ease": [
-     0.3333,
-     0,
-     0.6667,
-     1
-    ]
-   },
-   {
-    "t": 3.3367,
-    "v": 0.1
-   }
+   { "t": 0, "v": 0.0, "ease": "out" },
+   { "t": 1.0, "v": 0.01, "ease": "inOut" },
+   { "t": 2.4, "v": 0.08 }
   ]
  }
 }

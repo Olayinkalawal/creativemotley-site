@@ -1,36 +1,45 @@
-/* VIII · Results: the opener over the watchers, then four counters over the same painting under an ink veil.
-   A ledger: each figure sits on a hairline with its label right under it. On wide screens the ledger is only as
-   wide as its widest row, so the right of the screen stays clear for the TV. The figure is set in tabular lining
-   figures and laid out at its final width from the start; while it counts, the places it has not reached yet show
-   as faint zeros and the + waits (the M, which carries the magnitude, always shows), so nothing ever shifts. */
-/* the opener: a soft ink veil travels with the type, so cream holds over the bright drapery and sky */
-.rx-open::before {
-  content: ''; position: absolute; z-index: -1; top: 0; bottom: 0; left: 0; right: 0; pointer-events: none;
-  background: radial-gradient(130% 30% at 30% 55%, rgba(11, 8, 5, 0.66), rgba(11, 8, 5, 0.4) 50%, rgba(11, 8, 5, 0) 100%);
+/* VIII · Results: the opener over the watchers' sky, then four counters over the same painting under an ink veil.
+   Opener: title and dek set near the top (the painting's calm band, its manifest's titleBox), a short region, so the
+   first figure arrives at the foot of the first screen.
+   The ledger: each figure sits on a hairline with its label right under it, rows set close (≈ 0.29 screen each on
+   desktop). On wide screens the ledger is only as wide as its widest row, so the right of the screen stays clear for
+   the TV. The figure is set in tabular lining figures (the numeral role: never above the title) and laid out at its
+   final width from the start; while it counts, places not reached yet show as faint zeros and the + waits. */
+.opener.rx-open {
+  min-height: 56svh; justify-content: flex-start;
+  padding-top: calc(var(--nav-h) + 4.5svh); padding-bottom: 0;
 }
-@media (min-width: 900px) {
-  .rx-open::before { background: radial-gradient(75% 36% at 34% 54%, rgba(11, 8, 5, 0.6), rgba(11, 8, 5, 0.36) 50%, rgba(11, 8, 5, 0) 100%); }
+.rx-open .giant { margin-bottom: clamp(0.9rem, 2.6vh, 2rem); }
+.rx-open .dek { max-width: 13em; }
+/* a soft ink veil travels with the type, so cream holds over the bright clouds (local: the sky beyond stays clean) */
+.rx-open .scrim::before {
+  inset: -30% -22% -40% -16%;
+  background: radial-gradient(closest-side, rgba(11, 8, 5, 0.62), rgba(11, 8, 5, 0.38) 58%, rgba(11, 8, 5, 0));
 }
-@media (min-width: 1024px) { .rx-open::before { left: calc(-1 * var(--rail-w)); } }
+@media (max-width: 1023px) {
+  .opener.rx-open { min-height: 54svh; padding-top: calc(var(--nav-h) + 3.5svh); }
+  .rx-open .dek { max-width: 11em; }
+}
 
-/* the counters start under the opener's tail, so the first figure arrives as the dek leaves */
-.rx { position: relative; color: var(--cream); margin-top: -36svh; padding-top: 22svh; }
+/* the counters start under the opener's tail */
+.rx { position: relative; color: var(--cream); padding-block: 2svh 6svh; }
 /* the ink veil under the ledger: it fades in above the first hairline and out over the start of chapter IX
-   (it runs on past the region, so the painting never shows bare between the last figure and the next chapter) */
+   (it runs a little past the region, so the painting never shows bare between the last figure and IX's title, and
+   it has faded out before IX's title band) */
 .rx::before {
-  content: ''; position: absolute; z-index: -1; top: 0; bottom: -46svh; left: 0; right: 0; pointer-events: none;
+  content: ''; position: absolute; z-index: -1; top: -8svh; bottom: -14svh; left: 0; right: 0; pointer-events: none;
   background: linear-gradient(90deg, rgba(11, 8, 5, 0.84), rgba(11, 8, 5, 0.74));
-  -webkit-mask-image: linear-gradient(180deg, transparent, #000 22svh, #000 calc(100% - 46svh), transparent);
-  mask-image: linear-gradient(180deg, transparent, #000 22svh, #000 calc(100% - 46svh), transparent);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 18svh, #000 calc(100% - 20svh), transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 18svh, #000 calc(100% - 20svh), transparent);
 }
 @media (min-width: 900px) {
-  .rx::before { background: linear-gradient(90deg, rgba(11, 8, 5, 0.86), rgba(11, 8, 5, 0.8) 60%, rgba(11, 8, 5, 0.34) 82%, rgba(11, 8, 5, 0.22)); }
+  .rx::before { background: linear-gradient(90deg, rgba(11, 8, 5, 0.86), rgba(11, 8, 5, 0.8) 52%, rgba(11, 8, 5, 0.3) 76%, rgba(11, 8, 5, 0.16)); }
 }
 
 .rx-list { display: grid; }
 .rx-stat {
-  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(8px, 1.4svh, 16px);
-  padding-block: clamp(22px, 4.4svh, 48px) clamp(48px, 10svh, 108px);
+  position: relative; display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(6px, 1.1svh, 12px);
+  padding-block: clamp(14px, 2.4svh, 26px) clamp(22px, 4svh, 40px);
 }
 /* the hairline, and the gold that draws along it as the figure counts */
 .rx-stat::before, .rx-stat::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 1px; }
@@ -45,7 +54,7 @@
 .rx-digits { font-weight: inherit; }
 .rx-digits i { font-style: normal; }
 .rx-digits i.is-off { opacity: 0.14; }   /* places not reached yet: a ghost of the final figure */
-/* the unit (M) always shows; the + waits for the landing */
+/* the unit (M) always shows; the + waits for the landing (results.js); without JS it simply stands */
 .rx-lbl {
   font: var(--f-dek); letter-spacing: var(--ls-dek); color: var(--gold); max-width: 13em; text-wrap: balance;
 }
@@ -55,4 +64,7 @@
 
 @media (min-width: 900px) {
   .rx-list { grid-template-columns: minmax(0, max-content); }
+}
+@media (max-width: 899px) {
+  .rx-stat { padding-block: clamp(16px, 2.6svh, 24px) clamp(34px, 6.4svh, 56px); }
 }

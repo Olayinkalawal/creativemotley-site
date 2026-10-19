@@ -134,8 +134,9 @@ export default function register(stage) {
     // the full-screen backdrop video (scripts/encode-results.sh: AV1 where it plays, H.264 otherwise; ~1/5 of the old
     // 10.6 MB); narrow windows keep the 1100-px encode
     video: (ctx) => (ctx.vw < 900 ? [{ src: '/assets/video/results-sm.mp4', type: 'video/mp4' }] : [
-      { src: '/assets/video/film/results-1920-av1.mp4?v=1', type: 'video/mp4; codecs="av01.0.08M.08"' },
-      { src: '/assets/video/film/results-1920-h264.mp4?v=1', type: 'video/mp4; codecs="avc1.640028"' },
+      { src: '/assets/video/film/results-1920-av1.mp4?v=2', type: 'video/mp4; codecs="av01.0.08M.08"' },
+      { src: '/assets/video/film/results-1920-hevc.mp4?v=2', type: 'video/mp4; codecs="hvc1.1.6.L120.90"' },
+      { src: '/assets/video/film/results-1920-h264.mp4?v=2', type: 'video/mp4; codecs="avc1.640028"' },
     ]),
   }));
 }
