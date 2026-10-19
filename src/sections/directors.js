@@ -1,17 +1,21 @@
 /* IX · Directors: the alpha film and the names.
    - The film (two painted portraits on transparency): VP9-with-alpha WebM, or HEVC-with-alpha MP4 on WebKit
-     (Safari plays WebM but not its alpha). Phones (narrow, not WebKit) get the 1280px VP9 encode (data-dr-sm); it is
-     the first source, so if it were missing the browser would simply fall through to the full one.
+     (Safari plays WebM but not its alpha). Wherever the film is drawn at most ~1400 device pixels wide (phones, 1x
+     screens up to 1440 wide) the 1280px VP9 encode (data-dr-sm) is used, else the 1920px one; the small one is the
+     first source, so if it were missing the browser would simply fall through to the full one.
    - Loading: two and a half screens before it is reached the film gets its poster (frame 1, a transparent WebP);
      the film itself starts loading then on wide screens, but only 0.6 of a screen ahead on narrow ones, and never
      when the reader asked to save data or is on a 2G/3G connection (the poster stands). It plays only while it is
-     in view (IntersectionObserver), and fades in once the poster or a frame is there, so nothing pops.
+     in view (IntersectionObserver) and faded in (it fades in with the dissolve into the room), and fades in once
+     the poster or a frame is there, so nothing pops.
      No JS: a <noscript> still of the same frame.
    - The names run on a serif line behind the heads: its position is a pure function of scroll (one period of
-     the repeated pair over the run's pass), so scrolling back is exact. It fades in as it rises from the fold.
-   - Portrait screens: the film is taller than the screen is wide; the pin pans the camera from one portrait to the
-     other, resting on each (the pan runs over the middle 40% of the pin).
-   REDUCED: the poster only (the film is never downloaded); the names stand still (the static layout). */
+     the repeated pair over the stage's pass), so scrolling back is exact. It fades in as it rises from the fold.
+   - The film fades in as the set's painting dissolves into the umber room, so the cut-outs never stand over the set.
+   - Portrait screens: the film is wider than the screen; the scroll pans the camera from one portrait to the other
+     while the film rises whole across the screen (no pin there: the first portrait rises in, the second leaves).
+   REDUCED: the poster only (the film is never downloaded); no running line (the static layout: the people list
+   names them). */
 import './directors.css';
 import { onFrame, clamp, smooth, seg } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
@@ -24,15 +28,20 @@ const lite = () => { const c = navigator.connection; return !!c && (c.saveData =
 export function init() {
   const sec = document.getElementById('directors');
   if (!sec) return;
-  const run = sec.querySelector('[data-dr-run]');
+  const stage = sec.querySelector('[data-dr-stage]');
   const film = sec.querySelector('[data-dr-film]');
   const video = sec.querySelector('[data-dr-video]');
   const track = sec.querySelector('[data-dr-track]');
   const band = sec.querySelector('[data-dr-band]');
 
   /* ── the film ── */
+  // the 1280 px encode wherever the film is drawn at most ~1400 device pixels wide (phones, 1x laptops up to 1440:
+  // the column there is 1152 px), the 1920 px one on wider or denser screens
   const narrow = window.innerWidth < 900, webkit = isWebKit();
-  if (!narrow || webkit) video.querySelector('source[data-dr-sm]')?.remove();
+  const railW = window.innerWidth >= 1024 ? Math.min(288, Math.max(200, window.innerWidth * 0.2)) : 0;
+  const filmPx = Math.min(window.innerWidth - railW, window.innerHeight * 0.74 * 16 / 9) * (window.devicePixelRatio || 1);
+  const small = narrow || filmPx <= 1400;
+  if (!small || webkit) video.querySelector('source[data-dr-sm]')?.remove();
   if (webkit) { const mp4 = video.querySelector('source[type^="video/mp4"]'); if (mp4) video.prepend(mp4); }
   const posterOnly = REDUCED || lite();
   video.muted = true;
@@ -54,8 +63,11 @@ export function init() {
     // candidate from the markup's order, and flipping preload first would start fetching that one)
     loaded = true; video.load(); video.preload = 'auto';
   };
+  // it plays only while it can be seen: in view, and faded in (shown, below); decoding a hidden alpha film is the
+  // costliest thing in the chapter
+  let shown = REDUCED;
   const sync = () => {
-    if (inView && !posterOnly) { load(); video.play().catch(() => {}); }
+    if (inView && !posterOnly) { load(); if (shown) video.play().catch(() => {}); else if (!video.paused) video.pause(); }
     else if (!video.paused) video.pause();
   };
   if ('IntersectionObserver' in window) {
@@ -80,25 +92,31 @@ export function init() {
   onLayout(measure);
   document.fonts?.ready.then(measure);
 
-  let lastT = '', lastF = '', lastO = '';
+  let lastT = '', lastF = '', lastO = '', lastFO = '';
   onFrame((v) => {
-    const g = geo(run);
+    const g = geo(stage);
     if (v.y + v.vh < g.top - 2 || v.y > g.bottom + 2) return;
     const pe = clamp((v.y + v.vh - g.top) / (g.height + v.vh));       // 0 entering … 1 gone
-    const pin = clamp((v.y - g.top) / Math.max(1, g.height - v.vh));   // 0 pinned … 1 released
     const x = -period * (0.16 + (tall ? 1.5 : 1) * pe);
     const t = `translate3d(${x.toFixed(1)}px,0,0)`;
     if (t !== lastT) { track.style.transform = t; lastT = t; }
-    // the line fades in as it rises: nothing at the chapter's anchor (where it would sit sliced by the fold),
-    // whole by the time it is well inside the screen
-    const o = smooth(clamp((v.y + v.vh - g.top) / (v.vh * 0.4) - 0.75)).toFixed(3);
+    // the line fades in as it rises (it sits 0.38 screen below the stage's top): nothing while the stage's top is
+    // below the middle of the screen (the line would sit sliced by the fold, over the set), whole once it is at 0.2
+    const o = smooth(clamp((0.5 - (g.top - v.y) / v.vh) / 0.3)).toFixed(3);
     if (o !== lastO) { band.style.opacity = o; lastO = o; }
     // the film rises a little faster than the page as the stage arrives
     const rise = 1 - smooth(clamp((v.y + v.vh - g.top) / v.vh));
-    // portrait screens: from the first head's centre (22.5% of the frame) to the second's (72.5%), resting on each
+    // portrait screens: from the first head's centre (22.5% of the frame) to the second's (72.5%), while the film is
+    // whole on screen (no pin there: the stage's top from 0.3 screen down to 0.05, the film rising whole)
     let tx = 0;
-    if (W > room + 1) tx = clamp(room / 2 - W * (0.225 + 0.5 * smooth(seg(pin, 0.3, 0.7))), room - W, 0);
+    if (W > room + 1) tx = clamp(room / 2 - W * (0.225 + 0.5 * smooth(seg((v.y - g.top) / v.vh, -0.3, -0.05))), room - W, 0);
     const f = `translate3d(${tx.toFixed(1)}px,${(rise * 12).toFixed(2)}%,0)`;
     if (f !== lastF) { film.style.transform = f; lastF = f; }
+    // the portraits never stand over the set's painting: they fade in only as the set dissolves into the room
+    // (the stage's top from 0.62 to 0.42 of the screen; the dissolve runs around the middle)
+    const fo = smooth(clamp((0.62 - (g.top - v.y) / v.vh) / 0.2)).toFixed(3);
+    if (fo !== lastFO) { film.style.opacity = fo; lastFO = fo; }
+    const sh = +fo > 0.02;
+    if (sh !== shown) { shown = sh; sync(); }
   });
 }

@@ -209,11 +209,16 @@ export class Stage {
   }
   /* frame-rate governor: an average over consecutive drawn frames; below 45 fps, one level down (applied later).
      The capped levels (low, min: 30 fps) step down only when they cannot hold even ~24 fps; "min" (960 px) is the
-     floor for machines that cannot draw "low" at all (a software rasteriser, an old integrated GPU). */
+     floor for machines that cannot draw "low" at all (a software rasteriser, an old integrated GPU).
+     It only ever steps down (no oscillation). The two frames after a step are not counted (they pay for its
+     reallocation); a decision needs 20 counted frames, or, on a renderer too slow to give 20 (a few fps), 8 over 3 s. */
   govern(dt, floor, now) {
     const f = 1 / Math.max(1e-3, dt);
-    this.fps = this.sinceStep++ ? this.fps + (f - this.fps) * 0.05 : f;
-    if (this.sinceStep > 20 && now - this.stepAt > 2000 && this.fps < floor && this.level > 0 && this.pendingLevel < 0) {
+    const n = this.sinceStep++;
+    if (n < 2) return;
+    this.fps = n === 2 ? f : this.fps + (f - this.fps) * 0.05;
+    const enough = n > 22 || (n > 10 && now - this.stepAt > 3000);
+    if (enough && now - this.stepAt > 2000 && this.fps < floor && this.level > 0 && this.pendingLevel < 0) {
       this.pendingLevel = this.level - 1;
       this.applyNow = this.fps < 15;   // already unusable: a one-frame reallocation is the lesser evil, apply it now
     }

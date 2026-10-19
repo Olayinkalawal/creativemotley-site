@@ -44,7 +44,9 @@ const focusables = () => [...el.querySelectorAll(FOCUSABLE)].filter((n) => n.off
 export function openModal(node, { onClose, from, onOpen, beforeClose } = {}) {
   clearTimeout(clearT);
   lastFocus = document.activeElement; onCloseFn = onClose || null; beforeCloseFn = beforeClose || null;
-  const opened = () => { if (el.classList.contains('open') && body.contains(node)) onOpen?.(node); };
+  // isOpen: a close that starts during the opening morph (Esc pressed early) skips that morph and resolves its
+  // promise while .open is still on; without the check the player would be created inside a closing dialog
+  const opened = () => { if (isOpen && el.classList.contains('open') && body.contains(node)) onOpen?.(node); };
   const recent = performance.now() - lastClickT < 1200 ? lastClick : null;
   source = pictureIn(from || recent);
   if (!canMorph || !usable(source)) source = null;

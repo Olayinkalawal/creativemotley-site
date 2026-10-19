@@ -126,7 +126,7 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
 .rail .index li.is-light.is-plate:not(.is-active) a:hover .nm { color: var(--paper-ink); }
 
 /* ── hero frame: the edition mark, dek and index inside a golden frame ──────────────────────────────── */
-.hero { position: relative; height: 320svh; }
+.hero { position: relative; height: 190svh; }   /* one screen at rest, then the film's three beats (gl/lib/filmRanges.js) */
 .hero__pin { position: sticky; top: 0; height: 100svh; display: grid; place-items: center; overflow: hidden; }
 .frame {
   position: relative; width: min(84vw, 360px); aspect-ratio: 0.732;
@@ -149,7 +149,9 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
 .frame.is-out::before { display: none; }   /* no backdrop blur once the hero frame has faded out */
 @media (max-width: 1023px) {
   .frame { width: min(86vw, 340px); aspect-ratio: auto; height: min(74svh, 560px); }
-  .frame::before { background: linear-gradient(180deg, rgba(11, 8, 5, 0.44), rgba(11, 8, 5, 0.36) 40%, rgba(11, 8, 5, 0.6)); }
+  /* phones: no backdrop blur (the first frame is composited before anything else and pays for it); the veil is a
+     touch deeper instead, which holds the frame's type at >= 5:1 against the brightest tenth of the painting */
+  .frame::before { background: linear-gradient(180deg, rgba(11, 8, 5, 0.5), rgba(11, 8, 5, 0.42) 40%, rgba(11, 8, 5, 0.64)); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 
 /* Da Vinci construction lines */
@@ -168,11 +170,11 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
 @media (min-width: 1024px) { .beat { left: calc(var(--rail-w) + (100vw - var(--rail-w)) * 0.5); } }
 .beat::before { /* a soft ink halo (static, fades with the line) so the cream holds over the bright sky of the still */
   content: ''; position: absolute; inset: -130% -16% -140% -12%; z-index: -1; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(11, 8, 5, 0.4), rgba(11, 8, 5, 0.22) 45%, rgba(11, 8, 5, 0.06) 75%, rgba(11, 8, 5, 0));
+  background: radial-gradient(closest-side, rgba(var(--halo), 0.4), rgba(var(--halo), 0.22) 45%, rgba(var(--halo), 0.06) 75%, rgba(var(--halo), 0));
 }
-@media (max-width: 1023px) {
-  .beat::before { background: radial-gradient(closest-side, rgba(11, 8, 5, 0.56), rgba(11, 8, 5, 0.32) 45%, rgba(11, 8, 5, 0.08) 75%, rgba(11, 8, 5, 0)); }
-  .beat { text-shadow: 0 1px 2px rgba(11, 8, 5, 0.4), 0 2px 26px rgba(11, 8, 5, 0.6); }
+@media (max-width: 1023px) {   /* phones: the portrait still is brightest behind the lines, so the halo is rounder and deeper */
+  .beat::before { inset: -2.2em -12% -2.4em -14%; background: radial-gradient(closest-side, rgba(var(--halo), 0.62), rgba(var(--halo), 0.44) 50%, rgba(var(--halo), 0.14) 80%, rgba(var(--halo), 0)); }
+  .beat { text-shadow: 0 1px 2px rgba(var(--halo), 0.45), 0 2px 26px rgba(var(--halo), 0.6); }
 }
 
 /* ── mobile menu sheet: 56px rows with hairline dividers, over the hero's grain and faint golden lines ── */

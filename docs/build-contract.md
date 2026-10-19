@@ -24,7 +24,7 @@ Every builder reads this, `docs/concept.md` (what each chapter is) and `docs/ref
 - Files starting with `_` in `src/sections/` are helpers. They are still auto-imported, so give them a harmless `export function init() {}` or no `init`.
 
 ## Copy: the hard rule
-- Every visible word comes from `docs/facts.json`, verbatim. Drafted copy awaiting the client (`docs/copy-drafts.md`) is in facts.json with `kind: "draft"`: it traces, but the fact check lists each draft on the page as a warning (`⚠ draft F…`), and `--strict` fails on them. Splitting a fact into parts is fine, e.g. "Creators" + "audience, no system" from F22. Use the F-ids `docs/concept.md` gives your chapter.
+- Every visible word comes from `docs/facts.json`, verbatim. Drafted copy awaiting the client (`docs/copy-drafts.md`) is in facts.json with `kind: "draft"`: it traces, but the fact check lists each draft on the page as a warning (`⚠ draft F…`), and `--strict` fails on them. **v3 phase 2:** every element whose text is a draft carries `data-draft="DCxx"` (a wrapper around a block of drafts may list several ids, `data-draft="DC32 DC33 …"`); `?drafts=0` hides them all (`html.no-drafts`), and `node scripts/factcheck.mjs --drafts 0` fails if any draft still shows. Splitting a fact into parts is fine, e.g. "Creators" + "audience, no system" from F22. Use the F-ids `docs/concept.md` gives your chapter.
 - No new claims, numbers, names, testimonials or invented UI notes.
 - Interface labels with no fact ("Close", "Next", "Previous", "Play", "Pause", "Menu", "Chapters", "Skip to content") must be listed in your report. There are no "Chapter N" kickers in v3: the rail numbers the chapters. The director adds them to `docs/ui-strings.json`.
 - Alt text: use the facts' descriptions where they exist (F51, F53, F64–F70). Otherwise describe the painted art plainly ("Painted portrait of …"); names only from facts.
@@ -44,7 +44,7 @@ Every builder reads this, `docs/concept.md` (what each chapter is) and `docs/ref
   - `.scrim` puts a soft dark halo behind opener text.
   - `.opener--light`: an opener over a light painting (its manifest's `titleInk` is `"dark"`): ink type and a pale halo. Wrap it in a **full-width** `<div data-theme="light">` (the rail reads themes across the page width, and `.col` does not reach under the rail). X Apply is the example.
   - `.paper` is an opaque reading panel with a torn top edge. **Always** give it `data-theme="light" data-opaque`. `data-opaque` lets the stage stop rendering while paper covers the screen.
-  - `.paper-grain` is a texture layer.
+  - The paper's grain is baked into `.paper`'s own background (v3 phase 2: a separate multiply-blended layer cost ~8 ms a scrolled frame with WebGL off). `.paper-grain` is kept in markup but no longer drawn; don't add blend layers over paper.
 - **Reveal:** `data-reveal` (optionally `data-reveal="0.1"` for a delay) rises an element in once. Don't animate giant type per letter; move it as a block.
 - **Accent pink:** at most once per chapter.
 - **Theme:** any region with `data-theme="dark|light"` flips the nav and each rail item under it. Mark nested cards too, e.g. a dark card on paper gets `data-theme="dark"`.
@@ -74,6 +74,7 @@ Every builder reads this, `docs/concept.md` (what each chapter is) and `docs/ref
 - `update(ctx, seg)` gets:
   - `ctx = { stage, time, dt, frame, vw, vh, w, h, dpr, pointer (eased, -1..1), velocity, tier, still, quality, reduced, scrollY, renderer }`
   - `seg = { el, p (pin progress), pe (pass progress), top, height }`
+- **Teardowns (v3 phase 2):** Method (`td:camera`) and the Kit (`td:kit`, one run of four shots) follow `docs/teardown-v2.md` as amended at its top: the choreography is data on `[data-td-shot]` elements plus `src/gl/lib/tdcore.js` (`TD_PLAN`, phase helpers), frames from `public/assets/teardown/<dev>/v3/set.json`.
 - Reusable pieces in `src/gl/lib/`:
   - `plate.js`: `plateMaterial()` (cover-fit painting + depth parallax / push / zoom) and `fullscreenQuad()`.
   - `frameStream.js`: `FrameStream` (frame-sequence → texture; keeps a ±24-frame window and frees the rest).

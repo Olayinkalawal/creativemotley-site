@@ -29,7 +29,7 @@ export function minifyGlsl(text) {
     const pre = l.startsWith('#');
     const body = pre ? l : l.replace(/ ?([(){}[\];,=]) ?/g, '$1');
     if (!out) out = body;
-    else if (pre || prevPre) out += '\n' + body;               // a directive owns its line, and so does what follows one
+    else if (pre || prevPre || out.endsWith('\\')) out += '\n' + body;   // a directive (and a continued line) owns its line
     else out += (/[;{}]$/.test(out) || /^[{}]/.test(body) ? '' : ' ') + body;
     prevPre = pre;
   }

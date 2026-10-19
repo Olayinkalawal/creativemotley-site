@@ -52,9 +52,18 @@ html.gl-ready #stage { opacity: 1; }
 .plates .plate img { width: 100%; height: 100%; object-fit: cover; }
 /* the hero's portrait painting, framed as the phone stage frames it (its manifest's phoneFocus .56 on a ~.46 screen) */
 @media (orientation: portrait) and (max-width: 1023px) { .plates .plate[data-plate='hero'] img { object-position: 83% 50%; } }
-html.gl-ready .plates { visibility: hidden; }
+/* the Results plate (?tier=0, reduced motion) framed as the stage frames it at the opener's rest, so the dek sits above
+   the watchers' heads on landscape screens */
+@media (orientation: landscape) and (max-aspect-ratio: 11/5) { .plates .plate[data-plate='results'] { background-size: auto 128%; background-position: 35% 0; } }
+/* hidden once the canvas has faded in over them (#stage's 0.9 s opacity), not as it starts: no dip toward black at boot */
+html.gl-ready .plates { visibility: hidden; transition: visibility 0s linear 0.9s; }
 
 main { position: relative; z-index: 2; overflow-x: clip; }
+/* the first frame only (html.cv: index.html sets it, core/firstframe.js lifts it as the entry starts): the chapters after
+   the hero skip style and layout, so the first paint is the hero's alone */
+html.cv main > :not(:first-child) { content-visibility: auto; contain-intrinsic-size: auto 100svh; }
+/* ?drafts=0 (html.no-drafts, set in index.html): drafted copy awaiting the client's approval is hidden, to compare */
+html.no-drafts [data-draft] { display: none !important; }
 
 /* ── type: the role classes of the scale in tokens.css (no other sizes, weights or trackings) ──── */
 .giant {   /* chapter titles: title */
@@ -137,24 +146,39 @@ main { position: relative; z-index: 2; overflow-x: clip; }
 .scrim { position: relative; }
 .scrim::before {
   content: ''; position: absolute; inset: -12% -20% -18% -14%; z-index: -1; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(11, 8, 5, 0.5), rgba(11, 8, 5, 0.26) 62%, rgba(11, 8, 5, 0));
+  background: radial-gradient(closest-side, rgba(var(--halo), 0.5), rgba(var(--halo), 0.26) 62%, rgba(var(--halo), 0));
   filter: blur(6px);
 }
 @media (max-width: 1023px) {   /* phones: the portrait stills are brighter behind the type, so the halo is deeper */
-  .scrim::before { background: radial-gradient(closest-side, rgba(11, 8, 5, 0.62), rgba(11, 8, 5, 0.36) 62%, rgba(11, 8, 5, 0)); }
-  .scrim { text-shadow: 0 1px 2px rgba(11, 8, 5, 0.4), 0 0 28px rgba(11, 8, 5, 0.5); }
+  .scrim::before { background: radial-gradient(closest-side, rgba(var(--halo), 0.62), rgba(var(--halo), 0.36) 62%, rgba(var(--halo), 0)); }
+  .scrim { text-shadow: 0 1px 2px rgba(var(--halo), 0.4), 0 0 28px rgba(var(--halo), 0.5); }
 }
+/* a swash drop cap over a scene (the hero beats, opener deks): a halo of its own, centred on the cap at the start of
+   its paragraph (the cap's hairlines are what thin out first on a bright painting), and on phones a hairline more ink */
+.scrim .dek:has(> .dc:first-child) { position: relative; }
+.scrim .dek:has(> .dc:first-child)::after, .beat:has(> .dc:first-child)::after {
+  content: ''; position: absolute; z-index: -1; pointer-events: none;
+  left: -1.3em; top: -1.75em; width: 4.8em; height: 3.5em;
+  background: radial-gradient(closest-side, rgba(var(--halo), var(--halo-cap)), rgba(var(--halo), calc(var(--halo-cap) * 0.62)) 55%, rgba(var(--halo), 0));
+}
+:is(.scrim, .beat) .dc { -webkit-text-stroke: var(--cap-ink) currentColor; }
 /* an opener over a light painting (its manifest's titleInk is "dark": X Apply): ink type, a pale halo */
-.opener--light { color: var(--ink); }
-.opener--light .scrim::before { background: radial-gradient(closest-side, rgba(244, 237, 223, 0.5), rgba(244, 237, 223, 0.24) 62%, rgba(244, 237, 223, 0)); }
+.opener--light { color: var(--ink); --halo: 244, 237, 223; }
+.opener--light .scrim::before { background: radial-gradient(closest-side, rgba(var(--halo), 0.5), rgba(var(--halo), 0.24) 62%, rgba(var(--halo), 0)); }
 @media (max-width: 1023px) {
-  .opener--light .scrim::before { background: radial-gradient(closest-side, rgba(244, 237, 223, 0.6), rgba(244, 237, 223, 0.32) 62%, rgba(244, 237, 223, 0)); }
-  .opener--light .scrim { text-shadow: 0 1px 2px rgba(244, 237, 223, 0.4), 0 0 28px rgba(244, 237, 223, 0.5); }
+  .opener--light .scrim::before { background: radial-gradient(closest-side, rgba(var(--halo), 0.6), rgba(var(--halo), 0.32) 62%, rgba(var(--halo), 0)); }
 }
 
 /* paper panel: opaque, arrives with a torn top edge */
+/* the grain is baked into the sheet's own background (the --paper-noise tile at alpha .275 = the old .55 layer at
+   opacity .5, multiplied once at raster): a separate multiply-blended .paper-grain layer cost the compositor ~8 ms
+   on every scrolled frame with WebGL off (phase 2, tracks S and O1) */
 .paper {
-  position: relative; background: var(--paper); color: var(--paper-ink);
+  position: relative; color: var(--paper-ink);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42  0 0 0 0 .36  0 0 0 0 .26  0 0 0 .275 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E") 0 0 / 220px 220px,
+    linear-gradient(var(--paper), var(--paper));
+  background-blend-mode: multiply, normal;
   padding-block: clamp(72px, 12vh, 140px) clamp(80px, 14vh, 160px);
 }
 .paper::before {
@@ -163,10 +187,8 @@ main { position: relative; z-index: 2; overflow-x: clip; }
   -webkit-mask: var(--tear) top / 1200px 24px repeat-x; mask: var(--tear) top / 1200px 24px repeat-x;
 }
 .paper.no-tear::before { display: none; }
-.paper .grain, .paper-grain {
-  position: absolute; inset: 0; pointer-events: none; opacity: 0.5; mix-blend-mode: multiply;
-  background-image: var(--paper-noise); background-size: 220px;
-}
+/* the old grain layer: kept in markup, no longer drawn (the sheet's background carries the grain) */
+.paper .grain, .paper-grain { display: none; }
 
 /* reveal: [data-reveal] rises in once (JS adds .in). Without JS everything is visible. */
 html.js [data-reveal] { opacity: 0; transform: translate3d(0, 28px, 0); }

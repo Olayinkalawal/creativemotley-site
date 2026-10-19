@@ -6,6 +6,15 @@ The client's notes, verbatim in spirit:
 3. "The camera — or the viewport we're seeing — needs to ROTATE AROUND IT, just like the reference, with good motion graphics."
 4. "Look at the Shopify website as the major reference." Premium, ultra-photoreal.
 
+## v3 phase 2: what this document no longer describes (read this first)
+The choreography below (orbit → hand-off → explode → settle) still holds for **Method**. The **Kit** and the plumbing changed in phase 2 (track S):
+- **Kit is one run, not four.** `section#kit.td.td--seq[data-scene="td:kit"]`, one pin (`--td-run: 520svh`, phones `--td-run-m: 442svh`). Shot 0 (the console) is the run's only orbit, with the chapter title over it; it glides into the column and comes apart. Each later shot (microphone, headphones, phone) is a **cut**: a wipe in that device's colour key with an ink-bled edge while the heading crossfades, then the device, whole in the column, comes apart.
+- **Shots are data.** Each `.td__copy[data-td-shot]` carries `data-td-dev` (device), `data-td-key` ("centre edge" colour key), the framings `data-td-hero` / `data-td-frame0` / `data-td-frame` (+ `-tall`), `data-td-box` / `data-td-pbox`, and `data-td-xmap` (explode re-timing). Stills and DOM keys for shot k carry `data-td-still="k"`. The plans (`TD_PLAN.single` for Method, `TD_PLAN.seq` for the Kit) and every phase helper live in `src/gl/lib/tdcore.js`, shared by `gl/scenes/teardowns.js` and `sections/_teardown.js`; phase 3 only swaps the renderer.
+- **Frames:** `public/assets/teardown/<dev>/v3/` (re-timed, subsampled AVIF with a baked alpha matte; `scripts/prep_v3sets.py`), indexed by `v3/set.json`. `data-td-orbit` and the old `TD_PHASE` export are gone; the old `orbit/` and `lg`/`sm` streams are fallback-only.
+- **Method** lists nine camera parts (names are UI strings, lines are drafts DC41, DC43–47, DC50–52); the seven step names left Method (Process alone names them).
+- **Kit copy (phase 2 integration):** labels are the device names; heads are drafts DC85 "On the desk", DC86 "At the mic", DC87 "In the ears" (F42 is already in Creators and F88/F89 in Process's Sound step, so the Kit does not repeat them), and the phone keeps F98's first sentence, "The work went out.", which Results answers with "The world watched."
+- Run lengths are now Method 3.30 / 2.80 screens and Kit 5.20 / 4.42 screens (desktop / phone), not the 540 / 400 svh below.
+
 ## The reference moment (Shopify Editions Winter '26, chapter IV Retail)
 Desktop captures: `/home/user/ref-editions/cap/desktop_nogl/s_041_18450.jpg` … `s_050_22500.jpg`. Phones: `/home/user/ref-editions/cap/mobile_nogl/s_044_18568.jpg` … `s_050_21100.jpg`.
 - `s_043`/`s_044`: the device is **huge**. It takes up most of the viewport and runs off the bottom edge. A medium sans headline, a serif dek and a small boxed link sit top-left above it. The 3D camera **orbits** the device as you scroll: top-down, front, under, back.

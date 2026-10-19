@@ -1,45 +1,81 @@
 <!-- IX · DIRECTORS · scenes: plate:directors on the opener ("The Empty Set", public/assets/scenes/directors: two empty
      director's chairs under a tungsten beam; keys in src/gl/keys/directors.json), then plate:umber on the run
-     (shader-only dark umber stage: a warm pool of light, slow dust) · owner: builder B
-     The Results painting dissolves into the empty set at this chapter's top; the set dissolves into the umber room
-     as the run starts. The opener, then a pinned stage that
-     starts under the opener's tail: the directors' alpha film (two painted portraits on transparency, their foot torn
-     like paper) rises from the foot of the screen as the dek leaves; the names glide behind their heads on a serif
-     line that fades in as it rises and runs with scroll. On phones the film is taller than the screen is wide, so
-     the scroll pans the camera from one portrait to the other, resting on each. The film is decorative
-     (aria-hidden); the names are text (the list below, read once). The site never says which portrait is which,
-     so no name is ever set against one face. data-umber keys the stage's pool of light per region (see
-     src/gl/scenes/umber.js): a dim, low pool on the opener, a bright one behind the heads on the run.
-     Sources: phones (narrow, not WebKit) get a 1280px VP9-alpha encode (data-dr-sm, dropped elsewhere by
-     directors.js); WebKit gets the HEVC-alpha mp4 (moved first by directors.js). -->
+     (shader-only dark umber stage: a warm pool of light, slow dust; src/gl/scenes/umber.js) · owner: track O2
+     - Opener: title and dek near the top, above the chairs and the camera (the painting's calm band); the keys land
+       still at the opener's rest. data-rise: the painting rises with the opener, then holds.
+     - The stage (.dr-stage, pinned briefly): the set dissolves into the umber room as the directors' alpha film (two
+       painted portraits on transparency, their foot torn like paper) rises from the foot of the screen; the names
+       glide behind their heads on a serif line that runs with scroll (decorative, aria-hidden: the names are read
+       once, in the list below). On portrait screens the film is wider than the screen: the scroll pans from one
+       portrait to the other. The site never says which portrait is which, so no name is ever set against a face.
+     - The people (.dr-info): the two names, each with its role line (DC90) and a slot for the bio the client will
+       send (data-bio; empty until then, and an empty slot renders nothing), then the line they share (DC91) and the
+       "Leadership experience from" credits (F54–F59, moved here from III Brands).
+     The room is a sheet at its foot (data-wipe on the run): X's light painting is revealed exactly under the
+     chapter's end as it scrolls up, so X's ink title never crosses the dark room mid-dissolve.
+     data-umber keys the room's pool of light per region (umber.js): a dim, low pool on the opener, a bright one behind
+     the heads on the stage, a lower, softer one under the people.
+     Film sources (scripts/encode-directors.sh): VP9-with-alpha WebM, 1920 px (desktop) and 1280 px (narrow screens,
+     data-dr-sm, dropped elsewhere by directors.js); WebKit gets the HEVC-with-alpha mp4 (moved first by directors.js). -->
 <section class="chapter" id="directors" data-chapter data-theme="dark" data-scene="plate:directors" data-plate="directors"
-  data-umber="-0.12 0.3 0.42 0.5 0.55" aria-labelledby="directors-title">
+  data-rise data-umber="-0.12 0.3 0.42 0.5 0.55" aria-labelledby="directors-title">
   <div class="opener col dr-open">
     <div class="scrim">
       <h2 class="giant" id="directors-title" data-reveal>Directors</h2>
       <p class="dek" data-reveal="0.08"><span class="dc">T</span>he two people answerable for all of it.</p>
     </div>
   </div>
-  <div class="dr-run" data-dr-run data-scene="plate:umber" data-plate="umber" data-dissolve="0.25" data-umber="0 0.54 0.74 1 1">
-    <ul class="sr-only"><li>Olayinka Lawal</li><li>Gbenga Sosanya</li></ul>
-    <div class="dr-pin">
-      <div class="dr-band" data-dr-band aria-hidden="true">
-        <p class="dr-track" data-dr-track><span class="dr-unit"><span>Olayinka Lawal</span><i>✦</i><span>Gbenga Sosanya</span><i>✦</i></span><span class="dr-unit"><span>Olayinka Lawal</span><i>✦</i><span>Gbenga Sosanya</span><i>✦</i></span><span class="dr-unit"><span>Olayinka Lawal</span><i>✦</i><span>Gbenga Sosanya</span><i>✦</i></span></p>
+  <div class="dr-run" data-dr-run data-scene="plate:umber" data-plate="umber" data-dissolve="0.25" data-wipe data-umber="0 0.54 0.74 1 1">
+    <div class="dr-stage" data-dr-stage>
+      <div class="dr-pin">
+        <div class="dr-band" data-dr-band aria-hidden="true">
+          <p class="dr-track" data-dr-track><span class="dr-unit"><span>Olayinka Lawal</span><i>✦</i><span>Gbenga Sosanya</span><i>✦</i></span><span class="dr-unit"><span>Olayinka Lawal</span><i>✦</i><span>Gbenga Sosanya</span><i>✦</i></span><span class="dr-unit"><span>Olayinka Lawal</span><i>✦</i><span>Gbenga Sosanya</span><i>✦</i></span></p>
+        </div>
+        <div class="dr-film" data-dr-film>
+          <video class="dr-video" data-dr-video muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"
+            disablepictureinpicture disableremoteplayback width="1920" height="1080" data-poster="/assets/video/directors-poster.webp">
+            <source data-dr-sm src="/assets/video/directors-sm.webm?v=2" type='video/webm; codecs="vp9"'>
+            <source src="/assets/video/directors.webm?v=2" type='video/webm; codecs="vp9"'>
+            <source src="/assets/video/directors.mp4" type='video/mp4; codecs="hvc1"'>
+          </video>
+          <noscript><img class="dr-video" src="/assets/video/directors-poster.webp" alt="" width="1600" height="900"></noscript>
+        </div>
+        <!-- the still pair: the static layout on upright screens (reduced motion, no JS), where the film's wide frame
+             would leave the faces small; each portrait gets its own crop of the still, side by side, under the names -->
+        <div class="dr-duo" aria-hidden="true">
+          <div class="dr-duo__crop" style="--f: 0.226"><img src="/assets/video/directors-poster.webp" alt="" width="1600" height="900" loading="lazy" decoding="async"></div>
+          <div class="dr-duo__crop" style="--f: 0.724"><img src="/assets/video/directors-poster.webp" alt="" width="1600" height="900" loading="lazy" decoding="async"></div>
+        </div>
       </div>
-      <div class="dr-film" data-dr-film>
-        <video class="dr-video" data-dr-video muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"
-          disablepictureinpicture disableremoteplayback width="1920" height="1080" data-poster="/assets/video/directors-poster.webp">
-          <source data-dr-sm src="/assets/video/directors-sm.webm" type='video/webm; codecs="vp9"'>
-          <source src="/assets/video/directors.webm" type='video/webm; codecs="vp9"'>
-          <source src="/assets/video/directors.mp4" type='video/mp4; codecs="hvc1"'>
-        </video>
-        <noscript><img class="dr-video" src="/assets/video/directors-poster.webp" alt="" width="1600" height="900"></noscript>
-      </div>
-      <!-- the still pair: the static layout on upright screens (reduced motion, no JS), where the film's wide frame
-           would leave the faces small; each portrait gets its own crop of the still, side by side, under the names -->
-      <div class="dr-duo" aria-hidden="true">
-        <div class="dr-duo__crop" style="--f: 0.226"><img src="/assets/video/directors-poster.webp" alt="" width="1600" height="900" loading="lazy" decoding="async"></div>
-        <div class="dr-duo__crop" style="--f: 0.724"><img src="/assets/video/directors-poster.webp" alt="" width="1600" height="900" loading="lazy" decoding="async"></div>
+    </div>
+    <div class="dr-info col" data-umber="-0.18 0.42 0.8 0.62 0.7">
+      <ul class="dr-people">
+        <li class="dr-person" data-reveal>
+          <h3 class="dr-person__name">Olayinka Lawal</h3>
+          <p class="dr-person__role" data-draft="DC90">Director</p>
+          <!-- bio slot: the client's 20–25 words for Olayinka Lawal go here, as plain text (no rendering until then:
+               an empty slot collapses). docs/copy-drafts.md, IX, has the template. -->
+          <p class="dr-person__bio" data-bio="olayinka-lawal"></p>
+        </li>
+        <li class="dr-person" data-reveal="0.06">
+          <h3 class="dr-person__name">Gbenga Sosanya</h3>
+          <p class="dr-person__role" data-draft="DC90">Director</p>
+          <!-- bio slot: the client's 20–25 words for Gbenga Sosanya (as above) -->
+          <p class="dr-person__bio" data-bio="gbenga-sosanya"></p>
+        </li>
+      </ul>
+      <div class="dr-shared" data-reveal="0.1">
+        <p class="dr-shared__line" data-draft="DC91">Between them, leadership experience from YouTube, Paramount, Multichoice, Africa Magic and Circo Live.</p>
+        <div class="dr-credits">
+          <p class="dr-credits__label" id="directors-credits">Leadership experience from</p>
+          <ul class="dr-credits__list" aria-labelledby="directors-credits">
+            <li>YouTube</li>
+            <li>Paramount</li>
+            <li>Multichoice</li>
+            <li>Africa Magic</li>
+            <li>Circo Live</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

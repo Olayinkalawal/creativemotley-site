@@ -45,6 +45,12 @@
   --paper-mute: #615a4e;   /* grey descriptions on paper: 5.3:1 on --paper, 4.8:1 on the grained paper (#ded9c6) */
   --cream-mute: rgba(244, 237, 223, 0.62);
   --hair: rgba(244, 237, 223, 0.14);   /* 1px rules on ink (top bar, menu rows) */
+  /* halos: the soft cloud behind type over a painting. --halo is its colour (ink; cream on a light painting, set by
+     .opener--light); the strengths are contrast tokens, tuned so large type over a scene holds >= 3:1 against the
+     brightest tenth of the painting behind it, phones included (the paintings themselves are never darkened). */
+  --halo: 11, 8, 5;
+  --halo-cap: 0.5;        /* behind a swash drop cap over a scene: its hairlines need their own, centred on the cap */
+  --cap-ink: 0px;         /* a hairline of extra ink on the cap's strokes (phones: the script's hairlines are thinnest there) */
 
   --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --serif: 'Instrument Serif', 'Times New Roman', serif;
@@ -104,4 +110,7 @@
 }
 @media (min-width: 640px) {
   :root { --t-lead: 1.75rem; }
+}
+@media (max-width: 1023px) {
+  :root { --halo-cap: 0.66; --cap-ink: 0.6px; }
 }
