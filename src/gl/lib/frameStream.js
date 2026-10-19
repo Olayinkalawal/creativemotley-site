@@ -99,6 +99,9 @@ export class FrameStream {
     const i = this.nearestDecoded();
     if (i < 0 || i === this.shown) return;
     const bmp = this.bitmaps.get(i);
+    // a sequence may change resolution part-way (the hero film's lg tier does at f_0418): an allocated GPU
+    // texture cannot grow in place, so a new size gets a new texture (scenes read .texture every frame)
+    if (this.tex && (bmp.width !== this.size[0] || bmp.height !== this.size[1])) { this.tex.dispose(); this.tex = null; }
     if (!this.tex) { this.tex = texture(bmp); this.size = [bmp.width, bmp.height]; }
     else { this.tex.image = bmp; this.tex.needsUpdate = true; }
     this.shown = i;
