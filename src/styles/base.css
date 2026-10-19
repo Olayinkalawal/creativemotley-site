@@ -137,6 +137,10 @@ main { position: relative; z-index: 2; overflow-x: clip; }
   background: radial-gradient(closest-side, rgba(11, 8, 5, 0.5), rgba(11, 8, 5, 0.26) 62%, rgba(11, 8, 5, 0));
   filter: blur(6px);
 }
+@media (max-width: 1023px) {   /* phones: the portrait stills are brighter behind the type, so the halo is deeper */
+  .scrim::before { background: radial-gradient(closest-side, rgba(11, 8, 5, 0.62), rgba(11, 8, 5, 0.36) 62%, rgba(11, 8, 5, 0)); }
+  .scrim { text-shadow: 0 1px 2px rgba(11, 8, 5, 0.4), 0 0 28px rgba(11, 8, 5, 0.5); }
+}
 
 /* paper panel: opaque, arrives with a torn top edge */
 .paper {
