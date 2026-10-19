@@ -27,7 +27,10 @@ html.nav-light:not(.scrolled) .nav .pill--solid { background: var(--ink); color:
 html.nav-light:not(.scrolled) .nav .pill--solid:hover { background: var(--accent-ink); }
 .nav a { text-decoration: none; }
 .nav__brand { display: flex; align-items: baseline; gap: 0.5em; white-space: nowrap; }
-.nav__brand .ed { opacity: 0.62; }
+.nav__brand .ed { opacity: 0.72; }
+@media (max-width: 479px) {   /* phones: the edition under the name (Editions' two-line lockup), so the bar never crowds */
+  .nav__brand { flex-direction: column; align-items: flex-start; gap: 0; line-height: 1.2; }
+}
 .nav__links { display: none; align-items: center; gap: clamp(18px, 2vw, 32px); }
 .nav__right { margin-left: auto; display: flex; align-items: center; gap: clamp(12px, 1.6vw, 28px); }
 .nav__mail { display: none; }
@@ -36,6 +39,7 @@ html.nav-light:not(.scrolled) .nav .pill--solid:hover { background: var(--accent
 .nav__menu { display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; margin-right: -8px; }
 .nav__menu span, .nav__menu span::before { display: block; width: 18px; height: 1.5px; background: currentColor; position: relative; transition: transform 0.3s var(--ease-out); }
 .nav__menu span::before { content: ''; position: absolute; top: 6px; }
+.nav__menu b { font-weight: inherit; }
 .nav__menu span { transform: translateY(-3px); }
 html.menu-open .nav__menu span { transform: rotate(45deg); }
 html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90deg); }
@@ -101,16 +105,18 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
 .index { font: var(--f-label); letter-spacing: var(--ls-label); line-height: 0.97; }
 .index li { display: flex; align-items: baseline; gap: 6px; }
 .index a { display: contents; }
-.index .nm { white-space: nowrap; transition: opacity 0.3s; }
+.index .nm { white-space: nowrap; }
 .index .ld { flex: 1; min-width: 12px; height: 1px; transform: translateY(-0.2em); background-image: radial-gradient(circle, currentColor 0.6px, transparent 0.8px); background-size: 4px 1px; opacity: 0; transition: opacity 0.3s; }
-.index .rn { font-family: var(--serif); font-weight: 400; letter-spacing: 0; min-width: 1.6em; text-align: right; transition: opacity 0.3s; }
-.rail .index li .nm, .rail .index li .rn { opacity: 0.4; }
-.rail .index li.is-active .nm, .rail .index li.is-active .rn { opacity: 1; }
+.index .rn { font-family: var(--serif); font-weight: 400; letter-spacing: 0; min-width: 1.6em; text-align: right; }
+.index .nm, .index .rn { transition: opacity 0.3s, color 0.3s; }
+/* the chapters not being read are dimmed by colour to the muted tone of what is under them (>= 4.5:1), not faded */
+.rail .index li:not(.is-active) :is(.nm, .rn) { color: var(--cream-mute); }
+.rail .index li.is-light:not(.is-active) :is(.nm, .rn) { color: var(--paper-mute); }
 .rail .index li.is-active .ld { opacity: 0.9; }
-.rail .index li a:hover .nm { opacity: 1; }
+.rail .index li:not(.is-active) a:hover .nm { color: inherit; }
 /* over a painted scene: an ink halo, and the dimmed names dimmed by colour, not opacity (which would fade the halo) */
 .rail .is-plate { text-shadow: 0 0 2px rgba(11, 8, 5, 0.75), 0 0 8px rgba(11, 8, 5, 0.95), 0 0 16px rgba(11, 8, 5, 0.85), 0 0 30px rgba(11, 8, 5, 0.6); }
-.rail .index li.is-plate:not(.is-active) :is(.nm, .rn) { opacity: 1; color: rgba(244, 237, 223, 0.82); }
+.rail .index li.is-plate:not(.is-active) :is(.nm, .rn) { color: rgba(244, 237, 223, 0.82); }
 .rail .index li.is-plate:not(.is-active) a:hover .nm { color: var(--cream); }
 
 /* ── hero frame: the edition mark, dek and index inside a golden frame ──────────────────────────────── */
@@ -131,7 +137,7 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
 .frame .index a:hover .nm { opacity: 0.7; }
 .frame::before { /* veil inside the frame */
   content: ''; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(180deg, rgba(11, 8, 5, 0.12), rgba(11, 8, 5, 0.34));
+  background: linear-gradient(180deg, rgba(11, 8, 5, 0.12), rgba(11, 8, 5, 0.2) 45%, rgba(11, 8, 5, 0.5));   /* deeper under the dek and index */
   backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px); opacity: var(--veil, 1);
 }
 @media (max-width: 1023px) {
@@ -152,6 +158,10 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
   opacity: 0; text-shadow: 0 2px 26px rgba(11, 8, 5, 0.55);
 }
 @media (min-width: 1024px) { .beat { left: calc(var(--rail-w) + (100vw - var(--rail-w)) * 0.5); } }
+.beat::before { /* a soft ink halo (static, fades with the line) so the cream holds over the bright sky of the still */
+  content: ''; position: absolute; inset: -130% -16% -140% -12%; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(11, 8, 5, 0.4), rgba(11, 8, 5, 0.22) 45%, rgba(11, 8, 5, 0.06) 75%, rgba(11, 8, 5, 0));
+}
 
 /* ── mobile menu sheet: 56px rows with hairline dividers, over the hero's grain and faint golden lines ── */
 .menu {
@@ -177,7 +187,7 @@ html.menu-open .nav::after { opacity: 1; }
 .menu .index .ld { display: none; }
 .menu .index .rn { opacity: 0.62; }
 .menu .index li.is-active .nm { color: var(--gold); }
-.menu__foot { margin-top: auto; padding-top: 28px; display: grid; gap: 14px; }
+.menu__foot { margin-top: auto; padding-top: 20px; display: grid; gap: 12px; }
 .menu__foot a { text-decoration: none; }
 .menu__social { display: flex; gap: 22px; opacity: 0.8; }
 .menu__social a, .menu__foot > a { display: inline-flex; align-items: center; min-height: 32px; }
