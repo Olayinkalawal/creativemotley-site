@@ -142,6 +142,7 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
   background: linear-gradient(180deg, rgba(11, 8, 5, 0.12), rgba(11, 8, 5, 0.2) 45%, rgba(11, 8, 5, 0.5));   /* deeper under the dek and index */
   backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px); opacity: var(--veil, 1);
 }
+.frame.is-out::before { display: none; }   /* no backdrop blur once the hero frame has faded out */
 @media (max-width: 1023px) {
   .frame { width: min(86vw, 340px); aspect-ratio: auto; height: min(74svh, 560px); }
   .frame::before { background: linear-gradient(180deg, rgba(11, 8, 5, 0.44), rgba(11, 8, 5, 0.36) 40%, rgba(11, 8, 5, 0.6)); }

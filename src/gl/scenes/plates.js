@@ -70,10 +70,10 @@ export function plateScene({ id, image, depth, video = null, strength = 0.022, p
 }
 
 export default function register(stage) {
-  stage.add(plateScene({ id: 'plate:storytellers', image: '/assets/plates/storytellers.webp', depth: '/assets/plates/storytellers-depth.png' }));
-  stage.add(plateScene({ id: 'plate:hero', image: '/assets/plates/hero.webp', depth: '/assets/plates/hero-depth.png' }));
+  stage.add(plateScene({ id: 'plate:storytellers', image: '/assets/plates/storytellers.webp', depth: '/assets/plates/storytellers-depth.webp' }));
+  stage.add(plateScene({ id: 'plate:hero', image: '/assets/plates/hero.webp', depth: '/assets/plates/hero-depth.webp' }));
   stage.add(plateScene({
-    id: 'plate:results', image: '/assets/plates/results.webp', depth: '/assets/plates/results-depth.png',
+    id: 'plate:results', image: '/assets/plates/results.webp', depth: '/assets/plates/results-depth.webp',
     // the full-screen backdrop video (scripts/encode-results.sh: AV1 where it plays, H.264 otherwise; ~1/5 of the old
     // 10.6 MB); narrow windows keep the 1100-px encode
     video: (ctx) => (ctx.vw < 900 ? [{ src: '/assets/video/results-sm.mp4', type: 'video/mp4' }] : [

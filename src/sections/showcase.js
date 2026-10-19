@@ -124,6 +124,7 @@ export function init() {
     const fromCard = cards.includes(document.activeElement);
     sec.classList.add('is-modal');
     openModal(fig, {
+      from: cards[k],
       onClose() {
         document.removeEventListener('keydown', onKey);
         sec.classList.remove('is-modal');
