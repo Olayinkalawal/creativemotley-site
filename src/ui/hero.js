@@ -1,5 +1,6 @@
 /* Hero: the golden frame dissolves and its mark + index fly to the rail (desktop), the Da Vinci
-   lines draw on load and fade, and the three beat lines play over the film. */
+   lines draw on load and fade, and the three beat lines play over the film.
+   Per frame only diffed, quantised writes (nothing at rest; the frame's line and its veil only while they fade). */
 import { onFrame, onResize, seg, smooth, clamp, view } from '../core/scroll.js';
 import { geo } from '../core/layout.js';
 import { REDUCED, isDesktop } from '../core/env.js';
@@ -47,11 +48,13 @@ export function initHero() {
   };
   draw(); onResize(draw);
 
+  const last = new Map();   // diffed writes (below)
   // FLIP: the frame's mark and index travel to the rail's (desktop)
   const pairs = ['mark', 'index'].map((k) => ({ from: hero.querySelector(`[data-flip-src="${k}"]`), to: document.querySelector(`.rail [data-flip="${k}"]`) }));
   let deltas = null;
   const measureFlip = () => {
     for (const p of pairs) { p.from.style.transform = ''; }
+    last.clear();
     deltas = pairs.map(({ from, to }) => {
       if (!to || !isDesktop()) return null;
       const a = from.getBoundingClientRect(), b = to.getBoundingClientRect();
@@ -62,35 +65,49 @@ export function initHero() {
   document.fonts?.ready.then(measureFlip);
 
   const beatWin = [[0.06, 0.3], [0.38, 0.58], [0.68, 0.94]];
+  const dek = hero.querySelector('.frame__dek');
+  const nav = frame.querySelector('nav');
+  // diffed writes (v3): every value is quantised and written only when it changes, so the hero at rest writes
+  // nothing per frame, and the frame's line and veil (a backdrop-filter layer) are touched only while they fade
+  const put = (el, key, prop, val) => {
+    if (!el || last.get(key) === val) return;
+    last.set(key, val);
+    if (prop.charCodeAt(0) === 45) el.style.setProperty(prop, val); else el.style[prop] = val;
+  };
+  const q = (v) => (Math.round(v * 100) / 100).toString();
+  let lastDocked = null, lastOut = null;
   onFrame((v) => {
     const g = geo(hero);
     const p = clamp((v.y - g.top) / Math.max(1, g.height - v.vh));
     // frame veil + lines dissolve over the first stretch
     const out = smooth(seg(p, 0.0, 0.1));
-    lines.style.opacity = String(1 - smooth(seg(p, 0, 0.06)));
-    frame.style.setProperty('--veil', String(1 - out));
-    frame.style.boxShadow = `inset 0 0 0 1px rgba(244,237,223,${0.7 * (1 - out)})`;
-    hero.querySelector('.frame__dek').style.opacity = String(1 - smooth(seg(p, 0, 0.05)));
-    frame.classList.toggle('is-out', out > 0.98);
-    const docked = deltas && deltas[0] ? out > 0.97 : p > 0.1;
-    root.classList.toggle('rail-docked', docked || v.y > g.bottom - v.vh);
+    put(lines, 'lines', 'opacity', q(1 - smooth(seg(p, 0, 0.06))));
+    put(frame, 'veil', '--veil', q(1 - out));
+    const a = Math.round(70 * (1 - out)) / 100;
+    put(frame, 'line', 'boxShadow', a > 0 ? `inset 0 0 0 1px rgba(244,237,223,${a})` : 'none');
+    put(dek, 'dek', 'opacity', q(1 - smooth(seg(p, 0, 0.05))));
+    const isOut = out > 0.98;
+    if (isOut !== lastOut) { frame.classList.toggle('is-out', isOut); lastOut = isOut; }
+    const docked = (deltas && deltas[0] ? out > 0.97 : p > 0.1) || v.y > g.bottom - v.vh;
+    if (docked !== lastDocked) { root.classList.toggle('rail-docked', docked); lastDocked = docked; }
     pairs.forEach(({ from }, i) => {
       const d = deltas && deltas[i];
       if (d) {
-        const k = REDUCED ? (out > 0.5 ? 1 : 0) : out;
-        from.style.transform = `translate(${d.dx * k}px, ${d.dy * k}px) scale(${1 + (d.s - 1) * k})`;
-        from.style.transformOrigin = '0 0';
-        from.style.opacity = String(docked ? 0 : 1);
+        const k = REDUCED ? (out > 0.5 ? 1 : 0) : Math.round(out * 1000) / 1000;
+        put(from, `t${i}`, 'transform', k ? `translate(${(d.dx * k).toFixed(1)}px, ${(d.dy * k).toFixed(1)}px) scale(${(1 + (d.s - 1) * k).toFixed(4)})` : '');
+        put(from, `o${i}`, 'transformOrigin', '0 0');
+        put(from, `a${i}`, 'opacity', docked ? '0' : '1');
       } else {
-        from.style.transform = ''; from.style.opacity = String(1 - out);
+        put(from, `t${i}`, 'transform', ''); put(from, `a${i}`, 'opacity', q(1 - out));
       }
     });
-    frame.querySelector('nav').style.pointerEvents = out > 0.5 ? 'none' : '';
+    put(nav, 'nav', 'pointerEvents', out > 0.5 ? 'none' : '');
     beats.forEach((b, i) => {
-      const [a, z] = beatWin[i];
-      const k = REDUCED ? (p >= a && p < z ? 1 : 0) : Math.min(smooth(seg(p, a, a + 0.06)), 1 - smooth(seg(p, z - 0.07, z)));
-      b.style.opacity = String(k);
-      b.style.transform = `translate(-50%, calc(-50% + ${(1 - k) * (p < (a + z) / 2 ? 24 : -24)}px))`;
+      const [a0, z] = beatWin[i];
+      const k = REDUCED ? (p >= a0 && p < z ? 1 : 0) : Math.min(smooth(seg(p, a0, a0 + 0.06)), 1 - smooth(seg(p, z - 0.07, z)));
+      const kq = Math.round(k * 1000) / 1000;
+      put(b, `bo${i}`, 'opacity', String(kq));
+      put(b, `bt${i}`, 'transform', `translate(-50%, calc(-50% + ${((1 - kq) * (p < (a0 + z) / 2 ? 24 : -24)).toFixed(1)}px))`);
     });
   });
 }

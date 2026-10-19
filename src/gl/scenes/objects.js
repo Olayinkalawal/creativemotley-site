@@ -173,7 +173,7 @@ export default function register(stage) {
   }
 
   const o = {};
-  let ready = false;
+  let ready = false, section = null;
   function project(cx, cy, vw, vh, D) {
     // off-axis frustum: world (X, Y, 0) lands on screen (cx + X, cy - Y), wherever the slot is
     const k = camera.near / D;
@@ -207,11 +207,26 @@ export default function register(stage) {
       }));
       ready = true;
     },
+    // outside the stage's mount window: free the cut-outs and their shadows; the section's proxy takes over again
+    dispose() {
+      ready = false;
+      for (let k = 0; k < N; k++) {
+        const om = objs[k].material.uniforms, sm = shadows[k].material.uniforms;
+        if (om.map.value !== blank) om.map.value.dispose();
+        if (sm.smap.value !== blank) sm.smap.value.dispose();
+        om.map.value = blank; sm.smap.value = blank; sm.ell.value = blank;
+      }
+      if (ellTex !== blank) { ellTex.dispose(); ellTex = blank; }
+      if (state.gl) { state.gl = false; section?.classList.remove('is-gl'); }
+    },
+    // the active object breathes (the same drift as the proxy's): keep drawing while it is drawn
+    ambient(ctx) { return ready && !ctx.reduced; },
     resize(w, h) { res.set(w, h); ground.uniforms.res.value.set(w, h); },
-    update(ctx) {
+    update(ctx, sg) {
       const L = state.L;
       if (!L || !ready) return;
       const s = trackAt(ctx.scrollY);
+      section = sg.el.closest('section') || sg.el;
       if (!state.gl) { state.gl = true; state.onGL?.(); }
       // crisp mode: judged on the stage's resolution before its dynamic scaling, so it never flips mid-run on a
       // slow GPU; a phone (dpr 2–3 against a cap of 1.2–1.6) is the case it is for

@@ -1,0 +1,89 @@
+{
+ "chapter": "results",
+ "name": "VIII Results: The Audience",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/assets/scenes/results/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 188895,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/results/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 221552,
+    "q": 86
+   }
+  ]
+ },
+ "phone": {
+  "avif": [
+   {
+    "src": "/assets/scenes/results/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 166219,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/results/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 101584,
+    "q": 69
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/results/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 217316,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/results/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 139630,
+    "q": 86
+   }
+  ]
+ },
+ "focus": [
+  0.4,
+  0.6
+ ],
+ "phoneFocus": [
+  0.5,
+  0.76
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top",
+ "key": "#7FA3AE",
+ "titleBg": {
+  "desktop": "#6B5E4F",
+  "phone": "#8C9081"
+ },
+ "titleInk": {
+  "desktop": "light",
+  "phone": "dark"
+ },
+ "titleContrast": {
+  "desktop": 6.29,
+  "phone": 6.11
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAACwBACdASogABIAPu1iqE2ppaOiMAgBMB2JYwAASkZdiiM4SaqE7mzJ3BBod10AAP7Ac8NVB2mk7PgaGRAg+tu658/WjZU42EZGEMmy4R19dsf3Y0VuK4o52xGdjyGCzw8u9+Q411PaNQRQfRnOXc9gDRSLub3USv+2ADo4EMiOr2bzzvegfUg0qh1glkoYa2flI4WBJo11sEPNQ2q7JUfdua3lVXYxx4LwgAAA",
+  "phone": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAAAwBACdASoMABoAPu1kqU2ppaQiMAgBMB2JQBOmUABfTBjBK0pkXdQyBMAA8Zc4R3s8nEGLlgbweh6Zi2u04rHGZUTO02qxltYEj7vu6wKrMqmZeaSvDxfwmDe7WZTQFvmJ48ekXd7k/rMARWp66Bw1T/hwoGqEABDxi/Ig9Qyyt7tHg7QkF3P0nr5S1laUPNjTJOZtYQoAAA=="
+ },
+ "credit": {
+  "desktop": "the existing 1920 px Results plate; no larger master exists (the live site serves this painting only inside a video), so desktop stops at 2048",
+  "phone": "portrait painted from the same brief (the desktop painting cannot be imported), job 141b5c72"
+ }
+}

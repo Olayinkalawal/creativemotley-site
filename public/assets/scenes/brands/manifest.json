@@ -1,0 +1,103 @@
+{
+ "chapter": "brands",
+ "name": "III Brands: The Commission",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/assets/scenes/brands/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 132177,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/brands/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 196158,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/brands/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 183262,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/brands/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 278260,
+    "q": 86
+   }
+  ]
+ },
+ "phone": {
+  "avif": [
+   {
+    "src": "/assets/scenes/brands/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 135737,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/brands/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 88819,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/brands/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 186690,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/brands/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 116180,
+    "q": 86
+   }
+  ]
+ },
+ "focus": [
+  0.66,
+  0.5
+ ],
+ "phoneFocus": [
+  0.53,
+  0.68
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top",
+ "key": "#6E1418",
+ "titleBg": {
+  "desktop": "#190405",
+  "phone": "#20090E"
+ },
+ "titleInk": {
+  "desktop": "light",
+  "phone": "light"
+ },
+ "titleContrast": {
+  "desktop": 19.79,
+  "phone": 18.97
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBQCdASogABIAPu1sq1EppaOjqAqpMB2JYwC1Gw6FJ1cjdVbmTo12DVU1romiHCbM4AD++cF13Muc3d7P5t/f6pE4A3zOh33X1Zx7BGBoFQrewSP2VLmgOr2tQfJqCQ6qLpr7h1PEBX3VGl2Y7lkpVLqb+k5K4SPwsRuFGzp0xTQZgSRQAAAA",
+  "phone": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAwBACdASoMABoAPu1Ct1apoqakGAEwHYlkALsygCWYSbqF4AwkqckDHAAA/vxHIWOfhrXdliLA/4q95o7geErmVf9puWIpZQPy5ujiOzITlJg3qInsMhg7BP6w3lkQnPLTmXufrTAQ2NnIkicpBTmdxZk47ULnrAA="
+ },
+ "credit": {
+  "desktop": "new painting, job 4ce5fe76",
+  "phone": "portrait recomposition, job 1f54ecf8"
+ }
+}

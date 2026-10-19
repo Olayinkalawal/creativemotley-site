@@ -1,0 +1,103 @@
+{
+ "chapter": "creators",
+ "name": "II Creators: The Atelier",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/assets/scenes/creators/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 110045,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/creators/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 165366,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/creators/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 152706,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/creators/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 245964,
+    "q": 86
+   }
+  ]
+ },
+ "phone": {
+  "avif": [
+   {
+    "src": "/assets/scenes/creators/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 113180,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/creators/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 73243,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/creators/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 155724,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/creators/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 95246,
+    "q": 86
+   }
+  ]
+ },
+ "focus": [
+  0.66,
+  0.55
+ ],
+ "phoneFocus": [
+  0.58,
+  0.74
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top",
+ "key": "#5C8A78",
+ "titleBg": {
+  "desktop": "#0E0F0C",
+  "phone": "#2F322D"
+ },
+ "titleInk": {
+  "desktop": "light",
+  "phone": "light"
+ },
+ "titleContrast": {
+  "desktop": 19.23,
+  "phone": 13.0
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADwBACdASogABIAPu1oqVAppaOmqA1RMB2JZQDH5EXf1eUNflJZwR2Obkc95FGi/QAA/vkVohsX6SKKjgkyk3YY7hlacD7VQA8WiLhjgfoXZk8Ktk3lkagvyqOSKtr7DREi7eeUULAUoHWFRVhc9Qpk+bx4slaNsibJGFgHuk3vWGa6rgAAAA==",
+  "phone": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAQBACdASoMABoAPu1iqU2ppaOiMAgBMB2JZQABJPPJFRfnz1fXt45q4AD+/Mlw1czV5eDSJqd9qp+OyXSLXBgyg5zckz73/AhHY76c/JYOHGffmHpdkMro8IUtHKoqX3Jv0g5TSazGAAAA"
+ },
+ "credit": {
+  "desktop": "new painting, job 8bc87c5a",
+  "phone": "portrait recomposition, job 9191240c"
+ }
+}

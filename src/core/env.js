@@ -1,5 +1,6 @@
 /* Capabilities, read once at boot. */
 const mq = (q) => window.matchMedia(q).matches;
+const Q = new URLSearchParams(location.search);
 export const REDUCED = mq('(prefers-reduced-motion: reduce)');
 export const FINE = mq('(pointer: fine)');
 export const isDesktop = () => window.innerWidth >= 1024;
@@ -16,17 +17,44 @@ function glOk() {
   } catch { return null; }
 }
 
-/* Tier 0: no WebGL (still plates). 1: light (phones, software GL, few cores). 2: full. */
+/* Tier 0: no WebGL (still plates). 1: light (phones, software GL, few cores). 2: full.
+   (Sections read TIER > 0 as "animated"; the stage's own quality is QUALITY / STILL below.) */
 export const GL_RENDERER = glOk();
+export const SOFTWARE_GL = GL_RENDERER !== null && /swiftshader|llvmpipe|software|basic render/i.test(GL_RENDERER);
 export const TIER = (() => {
-  const q = new URLSearchParams(location.search).get('tier');
-  if (q !== null) return Math.max(0, Math.min(2, +q));
+  const q = Q.get('tier');
+  if (q !== null && q !== 'still') return Math.max(0, Math.min(2, +q || 0));
   if (GL_RENDERER === null) return 0;
-  if (/swiftshader|llvmpipe|software|basic render/i.test(GL_RENDERER)) return 1;
+  if (SOFTWARE_GL) return 1;
   const cores = navigator.hardwareConcurrency || 4;
   const mem = navigator.deviceMemory || 8;
   const touchOnly = !FINE;
   if (cores <= 4 || mem <= 4 || (touchOnly && window.innerWidth < 900)) return 1;
   return 2;
 })();
-document.documentElement.dataset.tier = String(TIER);
+
+/* The phone path (TIER_STILL): touch screens under 900 px on their short side, and any narrow window. The stage
+   then draws one still per chapter (portrait paintings where they exist) with the dissolve and the paper: no frame
+   streams, no film, no teardown frames (the sections show their stills). ?still=1 / ?tier=still force it, ?still=0
+   turns it off. */
+export const STILL = (() => {
+  if (Q.has('still')) return Q.get('still') !== '0';
+  if (Q.get('tier') === 'still') return true;
+  if (TIER === 0) return false;
+  const touch = !FINE && (mq('(pointer: coarse)') || 'ontouchstart' in window);
+  return (touch && Math.min(window.innerWidth, window.innerHeight) < 900) || window.innerWidth < 640;
+})();
+export const TIER_STILL = 'still';
+
+/* the stage's starting quality (pixel budget: longest side 1280 / 1920 / 2880 px, DPR ≤ 2); a frame-rate average
+   steps it down (gl/stage.js). ?q=low|medium|high forces it. */
+export const QUALITY = (() => {
+  const q = Q.get('q');
+  if (q === 'low' || q === 'medium' || q === 'high') return q;
+  if (SOFTWARE_GL) return 'low';
+  return TIER >= 2 ? 'high' : 'medium';
+})();
+
+const root = document.documentElement;
+root.dataset.tier = String(TIER);
+if (STILL && TIER > 0) root.classList.add('tier-still');

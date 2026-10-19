@@ -1,0 +1,103 @@
+{
+ "chapter": "storytellers",
+ "name": "I Storytellers: the three, out of the night",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/assets/scenes/storytellers/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 183684,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/storytellers/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 277842,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/storytellers/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 211430,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/storytellers/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 314856,
+    "q": 86
+   }
+  ]
+ },
+ "phone": {
+  "avif": [
+   {
+    "src": "/assets/scenes/storytellers/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 173403,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/storytellers/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 99092,
+    "q": 65
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/storytellers/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 195974,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/storytellers/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 125444,
+    "q": 86
+   }
+  ]
+ },
+ "focus": [
+  0.7,
+  0.5
+ ],
+ "phoneFocus": [
+  0.5,
+  0.7
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top",
+ "key": "#D81B7E",
+ "titleBg": {
+  "desktop": "#020505",
+  "phone": "#05070C"
+ },
+ "titleInk": {
+  "desktop": "light",
+  "phone": "light"
+ },
+ "titleContrast": {
+  "desktop": 20.46,
+  "phone": 20.15
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQBACdASogABIAPu1srlIppaQiqAgBMB2JZQDM0FbPHXGNf6KDDLiI5/RvegecAAD+/EYxAjsynH90ADJMBSVahY2lqPmaMsTj9Q8d3fpkRiQIUh+/+PgZPl/irKEqbARbL4KgXoiU8O+W/lALDQAA",
+  "phone": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQBACdASoMABoAPu1iqk4ppaQiMAgBMB2JZQDE2Glho2zrIdNokrzYAAD+/lfNpkhUSyeVbjOWfeTQW7oUtlGsQ8GuWoxFAZSRZhgCCV0cLGROJC/QFUXJ1rl46IAA"
+ },
+ "credit": {
+  "desktop": "live film frame f_0570 (creativemotley.com/frames/f_0570.webp), 4K upscale, job 0f6104cd",
+  "phone": "portrait recomposition of the Storytellers painting, job 89884a5e"
+ }
+}

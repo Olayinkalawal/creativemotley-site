@@ -1,0 +1,103 @@
+{
+ "chapter": "apply",
+ "name": "X Apply: The Open Gate",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/assets/scenes/apply/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 164698,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/apply/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 280801,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/apply/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 217772,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/apply/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 384698,
+    "q": 86
+   }
+  ]
+ },
+ "phone": {
+  "avif": [
+   {
+    "src": "/assets/scenes/apply/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 141920,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/apply/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 87337,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/apply/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 196836,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/apply/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 116882,
+    "q": 86
+   }
+  ]
+ },
+ "focus": [
+  0.74,
+  0.55
+ ],
+ "phoneFocus": [
+  0.56,
+  0.72
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top",
+ "key": "#DFAFA0",
+ "titleBg": {
+  "desktop": "#CC9A84",
+  "phone": "#E4B0A0"
+ },
+ "titleInk": {
+  "desktop": "dark",
+  "phone": "dark"
+ },
+ "titleContrast": {
+  "desktop": 8.11,
+  "phone": 10.48
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAACwBACdASogABIAPu1mqk8ppaOiKA1RMB2JQBdmY5BTCqjUFORxP4pGl/Nqw97AAP7eh+wlDOO/6ExISd7twso3n9z4wdj+j2tPfVFesMOvfo9ysVTjyM7SZPzAqWJHXewby5NJjgYJPxC3BNpvusi3BQQEjlr7csDHjWlC8lFWlVJhoFGVOSBiG0ed23ZLM/uSV8+AAAA=",
+  "phone": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABwAgCdASoMABoAA4BaJQBOgCHfrrbKEON/afbAAP7TTPgL9nLcn4PbJ5JwqVbAIKBlBqJAHolXultE5+umE/kc70pggVA3yhJaK8Jz3u7wXCWkv1pSjRJivDcZwOkmPDQAAA=="
+ },
+ "credit": {
+  "desktop": "new painting, job 4b22d074",
+  "phone": "portrait recomposition, job 397c34ba"
+ }
+}

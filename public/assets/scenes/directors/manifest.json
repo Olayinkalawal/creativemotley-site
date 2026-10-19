@@ -1,0 +1,103 @@
+{
+ "chapter": "directors",
+ "name": "IX Directors: The Empty Set",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/assets/scenes/directors/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 115461,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/directors/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 184336,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/directors/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 159910,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/directors/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 250814,
+    "q": 86
+   }
+  ]
+ },
+ "phone": {
+  "avif": [
+   {
+    "src": "/assets/scenes/directors/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 124199,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/directors/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 80174,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/directors/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 177298,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/directors/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 109272,
+    "q": 86
+   }
+  ]
+ },
+ "focus": [
+  0.64,
+  0.7
+ ],
+ "phoneFocus": [
+  0.55,
+  0.76
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top",
+ "key": "#20264F",
+ "titleBg": {
+  "desktop": "#040210",
+  "phone": "#473333"
+ },
+ "titleInk": {
+  "desktop": "light",
+  "phone": "light"
+ },
+ "titleContrast": {
+  "desktop": 20.56,
+  "phone": 11.74
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAAAwBQCdASogABIAPu1wsVKppiSiqAgBMB2JYwDCgFbQskdilNRnXhWmONQOUgjqr5VeAAD++9yToyZxC0JVuqOiVoqJ3BM0P2+6TabT9nM0fsgYWZoPj3smVqqWofiLZ9vL40fKpmc0phi62ZTGxkciJY7OYiq4RpJO15/CxI/IumGkPDJBLDAAAAA=",
+  "phone": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwAwCdASoMABoAPu1iqU2ppaOiMAgBMB2JQBOgDVha05sdLhQ7c4kAAP79bApKZf/IED86uNGlMkxHkDnjBtE/LhUJhuJN+8xJXPaKTwHfabmWUgD+mf/g+irvB91trjs58hrj66nfSscgVd7TqT6AAAA="
+ },
+ "credit": {
+  "desktop": "new painting, job 0c9f02b1",
+  "phone": "portrait recomposition, job 87ef8956"
+ }
+}
