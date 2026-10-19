@@ -109,7 +109,7 @@ function teardown(name, stage) {
       const [lo, hi] = sec ? tdOrbitRange(sec, T.tall) : [1, 97];
       orbitKey = ''; section = null;
       orbitStream(lo, hi);
-      [dep] = await Promise.all([loadTexture(`/assets/teardown/${name}/depth.png`), orbit.first()]);
+      [dep] = await Promise.all([loadTexture(`/assets/teardown/${name}/depth.webp`), orbit.first()]);
       mat.uniforms.depth.value = dep;
     },
     dispose() {

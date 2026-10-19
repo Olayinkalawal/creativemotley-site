@@ -15,12 +15,19 @@ const url = (A.url || 'http://127.0.0.1:5173/') + '?tier=0';
 const norm = (s) => s.replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
 const facts = JSON.parse(fs.readFileSync(new URL('../docs/facts.json', import.meta.url)));
 const ui = JSON.parse(fs.readFileSync(new URL('../docs/ui-strings.json', import.meta.url))).strings;
-const corpus = facts.flatMap((f) => [f.claim, f.source_sentence, ...[...(f.note || '').matchAll(/alt text verbatim: '([^']+)'/g)].map((m) => m[1])].filter(Boolean).map(norm));
+// kind "draft" = drafted copy awaiting client approval (docs/copy-drafts.md): it traces, but is reported until approved
+const texts = (f) => [f.claim, f.source_sentence, ...[...(f.note || '').matchAll(/alt text verbatim: '([^']+)'/g)].map((m) => m[1])].filter(Boolean).map(norm);
+const corpus = facts.filter((f) => f.kind !== 'draft').flatMap(texts);
+const drafts = facts.filter((f) => f.kind === 'draft').map((f) => ({ id: f.id, t: texts(f) }));
+const draftHits = new Map();   // id → first string seen
 const ok = (s) => {
   const t = norm(s);
   if (!t || /^[\s\p{P}\p{S}\d]*$/u.test(t) && t.length <= 2) return true;   // stray punctuation / a drop-cap letter
   if (ui.some((u) => norm(u) === t)) return true;
-  return corpus.some((c) => c.includes(t));
+  if (corpus.some((c) => c.includes(t))) return true;
+  const d = drafts.find((x) => x.t.some((c) => c.includes(t)));
+  if (d) { if (!draftHits.has(d.id)) draftHits.set(d.id, t); return true; }
+  return false;
 };
 const browser = await chromium.launch({ ...(CHROME ? { executablePath: CHROME } : {}) });
 const ctx = await browser.newContext(A.mode === 'mobile' ? { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true } : { viewport: { width: 1440, height: 900 } });
@@ -49,6 +56,8 @@ for (const f of found) {
 }
 const uniq = [...new Map(fails.map((f) => [f.where + f.text, f])).values()];
 for (const f of uniq) console.log(`✗ ${f.where}: "${f.text}"`);
+for (const [id, t] of draftHits) console.log(`⚠ draft ${id}: "${t.slice(0, 120)}"`);
+if (draftHits.size) console.log(`${draftHits.size} draft string(s) on the page await client approval (docs/copy-drafts.md)`);
 console.log(uniq.length ? `\n${uniq.length} string(s) not traced to facts.json / ui-strings.json` : `✓ every string traces to facts.json (${found.length} checked)`);
 await browser.close();
-process.exit(uniq.length ? 1 : 0);
+process.exit(uniq.length || ('strict' in A && draftHits.size) ? 1 : 0);

@@ -64,7 +64,7 @@ export default function register(stage) {
     async load(ctx) {
       ranges = filmRanges('hero');
       // the end plate's depth map is needed only once the film nears its end (loaded then, in update)
-      [src, depthRest] = await Promise.all([open(ctx), loadTexture('/assets/plates/hero-depth.png')]);
+      [src, depthRest] = await Promise.all([open(ctx), loadTexture('/assets/plates/hero-depth.webp')]);
       if (ctx.tier >= 1 && !ctx.reduced && !sparks) {
         sparks = createSparks(ctx.tier >= 2 ? 2600 : 900);
         sparks.u.px.value = ctx.dpr * 1.6;
@@ -85,7 +85,7 @@ export default function register(stage) {
       const f = ctx.reduced ? 0 : frameAt(ranges, ctx.scrollY, ctx.vh);
       src.seek(f);
       if (f > 300 && !depthEnd && !endLoading) {
-        endLoading = loadTexture('/assets/plates/storytellers-depth.png').then((t) => { if (src) { depthEnd = t; redraw(); } else t.dispose(); }).catch(() => {});
+        endLoading = loadTexture('/assets/plates/storytellers-depth.webp').then((t) => { if (src) { depthEnd = t; redraw(); } else t.dispose(); }).catch(() => {});
       }
       const u = mat.uniforms;
       u.map.value = src.texture;
