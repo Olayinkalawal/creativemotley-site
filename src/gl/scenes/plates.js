@@ -1,6 +1,6 @@
 /* Still-plate dioramas used as chapter scenes. Each is one painting + its depth map, moved by camera keys
    (zoom, focus, push) plus pointer parallax:
-   - keys: the chapter's sheet in src/gl/keys/plates.json (gl/timeline.js: per-channel keyframes in viewports of the
+   - keys: the chapter's sheet in src/gl/keys/<chapter>.json (gl/timeline.js: per-channel keyframes in viewports of the
      section's pass, cubic-bezier eases); a chapter without a sheet falls back to the section's
      data-cam-from / data-cam-to = "zoom focusX focusY push", interpolated (smoothstep) over its pass progress (pe).
    - plate:<chapter> for every chapter painting in public/assets/scenes/<chapter>/manifest.json (the art track's
@@ -15,11 +15,12 @@ import { Scene, OrthographicCamera } from 'three';
 import { plateMaterial, fullscreenQuad } from '../lib/plate.js';
 import { loadTexture, videoTexture, avifOK } from '../lib/loaders.js';
 import { sheet, passT, cameraAt } from '../timeline.js';
-import KEYS from '../keys/plates.json';
 import { smooth } from '../../core/scroll.js';
 
 const parseCam = (s, d) => (s ? s.trim().split(/\s+/).map(Number) : d);
-const SHEETS = Object.fromEntries(Object.entries(KEYS).filter(([k]) => !k.startsWith('//')).map(([k, v]) => [k, sheet(v)]));
+/* one sheet per chapter, bundled at build time: src/gl/keys/<chapter>.json (keys starting with // are notes) */
+const KEYS = import.meta.glob('../keys/*.json', { eager: true, import: 'default' });
+const SHEETS = Object.fromEntries(Object.entries(KEYS).map(([p, v]) => [p.match(/([\w-]+)\.json$/)[1], sheet(Object.fromEntries(Object.entries(v).filter(([k]) => !k.startsWith('//'))))]));
 const chapterOf = (el) => el.closest('[data-chapter]')?.id || el.id;
 
 /* the art track's desktop encode lists, bundled at build time (only the "desktop" field of each manifest) */
