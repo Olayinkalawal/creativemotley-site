@@ -42,15 +42,14 @@ html.js .dr-video.is-ready { opacity: 1; }
 }
 .dr-track {
   display: flex; flex-wrap: wrap; justify-content: center; text-align: center;
-  font-family: var(--serif); font-weight: 400; font-size: clamp(2.4rem, 5.6vw, 5.6rem);
-  line-height: 1.02; letter-spacing: -0.018em; color: var(--cream); white-space: nowrap;
+  font: var(--f-display); letter-spacing: var(--ls-display); color: var(--cream); white-space: nowrap;
   padding-inline: var(--col-pad);
 }
 .dr-unit { display: contents; }
 .dr-unit + .dr-unit { display: none; }
 .dr-unit > span { flex: 0 0 100%; }
 .dr-track i {
-  display: none; font-style: normal; color: var(--accent); font-size: 0.5em; line-height: 1;
+  display: none; font-style: normal; color: var(--accent); font-size: var(--t-dek); line-height: 1;
   align-self: center; margin-inline: 0.42em; transform: translateY(-0.12em);
 }
 
@@ -67,7 +66,6 @@ html.js .dr-video.is-ready { opacity: 1; }
 @media (min-width: 1024px) { .dr-on .dr-band { left: var(--rail-w); } }
 .dr-on .dr-track {
   flex-wrap: nowrap; width: max-content; padding: 0; text-align: left; will-change: transform;
-  font-size: clamp(3.9rem, 10.2vw, 11rem); line-height: 0.98;
 }
 .dr-on .dr-unit, .dr-on .dr-unit + .dr-unit { display: flex; align-items: baseline; }
 .dr-on .dr-unit > span { flex: none; }
@@ -78,7 +76,7 @@ html.js .dr-video.is-ready { opacity: 1; }
    sized to fit under the bar with the heads whole */
 @media (orientation: landscape) and (max-height: 560px) {
   .dr-on .dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 72svh); }
-  .dr-on .dr-track { font-size: min(clamp(3.9rem, 10.2vw, 11rem), 15svh); }
+  .dr-on .dr-track { font-size: min(var(--t-display), 15svh); }
 }
 
 /* portrait screens (phones, upright tablets): a film taller than the screen is wide; the scroll pans across it.
@@ -88,7 +86,6 @@ html.js .dr-video.is-ready { opacity: 1; }
   .dr-on .dr-run { --film-h: min(66svh, 660px); --film-b: 10svh; }
   .dr-on .dr-film { right: auto; justify-content: flex-start; }
   .dr-on .dr-band { bottom: calc(var(--film-h) * 0.86 + var(--film-b)); }
-  .dr-on .dr-track { font-size: clamp(3.4rem, 17vw, 7rem); }
 }
 
 /* the still pair (static layout on upright screens): each portrait its own crop of the still (x: the face's centre

@@ -69,6 +69,7 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
   grid-column: 1; grid-row: 1; width: 48px; aspect-ratio: 16 / 9; border-radius: 2px; overflow: hidden;
   background: var(--umber); box-shadow: inset 0 0 0 1px var(--hair);
 }
+.chapters__panel .th picture { display: contents; }
 .chapters__panel .th img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.3s; }
 .chapters__panel .th img.is-in { opacity: 1; }
 .chapters__panel .nm { grid-column: 2; }

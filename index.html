@@ -17,6 +17,7 @@
   <link rel="preload" href="/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/imperial-script-caps.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/plates/hero.webp" as="image" fetchpriority="high">
   <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="/src/styles/index.css">
@@ -50,7 +51,8 @@
   </aside>
 
   <!-- mobile menu -->
-  <div class="menu" id="menu" aria-hidden="true">
+  <div class="menu" id="menu" aria-hidden="true" data-lenis-prevent>
+    <div class="menu__art" aria-hidden="true"><svg viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice"><line x1="149" y1="0" x2="149" y2="844"/><line x1="0" y1="844" x2="390" y2="252"/><line x1="149" y1="0" x2="390" y2="560"/><circle cx="390" cy="988" r="640"/><circle cx="241" cy="652" r="149"/><rect x="241" y="503" width="149" height="149"/><rect x="241" y="652" width="92" height="92"/><rect x="333" y="652" width="57" height="57"/></svg></div>
     <ol class="index" data-index-clone></ol>
     <div class="menu__foot">
       <a href="mailto:info@creativemotley.com">info@creativemotley.com</a>

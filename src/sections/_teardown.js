@@ -107,7 +107,10 @@ function lineLayers(W, H, D, rail, tall, id) {
   }
   // each layer masks its lines with the shared mask image (an SVG <mask>: rasterised with the layer once, then only
   // the layer's opacity changes: a CSS mask-image would cost a render surface per layer on every composited frame)
-  return L.filter((l) => l.length).map((l, i) => `<svg class="td__lines" viewBox="0 0 ${r(W)} ${r(H)}" width="${r(W)}" height="${r(H)}">`
+  // plus one layer with all of them: once every layer is fully in, it replaces the three (one composited layer, not
+  // three, for the rest of the orbit)
+  const layers = L.filter((l) => l.length);
+  return [...layers, layers.flat()].map((l, i) => `<svg class="td__lines" viewBox="0 0 ${r(W)} ${r(H)}" width="${r(W)}" height="${r(H)}">`
     + `<defs><mask id="${id}${i}" maskUnits="userSpaceOnUse" x="0" y="0" width="${r(W)}" height="${r(H)}"><image width="${r(W)}" height="${r(H)}" preserveAspectRatio="none"/></mask></defs>`
     + `<g mask="url(#${id}${i})">${l.join('')}</g></svg>`);
 }
@@ -147,14 +150,35 @@ function lineMask(W, H, D, M, rail, tall) {
   return c;
 }
 
-/* the degree ticker: a turntable scale under the device (ticks every 5°, long every 30°), tilted into an ellipse */
-function tickSVG() {
-  const L = [];
-  for (let a = 0; a < 360; a += 5) {
-    const t = (a * Math.PI) / 180, long = a % 30 === 0, r0 = long ? 82 : 89;
-    L.push(`<line x1="${(r0 * Math.cos(t)).toFixed(2)}" y1="${(r0 * Math.sin(t)).toFixed(2)}" x2="${(96 * Math.cos(t)).toFixed(2)}" y2="${(96 * Math.sin(t)).toFixed(2)}"${long ? ' class="is-long"' : ''}/>`);
+/* the degree ticker: a turntable scale under the device (ticks every 5°, long every 30°), tilted into an ellipse
+   (rotateX 73°) with only its front arc showing. v3: drawn on a small canvas, only when its angle changes (no 3D
+   transform under a CSS mask, which cost a render surface on every frame). */
+const TILT = Math.cos((73 * Math.PI) / 180);
+function drawTick(cv, deg) {
+  const g = cv.getContext('2d'), W = cv.width, H = cv.height, k = cv._k || 1;
+  g.globalCompositeOperation = 'source-over';
+  g.clearRect(0, 0, W, H);
+  const cx = W / 2, cy = H / 2, u = W / 200;   // disc units (−100 … 100) → px
+  const ring = (r, col) => { g.strokeStyle = col; g.beginPath(); g.ellipse(cx, cy, r * u, r * u * TILT, 0, 0, Math.PI * 2); g.stroke(); };
+  g.lineWidth = k;
+  ring(96, 'rgba(201,165,92,0.58)');
+  ring(74, 'rgba(201,165,92,0.22)');
+  const th = (deg * Math.PI) / 180;
+  for (const long of [false, true]) {
+    g.strokeStyle = long ? 'rgba(217,188,133,0.78)' : 'rgba(201,165,92,0.58)';
+    g.beginPath();
+    for (let a = 0; a < 360; a += 5) {
+      if ((a % 30 === 0) !== long) continue;
+      const t = (a * Math.PI) / 180 + th, c = Math.cos(t), s = Math.sin(t), r0 = long ? 82 : 89;
+      g.moveTo(cx + r0 * c * u, cy + r0 * s * u * TILT); g.lineTo(cx + 96 * c * u, cy + 96 * s * u * TILT);
+    }
+    g.stroke();
   }
-  return `<svg viewBox="-100 -100 200 200"><circle r="96"/><circle r="74" class="is-faint"/>${L.join('')}</svg>`;
+  // the front arc only: fade out the upper part (was a CSS mask over the 3D-transformed disc)
+  g.globalCompositeOperation = 'destination-in';
+  const fade = g.createLinearGradient(0, 0, 0, H);
+  fade.addColorStop(0.3, 'rgba(0,0,0,0)'); fade.addColorStop(0.7, '#000');
+  g.fillStyle = fade; g.fillRect(0, 0, W, H);
 }
 
 function block(el, idx) {
@@ -243,11 +267,13 @@ function block(el, idx) {
     masked = false;
     tick = document.createElement('div');
     tick.className = 'td__tick';
-    tick.innerHTML = `<div class="td__tick-disc">${tickSVG()}</div><i class="td__tick-idx"></i>`;
+    tick.innerHTML = `<canvas class="td__tick-disc"></canvas><i class="td__tick-idx"></i>`;
     disc = tick.firstElementChild;
     const tw = Math.min((D.x1 - D.x0) * 1.12, heroR.w * (desk ? 0.62 : 0.96));
     const ty = Math.min(D.y1 - (D.y1 - D.y0) * 0.05, heroR.h - tw * 0.16 - 8);
     tick.style.cssText = `width:${px(tw)};height:${px(tw * 0.3)};transform:translate(${px((D.x0 + D.x1) / 2 - tw / 2)},${px(ty - tw * 0.15)})`;
+    const dk = Math.min(2, window.devicePixelRatio || 1);
+    disc.width = Math.round(tw * dk); disc.height = Math.round(tw * 0.3 * dk); disc._k = dk; disc._deg = NaN;
     fx.append(tick);
     marks = anchors.map((A, j) => {
       if (!A) return null;
@@ -349,13 +375,19 @@ function block(el, idx) {
     // hand-off begins (opacity only: composited, nothing is redrawn)
     const linesOut = 1 - smooth(seg(p, 0.25, 0.33));
     const kl = seg(r.pv, -0.8 * vp, 0.24), lin = linesOut * smooth(seg(r.pv, -0.9 * vp, -0.5 * vp));
+    const nl = lineEls.length - 1, all = kl >= LAYER_K[Math.min(nl - 1, LAYER_K.length - 1)][1];
     lineEls.forEach((ln, j) => {
-      const W = LAYER_K[Math.min(j, LAYER_K.length - 1)];
-      put(ln, 'opacity', masked ? f2(lin * smooth(seg(kl, W[0], W[1]))) : '0');
+      let o = 0;
+      if (masked && lin > 0) o = j === nl ? (all ? lin : 0) : (all ? 0 : lin * smooth(seg(kl, LAYER_K[Math.min(j, LAYER_K.length - 1)][0], LAYER_K[Math.min(j, LAYER_K.length - 1)][1])));
+      const v = f2(o);
+      put(ln, 'opacity', v);
+      put(ln, 'visibility', v === '0.00' ? 'hidden' : 'visible');   // a hidden layer is not composited at all
     });
     if (tick) {
-      put(disc, 'transform', `translateY(-50%) rotateX(73deg) rotate(${(-150 * ph.orbit).toFixed(2)}deg)`);
-      put(tick, 'opacity', f2(linesOut * smooth(seg(r.pv, -0.7 * vp, -0.2 * vp))));
+      const deg = Math.round(-150 * ph.orbit * 4) / 4;
+      if (deg !== disc._deg && tick.style.opacity !== '0.00') { disc._deg = deg; drawTick(disc, deg); }
+      const to = f2(linesOut * smooth(seg(r.pv, -0.7 * vp, -0.2 * vp)));
+      put(tick, 'opacity', to); put(tick, 'visibility', to === '0.00' ? 'hidden' : 'visible');
     }
 
     // part markers (desktop): on their parts in the exploded frame, through the shader's transform

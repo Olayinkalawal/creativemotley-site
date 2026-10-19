@@ -31,7 +31,6 @@
   -webkit-mask: var(--tear) top / 1200px 24px repeat-x; mask: var(--tear) top / 1200px 24px repeat-x;
 }
 .proc-head, .proc-desk { position: relative; z-index: 1; }
-.proc-head .kicker { margin-bottom: clamp(0.9rem, 2vh, 1.4rem); }
 .proc-head .head { max-width: 15em; }
 
 /* ── static: the seven steps as a calm grid / list ───────────────────────────────────────────────────── */
@@ -48,8 +47,8 @@
   filter: drop-shadow(0 10px 12px rgba(36, 24, 10, 0.2)) drop-shadow(0 2px 2px rgba(36, 24, 10, 0.16));
 }
 .proc-step__txt { display: grid; gap: 6px; padding-top: 12px; box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.16); }
-.proc-step__t { font-family: var(--sans); font-weight: 650; font-size: clamp(1.0625rem, 1.25vw, 1.25rem); letter-spacing: -0.02em; line-height: 1.15; }
-.proc-step__s { font-family: var(--serif); font-size: var(--t-lead); line-height: 1.12; letter-spacing: -0.006em; color: var(--proc-mute); text-wrap: pretty; }
+.proc-step__t { font: var(--f-label); letter-spacing: var(--ls-label); }
+.proc-step__s { font: var(--f-lead); letter-spacing: var(--ls-lead); color: var(--proc-mute); text-wrap: pretty; }
 .proc-frame { display: none; }
 @media (max-width: 639px) {
   .proc-list { grid-template-columns: minmax(0, 1fr); gap: 26px; }
@@ -139,10 +138,9 @@
 .proc-cap__items { display: grid; }
 .proc-cap__item { grid-area: 1 / 1; display: grid; gap: 8px; align-content: end; will-change: opacity, transform; }
 .proc-cap__t {
-  font-family: var(--sans); font-weight: 650; font-size: clamp(1.5rem, 2.3vw, 2.25rem);
-  letter-spacing: -0.04em; line-height: 1;
+  font: var(--f-head); letter-spacing: var(--ls-head);
 }
-.proc-cap__s { font-family: var(--serif); font-size: clamp(1.2rem, 1.65vw, 1.6rem); line-height: 1.1; letter-spacing: -0.01em; text-wrap: pretty; }
+.proc-cap__s { font: var(--f-lead); letter-spacing: var(--ls-lead); text-wrap: pretty; }
 
 /* seven short rules; the chapter's one accent slides along them with the track */
 .proc-cap__ticks {
@@ -164,8 +162,6 @@
 @media (max-width: 719px) {
   .proc-on .proc-run { --proc-dwell: 50; }
   .proc-slot { width: min(80vw, 340px); height: min(36svh, 300px); }
-  .proc-cap__t { font-size: 1.5rem; }
-  .proc-cap__s { font-size: 1.2rem; }
 }
 
 /* the sheet over the desk must still cover the screen above it while the stage dissolves into the Kit (the
