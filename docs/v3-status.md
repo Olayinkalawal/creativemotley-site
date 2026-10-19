@@ -175,3 +175,117 @@ Still open (none is new in v3 unless marked):
 4. **Profile Brands and Showcase** (WebGL off) while those chapters are open.
 5. **Prepare the watch-the-work cards.** Verify the YouTube ids, then build the lazy thumbnail plus modal player.
 6. **Phase 3 can then be decided on numbers:** about 2 MB for five devices means real-time 3D, if the camera proof passes the client's side-by-side.
+
+---
+
+# Phase 2 (chapters), integrated
+
+Measured 2026-10-19 (22:19–22:48 UTC) on the integrated phase-2 working tree (tracks S structure, O1 Creators/Brands/Showcase, O2 Results/Directors/Apply, P platform, plus the integration fixes below), production build served by `scripts/perf.mjs --dist` (gzip text, range requests, immutable `/assets/*`). Same method as phase 1 (§1), now one command: `node scripts/perf.mjs --dist <build>`. Full report: `scratchpad/p2-int/perf1/perf.md`. Load average was 5.6–10 on the shared 4 cores (phase 1: 1.2–5.9), so single timings carry ±5 fps / ±150 ms.
+
+## P2.1 Targets: phase 1 → phase 2
+
+| Budget | Phase 1 | **Phase 2** | Target | |
+|---|---|---|---|---|
+| First load, desktop @1× | 0.56 MB / 32 req | **0.62 MB / 28 req** | ≤ 1.5 MB | met |
+| First load, desktop @2× | 0.61 MB | **0.62 MB** | ≤ 1.5 MB | met |
+| First load, phone @2× | 0.57 MB | **0.57 MB** | ≤ 1.0 MB | met |
+| Full read, desktop @1× | 77.0 MB / 1,121 req | **19.12 MB / 378 req** | ≤ 18 MB | **missed by 1.1 MB**: the device frames are 11.17 MB (phase 3) |
+| Full read, phone @2× | 5.83 MB / 77 req | **3.96 MB / 87 req** | ≤ 6 MB | met |
+| JS (gzip) | 29.1 KB entry + 162.6 KB lazy (all desktop scenes) | **32.7 KB entry** (index 25.7 + scroll 7.0) + **155.4 KB lazy** (three 123.1 with `three-slim`, + every desktop scene) | ≤ 60 + ≤ 160 KB | met |
+| LCP unthrottled, desktop / phone | 0.70–0.76 / 0.55–0.58 s | **0.94 s** median of 5 (0.84–1.04, load 7–8; the harness's 3 runs at load 7–10: 1.06) / **0.63 s** (0.60–0.93) | ≤ 1.0 s | met, at the line under load |
+| LCP throttled phone | 2.56 s | **2.40 s** (2.36 / 2.40 / 2.52) | ≤ 2.5 s | met |
+| Steady wheel, WebGL off | 39–60 fps; Brands and Showcase 39–40 | **51.9–59.8 fps** in all 12 windows (median 53.8) | ≥ 50 everywhere | met (table P2.3) |
+| CLS while scrolling | 0 | **0** in all 24 windows | < 0.01 | met |
+| Page length, desktop / phone | 58.5 / 54.2 screens | **33.6 / 32.7** (`?tier=0`: 28.5 / 28.3) | ≈ 40 | met |
+| First chapter title | top at 6.1 screens | **top at 1.96** (in view after 0.96) | ≤ 2 | met |
+| Words per screen | 11.5 | **34.4** (1,157 words / 33.6 screens; 40.6 on the `?tier=0` length) | 40–60 | **missed** with WebGL: the pinned runs (Showcase, Kit, Method) carry few words; 44 draft ids await the client |
+| Distinct painted worlds | 7 paintings, 10 of 10 chapters own a scene | unchanged, plus the Kit's four colour keys | ≥ 9 | met |
+
+### Where the bytes go now
+- **Desktop full read @1×, 19.12 MB:** device frames 11.17 MB (Method camera v3 orbit+explode and the Kit's one orbit + four explodes); film 3.14 MB (hero cut 1.02 + Results backdrop AV1 1.88 + …); images 2.41 MB (posters as WebGL textures, 1200 px AVIF); Directors alpha film 0.97 MB (the 1280 encode now serves 1× desktops up to 1440); scene stills 0.67 MB; JS 0.19 MB; fonts 0.09 MB. Without the devices it is 7.9 MB, so **the five devices have ≈ 10 MB of headroom** against 18 MB (phase 1 said ≈ 2 MB).
+- **Phone full read @2×, 3.96 MB:** Directors film (`directors-sm.webm`) 0.97 MB, images 1.15 MB, device stills 0.85 MB, portrait paintings 0.62 MB, JS 0.16 MB.
+
+## P2.2 Chapter lengths vs the blueprint (screens; desktop 1440×900 / phone 390×844, WebGL on; `?tier=0` in brackets where it differs)
+
+| Chapter | Blueprint (§5; phone ≈ 0.85×) | Phase 1 | **Phase 2** | |
+|---|---|---|---|---|
+| Hero + film beat | 2.70 / 2.30 | 3.20 / 3.20 | **1.90 / 1.90** | under |
+| I Storytellers | 2.00 / 1.70 | 4.68 / 4.45 | **1.97 / 1.82** | on |
+| II Creators | 2.60 / 2.21 | 4.15 / 5.02 | **2.73 / 3.68** | desktop +0.13; **phone +1.5** |
+| III Brands | 2.40 / 2.04 | 3.97 / 3.85 | **2.71 / 3.52** | desktop +0.3; **phone +1.5** |
+| IV Method | 3.30 / 2.81 | 5.40 / 4.40 | **3.30 / 2.80** | on |
+| V Showcase | 3.00 / 2.55 | ≈ 6.6 / 6.6 (derived) | **7.32 / 6.83** (3.28 / 2.42) | **+4.3 with WebGL** (the poster-room pin) |
+| VI Process | 2.80 / 2.38 | 6.18 / 5.83 (1.74 / 2.56) | **2.84 / 2.56** (1.74 / 2.56) | on |
+| VII Kit | 4.5–6.0 / 3.8–5.1 | 16.0 / 13.2 | **5.20 / 4.42** | on |
+| VIII Results | 1.80 / 1.53 | 2.79 / 2.30 | **1.84 / 1.44** | on |
+| IX Directors | 2.20 / 1.87 | 3.22 / 3.12 | **2.16 / 2.06** | phone +0.2 |
+| X Apply | 1.60 / 1.36 | 2.34 / 2.23 | **1.63 / 1.70** | phone +0.34 (the footer alone is ≈ 0.65) |
+| **Page** | 29.7 / 25.2 (sum); target ≈ 40 | 58.5 / 54.2 | **33.6 / 32.7** (28.5 / 28.3) | |
+
+## P2.3 Smoothness by chapter (desktop 1440×900, steady wheel 50 px / 50 ms, 10 s; top 14 s)
+
+| Window | Phase 1 WebGL off | **Phase 2 WebGL off** (p95 ms) | Phase 2 WebGL on (SwiftShader, relative only) | CLS off / on | Load avg |
+|---|---|---|---|---|---|
+| Top (hero → film) | 55.6 | **53.2** (33) | 2.3 | 0 / 0 | 8.6 |
+| I Storytellers | — | **53.1** (33) | 3.4 | 0 / 0 | 7.8 |
+| II Creators | 55.5 | **52.8** (33) | 3.1 | 0 / 0 | 7.5 |
+| III Brands | 40.3 / 38.7 | **54.0** (33) | 4.0 | 0 / 0 | 6.2 |
+| IV Method | 47.4 (orbit) / 51.7 (explode) | **55.8** (33) | 2.8 | 0 / 0 | 6.0 |
+| V Showcase | 39.6 / 39.3 | **58.5** (17) | 3.9 | 0 / 0 | 6.1 |
+| VI Process | 48.6 (→ Kit) | **54.4** (33) | 1.9 | 0 / 0 | 6.7 |
+| VII Kit (console) | 48.1 | **53.8** (33) | 2.4 | 0 / 0 | 6.4 |
+| VII Kit +0.5 (cuts) | 52.0 / 50.8 | **56.9** (17) | 3.5 | 0 / 0 | 6.6 |
+| VIII Results | 52.4 | **51.9** (33) | 1.8 | 0 / 0 | 6.8 |
+| IX Directors | 49.2 / 47.7 | **52.2** (33) | 1.7 | 0 / 0 | 6.9 |
+| X Apply | 60.0 / 59.9 | **59.8** (17) | 3.7 | 0 / 0 | 5.6 |
+
+- The WebGL-off gains are the baked paper grain (a multiply-blended `.paper-grain` layer cost ≈ 8 ms a frame; now baked into `.paper` itself), the CSS plate hidden while a sheet covers the screen, flat photo cards, one construction-line layer in the teardowns, and the shorter runs.
+- WebGL on: SwiftShader on a loaded machine, 1.7–4.0 fps, not comparable with phase 1's 3.0–12.1 (load 1–6). Each window reports the governor stepping down (4–8 canvas reallocations, at scene changes). Stage renders stop in 5 s idle everywhere except the scenes that animate on their own (Process objects 21, Results TV 16, Directors 18).
+
+## P2.4 What the integration changed
+Cross-track requests applied:
+- S → `base.css`: the plates stay visible until the canvas has faded in (`transition: visibility 0s linear 0.9s`), so the hero no longer dips toward black at boot.
+- S → `chrome.css`: `.hero` is 190svh (the inline style in `hero.html` is gone).
+- S, O1, P → `base.css`: the paper grain is baked into `.paper` (the `.paper--baked` background); `.paper-grain` is kept in markup but no longer drawn.
+- O2 → `plates.js` (Results): HEVC source for Safari, cache-busted `?v=2`.
+- O2 → `base.css`: the tier-0 / reduced Results plate is framed like the stage (dek above the watchers' heads).
+- P → `vite.config.js`: `threeSlim()` plugin (three's engine chunk 136.5 → 123.1 KB). The optional `modulePreload` change was not taken (its LCP gain was inside the noise).
+- P → Creators / Brands: the services list and the brief steps carry one wrapper `data-draft="DC10 … DC17"` / `"DC32 … DC37"`, so `?drafts=0` leaves no empty block.
+- P → `.gitignore`: `qa/perf`.
+- S → docs: `teardown-v2.md` (a phase-2 note at its top) and `build-contract.md` (baked paper, `data-draft`, the teardown model) describe the one-run Kit, `[data-td-shot]`, `td:kit`, `data-td-key`, `data-td-xmap` and `v3/set.json`.
+
+Seams fixed:
+- **Kit repeated lines.** The Kit's heads repeated F42 (Creators' feature block) and F88/F89 (Process's Sound step). They are now the drafts DC85 "On the desk", DC86 "At the mic", DC87 "In the ears" (`data-draft`); the phone keeps "The work went out.", answered by Results' "The world watched." A scan finds no sentence on the page in two chapters.
+- **Video modal race** (`ui/modal.js`): a close during the opening morph (Esc pressed early) let the player iframe be created inside the closing dialog. `onOpen` now also checks the dialog is still open.
+- Verified, nothing to change: the "Leadership experience from" credits appear once (IX Directors, with DC91; gone from Brands with their CSS); Results says only "The world watched."
+
+Checks:
+- `npx vite build` clean; `node scripts/build-pages.mjs --base /creativemotley-site/` builds, and a full read of it under that path returned no 404 on desktop or phone (canonical and Organization JSON-LD present).
+- Fact check passes, desktop and mobile (500 strings), 44 draft ids listed by chapter (storytellers DC01 DC03; creators DC10–17 DC19; brands DC31–37; method DC41 DC43–47 DC50–52; showcase DC60–63 DC65 DC67 DC69 DC71 DC73 DC75; kit DC85–87; directors DC90 DC91; apply DC100 DC101). `--drafts 0` passes (410 strings, no draft shows) and leaves no gaps (`qa/shots/v3p2_drafts0/`).
+- No horizontal overflow at 1440, 1280, 1024, 390 or 360 (WebGL on and `?tier=0`, every half screen).
+- Console: the only errors are the blocked i.ytimg.com thumbnails (policy block in this container), in every walk. No page errors, no failed first-party requests.
+- `?tier=0` and reduced motion: complete; a slow walk finds no reveal left unrevealed at 1440, 1024 and 360.
+- Video cards: no iframe and no YouTube request at load; thumbnails are requested only near Showcase; a click opens the modal with the youtube-nocookie player, Tab stays inside, Esc closes, the iframe is removed and focus returns to the card (desktop WebGL, phone, `?tier=0`).
+- Kit and Method with the stage: the scenes draw at 1440, 1280 and 1024. At ≤ 1280 the Method explode streams the old `camera/sm` WebP frames (its column is under 960 device px); the Kit uses the v3 sets at every width tested.
+
+## P2.5 Visual check
+Contact sheets, one frame every 0.75 screen, labelled with the screen number: `qa/shots/v3p2_desk_sheet_00…03.jpg` (1440×900, 45 frames) and `qa/shots/v3p2_mob_sheet_00…03.jpg` (390×844, 43 frames); frames in `qa/shots/v3p2_desk/` and `qa/shots/v3p2_mob/`. Openers and runs at 1280×800 and 1024×768: `qa/shots/v3p2_1280/`, `qa/shots/v3p2_1024/`. Presentation sheets: `qa/shots/v3p2_best_desk.jpg`, `qa/shots/v3p2_best_mob.jpg`.
+
+Closed since phase 1: (a) the fan and photo crops are each chapter's own painting; (b) the Creators, Brands and Directors titles sit in the calm band, clear of the figures, at 1440, 1280 and 1024; (c) the near-black film stretch is gone (161 of 570 frames); (d) the Kit's explodes sit inside the frame (Method's front element still bleeds off the right edge at 1024–1440, the teardown doc's intended edge bleed, with its 01 marker just inside); (g) the Results counters settle before any rest frame.
+
+Still open (ranked):
+1. **Showcase with WebGL is 7.3 screens** against 3.0; the opener still has a mostly empty dark screen before the posters rise (desk 016–018, phone 018–019).
+2. **Phone Creators and Brands** run 3.7 and 3.5 screens against ≈ 2.2 and 2.0 (desktop is within 0.3).
+3. **Process has no giant title**, only the serif head "Seven steps, every time." (phase-1 item e). On phones the desk's last screen before the Kit is nearly blank paper (phone 030).
+4. **Phone Storytellers:** around screen 1.5 the title and dek cross the upper figure's face as they rise; clear from 1.7 (`qa/shots/v3p2_best_m2/`).
+5. **Directors:** the running names line touches the top of the left portrait's cap (desk 041, phone 039).
+6. **Kit cuts play over about 60 px of scroll** (one wheel notch, eased by Lenis). Judge the feel on real hardware before phase 4.
+7. 1024×768: mid-truck in Brands (+0.12 of the section) the woman's face is outside the right edge; both faces are in by +0.2.
+
+## P2.6 Open issues and what phase 3 / 4 start with
+1. **Phase 3 (devices):** the desktop read is 19.1 MB, of which 11.2 MB is device frames; the target leaves ≈ 10 MB for all five devices (≈ 2 MB each). Video at 1–1.5 Mb/s or real-time GLBs (≤ 0.4 MB each) both fit; the renderer swap is contained to `gl/scenes/teardowns.js` (the choreography is data plus `gl/lib/tdcore.js`). Also retire the `sm` WebP fallback Method still streams at ≤ 1280.
+2. **Words per screen 34 against 40–60:** the 44 drafts need the client's yes; the Directors bios must come from the client; the pinned runs (Showcase 7.3 screens, Kit 5.2) carry few words.
+3. **Client inputs:** the 14 YouTube ids are still unverified from here (oEmbed and i.ytimg are blocked); DC91 repeats the five credits (keep one); DC85–DC87 are new on the page.
+4. **Safari Directors film** (`directors.mp4`, HEVC with alpha, 15.1 MB) is unchanged: it needs macOS to encode (steps in `scripts/encode-directors.sh`).
+5. **Phase 4 (critique) should start with** the Showcase length and its empty opener, the phone lengths of Creators and Brands, Process's missing title, and the Kit cut feel; then a real-device check of LCP (desktop sits at the 1.0 s line under load) and of WebGL smoothness, which this machine cannot measure.
+6. **Housekeeping:** unused files that can be deleted (not deleted here): `public/assets/video/film/hero-1920-{av1,h264}.mp4` (11.1 MB), `public/assets/video/results.mp4` (10.6 MB master), `public/assets/teardown/{mic,headphones,phone}/orbit/` (18.9 MB, never requested: only the console orbits), `public/assets/teardown/{mixer,mic,headphones,phone}/{hero,poster}.webp` (0.6 MB; the Kit uses `v3/`), `public/assets/teardown/*/depth.png` (1.2 MB; only `depth.webp` loads). Fallback-only, keep for now: `public/assets/frames/hero/` (79 MB, the film without a playable video), the Kit devices' old `lg`/`sm` explode frames, `camera/orbit`, `mixer/orbit`. The stray `/dist-5405` (248 MB, filesystem root) is still there.
