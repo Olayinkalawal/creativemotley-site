@@ -1,42 +1,68 @@
-/* III · Brands paper */
-.br { display: flex; flex-direction: column; }
-.br__intro { display: grid; gap: clamp(20px, 4vh, 40px); }
-@media (min-width: 900px) { .br__fan { --fan-w: clamp(204px, 16.5vw, 238px); } }
+/* III · Brands paper (track O1). The Brands block (+ DC31) beside two notes · "How a brief runs": five numbered
+   steps, a row of columns from 1280 px, a hairline list below · the room and the set side by side in velvet mats
+   (crops of the Commission painting). */
+#brands > .paper { padding-block: clamp(64px, 9vh, 104px) clamp(72px, 10vh, 112px); }
+.br { display: flex; flex-direction: column; gap: clamp(40px, 6vh, 72px); }
+.br__intro { display: grid; gap: clamp(28px, 4vh, 40px); }
+.br__lead { font: var(--f-body); letter-spacing: var(--ls-body); color: var(--pp-mute, var(--paper-mute)); max-width: 26em; margin: -0.35rem 0 1.15rem; text-wrap: pretty; }
+@media (min-width: 900px) { .br__fan { --fan-w: clamp(184px, 14.4vw, 208px); } }
 @media (min-width: 1024px) {
-  .br__intro { grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); align-items: center; min-height: 52svh; }
+  .br__intro { grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr); align-items: center; }
 }
 
-/* two XXL photo cards in painted mats (crops of the hero plate): the room full width, the set offset right */
-.br__photos { display: grid; gap: clamp(56px, 10vh, 120px); margin-top: clamp(56px, 10vh, 128px); }
-.br__pc { --plate: url(/assets/plates/hero.webp); }
-.br__pc--room { --pc-ar: 0.6; --pc-inset: 0.76; --cx: 0.42; --cy: 0.25; --zoom: 2.4; }   /* sky and floating kit */
-.br__pc--set { --pc-ar: 0.66; --pc-inset: 0.8; --cx: 0.21; --cy: 0.72; --zoom: 2.4; }    /* silk and cypresses */
-@media (min-width: 1024px) {
-  .br__photos { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 16px; }
-  .br__pc--room { grid-column: 1 / 12; }
-  .br__pc--set { grid-column: 3 / 13; }
+/* how a brief runs */
+.brief__label { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--pp-mute, var(--paper-mute)); margin-bottom: 14px; }
+.brief__steps { display: grid; grid-template-columns: minmax(0, 1fr); counter-reset: none; }
+.brief__step {
+  display: grid; grid-template-columns: 2.6rem minmax(0, 1fr); column-gap: 12px; row-gap: 4px; align-items: baseline;
+  padding-block: 14px 16px; box-shadow: inset 0 1px 0 var(--pp-rule, rgba(20, 16, 10, 0.18));
 }
-@media (max-width: 639px) {
-  .br__pc--room, .br__pc--set { --pc-ar: 0.9; --pc-inset: 0.86; --zoom: 3.2; }
-  .br__pc--room { --cy: 0.3; }
-  .br__pc--set { --cy: 0.7; }
+.brief__n { grid-row: span 2; font: var(--f-lead); letter-spacing: var(--ls-lead); color: var(--ochre); font-variant-numeric: lining-nums tabular-nums; }
+.brief__name { font: var(--f-head); letter-spacing: var(--ls-head); color: var(--pp-ink, inherit); }
+.brief__line { font: var(--f-body); letter-spacing: var(--ls-body); color: var(--pp-mute, var(--paper-mute)); text-wrap: pretty; max-width: 30em; }
+@media (min-width: 640px) and (max-width: 1279px) {
+  .brief__step { grid-template-columns: 3.4rem minmax(0, 0.7fr) minmax(0, 1.5fr); column-gap: 16px; }
+  .brief__n { grid-row: auto; }
+}
+/* wide: five columns, each under a hairline, the numeral large in the serif (the display role) */
+@media (min-width: 1280px) {
+  .brief__steps { grid-template-columns: repeat(5, minmax(0, 1fr)); column-gap: clamp(20px, 2vw, 32px); }
+  .brief__step { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto 1fr; row-gap: 10px; padding-top: 18px; align-items: start; }
+  .brief__n { grid-row: auto; font: var(--f-display); letter-spacing: var(--ls-display); line-height: 0.82; margin-bottom: 8px; }
 }
 
-/* leadership experience: type only, a dense row of names under its label */
-.br__credits { margin-top: clamp(80px, 15vh, 180px); }
-.br__credits .pf__label { margin-bottom: clamp(14px, 2.4vh, 22px); }
-.credits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(16px, 2.4vw, 32px); }
-.credits li {
-  padding-block: 12px 18px; box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.2);
-  font: var(--f-head); letter-spacing: var(--ls-head);
+/* the room and the set: side by side from 900 px, the set a step lower */
+.br__photos { display: grid; gap: clamp(36px, 6vh, 64px); }
+.br__pc { --pc-ar: 0.6; --pc-inset: 0.84; }
+@media (min-width: 900px) {
+  .br__photos { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(20px, 2.6vw, 40px); align-items: start; }
+  .br__pc--set { margin-top: clamp(24px, 4vh, 48px); }
 }
-@media (min-width: 900px) { .credits { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+@media (max-width: 639px) { .br__pc { --pc-ar: 0.86; --pc-inset: 0.86; } }
+
+/* the CSS plate (no WebGL: ?tier=0, reduced motion) holds the keys' first frame on wide screens: close on the
+   velvet and the globe (zoom 1.9 about the painting's left edge, .7 down), so the title sits on the calm third */
+@media (min-width: 1024px) and (orientation: landscape) {
+  .plates .plate[data-plate='brands'] {
+    --cw: max(100vw, 177.78vh); --ch: max(56.25vw, 100vh);
+    background-size: calc(var(--cw) * 1.9) auto;
+    background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.7 * (1 - 1.9));
+  }
+}
+
+/* …and, once the title has left, the keys' landing frame: the commission (zoom 1.6 about the right edge, .24 down) (landPlate in _paper.js: a cut, not a move) */
+@media (min-width: 1024px) and (orientation: landscape) {
+  html.is-landed-brands .plates .plate[data-plate='brands'] {
+    background-size: calc(var(--cw) * 1.6) auto;
+    background-position: calc((100vw - var(--cw)) / 2 + var(--cw) * 1.0 * (1 - 1.6)) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.24 * (1 - 1.6));
+  }
+}
 
 /* the sheet tears off at the bottom onto chapter IV's black stage (the camera), as Process tears off onto the Kit's:
    the bottom tear (the shell's tear, flipped), paper + the shell's grain at half strength in one layer, so the rim is
    the same grained paper as the sheet. z-index: above the Method stage's edge glow (z 1) and its pinned copy (z 2),
    so the rim that reaches 22px into it lies on top cleanly. */
-#brands > .paper { z-index: 3; isolation: isolate; }
+#brands > .paper { z-index: 3; }   /* positioned + z-index: its own stacking context (no isolation: a needless group) */
 #brands > .paper::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: -22px; height: 24px; pointer-events: none;
   background:

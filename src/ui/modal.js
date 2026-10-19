@@ -1,4 +1,7 @@
-/* One shared dialog. openModal(node, { onClose, from }) moves focus in, traps Tab, closes on Esc/scrim.
+/* One shared dialog. openModal(node, { onClose, from, onOpen, beforeClose }) moves focus in, traps Tab (iframes included;
+   focus that escapes the dialog, e.g. Shift+Tab out of an embedded player, is brought back), closes on Esc/scrim.
+   onOpen runs once the dialog has opened (after the morph), e.g. to create a player only then; beforeClose runs before
+   the closing morph captures the page, e.g. to remove that player so the morph shrinks the still art, not the video.
    Opening morphs from the clicked element (View Transitions): the element's picture grows into the modal's first
    picture, and the rest cross-fades. `from` names the source explicitly; otherwise it is the button or link the
    reader just clicked (when it is card-sized). No View Transitions, reduced motion, or no source: a plain fade.
@@ -10,7 +13,7 @@ const el = document.getElementById('modal');
 const body = el.querySelector('[data-modal-body]');
 const VT = 'cm-modal';
 const canMorph = !REDUCED && typeof document.startViewTransition === 'function';
-let lastFocus = null, onCloseFn = null, source = null, openedWith = '', clearT = 0;
+let isOpen = false, lastFocus = null, onCloseFn = null, beforeCloseFn = null, source = null, openedWith = '', clearT = 0;
 let lastClick = null, lastClickT = 0;
 el.inert = true;
 
@@ -35,14 +38,18 @@ function morph(update, done) {
   const t = document.startViewTransition(update);
   t.finished.finally(() => { el.classList.remove('vt'); done?.(); });
 }
+const FOCUSABLE = 'a[href],button:not([tabindex="-1"]),iframe,[tabindex="0"]';
+const focusables = () => [...el.querySelectorAll(FOCUSABLE)].filter((n) => n.offsetParent !== null && !n.disabled);
 
-export function openModal(node, { onClose, from } = {}) {
+export function openModal(node, { onClose, from, onOpen, beforeClose } = {}) {
   clearTimeout(clearT);
-  lastFocus = document.activeElement; onCloseFn = onClose || null;
+  lastFocus = document.activeElement; onCloseFn = onClose || null; beforeCloseFn = beforeClose || null;
+  const opened = () => { if (el.classList.contains('open') && body.contains(node)) onOpen?.(node); };
   const recent = performance.now() - lastClickT < 1200 ? lastClick : null;
   source = pictureIn(from || recent);
   if (!canMorph || !usable(source)) source = null;
   const show = () => {
+    isOpen = true;
     body.replaceChildren(node);
     el.inert = false; el.setAttribute('aria-hidden', 'false'); el.classList.add('open');
     const target = pictureIn(body.firstElementChild);
@@ -51,12 +58,14 @@ export function openModal(node, { onClose, from } = {}) {
     requestAnimationFrame(() => el.querySelector('.modal__close').focus({ preventScroll: true }));
   };
   lockScroll(true);
-  if (source) { source.style.viewTransitionName = VT; morph(() => { show(); return ready(pictureIn(body.firstElementChild)); }); }
-  else show();
+  if (source) { source.style.viewTransitionName = VT; morph(() => { show(); return ready(pictureIn(body.firstElementChild)); }, opened); }
+  else { show(); requestAnimationFrame(opened); }
 }
 
 export function closeModal() {
   if (!el.classList.contains('open')) return;
+  isOpen = false;
+  beforeCloseFn?.(); beforeCloseFn = null;
   const target = body.querySelector('[style*="view-transition-name"]') || pictureIn(body.firstElementChild);
   const back = !!source && usable(source) && !!target && mediaKey(target) === openedWith;
   const hide = () => {
@@ -80,10 +89,15 @@ document.addEventListener('keydown', (e) => {
   if (!el.classList.contains('open')) return;
   if (e.key === 'Escape') { e.preventDefault(); closeModal(); }
   if (e.key === 'Tab') {
-    const f = [...el.querySelectorAll('a[href],button:not([tabindex="-1"]),[tabindex="0"]')].filter((n) => n.offsetParent !== null && !n.disabled);
+    const f = focusables();
     if (!f.length) return;
     const first = f[0], last = f[f.length - 1];
     if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
+});
+// focus that leaves the open dialog (Shift+Tab out of an embedded player, a click on the page behind) comes back
+document.addEventListener('focusin', (e) => {
+  if (!isOpen || el.contains(e.target)) return;
+  (focusables()[0] || el.querySelector('.modal__close'))?.focus({ preventScroll: true });
 });

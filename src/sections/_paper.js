@@ -20,12 +20,15 @@
    ── 2 · notes fan: initFan(ul) ───────────────────────────────────────────────────────────────────
    <ul class="fan" data-fan>
      <li class="fan__card">
-       <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/hero.webp);--cx:.5;--cy:.38;--zoom:6"></span>
+       <span class="fan__thumb" aria-hidden="true"><picture><source type="image/avif" srcset="…-240.avif 240w, …-480.avif 480w"
+         sizes="(max-width: 899px) 44vw, 240px"><img src="…-480.webp" srcset="…" sizes="…" alt="" width="480" height="360"
+         loading="lazy" decoding="async"></picture></span>   (a crop of the chapter's own painting: public/assets/thumbs/crops)
        <p class="fan__note">Note text</p>
      </li> …
    </ul>
-   A row fanned in 3D on wide screens, a cascade below 900px. Opens as it rises into view, then
-   drifts and turns with scroll; tilts toward the pointer. data-fan-spread="0.8" packs the row tighter.
+   A row fanned in 3D on wide screens; below 900px two columns laid out by CSS, which JS only tilts a little
+   (--fan-mode: grid). Opens as it rises into view, then drifts and turns with scroll; tilts toward the pointer.
+   data-fan-spread="0.8" packs the row tighter. The thumb holds a <picture> (a crop file, AVIF + WebP).
 
    ── 3 · command cloud: initCloud(div) ─────────────────────────────────────────────────────────────
    <div class="cloud" data-cloud>
@@ -38,18 +41,20 @@
      <div class="cloud__echoes" aria-hidden="true"><span class="cloud__node" style="--x:14;--y:10;--z:.25">/command</span> …</div>
    </div>
    --x/--y: centre in % of the cloud (--mx/--my on phones); --z: depth 0 (far, small, faint) … 1 (near).
+   --cloud-drift on the cloud: how far nodes travel with scroll (× viewport height, default .5; a compact cloud less).
    Nearer nodes travel further with scroll; hairlines join each node to its nearest neighbours.
 
    ── 4 · photo card: initPhotoCard(figure) ─────────────────────────────────────────────────────────
-   <figure class="pc" data-pc style="--plate:url(/assets/plates/storytellers.webp);--cx:.6;--cy:.3;--zoom:4">
+   <figure class="pc" data-pc>
      <div class="pc__frame">
-       <div class="pc__mat" aria-hidden="true"><div class="pc__paint crop"></div></div>
-       <img class="pc__img" src="…" alt="…" width="1600" height="1073" loading="lazy" decoding="async">
+       <div class="pc__mat" aria-hidden="true"><div class="pc__paint"><picture>…<img alt="" …></picture></div></div>
+       <picture><source type="image/avif" …><source type="image/webp" …><img class="pc__img" src="…" alt="…" …></picture>
      </div>
      <figcaption class="pc__cap">Caption</figcaption>
    </figure>
    --pc-ar: mat height / width (default .625), --pc-inset: photo width / mat width (default .78).
-   The paint drifts with scroll inside the mat; the card tilts a little under the pointer.
+   The paint drifts with scroll inside the mat; the card tilts a little under the pointer (3D only while it tilts).
+   (.pc__paint.crop with --plate/--cx/--cy/--zoom still works: a crop of a plate as a background.)
 
    ── 5 · dense grid (CSS only) ─────────────────────────────────────────────────────────────────────
    <dl class="dense">
@@ -63,7 +68,7 @@
 import './_paper.css';
 import { onFrame, onResize, clamp, smooth, seg } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
-import { REDUCED, FINE } from '../core/env.js';
+import { REDUCED, FINE, TIER } from '../core/env.js';
 
 const LIVE = !REDUCED;
 const TILT = FINE && !REDUCED;
@@ -103,7 +108,7 @@ export function initFan(root) {
     W = root.clientWidth; cw = cards[0].offsetWidth;
     ch = Math.max(...cards.map((c) => c.offsetHeight));
     if (mode === 'stack') root.style.height = `${Math.round((n - 1) * ch * 0.58 + ch + 64)}px`;
-    else root.style.height = '';
+    else if (root.style.height) root.style.height = '';
     // row: each card lies over its left neighbour (a dealt hand), so every note's first words stay visible;
     // stack: each card lies over the one below it, so every note's text stays visible
     cards.forEach((c, i) => { c.style.zIndex = String(mode === 'stack' ? n - i : i + 1); });
@@ -112,6 +117,12 @@ export function initFan(root) {
   /* s: how open the fan is (0 bunched … 1 open); d: scroll drift (-1 … 1); px, py: pointer */
   const pose = (i, s, d, px, py) => {
     const c = i - (n - 1) / 2;
+    if (mode === 'grid') {   // CSS places the cards; they settle from a slight tilt and drift apart with scroll
+      const side = i % 2 ? 1 : -1, row = Math.floor(i / 2);
+      const rz = side * (1.6 + (row % 2) * 0.8) * s + d * side * 0.8;
+      const y = (1 - s) * 26 - d * 10 * side;
+      return `translate3d(0,${f1(y)}px,0) rotate(${f2(rz)}deg)`;
+    }
     if (mode === 'stack') {
       const side = i % 2 ? 1 : -1, step = ch * 0.58;
       const x = side * Math.min(cw * 0.5, Math.max(0, (W - cw) * 0.5 - 6)) * (0.25 + 0.75 * s);
@@ -157,10 +168,11 @@ export function initCloud(root) {
   let svg = root.querySelector('.cloud__lines');
   if (!svg) { svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'cloud__lines'); svg.setAttribute('aria-hidden', 'true'); root.prepend(svg); }
   const items = nodes.map((el) => ({ el, z: parseFloat(getComputedStyle(el).getPropertyValue('--z')) || 0.5, bx: 0, by: 0, dx: 0, dy: 0, last: '' }));
-  let edges = [], vh = window.innerHeight, lastT = -1, lastP = '';
+  let edges = [], vh = window.innerHeight, lastT = -1, lastP = '', amp = 0.5;
 
   const measure = () => {
     vh = window.innerHeight;
+    amp = parseFloat(getComputedStyle(root).getPropertyValue('--cloud-drift')) || 0.5;   // scroll travel (× vh)
     // offsetLeft/Top ignore transforms; with translate:-50% -50% they are the node's centre
     for (const it of items) { it.bx = it.el.offsetLeft; it.by = it.el.offsetTop; }
     const W = root.clientWidth, H = root.clientHeight;
@@ -182,7 +194,7 @@ export function initCloud(root) {
   const draw = (t, px = 0, py = 0) => {
     for (const it of items) {
       const k = it.z - 0.42;
-      it.dy = k * (0.5 - t) * vh * 0.5 + py * k * -10;
+      it.dy = k * (0.5 - t) * vh * amp + py * k * -10;
       it.dx = k * (t - 0.5) * 36 + px * k * -14;
       const tr = `translate3d(${f1(it.dx)}px,${f1(it.dy)}px,0)`;
       if (tr !== it.last) { it.el.style.transform = tr; it.last = tr; }
@@ -234,12 +246,46 @@ export function initPhotoCard(fig) {
     const k = 1 - Math.pow(0.006, v.dt);
     s.x += (s.tx - s.x) * k; s.y += (s.ty - s.y) * k;
     const t = pass(g, v);
-    const tf = `perspective(1600px) rotateX(${f2(-s.y * 2.6)}deg) rotateY(${f2(s.x * 3.4)}deg)`;
+    // the 3D tilt (and its 3D rendering context, costly to composite while scrolling) only while the pointer leans on
+    // the card; at rest the card is flat and only the paint and the photo drift (2D)
+    const tilt = Math.abs(s.x) > 0.004 || Math.abs(s.y) > 0.004;
+    const tf = tilt ? `perspective(1600px) rotateX(${f2(-s.y * 2.6)}deg) rotateY(${f2(s.x * 3.4)}deg)` : 'none';
     const tp = `translate3d(${f1(-s.x * 10)}px,${f2((0.5 - t) * 9)}%,0)`;
-    const ti = `translate3d(${f1(s.x * 5)}px,${f1(s.y * 5 + (0.5 - t) * -14)}px,${f1(28 + Math.hypot(s.x, s.y) * 10)}px)`;
-    if (tf !== lastF) { frame.style.transform = tf; lastF = tf; }
+    const ti = tilt ? `translate3d(${f1(s.x * 5)}px,${f1(s.y * 5 + (0.5 - t) * -14)}px,${f1(28 + Math.hypot(s.x, s.y) * 10)}px)` : `translate3d(0,${f1((0.5 - t) * -14)}px,0)`;
+    if (tf !== lastF) { frame.style.transform = tf; frame.classList.toggle('is-tilt', tilt); lastF = tf; }
     if (paint && tp !== lastP) { paint.style.transform = tp; lastP = tp; }
     if (img && ti !== lastI) { img.style.transform = ti; lastI = ti; }
+  });
+}
+
+/* With WebGL off (tier 0, reduced motion) the fixed CSS plate under the page is composited every scrolled frame, even
+   while an opaque sheet covers the whole screen (≈ 4 ms a frame here). coverPlates(paper) hides the plates layer while
+   that sheet covers the viewport (html.is-papered); with the stage running the plates are hidden anyway. */
+let papered = 0;
+export function coverPlates(paper) {
+  if (!paper || (TIER > 0 && !REDUCED)) return () => {};
+  let on = false;
+  return onFrame((v) => {
+    const g = geo(paper);
+    const c = g.top <= v.y - 24 && g.bottom >= v.y + v.vh;
+    if (c === on) return;
+    on = c; papered += c ? 1 : -1;
+    document.documentElement.classList.toggle('is-papered', papered > 0);
+  });
+}
+
+/* With WebGL off, the chapter's CSS plate cannot move like the stage's camera; landPlate(opener, name) cuts it once from
+   the title's frame to the landing frame (html.is-landed-<name>, the frames are CSS in the chapter's stylesheet) when
+   the opener's title has left the screen (t > at, in viewports of the opener's pass) and back above it. */
+export function landPlate(opener, name, at = 1.36) {
+  if (!opener || (TIER > 0 && !REDUCED)) return () => {};
+  let on = false;
+  const cls = `is-landed-${name}`;
+  return onFrame((v) => {
+    const g = geo(opener);
+    const c = (v.y + v.vh - g.top) / v.vh > at;
+    if (c === on) return;
+    on = c; document.documentElement.classList.toggle(cls, c);
   });
 }
 

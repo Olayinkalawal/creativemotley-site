@@ -1,15 +1,19 @@
 /* The hero film (570 painted frames): the figures and the floating kit → the camera handed across
    → the lens → the vortex → the machine draws → the Storytellers painting.
    Delivered as video (v3): one short-GOP encode (a keyframe every 8 frames), AV1 where the browser decodes it, H.264
-   everywhere else, 1920×1080 (public/assets/video/film/, scripts/encode-film.sh), scrubbed by scroll:
+   everywhere else, 1920×1080 (public/assets/video/film/, scripts/encode-film.sh), scrubbed by scroll.
+   v3 phase 2: the encode is a cut of 161 of the 570 frames (FILM_CUT in gl/lib/filmRanges.js: no static opening, no
+   near-black lens, every other frame where the render doubles them); the markup and this scene still speak in source
+   frames, and cutIndex() maps them onto the cut. Paths:
      1. WebCodecs on a hardware decoder (gl/lib/codecStream.js): each GOP decoded once into a cache around the
         playhead (exact frames, no per-seek re-decode); ?film=codec forces it on a software decoder too;
      2. else a <video> seeked by currentTime (gl/lib/video.js; ?film=video);
-     3. else the WebP frame streams (no playable source, a decode error, or ?film=frames).
-   Scroll position → frame comes from [data-film="hero"][data-frames="a-b"] ranges in the markup:
-   each element maps its pin progress linearly onto frames a..b (holds between ranges).
+     3. else the WebP frame streams, the cut's frames only (no playable source, a decode error, or ?film=frames).
+   Scroll position → source frame comes from [data-film="hero"] in the markup (the hero keys it in screens of scroll,
+   data-film-map; gl/lib/filmRanges.js).
    At rest on frame 0 and at the end (frame 569, which is the Storytellers plate) the frame becomes a
-   depth diorama with pointer parallax and a slow push. Desktop only: phones take the still path (gl/scenes/stills.js).
+   depth diorama with pointer parallax and a slow push. On load the rest frame pushes in (about 2.4 s, from the CSS
+   plate's framing): the copy is DOM and never waits for it. Desktop only: phones take the still path (gl/scenes/stills.js).
    First load: frame 0 is the hero plate (public/assets/plates/hero.webp, already fetched as the first paint), so at
    rest the scene draws that and opens the film only at the first sign of scrolling (wheel, touch, a key, a click, or
    a playhead past frame 0). Opening it at load cost 1–1.7 MB of buffered film before any scroll. */
@@ -20,16 +24,20 @@ import { CodecStream } from '../lib/codecStream.js';
 import { plateMaterial, fullscreenQuad } from '../lib/plate.js';
 import { loadTexture } from '../lib/loaders.js';
 import { createSparks } from '../lib/sparks.js';
-import { filmRanges, frameAt } from '../lib/filmRanges.js';
+import { filmRanges, frameAt, cutFrames, cutIndex } from '../lib/filmRanges.js';
 import { smooth, seg } from '../../core/scroll.js';
 
 export { filmRanges, frameAt };
 
-const COUNT = 570, FPS = 30;
+const LAST = 569, FPS = 30;              // source frames 0 … 569
+const CUT = cutFrames();                  // the source frame of each encoded frame
+const COUNT = CUT.length;
 export const FILM_SOURCES = [
-  { src: '/assets/video/film/hero-1920-av1.mp4?v=1', type: 'video/mp4; codecs="av01.0.08M.08"' },
-  { src: '/assets/video/film/hero-1920-h264.mp4?v=1', type: 'video/mp4; codecs="avc1.640028"' },
+  { src: '/assets/video/film/hero-cut-1920-av1.mp4?v=1', type: 'video/mp4; codecs="av01.0.08M.08"' },
+  { src: '/assets/video/film/hero-cut-1920-h264.mp4?v=1', type: 'video/mp4; codecs="avc1.640028"' },
 ];
+const PUSH_MS = 2400;                     // the load push-in
+const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 const timeout = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export default function register(stage) {
@@ -39,7 +47,7 @@ export default function register(stage) {
   const mat = plateMaterial();
   scene.add(fullscreenQuad(mat));
   let src = null, plate = null, opening = null, gen = 0, depthRest = null, depthEnd = null, endLoading = null, sparks = null, ranges = [];
-  let push = 0;
+  let push = 0, t0 = 0;   // t0: the first draw (the load push-in starts there)
   const redraw = () => stage.invalidate();
 
   async function open(ctx) {
@@ -56,8 +64,9 @@ export default function register(stage) {
         v.dispose();
       }
     }
-    // fallback: the frame streams (the lg tier is 1920×1080 to f_0417, then 2400×1350: FrameStream reallocates)
-    const s = new FrameStream({ dir: `/assets/frames/hero/${small() ? 'sm' : 'lg'}`, count: COUNT, rev: 2, onShow: redraw });
+    // fallback: the frame streams, the cut's frames only (the lg tier is 1920×1080 to f_0417, then 2400×1350:
+    // FrameStream reallocates)
+    const s = new FrameStream({ dir: `/assets/frames/hero/${small() ? 'sm' : 'lg'}`, count: COUNT, name: (i) => `f_${String(CUT[i] + 1).padStart(4, '0')}.webp`, rev: 2, onShow: redraw });
     await s.first();
     return s;
   }
@@ -75,8 +84,11 @@ export default function register(stage) {
     }).catch((e) => console.warn('[film] open failed', e));
   }
 
+  // the finish (gl/lib/post.js reads it every frame): it lands with the push-in, so the first frames match the CSS
+  // plate they replace (no vignette, no grain), then the film's finish settles in
+  const post = { vignette: 0.32, grain: 0.045 };
   stage.add({
-    id: 'film', scene, camera,
+    id: 'film', scene, camera, post,
     async load(ctx) {
       ranges = filmRanges('hero');
       // the end plate's depth map is needed only once the film nears its end (loaded then, in update)
@@ -98,12 +110,14 @@ export default function register(stage) {
       mat.uniforms.map.value = null; mat.uniforms.depth.value = null;
     },
     resize(w, h, dpr) { mat.uniforms.res.value.set(w, h); if (sparks) { sparks.u.aspect.value = w / h; sparks.u.px.value = dpr * 1.6; } },
+    // the load push-in keeps the loop drawing (≤ 30 fps while idle) until it lands
+    ambient(ctx) { return !ctx.reduced && t0 > 0 && performance.now() - t0 < PUSH_MS; },
     update(ctx, s) {
       if (!src && !plate) return;
       if (!ranges.length || !document.body.contains(ranges[0].el)) ranges = filmRanges('hero');
-      const f = ctx.reduced ? 0 : frameAt(ranges, ctx.scrollY, ctx.vh);
+      const f = ctx.reduced ? 0 : frameAt(ranges, ctx.scrollY, ctx.vh);   // source frame
       if (!src && f > 0) go();
-      src?.seek(f);
+      src?.seek(cutIndex(CUT, f));
       if (f > 300 && !depthEnd && !endLoading) {
         endLoading = loadTexture('/assets/plates/storytellers-depth.webp').then((t) => { if (src) { depthEnd = t; redraw(); } else t.dispose(); }).catch(() => {});
       }
@@ -114,14 +128,19 @@ export default function register(stage) {
       else { u.map.value = plate; u.imgSize.value.set(plate.image.width, plate.image.height); }
       // depth parallax only where the frame is the plate the depth map was computed from
       const atRest = 1 - smooth(seg(f, 0, 6));
-      const atEnd = smooth(seg(f, COUNT - 7, COUNT - 1));
+      const atEnd = smooth(seg(f, LAST - 7, LAST));
       if (atEnd > 0 && depthEnd) { u.depth.value = depthEnd; u.hasDepth.value = 1; u.strength.value = 0.022 * atEnd; }
       else if (atRest > 0) { u.depth.value = depthRest; u.hasDepth.value = 1; u.strength.value = 0.02 * atRest; }
       else u.hasDepth.value = 0;
+      // the load push-in: from the CSS plate's framing (cover, zoom 1) to the rest framing, once, from the first draw
+      if (!t0) t0 = performance.now();
+      const intro = ctx.reduced ? 1 : easeOut(Math.min(1, (performance.now() - t0) / PUSH_MS));
       // slow breathing push while at rest; the film carries its own camera in between
       push += ((atRest + atEnd) * (0.035 + 0.02 * Math.sin(ctx.time * 0.25)) - push) * 0.05;
-      u.push.value = push;
-      u.zoom.value = 1.04 + 0.02 * (atRest + atEnd);
+      const k = atRest > 0 ? 1 - atRest * (1 - intro) : 1;   // 0 at the first frame (the CSS plate) … 1 landed
+      u.push.value = push * intro;
+      u.zoom.value = 1 + (0.04 + 0.02 * (atRest + atEnd)) * k;
+      post.vignette = 0.32 * k; post.grain = 0.045 * k;
       u.focus.value.set(0.5, 0.48);
       u.pointer.value.copy(ctx.pointer);
       u.exposure.value = 1;

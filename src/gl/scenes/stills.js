@@ -133,7 +133,7 @@ function stillScene(id, stage) {
   const film = id === 'film';
   let views = new Map();   // element → { src, handle }
   let held = [], ranges = [], filmA = null, filmB = null, token = null;
-  const setLayer = (k, v, pe) => {
+  const setLayer = (k, v, pe, rise = 0) => {
     const u = (n) => U[n + k];
     if (!v || v.src.kind !== 'img' || !v.handle) {
       u('kind').value = v?.src.kind === 'umber' ? 2 : 1;
@@ -146,7 +146,8 @@ function stillScene(id, stage) {
     const z = v.src.zoom * (1 + 0.045 * smooth(pe));
     const ra = U.res.value.x / U.res.value.y, ia = img.width / img.height;
     const sx = (ra > ia ? 1 : ra / ia) / z, sy = (ra > ia ? ia / ra : 1) / z;
-    u('ctr').value.set(clamp(v.src.focus[0], sx / 2, 1 - sx / 2), clamp(v.src.focus[1], sy / 2, 1 - sy / 2));
+    // rise (data-rise, see gl/scenes/plates.js): the painting enters with its section, moved down by `rise` screens
+    u('ctr').value.set(clamp(v.src.focus[0], sx / 2, 1 - sx / 2), clamp(v.src.focus[1], sy / 2, 1 - sy / 2) - rise * sy);
     u('zoom').value = z;
   };
   stage.add({
@@ -194,7 +195,7 @@ function stillScene(id, stage) {
       }
       let v = views.get(s.el);
       if (!v) { const src = sourceFor(s.el, ctx.w); v = { src, handle: null }; }
-      setLayer('A', v, s.pe);
+      setLayer('A', v, s.pe, ctx.reduced || !s.el.hasAttribute('data-rise') ? 0 : Math.max(0, 1 - (s.pe * (s.height + ctx.vh)) / ctx.vh));
       U.mixT.value = 0;
     },
   });

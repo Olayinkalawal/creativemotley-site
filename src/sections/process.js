@@ -9,10 +9,10 @@
      - the live caption: the active step's title + short line (F75/F76 … F93/F94) and a seven-step marker.
    The stage switches to the objects scene at a marker ~0.9 viewport into the run ([data-proc-scene]), so its
    dissolve from the posters happens under the pin's paper, and the paper clears only once that dissolve is done.
-   On the way out the row trucks on, the lifted object settles and the caption fades as the pin leaves, and the long
-   lines arrive on a second sheet laid over the live desk; it tears off at the bottom onto chapter VII's black stage
-   (the Kit), where the objects scene paints the black under the torn edge (state.bottom) until the stage has
-   dissolved into the Kit's first teardown.
+   v3 (phase 2): the caption carries each step's long line too, and the run is ≈2.8 screens. On the way out the row
+   trucks on and the caption fades as the pin leaves; the desk is a sheet (data-wipe on the scene marker) whose torn
+   bottom edge scrolls off chapter VII's stage (the Kit): the objects scene paints black under the edge
+   (state.bottom) and the stage splits the two scenes there. The dense sheet of long lines is the static layout's.
    World units are CSS px on the plane z = 0 through the slot (the box the active object lifts into); the camera sits
    D px in front of the slot with an off-axis frustum, so the CSS perspective and the WebGL camera are one camera.
    The desk is a plane tilted back by `tau` and Zd px behind the slot plane; objects at rest lie flat on it.
@@ -21,9 +21,10 @@ import './process.css';
 import { onFrame, clamp, smooth, seg } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
 import { REDUCED, TIER } from '../core/env.js';
+import { coverPlates } from './_paper.js';   // shared paper helper (read-only)
 
 export const N = 7;
-const HOLD = [0.25, 0.75];                                // within each step: dwell, ease across, dwell
+const HOLD = [0.3, 0.7];                                  // within each step: dwell, ease across, dwell
 const LX = 0.12, LY = -0.15;                              // the key light's direction (toward the desk)
 const smoother = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 
@@ -142,10 +143,13 @@ export function init() {
     const img = li.querySelector('img');
     return { src: img.getAttribute('src'), aspect: +img.getAttribute('height') / +img.getAttribute('width'), w: 1, h: 1 };
   });
-  if (!(TIER > 0 && !REDUCED)) return;   // static: the calm grid, nothing moves
+  if (!(TIER > 0 && !REDUCED)) { coverPlates(sec); return; }   // static: the calm grid (the plate is hidden while it covers)
 
   /* ── animated: the pinned run ─────────────────────────────────────────── */
   sec.classList.add('proc-on');
+  // v3: the dense sheet is the static layout's; here it stays only for screen readers (the live caption carries the
+  // long lines), so it no longer covers the stage, and the desk itself is the sheet that tears off onto the Kit
+  sec.querySelector('.proc-more')?.removeAttribute('data-opaque');
   const slot = sec.querySelector('[data-proc-slot]');
   const bg = sec.querySelector('[data-proc-bg]');
   const scn = sec.querySelector('[data-proc-scene]');

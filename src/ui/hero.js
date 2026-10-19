@@ -1,7 +1,10 @@
 /* Hero: the golden frame dissolves and its mark + index fly to the rail (desktop), the Da Vinci
    lines draw on load and fade, and the three beat lines play over the film.
+   v3 (phase 2): everything runs on screens of scroll since the top (s = scrollY / innerHeight), the clock the film
+   is keyed on (data-film-map on the section): the frame dissolves over the first 0.12 screens, each beat holds over
+   its own window (data-beat="from to", in screens), all inside the 190svh section's pin.
    Per frame only diffed, quantised writes (nothing at rest; the frame's line and its veil only while they fade). */
-import { onFrame, onResize, seg, smooth, clamp, view } from '../core/scroll.js';
+import { onFrame, onResize, seg, smooth } from '../core/scroll.js';
 import { geo } from '../core/layout.js';
 import { REDUCED, isDesktop } from '../core/env.js';
 
@@ -64,7 +67,8 @@ export function initHero() {
   requestAnimationFrame(measureFlip); onResize(measureFlip);
   document.fonts?.ready.then(measureFlip);
 
-  const beatWin = [[0.06, 0.3], [0.38, 0.58], [0.68, 0.94]];
+  // each beat's window in screens (data-beat="from to"); fades take 0.05 screens at each end
+  const beatWin = beats.map((b, i) => { const w = (b.dataset.beat || '').split(/\s+/).map(Number); return w.length === 2 && w.every(Number.isFinite) ? w : [0.12 + 0.28 * i, 0.36 + 0.28 * i]; });
   const dek = hero.querySelector('.frame__dek');
   const nav = frame.querySelector('nav');
   // diffed writes (v3): every value is quantised and written only when it changes, so the hero at rest writes
@@ -78,17 +82,17 @@ export function initHero() {
   let lastDocked = null, lastOut = null;
   onFrame((v) => {
     const g = geo(hero);
-    const p = clamp((v.y - g.top) / Math.max(1, g.height - v.vh));
+    const s = Math.max(0, (v.y - g.top) / Math.max(1, v.vh));   // screens since the top
     // frame veil + lines dissolve over the first stretch
-    const out = smooth(seg(p, 0.0, 0.1));
-    put(lines, 'lines', 'opacity', q(1 - smooth(seg(p, 0, 0.06))));
+    const out = smooth(seg(s, 0.0, 0.12));
+    put(lines, 'lines', 'opacity', q(1 - smooth(seg(s, 0, 0.07))));
     put(frame, 'veil', '--veil', q(1 - out));
     const a = Math.round(70 * (1 - out)) / 100;
     put(frame, 'line', 'boxShadow', a > 0 ? `inset 0 0 0 1px rgba(244,237,223,${a})` : 'none');
-    put(dek, 'dek', 'opacity', q(1 - smooth(seg(p, 0, 0.05))));
+    put(dek, 'dek', 'opacity', q(1 - smooth(seg(s, 0, 0.06))));
     const isOut = out > 0.98;
     if (isOut !== lastOut) { frame.classList.toggle('is-out', isOut); lastOut = isOut; }
-    const docked = (deltas && deltas[0] ? out > 0.97 : p > 0.1) || v.y > g.bottom - v.vh;
+    const docked = (deltas && deltas[0] ? out > 0.97 : s > 0.12) || v.y > g.bottom - v.vh;
     if (docked !== lastDocked) { root.classList.toggle('rail-docked', docked); lastDocked = docked; }
     pairs.forEach(({ from }, i) => {
       const d = deltas && deltas[i];
@@ -104,10 +108,10 @@ export function initHero() {
     put(nav, 'nav', 'pointerEvents', out > 0.5 ? 'none' : '');
     beats.forEach((b, i) => {
       const [a0, z] = beatWin[i];
-      const k = REDUCED ? (p >= a0 && p < z ? 1 : 0) : Math.min(smooth(seg(p, a0, a0 + 0.06)), 1 - smooth(seg(p, z - 0.07, z)));
+      const k = REDUCED ? (s >= a0 && s < z ? 1 : 0) : Math.min(smooth(seg(s, a0, a0 + 0.05)), 1 - smooth(seg(s, z - 0.05, z)));
       const kq = Math.round(k * 1000) / 1000;
       put(b, `bo${i}`, 'opacity', String(kq));
-      put(b, `bt${i}`, 'transform', `translate(-50%, calc(-50% + ${((1 - kq) * (p < (a0 + z) / 2 ? 24 : -24)).toFixed(1)}px))`);
+      put(b, `bt${i}`, 'transform', `translate(-50%, calc(-50% + ${((1 - kq) * (s < (a0 + z) / 2 ? 24 : -24)).toFixed(1)}px))`);
     });
   });
 }

@@ -1,14 +1,21 @@
-.film-run { height: 230svh; }
+/* I · Storytellers (v3 phase 2). The title sits at the opener's top: it rises over the end of the film (the hero keys
+   the film in screens; the Storytellers painting completes as the title passes mid-screen), so the first chapter title
+   lands by screen 2. Then a short look at the painting under the dek, and the paper. */
+.st-open { min-height: 0; justify-content: flex-start; padding-block: 3svh 44svh; }
+@media (max-width: 1023px) { .st-open { padding-block: 3svh 38svh; } }
+
+/* the paper: the three ways in, converging on one machine, then who we are */
+.st-paper { padding-block: clamp(72px, 12vh, 140px) clamp(96px, 16vh, 180px); }
 
 /* the three ways in, converging on one machine */
-.ways { display: grid; gap: clamp(2rem, 6vh, 4rem); position: relative; }
+.ways { display: grid; gap: clamp(2rem, 5vh, 3.5rem); position: relative; }
 .ways__list { display: grid; gap: 0; }
 .way { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; padding-block: clamp(14px, 2.4vh, 22px); box-shadow: inset 0 -1px 0 rgba(20, 16, 10, 0.16); }
 .way:first-child { box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.16), inset 0 -1px 0 rgba(20, 16, 10, 0.16); }
 .way__nm { font: var(--f-head); letter-spacing: var(--ls-head); }
 .way__need { color: var(--paper-mute); }
 @media (min-width: 900px) {
-  .ways { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; min-height: 72svh; }
+  .ways { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; min-height: 58svh; }
   .way { grid-template-columns: 0.9fr 1.1fr; align-items: baseline; }
 }
 .ways__lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
@@ -20,4 +27,13 @@
   .ways__lines { display: none; }
   .ways__machine { padding-top: 22px; }
   .ways__machine::before { content: ''; position: absolute; left: 0; top: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+}
+
+/* who we are: the lead paragraph under the diagram, the reach beside it (drafts, data-draft) */
+.who { display: grid; gap: clamp(1.25rem, 3vh, 2rem); margin-top: clamp(3rem, 9vh, 6rem); }
+.who__lead { max-width: 30em; text-wrap: pretty; }
+.who__reach { color: var(--paper-mute); text-wrap: pretty; }
+@media (min-width: 900px) {
+  .who { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: end; column-gap: clamp(2rem, 5vw, 5rem); }
+  .who__reach { max-width: 24em; justify-self: end; padding-top: 14px; box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.16); }
 }
