@@ -17,7 +17,8 @@ for (const [path, m] of Object.entries(sections)) {
 }
 initReveal();
 
-// still plates under the canvas: first paint, and the whole stage when WebGL is off
+// still plates under the canvas: first paint, and the whole stage when WebGL is off (a plate marked data-bg="url"
+// loads only when it is first shown, so the hidden ones cost nothing on the first load)
 const plates = [...document.querySelectorAll('.plates [data-plate]')];
 const holders = [...document.querySelectorAll('main [data-plate]')];
 let lastPlate = 'hero';
@@ -28,7 +29,12 @@ onFrame((v) => {
   for (const el of holders) if (geo(el).top <= c) cur = el.dataset.plate;
   if (cur === lastPlate) return;
   lastPlate = cur;
-  for (const p of plates) p.classList.toggle('is-on', p.dataset.plate === cur);
+  for (const p of plates) {
+    const on = p.dataset.plate === cur;
+    // a deferred plate (data-bg instead of an inline background-image) loads the first time it is shown
+    if (on && p.dataset.bg && !p.style.backgroundImage) p.style.backgroundImage = `url(${p.dataset.bg})`;
+    p.classList.toggle('is-on', on);
+  }
 });
 
 // the WebGL stage loads after first paint (tier 0 or reduced motion keep the stills)

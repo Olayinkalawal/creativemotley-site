@@ -1243,5 +1243,644 @@
   "location": "#results stage film",
   "kind": "plate-art",
   "note": "Inside the TV (≈7% of the frame); illegible at film size. Not used as claims."
+ },
+ {
+  "id": "DC01",
+  "claim": "Creative Motley is a creator service provider. We run YouTube channels as businesses for Africa’s creators, filmmakers and media owners: not a traditional network, but a team that takes on the strategy, the programming, the rights and the revenue, on clear terms, so the people making the work can keep making it.",
+  "source_sentence": "Creative Motley is a creator service provider. We run YouTube channels as businesses for Africa’s creators, filmmakers and media owners: not a traditional network, but a team that takes on the strategy, the programming, the rights and the revenue, on clear terms, so the people making the work can keep making it.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #storytellers — Who we are (paragraph under the three ways in) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S1 F06, F111; S2. Paraphrase. F06 \"Africa’s creator service provider — helping creators, filmmakers and media brands turn views into long-term revenue\"; F111 \"We turn channels into media companies.\"; S2 \"a Creator Service Provider (CSP), not a traditional MCN. We offer hands-on strategy, management and monetization support with transparent terms\" and its service list \"strategy, SEO, thumbnails, programming, monetization, rights and reporting\". The last clause is reasoning, not a quote."
+ },
+ {
+  "id": "DC02",
+  "claim": "A creator service provider, not a traditional network: hands-on strategy, management and monetisation, on transparent terms.",
+  "source_sentence": "A creator service provider, not a traditional network: hands-on strategy, management and monetisation, on transparent terms.",
+  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
+  "location": "v3 #storytellers — Who we are (short alternative to DC01) (Track C draft, alt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Near-verbatim S2: \"Creator Service Provider (CSP), not a traditional MCN. We offer hands-on strategy, management and monetization support with transparent terms.\" Changes: MCN → network (plain English), UK spelling."
+ },
+ {
+  "id": "DC03",
+  "claim": "We work with creators and content owners anywhere who make work for African audiences or the diaspora. Our network spans Africa, the UK, the US, Europe and beyond.",
+  "source_sentence": "We work with creators and content owners anywhere who make work for African audiences or the diaspora. Our network spans Africa, the UK, the US, Europe and beyond.",
+  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
+  "location": "v3 #storytellers — Reach (one line after DC01; or in Apply) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Near-verbatim S2 (FAQ, \"Is it only African creators?\"): \"We work with creators and content owners globally who create content for African audiences or the African diaspora. Our network spans Africa, UK, US, Europe and beyond.\""
+ },
+ {
+  "id": "DC10",
+  "claim": "What we run",
+  "source_sentence": "What we run",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Services list label (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Label for the services list; echoes F111/F08 \"run like media companies\"."
+ },
+ {
+  "id": "DC11",
+  "claim": "Channel strategy — What the channel is for, and what it makes next.",
+  "source_sentence": "Channel strategy — What the channel is for, and what it makes next.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 lists \"strategy\" first in its service list."
+ },
+ {
+  "id": "DC12",
+  "claim": "Programming — Series, formats and the order they go out.",
+  "source_sentence": "Programming — Series, formats and the order they go out.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 service list: \"programming\". Kept distinct from F83 (upload calendar), which stays in Process."
+ },
+ {
+  "id": "DC13",
+  "claim": "SEO — Written so the right viewer finds the work.",
+  "source_sentence": "SEO — Written so the right viewer finds the work.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 service list: \"SEO\"."
+ },
+ {
+  "id": "DC14",
+  "claim": "Thumbnails — Designed and tested: the click comes first.",
+  "source_sentence": "Thumbnails — Designed and tested: the click comes first.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 service list: \"thumbnails\"; F32 \"/thumbnail-test\", F27 (A/B chatter)."
+ },
+ {
+  "id": "DC15",
+  "claim": "Monetisation — Ads and sponsorship, set up so views pay.",
+  "source_sentence": "Monetisation — Ads and sponsorship, set up so views pay.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2: \"ad optimisation and sponsorships\"; F07 \"Turn views into long-term revenue.\""
+ },
+ {
+  "id": "DC16",
+  "claim": "Rights and Content ID — Re-uploads found, claimed and earning for you.",
+  "source_sentence": "Rights and Content ID — Re-uploads found, claimed and earning for you.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2: \"Rights & Content ID — protect IP and monetise reuploads\"; F30, F37 (rights chatter)."
+ },
+ {
+  "id": "DC17",
+  "claim": "Brand deals — Access to the brand briefs that come to us.",
+  "source_sentence": "Brand deals — Access to the brand briefs that come to us.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2: \"access to brand deal pipeline\"."
+ },
+ {
+  "id": "DC18",
+  "claim": "Reporting — A monthly review of what moved and what changes.",
+  "source_sentence": "Reporting — A monthly review of what moved and what changes.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Services list item (name — line) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 service list: \"reporting\". One search summary also listed \"monthly performance reviews\"; a second could not confirm it, so \"monthly\" needs the client’s yes."
+ },
+ {
+  "id": "DC19",
+  "claim": "Catalogue channels — Your film and TV library, launched and programmed on YouTube.",
+  "source_sentence": "Catalogue channels — Your film and TV library, launched and programmed on YouTube.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Media Owners list item (under F44–F46) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S1 F44, F45; S2. F45 \"Film, TV and digital IP, earning every month.\"; S2 describes a Media Owners offer for holders of \"film, TV or digital IP\" who want recurring YouTube income."
+ },
+ {
+  "id": "DC20",
+  "claim": "Release order — Films and series released to build an audience, not dropped all at once.",
+  "source_sentence": "Release order — Films and series released to build an audience, not dropped all at once.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Media Owners list item (optional second) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Reasoning from F82/F83 (series design, upload calendar) applied to a library. No source states it for catalogues."
+ },
+ {
+  "id": "DC21",
+  "claim": "/metadata-pass",
+  "source_sentence": "/metadata-pass",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+ },
+ {
+  "id": "DC22",
+  "claim": "/rights-sweep",
+  "source_sentence": "/rights-sweep",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+ },
+ {
+  "id": "DC23",
+  "claim": "/sponsor-slot",
+  "source_sentence": "/sponsor-slot",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+ },
+ {
+  "id": "DC24",
+  "claim": "Re-upload found — claim filed",
+  "source_sentence": "Re-upload found — claim filed",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+ },
+ {
+  "id": "DC25",
+  "claim": "Shorts cut from the long episode",
+  "source_sentence": "Shorts cut from the long episode",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+ },
+ {
+  "id": "DC26",
+  "claim": "Chapters added to the new upload",
+  "source_sentence": "Chapters added to the new upload",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+ },
+ {
+  "id": "DC27",
+  "claim": "Series trailer scheduled",
+  "source_sentence": "Series trailer scheduled",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+ },
+ {
+  "id": "DC28",
+  "claim": "Sponsor read approved",
+  "source_sentence": "Sponsor read approved",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+ },
+ {
+  "id": "DC29",
+  "claim": "Playlist reordered for the series",
+  "source_sentence": "Playlist reordered for the series",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+ },
+ {
+  "id": "DC30",
+  "claim": "Monthly review sent",
+  "source_sentence": "Monthly review sent",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+ },
+ {
+  "id": "DC31",
+  "claim": "We also work with brands and agencies looking to partner with African creators.",
+  "source_sentence": "We also work with brands and agencies looking to partner with African creators.",
+  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
+  "location": "v3 #brands — Lead-in line above the brief steps (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Verbatim S2 (FAQ, \"Who do you work with?\")."
+ },
+ {
+  "id": "DC32",
+  "claim": "How a brief runs",
+  "source_sentence": "How a brief runs",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #brands — \"How a brief runs\" label (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Plan §5 ★ label."
+ },
+ {
+  "id": "DC33",
+  "claim": "Brief — You tell us the audience, the message and the budget.",
+  "source_sentence": "Brief — You tell us the audience, the message and the budget.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. F38 \"Brand brief received — Lagos\"; F24 \"Brands — budget, no voice\". Drafted."
+ },
+ {
+  "id": "DC34",
+  "claim": "Match — We put forward creators from a vetted network whose audiences fit the brief.",
+  "source_sentence": "Match — We put forward creators from a vetted network whose audiences fit the brief.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. S2: \"a curated network of vetted creators\"."
+ },
+ {
+  "id": "DC35",
+  "claim": "Contract — One agreement and one point of contact, however many creators are on it.",
+  "source_sentence": "Contract — One agreement and one point of contact, however many creators are on it.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. S2: \"a single contract and point of contact\"; F48 \"One contract.\" (step named \"Contract\" so F48 is not repeated)."
+ },
+ {
+  "id": "DC36",
+  "claim": "Make — Made in the creator’s own voice, to your brief.",
+  "source_sentence": "Make — Made in the creator’s own voice, to your brief.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Answers F24 \"Brands — budget, no voice\". Drafted."
+ },
+ {
+  "id": "DC37",
+  "claim": "Report — Performance tracked and brand lift measured, from first upload to final report.",
+  "source_sentence": "Report — Performance tracked and brand lift measured, from first upload to final report.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. S2: \"Performance tracking & brand lift measurement\"; S2 campaign management \"from the brief through to reporting\"."
+ },
+ {
+  "id": "DC40",
+  "claim": "Inside the instrument",
+  "source_sentence": "Inside the instrument",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Spec list label (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S1 F62. Picks up F62 \"…passes through one instrument…\". Optional; the list can run unlabelled."
+ },
+ {
+  "id": "DC41",
+  "claim": "Front element — The first glass the light meets.",
+  "source_sentence": "Front element — The first glass the light meets.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.86 0.51 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.86 0.51 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC42",
+  "claim": "Lens elements — Groups of glass that bring the image into focus.",
+  "source_sentence": "Lens elements — Groups of glass that bring the image into focus.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.62 0.52 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.62 0.52 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC43",
+  "claim": "Aperture — Overlapping blades that set how much light gets through.",
+  "source_sentence": "Aperture — Overlapping blades that set how much light gets through.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.55 0.48 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.55 0.48 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC44",
+  "claim": "Lens mount — A bayonet with electrical contacts: lens and body talk through it.",
+  "source_sentence": "Lens mount — A bayonet with electrical contacts: lens and body talk through it.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.485 0.48 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.485 0.48 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC45",
+  "claim": "Body and grip — Dials, shutter button and the hand that holds them.",
+  "source_sentence": "Body and grip — Dials, shutter button and the hand that holds them.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.33 0.52 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.33 0.52 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC46",
+  "claim": "Viewfinder (EVF) — A small screen behind an eyepiece: the frame, at the eye.",
+  "source_sentence": "Viewfinder (EVF) — A small screen behind an eyepiece: the frame, at the eye.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.405 0.18 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.405 0.18 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC47",
+  "claim": "Battery — A removable pack. Carry a spare.",
+  "source_sentence": "Battery — A removable pack. Carry a spare.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.405 0.815 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.405 0.815 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC48",
+  "claim": "Shutter — Times each exposure, just in front of the sensor.",
+  "source_sentence": "Shutter — Times each exposure, just in front of the sensor.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.235 0.52 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.235 0.52 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC49",
+  "claim": "Image sensor — Where light becomes a picture.",
+  "source_sentence": "Image sensor — Where light becomes a picture.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.225 0.50 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.225 0.50 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC50",
+  "claim": "Stabiliser (IBIS) — In-body image stabilisation: the sensor moves to cancel shake.",
+  "source_sentence": "Stabiliser (IBIS) — In-body image stabilisation: the sensor moves to cancel shake.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.21 0.55 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.21 0.55 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC51",
+  "claim": "Main board — The processor that turns what the sensor sees into files.",
+  "source_sentence": "Main board — The processor that turns what the sensor sees into files.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.155 0.50 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.155 0.50 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC52",
+  "claim": "Rear screen (LCD) — For framing, menus and playback.",
+  "source_sentence": "Rear screen (LCD) — For framing, menus and playback.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.068 0.52 (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.068 0.52 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+ },
+ {
+  "id": "DC60",
+  "claim": "Watch the work",
+  "source_sentence": "Watch the work",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #showcase — Video section head (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Plan §3.8 wording for the XXL video cards."
+ },
+ {
+  "id": "DC61",
+  "claim": "Play video",
+  "source_sentence": "Play video",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #showcase — Video card button (UI) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Interface label; could move to ui-strings.json once approved."
+ },
+ {
+  "id": "DC62",
+  "claim": "Watch on YouTube ↗",
+  "source_sentence": "Watch on YouTube ↗",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #showcase — Video card link (UI) (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Interface label; the ↗ matches F43/F46/F49."
+ },
+ {
+  "id": "DC63",
+  "claim": "The Law vs. The Machine",
+  "source_sentence": "THE LAW VS. THE MACHINE",
+  "url": "https://www.youtube.com/watch?v=6aheOxb7GPU",
+  "location": "v3 #showcase — Video card title — Layi Wasabi (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"THE LAW VS. THE MACHINE\" (id 6aheOxb7GPU). Verification: channel-confirmed, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC64",
+  "claim": "Rugged Lawyer",
+  "source_sentence": "RUGGED LAWYER",
+  "url": "https://www.youtube.com/watch?v=gc_CdEdEVrQ",
+  "location": "v3 #showcase — Video card title — Layi Wasabi (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"RUGGED LAWYER\" (id gc_CdEdEVrQ). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC65",
+  "claim": "Love Was Not Invited",
+  "source_sentence": "LOVE WAS NOT INVITED - Nigerian Movies 2026 Latest Full Movies",
+  "url": "https://www.youtube.com/watch?v=H9qoC981BAU",
+  "location": "v3 #showcase — Video card title — Omoni Oboli TV (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"LOVE WAS NOT INVITED - Nigerian Movies 2026 Latest Full Movies\" (id H9qoC981BAU). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC66",
+  "claim": "Love in Every Word 2: The Wedding",
+  "source_sentence": "LOVE IN EVERY WORD 2 - THE WEDDING",
+  "url": "https://www.youtube.com/watch?v=OQQaDqLCgKg",
+  "location": "v3 #showcase — Video card title — Omoni Oboli TV (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"LOVE IN EVERY WORD 2 - THE WEDDING\" (id OQQaDqLCgKg). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC67",
+  "claim": "RMD on Curiosity Made Me Ask",
+  "source_sentence": "RMD ON CURIOSITY MADE ME ASK!",
+  "url": "https://www.youtube.com/watch?v=nOedKYSXuPU",
+  "location": "v3 #showcase — Video card title — Isbae U (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"RMD ON CURIOSITY MADE ME ASK!\" (id nOedKYSXuPU). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC68",
+  "claim": "Olusegun Obasanjo on Curiosity Made Me Ask",
+  "source_sentence": "Former President Olusegun Obasanjo on curiosity made me ask",
+  "url": "https://www.youtube.com/watch?v=U-xB3IOipac",
+  "location": "v3 #showcase — Video card title — Isbae U (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"Former President Olusegun Obasanjo on curiosity made me ask\" (id U-xB3IOipac). Verification: channel-confirmed, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC69",
+  "claim": "FDI: Federal Disturbance Intelligence, episode 1",
+  "source_sentence": "FDI - FEDERAL DISTURBANCE INTELLIGENCE (Epi 1) Brodashaggi",
+  "url": "https://www.youtube.com/watch?v=MTZlMqXgUZA",
+  "location": "v3 #showcase — Video card title — Broda Shaggi (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"FDI - FEDERAL DISTURBANCE INTELLIGENCE (Epi 1) Brodashaggi\" (id MTZlMqXgUZA). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC70",
+  "claim": "New Love Story",
+  "source_sentence": "New Love Story",
+  "url": "https://www.youtube.com/watch?v=HcZDHLW7cKA",
+  "location": "v3 #showcase — Video card title — Broda Shaggi (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"New Love Story\" (id HcZDHLW7cKA). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC71",
+  "claim": "Bisola Aiyeola on intentional friendships",
+  "source_sentence": "Bisola Aiyeola speaks on Intentional Friendships",
+  "url": "https://www.youtube.com/watch?v=2FY9NcE2lbw",
+  "location": "v3 #showcase — Video card title — Diary of a Naija Girl (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"Bisola Aiyeola speaks on Intentional Friendships\" (id 2FY9NcE2lbw). Verification: channel-confirmed, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC72",
+  "claim": "Kunle Remi on real-life marriage",
+  "source_sentence": "Kunle Remi on Real-Life Marriage Struggles",
+  "url": "https://www.youtube.com/watch?v=7OBeFS70vpg",
+  "location": "v3 #showcase — Video card title — Diary of a Naija Girl (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"Kunle Remi on Real-Life Marriage Struggles\" (id 7OBeFS70vpg). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC73",
+  "claim": "Reheated Passion",
+  "source_sentence": "REHEATED PASSION | Nigerian movies 2026 Latest full movies",
+  "url": "https://www.youtube.com/watch?v=QoZJOlmynbw",
+  "location": "v3 #showcase — Video card title — Kie Kie (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"REHEATED PASSION | Nigerian movies 2026 Latest full movies\" (id QoZJOlmynbw). Verification: channel-confirmed, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC74",
+  "claim": "Dr Shaggi in Distress",
+  "source_sentence": "DR SHAGGI IN DISTRESS",
+  "url": "https://www.youtube.com/watch?v=RdlXuz1_iKo",
+  "location": "v3 #showcase — Video card title — Kie Kie (with Broda Shaggi) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"DR SHAGGI IN DISTRESS\" (id RdlXuz1_iKo). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC75",
+  "claim": "The Figurine: Araromire (2009)",
+  "source_sentence": "The Figurine: Araromire (2009)",
+  "url": "https://www.youtube.com/watch?v=7A3M-n54gG8",
+  "location": "v3 #showcase — Video card title — Kunle Afolayan (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"The Figurine: Araromire (2009)\" (id 7A3M-n54gG8). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+ },
+ {
+  "id": "DC80",
+  "claim": "It starts with a discovery call: your goals, your content, your audience.",
+  "source_sentence": "It starts with a discovery call: your goals, your content, your audience.",
+  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
+  "location": "v3 #process — Optional third sentence for \"Blank page\" (after F76 + F77) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Near-verbatim S2 (\"How we work\": \"Discovery Call — unpack your goals, content and audience\"). Its next step, \"Channel audit — deep dive into analytics, SEO & monetization\", is already F77."
+ },
+ {
+  "id": "DC85",
+  "claim": "On the desk",
+  "source_sentence": "On the desk",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #kit — Kit run label for the console (replaces the step name used now) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Kit currently labels its runs \"Production\", \"Sound\", \"Sound\", \"Published\" (step names), so steps are named twice on the page. Descriptive, no claim."
+ },
+ {
+  "id": "DC86",
+  "claim": "At the mic",
+  "source_sentence": "At the mic",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #kit — Kit run label for the microphone (replaces the step name used now) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Kit currently labels its runs \"Production\", \"Sound\", \"Sound\", \"Published\" (step names), so steps are named twice on the page. Descriptive, no claim."
+ },
+ {
+  "id": "DC87",
+  "claim": "In the ears",
+  "source_sentence": "In the ears",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #kit — Kit run label for the headphones (replaces the step name used now) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Kit currently labels its runs \"Production\", \"Sound\", \"Sound\", \"Published\" (step names), so steps are named twice on the page. Descriptive, no claim."
+ },
+ {
+  "id": "DC88",
+  "claim": "In the hand",
+  "source_sentence": "In the hand",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #kit — Kit run label for the phone (replaces the step name used now) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Kit currently labels its runs \"Production\", \"Sound\", \"Sound\", \"Published\" (step names), so steps are named twice on the page. Descriptive, no claim."
+ },
+ {
+  "id": "DC90",
+  "claim": "Director",
+  "source_sentence": "Director",
+  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
+  "location": "v3 #directors — Role line under each name (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: from site. Source: S1 F104; S2. Singular of F104 \"Directors\"; S2 lists each as \"Director\". The live site gives no other title (F106 note: no Founder/CEO)."
+ },
+ {
+  "id": "DC91",
+  "claim": "Between them, leadership experience from YouTube, Paramount, Multichoice, Africa Magic and Circo Live.",
+  "source_sentence": "Between them, leadership experience from YouTube, Paramount, Multichoice, Africa Magic and Circo Live.",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #directors — Shared line under both names (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S1 F54–F59. Restates F54–F59. Assumes the two directors are \"the leadership\" F54 refers to: confirm. If used, move the credits row out of Brands so the line appears once."
+ },
+ {
+  "id": "DC92",
+  "claim": "Creator management and commercial growth",
+  "source_sentence": "Creator management and commercial growth",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #directors — Candidate focus line (to confirm and assign per director) (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: draft. Source: S2. S2 (search summary) says the directors focus on \"creator management and commercial growth\" but not who does which. Do not render until the client assigns it."
+ },
+ {
+  "id": "DC100",
+  "claim": "We work with established creators, filmmakers, media companies and content owners who already have traction and want to build a sustainable business.",
+  "source_sentence": "We work with established creators, filmmakers, media companies and content owners who already have traction and want to build a sustainable business.",
+  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
+  "location": "v3 #apply — Who we work with (above \"Apply to join\") (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Near-verbatim S2 (FAQ): \"We work with established YouTube creators, filmmakers, media companies and content owners who have existing traction and want to build a sustainable business.\""
+ },
+ {
+  "id": "DC101",
+  "claim": "Apply with your channel details. We review each application and, if there is a fit, book a discovery call.",
+  "source_sentence": "Apply with your channel details. We review each application and, if there is a fit, book a discovery call.",
+  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
+  "location": "v3 #apply — How applying works (Track C draft, rec)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Close paraphrase of S2 (FAQ): click \"Apply to Join\" and submit your channel details; the team reviews it and, \"if we see a fit, we’ll schedule a discovery call\"."
+ },
+ {
+  "id": "DC102",
+  "claim": "We work with creators who treat this like a real business.",
+  "source_sentence": "We work with creators who treat this like a real business.",
+  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
+  "location": "v3 #apply — Closing line before the marquee (Track C draft, opt)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Near-verbatim S2: \"We work with creators who treat this like a real business.\""
  }
 ]

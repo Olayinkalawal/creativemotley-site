@@ -24,7 +24,8 @@ export class VideoScrub {
     this.lat = []; this.size = [1920, 1080];
     if (!this.ok) return;
     const v = (this.video = document.createElement('video'));
-    v.muted = true; v.playsInline = true; v.preload = 'auto'; v.crossOrigin = 'anonymous'; v.disablePictureInPicture = true;
+    // first frame only at load (the first-load budget); the rest buffers once the playhead leaves frame 0 (warm)
+    v.muted = true; v.playsInline = true; v.preload = 'metadata'; v.crossOrigin = 'anonymous'; v.disablePictureInPicture = true;
     v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
     const t = (this.tex = new Texture(v));
     t.flipY = false; t.colorSpace = NoColorSpace; t.generateMipmaps = false;
@@ -48,11 +49,20 @@ export class VideoScrub {
     });
     v.src = this.source.src;
     v.load();
+    // a browser that will not decode a first frame on preload="metadata": buffer properly after a moment
+    this._warmT = setTimeout(() => { if (!this.ready) this.warm(); }, 1500);
+  }
+  /* start buffering the whole film (from the first scroll into it) */
+  warm() {
+    if (this.warmed || !this.video) return;
+    this.warmed = true;
+    this.video.preload = 'auto';
   }
   timeOf(i) { return (i + 0.5) / this.fps; }
   seek(f) {
     if (!this.ok) return;
     this.target = Math.max(0, Math.min(this.count - 1, Math.round(f)));
+    if (this.target > 0) this.warm();
     if (!this.ready || this.pending >= 0 || this.target === this.shown) return;
     this.seekTo(this.target);
   }
@@ -76,6 +86,7 @@ export class VideoScrub {
     return { n: s.length, p50: +q(0.5).toFixed(1), p90: +q(0.9).toFixed(1), max: +q(1).toFixed(1), src: this.source?.src };
   }
   dispose() {
+    clearTimeout(this._warmT);
     if (!this.video) return;
     this.video.removeEventListener('seeked', this._done);
     this.video.removeAttribute('src'); this.video.load();   // frees the decoder

@@ -74,6 +74,11 @@ export default function register(stage) {
   stage.add(plateScene({ id: 'plate:hero', image: '/assets/plates/hero.webp', depth: '/assets/plates/hero-depth.png' }));
   stage.add(plateScene({
     id: 'plate:results', image: '/assets/plates/results.webp', depth: '/assets/plates/results-depth.png',
-    video: (ctx) => [{ src: ctx.vw < 900 ? '/assets/video/results-sm.mp4' : '/assets/video/results.mp4', type: 'video/mp4' }],
+    // the full-screen backdrop video (scripts/encode-results.sh: AV1 where it plays, H.264 otherwise; ~1/5 of the old
+    // 10.6 MB); narrow windows keep the 1100-px encode
+    video: (ctx) => (ctx.vw < 900 ? [{ src: '/assets/video/results-sm.mp4', type: 'video/mp4' }] : [
+      { src: '/assets/video/film/results-1920-av1.mp4?v=1', type: 'video/mp4; codecs="av01.0.08M.08"' },
+      { src: '/assets/video/film/results-1920-h264.mp4?v=1', type: 'video/mp4; codecs="avc1.640028"' },
+    ]),
   }));
 }

@@ -19,9 +19,9 @@
        stage.invalidate(), a stream frame landing) and stops ~300 ms after the last change. Scenes that are alive on
        their own (ambient(ctx) → true: dust, a playing video) keep drawing at 30 fps while idle;
      - one canvas size per quality level, from a pixel budget (longest side 1280 / 1920 / 2880 px, DPR ≤ 2; phones
-       on the still path 1280 / 1920 / 2560, DPR ≤ 3). A frame-rate average steps the level down below 45 fps; "low"
-       caps the stage at 30 fps. A level change is applied only between scenes (paper covering, a scene change, or
-       idle), never mid-scene.
+       on the still path 1280 / 1920 / 2560, DPR ≤ 3; a 960-px floor for software rasterisers). A frame-rate average
+       steps the level down below 45 fps; "low" (and the floor) cap the stage at 30 fps. A level change is applied
+       only between scenes (paper covering, a scene change, or idle), never mid-scene.
 
    A scene module (src/gl/scenes/*.js) default-exports register(stage) and calls stage.add({
      id,                       // matches data-scene
@@ -47,8 +47,8 @@ import { onFrame, onResize, clamp } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
 import { TIER, FINE, REDUCED, STILL, QUALITY } from '../core/env.js';
 
-const LEVELS = ['low', 'medium', 'high'];
-const BUDGET = STILL ? { low: 1280, medium: 1920, high: 2560 } : { low: 1280, medium: 1920, high: 2880 };
+const LEVELS = ['min', 'low', 'medium', 'high'];
+const BUDGET = STILL ? { min: 960, low: 1280, medium: 1920, high: 2560 } : { min: 960, low: 1280, medium: 1920, high: 2880 };
 const MAX_DPR = STILL ? 3 : 2;
 const IDLE_MS = 300;
 const idle = (timeout = 400) => new Promise((r) => (window.requestIdleCallback ? requestIdleCallback(r, { timeout }) : setTimeout(r, 16)));
@@ -66,6 +66,7 @@ export class Stage {
     this.scenes = new Map();
     this.segs = []; this.runs = []; this.opaque = [];
     this.post = createPost();
+    this.renderer.compile(this.post.scene, this.post.camera);   // the finishing pass, once, before the first frame
     this.rtA = this.makeRT(); this.rtB = this.makeRT();
     this.pointer = new Vector2(); this.pTarget = new Vector2();
     this.drawn = new Set();
@@ -120,7 +121,7 @@ export class Stage {
     const s = this.scenes.get(id);
     if (!s) { this.importFor(id); return null; }
     s.disposeAt = 0;
-    if (s.loaded || s.loading) return s;
+    if (s.loaded || s.loading || s.failed) return s;
     const gen = (s.gen = (s.gen || 0) + 1);
     s.loading = Promise.resolve(s.load?.(this.ctx))
       .then(() => this.prepare(s))
@@ -202,11 +203,13 @@ export class Stage {
     Object.assign(this.ctx, { vw: w, vh: h, w: W, h: H, dpr });
     for (const s of this.scenes.values()) s.resize?.(W, H, dpr);
   }
-  /* frame-rate governor: an average over consecutive drawn frames; below 45 fps, one level down (applied later) */
-  govern(dt) {
+  /* frame-rate governor: an average over consecutive drawn frames; below 45 fps, one level down (applied later).
+     The capped levels (low, min: 30 fps) step down only when they cannot hold even ~24 fps; "min" (960 px) is the
+     floor for machines that cannot draw "low" at all (a software rasteriser, an old integrated GPU). */
+  govern(dt, floor) {
     this.fps += (1 / Math.max(1e-3, dt) - this.fps) * 0.04;
     this.sinceStep++;
-    if (this.sinceStep > 90 && this.fps < 45 && this.level > 0 && this.pendingLevel < 0) this.pendingLevel = this.level - 1;
+    if (this.sinceStep > 60 && this.fps < floor && this.level > 0 && this.pendingLevel < 0) this.pendingLevel = this.level - 1;
   }
   applyLevel() {
     if (this.pendingLevel < 0) return;
@@ -295,11 +298,14 @@ export class Stage {
     const active = now - this.lastActive < IDLE_MS;
     const ambient = list.some((s) => s.ambient?.(ctx));
     if (!active && !ambient) { if (this.drawing) { this.drawing = false; this.applyLevel(); } return; }
-    const cap = this.level === 0 || !active ? 30 : 0;
+    const capped = this.level <= 1;
+    const cap = capped || !active ? 30 : 0;
     if (cap && now - this.lastRender < 1000 / cap - 4) return;
 
     const dt = this.lastRender ? Math.min(0.25, (now - this.lastRender) / 1000) : 1 / 60;
-    if (!cap && this.lastFrameNo === v.frame - 1) this.govern(dt);
+    // govern on consecutive active frames only (not across an idle stop, not the ≤ 30 fps ambient frames)
+    if (active && this.lastWasActive && now - this.lastRender < 250 && (capped || this.lastFrameNo === v.frame - 1)) this.govern(dt, capped ? 24 : 45);
+    this.lastWasActive = active;
     this.clock += Math.min(dt, 1 / 20);
     ctx.time = this.clock; ctx.dt = Math.min(dt, 0.1);
 

@@ -31,7 +31,7 @@ export default function register(stage) {
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const mat = plateMaterial();
   scene.add(fullscreenQuad(mat));
-  let src = null, depthRest = null, depthEnd = null, sparks = null, ranges = [];
+  let src = null, depthRest = null, depthEnd = null, endLoading = null, sparks = null, ranges = [];
   let push = 0;
   const redraw = () => stage.invalidate();
 
@@ -55,7 +55,8 @@ export default function register(stage) {
     id: 'film', scene, camera,
     async load(ctx) {
       ranges = filmRanges('hero');
-      [src, depthRest, depthEnd] = await Promise.all([open(ctx), loadTexture('/assets/plates/hero-depth.png'), loadTexture('/assets/plates/storytellers-depth.png')]);
+      // the end plate's depth map is needed only once the film nears its end (loaded then, in update)
+      [src, depthRest] = await Promise.all([open(ctx), loadTexture('/assets/plates/hero-depth.png')]);
       if (ctx.tier >= 1 && !ctx.reduced && !sparks) {
         sparks = createSparks(ctx.tier >= 2 ? 2600 : 900);
         sparks.u.px.value = ctx.dpr * 1.6;
@@ -66,7 +67,7 @@ export default function register(stage) {
     },
     dispose() {
       src?.dispose(); src = null;
-      depthRest?.dispose(); depthEnd?.dispose(); depthRest = depthEnd = null;
+      depthRest?.dispose(); depthEnd?.dispose(); depthRest = depthEnd = null; endLoading = null;
       mat.uniforms.map.value = null; mat.uniforms.depth.value = null;
     },
     resize(w, h, dpr) { mat.uniforms.res.value.set(w, h); if (sparks) { sparks.u.aspect.value = w / h; sparks.u.px.value = dpr * 1.6; } },
@@ -75,13 +76,16 @@ export default function register(stage) {
       if (!ranges.length || !document.body.contains(ranges[0].el)) ranges = filmRanges('hero');
       const f = ctx.reduced ? 0 : frameAt(ranges, ctx.scrollY, ctx.vh);
       src.seek(f);
+      if (f > 300 && !depthEnd && !endLoading) {
+        endLoading = loadTexture('/assets/plates/storytellers-depth.png').then((t) => { if (src) { depthEnd = t; redraw(); } else t.dispose(); }).catch(() => {});
+      }
       const u = mat.uniforms;
       u.map.value = src.texture;
       u.imgSize.value.set(src.size[0], src.size[1]);
       // depth parallax only where the frame is the plate the depth map was computed from
       const atRest = 1 - smooth(seg(f, 0, 6));
       const atEnd = smooth(seg(f, COUNT - 7, COUNT - 1));
-      if (atEnd > 0) { u.depth.value = depthEnd; u.hasDepth.value = 1; u.strength.value = 0.022 * atEnd; }
+      if (atEnd > 0 && depthEnd) { u.depth.value = depthEnd; u.hasDepth.value = 1; u.strength.value = 0.022 * atEnd; }
       else if (atRest > 0) { u.depth.value = depthRest; u.hasDepth.value = 1; u.strength.value = 0.02 * atRest; }
       else u.hasDepth.value = 0;
       // slow breathing push while at rest; the film carries its own camera in between
