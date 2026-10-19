@@ -73,7 +73,7 @@ export class Stage {
     this.ctx = { stage: this, renderer: this.renderer, time: 0, dt: 0, frame: 0, vw: 1, vh: 1, w: 1, h: 1, dpr: 1, pointer: this.pointer, velocity: 0, tier: TIER, still: STILL, quality: this.quality, reduced: REDUCED, scrollY: 0 };
     // loop state
     this.clock = 0; this.dirty = true; this.lastActive = 0; this.lastY = NaN; this.lastRender = 0; this.lastFrameNo = -9; this.drawing = false; this.primary = null;
-    this.renders = 0; this.fps = 60; this.sinceStep = 0; this.pendingLevel = -1;
+    this.renders = 0; this.fps = 60; this.sinceStep = 0; this.stepAt = 0; this.pendingLevel = -1;
     this.activeRun = -1; this.runSince = 0; this.mountedRun = -2; this.hover = null; this.nextGC = 0;
     if (FINE) window.addEventListener('pointermove', (e) => this.pTarget.set((e.clientX / innerWidth) * 2 - 1, -((e.clientY / innerHeight) * 2 - 1)), { passive: true });
     document.addEventListener('mouseleave', () => this.pTarget.set(0, 0));
@@ -206,16 +206,19 @@ export class Stage {
   /* frame-rate governor: an average over consecutive drawn frames; below 45 fps, one level down (applied later).
      The capped levels (low, min: 30 fps) step down only when they cannot hold even ~24 fps; "min" (960 px) is the
      floor for machines that cannot draw "low" at all (a software rasteriser, an old integrated GPU). */
-  govern(dt, floor) {
-    this.fps += (1 / Math.max(1e-3, dt) - this.fps) * 0.04;
-    this.sinceStep++;
-    if (this.sinceStep > 60 && this.fps < floor && this.level > 0 && this.pendingLevel < 0) this.pendingLevel = this.level - 1;
+  govern(dt, floor, now) {
+    const f = 1 / Math.max(1e-3, dt);
+    this.fps = this.sinceStep++ ? this.fps + (f - this.fps) * 0.05 : f;
+    if (this.sinceStep > 20 && now - this.stepAt > 2000 && this.fps < floor && this.level > 0 && this.pendingLevel < 0) {
+      this.pendingLevel = this.level - 1;
+      this.applyNow = this.fps < 15;   // already unusable: a one-frame reallocation is the lesser evil, apply it now
+    }
   }
   applyLevel() {
     if (this.pendingLevel < 0) return;
     this.level = this.pendingLevel; this.pendingLevel = -1;
     this.quality = this.ctx.quality = LEVELS[this.level];
-    this.sinceStep = 0; this.fps = 60;
+    this.sinceStep = 0; this.stepAt = performance.now();
     this.resize();
     this.dirty = true;   // a resize clears the canvas: draw again
   }
@@ -302,11 +305,13 @@ export class Stage {
     const cap = capped || !active ? 30 : 0;
     if (cap && now - this.lastRender < 1000 / cap - 4) return;
 
-    const dt = this.lastRender ? Math.min(0.25, (now - this.lastRender) / 1000) : 1 / 60;
-    // govern on consecutive active frames only (not across an idle stop, not the ≤ 30 fps ambient frames)
-    if (active && this.lastWasActive && now - this.lastRender < 250 && (capped || this.lastFrameNo === v.frame - 1)) this.govern(dt, capped ? 24 : 45);
+    const dt = this.lastRender ? Math.min(1, (now - this.lastRender) / 1000) : 1 / 60;
+    // govern on consecutive active frames only (not across an idle stop, not the ≤ 30 fps ambient frames): the last
+    // draw was on the previous tick (two ticks back when capped at 30 fps on a 60 Hz display)
+    if (active && this.lastWasActive && v.frame - this.lastFrameNo <= (capped ? 3 : 1)) this.govern(dt, capped ? 24 : 45, now);
     this.lastWasActive = active;
-    this.clock += Math.min(dt, 1 / 20);
+    this.clock += Math.min(dt, 1 / 20);   // the scenes' clock runs only while drawing (no jump after an idle stop)
+    if (this.applyNow) { this.applyNow = false; this.applyLevel(); }
     ctx.time = this.clock; ctx.dt = Math.min(dt, 0.1);
 
     const segA = okA ? this.segInfo(A, y, vh) : this.segInfo(B, y, vh);

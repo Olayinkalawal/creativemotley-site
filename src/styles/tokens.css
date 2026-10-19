@@ -42,7 +42,7 @@
   --paper: #e8e3d4;
   --paper-2: #efeadd;
   --paper-ink: #14100a;
-  --paper-mute: #6e675a;   /* grey descriptions on paper: 4.9:1 on --paper */
+  --paper-mute: #615a4e;   /* grey descriptions on paper: 5.3:1 on --paper, 4.8:1 on the grained paper (#ded9c6) */
   --cream-mute: rgba(244, 237, 223, 0.62);
   --hair: rgba(244, 237, 223, 0.14);   /* 1px rules on ink (top bar, menu rows) */
 
@@ -69,7 +69,7 @@
   --t-title: min(calc(11.24vw + 1.76rem), 18.3vw, 12rem);
   --t-numeral: var(--t-title);
   --t-display: min(var(--t-title), clamp(3.5rem, calc(6.19vw + 1.99rem), 9.375rem));
-  --t-dek: clamp(1.75rem, calc(1.524vw + 1.38rem), 2.75rem);
+  --t-dek: clamp(1.75rem, calc(1.53vw + 1.375rem), 2.75rem);   /* exactly 28 at <= 390 and 44 at >= 1440 */
   --t-cap: calc(var(--t-dek) * 2.6);
   --t-head: 1.75rem;
   --t-lead: 1.5rem;
