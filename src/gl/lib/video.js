@@ -7,7 +7,7 @@
      where it fires for paused seeks), never per tick; onShow lets the stage redraw;
    - stats: seek latency (currentTime set → frame ready), in ms, for QA (window.__stage film scene).
    No playable source (or a decode error): ok = false, and the caller falls back to its frame stream. */
-import { Texture, LinearFilter, NoColorSpace } from 'three';
+import { VideoTexture, LinearFilter, NoColorSpace } from 'three';
 
 export function playable(sources) {
   const v = document.createElement('video');
@@ -27,7 +27,10 @@ export class VideoScrub {
     // first frame only at load (the first-load budget); the rest buffers once the playhead leaves frame 0 (warm)
     v.muted = true; v.playsInline = true; v.preload = 'metadata'; v.crossOrigin = 'anonymous'; v.disablePictureInPicture = true;
     v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
-    const t = (this.tex = new Texture(v));
+    // a VideoTexture (three uploads it with texImage2D from the element's own size; a plain Texture would allocate
+    // storage from video.width/height, which are 0), updated only when a seek lands, not on every frame
+    const t = (this.tex = new VideoTexture(v));
+    t.update = () => {};
     t.flipY = false; t.colorSpace = NoColorSpace; t.generateMipmaps = false;
     t.minFilter = t.magFilter = LinearFilter;
     this._done = () => this.landed();

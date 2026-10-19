@@ -1,8 +1,11 @@
 /* The hero film (570 painted frames): the figures and the floating kit → the camera handed across
    → the lens → the vortex → the machine draws → the Storytellers painting.
-   Delivered as video (v3): one short-GOP encode scrubbed by scroll (gl/lib/video.js): AV1 where the browser plays it,
-   H.264 everywhere else, 1920×1080 (public/assets/video/film/, scripts/encode-film.sh). The WebP frame streams stay
-   as the fallback (no playable source, a decode error, or ?film=frames).
+   Delivered as video (v3): one short-GOP encode (a keyframe every 8 frames), AV1 where the browser decodes it, H.264
+   everywhere else, 1920×1080 (public/assets/video/film/, scripts/encode-film.sh), scrubbed by scroll:
+     1. WebCodecs on a hardware decoder (gl/lib/codecStream.js): each GOP decoded once into a cache around the
+        playhead (exact frames, no per-seek re-decode); ?film=codec forces it on a software decoder too;
+     2. else a <video> seeked by currentTime (gl/lib/video.js; ?film=video);
+     3. else the WebP frame streams (no playable source, a decode error, or ?film=frames).
    Scroll position → frame comes from [data-film="hero"][data-frames="a-b"] ranges in the markup:
    each element maps its pin progress linearly onto frames a..b (holds between ranges).
    At rest on frame 0 and at the end (frame 569, which is the Storytellers plate) the frame becomes a
@@ -10,6 +13,7 @@
 import { Scene, OrthographicCamera } from 'three';
 import { FrameStream } from '../lib/frameStream.js';
 import { VideoScrub } from '../lib/video.js';
+import { CodecStream } from '../lib/codecStream.js';
 import { plateMaterial, fullscreenQuad } from '../lib/plate.js';
 import { loadTexture } from '../lib/loaders.js';
 import { createSparks } from '../lib/sparks.js';
@@ -36,8 +40,12 @@ export default function register(stage) {
   const redraw = () => stage.invalidate();
 
   async function open(ctx) {
-    const frames = new URLSearchParams(location.search).get('film') === 'frames';
-    if (!frames) {
+    const mode = new URLSearchParams(location.search).get('film');   // QA: ?film=video | frames forces a path
+    if (!mode || mode === 'codec') {
+      const c = await CodecStream.open({ sources: FILM_SOURCES, count: COUNT, onShow: redraw, hardware: mode !== 'codec' });
+      if (c) return c;
+    }
+    if (mode !== 'frames') {
       const v = new VideoScrub({ sources: FILM_SOURCES, fps: FPS, count: COUNT, onShow: redraw });
       if (v.ok) {
         await Promise.race([v.first, timeout(6000)]);
