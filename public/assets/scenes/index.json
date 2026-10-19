@@ -1,0 +1,163 @@
+{
+ "hero": {
+  "manifest": "/assets/scenes/hero/manifest.json",
+  "name": "Hero: the Creation, with kit",
+  "key": "#C8643C",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAADwBACdASogABIAPu1kqE2ppaOiMAgBMB2JQBUfVpYXEdE1BaTf/aPNTvSGtdZpGWAA/un72iYhQCUWGZ1+VY15BAg00M1dpJjqqW8jUG5FsXhjTi0HzCQgfHkAuGnih8B0AEU5o7aRA9++l29MJscJY+B1P/OVOuddAOWYhiNbC6+PRxHQAB36DnT8fVT6AKoCezvqY+Rx9ynbgIzzgAAA",
+   "phone": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABwBACdASoMABoAPu1iqU2ppaOiMAgBMB2JYgCsABn2l2OEZlJ+4f7DT+rD4AD4p880nsylhWWsidC6i+re/vmerAA8Ef4/SPPxwT5dyA0TGBo5Itm7r3V+iWPHbaMSTrL+aq33P8TIkBeRNVD5Uz3wmbx9B3X0H0PmZ061H/O+2JxHGInHiruh2bC2qR7FQkWHjhsKBJSaHFXPxIAAAA=="
+  },
+  "thumb": [
+   {
+    "src": "/assets/scenes/hero/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 7726
+   },
+   {
+    "src": "/assets/scenes/hero/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 7666
+   }
+  ]
+ },
+ "storytellers": {
+  "manifest": "/assets/scenes/storytellers/manifest.json",
+  "name": "I Storytellers: the three, out of the night",
+  "key": "#D81B7E",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQBACdASogABIAPu1srlIppaQiqAgBMB2JZQDM0FbPHXGNf6KDDLiI5/RvegecAAD+/EYxAjsynH90ADJMBSVahY2lqPmaMsTj9Q8d3fpkRiQIUh+/+PgZPl/irKEqbARbL4KgXoiU8O+W/lALDQAA",
+   "phone": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQBACdASoMABoAPu1iqk4ppaQiMAgBMB2JZQDE2Glho2zrIdNokrzYAAD+/lfNpkhUSyeVbjOWfeTQW7oUtlGsQ8GuWoxFAZSRZhgCCV0cLGROJC/QFUXJ1rl46IAA"
+  },
+  "thumb": [
+   {
+    "src": "/assets/scenes/storytellers/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 6668
+   },
+   {
+    "src": "/assets/scenes/storytellers/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 6174
+   }
+  ]
+ },
+ "creators": {
+  "manifest": "/assets/scenes/creators/manifest.json",
+  "name": "II Creators: The Atelier",
+  "key": "#5C8A78",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADwBACdASogABIAPu1oqVAppaOmqA1RMB2JZQDH5EXf1eUNflJZwR2Obkc95FGi/QAA/vkVohsX6SKKjgkyk3YY7hlacD7VQA8WiLhjgfoXZk8Ktk3lkagvyqOSKtr7DREi7eeUULAUoHWFRVhc9Qpk+bx4slaNsibJGFgHuk3vWGa6rgAAAA==",
+   "phone": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAQBACdASoMABoAPu1iqU2ppaOiMAgBMB2JZQABJPPJFRfnz1fXt45q4AD+/Mlw1czV5eDSJqd9qp+OyXSLXBgyg5zckz73/AhHY76c/JYOHGffmHpdkMro8IUtHKoqX3Jv0g5TSazGAAAA"
+  },
+  "thumb": [
+   {
+    "src": "/assets/scenes/creators/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 6760
+   },
+   {
+    "src": "/assets/scenes/creators/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 7158
+   }
+  ]
+ },
+ "brands": {
+  "manifest": "/assets/scenes/brands/manifest.json",
+  "name": "III Brands: The Commission",
+  "key": "#6E1418",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBQCdASogABIAPu1sq1EppaOjqAqpMB2JYwC1Gw6FJ1cjdVbmTo12DVU1romiHCbM4AD++cF13Muc3d7P5t/f6pE4A3zOh33X1Zx7BGBoFQrewSP2VLmgOr2tQfJqCQ6qLpr7h1PEBX3VGl2Y7lkpVLqb+k5K4SPwsRuFGzp0xTQZgSRQAAAA",
+   "phone": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAwBACdASoMABoAPu1Ct1apoqakGAEwHYlkALsygCWYSbqF4AwkqckDHAAA/vxHIWOfhrXdliLA/4q95o7geErmVf9puWIpZQPy5ujiOzITlJg3qInsMhg7BP6w3lkQnPLTmXufrTAQ2NnIkicpBTmdxZk47ULnrAA="
+  },
+  "thumb": [
+   {
+    "src": "/assets/scenes/brands/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 7163
+   },
+   {
+    "src": "/assets/scenes/brands/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 7804
+   }
+  ]
+ },
+ "results": {
+  "manifest": "/assets/scenes/results/manifest.json",
+  "name": "VIII Results: The Audience",
+  "key": "#7FA3AE",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAACwBACdASogABIAPu1iqE2ppaOiMAgBMB2JYwAASkZdiiM4SaqE7mzJ3BBod10AAP7Ac8NVB2mk7PgaGRAg+tu658/WjZU42EZGEMmy4R19dsf3Y0VuK4o52xGdjyGCzw8u9+Q411PaNQRQfRnOXc9gDRSLub3USv+2ADo4EMiOr2bzzvegfUg0qh1glkoYa2flI4WBJo11sEPNQ2q7JUfdua3lVXYxx4LwgAAA",
+   "phone": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAAAwBACdASoMABoAPu1kqU2ppaQiMAgBMB2JQBOmUABfTBjBK0pkXdQyBMAA8Zc4R3s8nEGLlgbweh6Zi2u04rHGZUTO02qxltYEj7vu6wKrMqmZeaSvDxfwmDe7WZTQFvmJ48ekXd7k/rMARWp66Bw1T/hwoGqEABDxi/Ig9Qyyt7tHg7QkF3P0nr5S1laUPNjTJOZtYQoAAA=="
+  },
+  "thumb": [
+   {
+    "src": "/assets/scenes/results/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 9066
+   },
+   {
+    "src": "/assets/scenes/results/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 8984
+   }
+  ]
+ },
+ "directors": {
+  "manifest": "/assets/scenes/directors/manifest.json",
+  "name": "IX Directors: The Empty Set",
+  "key": "#20264F",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAAAwBQCdASogABIAPu1wsVKppiSiqAgBMB2JYwDCgFbQskdilNRnXhWmONQOUgjqr5VeAAD++9yToyZxC0JVuqOiVoqJ3BM0P2+6TabT9nM0fsgYWZoPj3smVqqWofiLZ9vL40fKpmc0phi62ZTGxkciJY7OYiq4RpJO15/CxI/IumGkPDJBLDAAAAA=",
+   "phone": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwAwCdASoMABoAPu1iqU2ppaOiMAgBMB2JQBOgDVha05sdLhQ7c4kAAP79bApKZf/IED86uNGlMkxHkDnjBtE/LhUJhuJN+8xJXPaKTwHfabmWUgD+mf/g+irvB91trjs58hrj66nfSscgVd7TqT6AAAA="
+  },
+  "thumb": [
+   {
+    "src": "/assets/scenes/directors/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 5299
+   },
+   {
+    "src": "/assets/scenes/directors/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 5994
+   }
+  ]
+ },
+ "apply": {
+  "manifest": "/assets/scenes/apply/manifest.json",
+  "name": "X Apply: The Open Gate",
+  "key": "#DFAFA0",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAACwBACdASogABIAPu1mqk8ppaOiKA1RMB2JQBdmY5BTCqjUFORxP4pGl/Nqw97AAP7eh+wlDOO/6ExISd7twso3n9z4wdj+j2tPfVFesMOvfo9ysVTjyM7SZPzAqWJHXewby5NJjgYJPxC3BNpvusi3BQQEjlr7csDHjWlC8lFWlVJhoFGVOSBiG0ed23ZLM/uSV8+AAAA=",
+   "phone": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABwAgCdASoMABoAA4BaJQBOgCHfrrbKEON/afbAAP7TTPgL9nLcn4PbJ5JwqVbAIKBlBqJAHolXultE5+umE/kc70pggVA3yhJaK8Jz3u7wXCWkv1pSjRJivDcZwOkmPDQAAA=="
+  },
+  "thumb": [
+   {
+    "src": "/assets/scenes/apply/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 6401
+   },
+   {
+    "src": "/assets/scenes/apply/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 6802
+   }
+  ]
+ }
+}

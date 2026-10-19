@@ -35,6 +35,20 @@
    }
   ]
  },
+ "thumb": [
+  {
+   "src": "/assets/scenes/brands/thumb-320.avif",
+   "w": 320,
+   "h": 180,
+   "bytes": 7163
+  },
+  {
+   "src": "/assets/scenes/brands/thumb-320.webp",
+   "w": 320,
+   "h": 180,
+   "bytes": 7804
+  }
+ ],
  "phone": {
   "avif": [
    {
@@ -79,6 +93,20 @@
  ],
  "titleSide": "left",
  "phoneTitle": "top",
+ "titleBox": {
+  "desktop": [
+   0.0,
+   0.18,
+   0.33,
+   0.82
+  ],
+  "phone": [
+   0.06,
+   0.04,
+   0.94,
+   0.3
+  ]
+ },
  "key": "#6E1418",
  "titleBg": {
   "desktop": "#190405",
@@ -89,8 +117,14 @@
   "phone": "light"
  },
  "titleContrast": {
-  "desktop": 19.79,
-  "phone": 18.97
+  "desktop": {
+   "mean": 19.79,
+   "worst10": 18.4
+  },
+  "phone": {
+   "mean": 18.97,
+   "worst10": 17.28
+  }
  },
  "placeholder": {
   "desktop": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBQCdASogABIAPu1sq1EppaOjqAqpMB2JYwC1Gw6FJ1cjdVbmTo12DVU1romiHCbM4AD++cF13Muc3d7P5t/f6pE4A3zOh33X1Zx7BGBoFQrewSP2VLmgOr2tQfJqCQ6qLpr7h1PEBX3VGl2Y7lkpVLqb+k5K4SPwsRuFGzp0xTQZgSRQAAAA",

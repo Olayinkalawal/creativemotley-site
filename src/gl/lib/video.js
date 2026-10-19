@@ -9,15 +9,16 @@
    No playable source (or a decode error): ok = false, and the caller falls back to its frame stream. */
 import { Texture, LinearFilter, NoColorSpace } from 'three';
 
-export function pickSource(sources) {
+export function playable(sources) {
   const v = document.createElement('video');
-  return sources.find((s) => !s.type || v.canPlayType(s.type) !== '') || null;
+  return sources.filter((s) => !s.type || v.canPlayType(s.type) !== '');
 }
 
 export class VideoScrub {
   constructor({ sources, fps = 30, count, onShow = null }) {
     this.fps = fps; this.count = count; this.onShow = onShow;
-    this.source = pickSource(sources);
+    this.queue = playable(sources);
+    this.source = this.queue.shift() || null;
     this.ok = !!this.source;
     this.ready = false; this.target = 0; this.shown = -1; this.pending = -1; this.t0 = 0;
     this.lat = []; this.size = [1920, 1080];
@@ -30,7 +31,6 @@ export class VideoScrub {
     t.minFilter = t.magFilter = LinearFilter;
     this._done = () => this.landed();
     v.addEventListener('seeked', this._done);
-    v.addEventListener('error', () => { this.ok = false; this.onShow?.(); }, { once: true });
     this.first = new Promise((resolve) => {
       v.addEventListener('loadeddata', () => {
         this.size = [v.videoWidth, v.videoHeight];
@@ -38,7 +38,13 @@ export class VideoScrub {
         this.seekTo(this.target);
         resolve();
       }, { once: true });
-      v.addEventListener('error', () => resolve(), { once: true });
+      // a source that fails (missing, or a decoder that refuses it): the next playable one, then give up
+      v.addEventListener('error', () => {
+        if (this.ready) { this.ok = false; this.onShow?.(); return; }
+        this.source = this.queue.shift() || null;
+        if (this.source) { v.src = this.source.src; v.load(); }
+        else { this.ok = false; resolve(); }
+      });
     });
     v.src = this.source.src;
     v.load();
