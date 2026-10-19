@@ -157,6 +157,8 @@ CHAPTERS = {
 #   phoneTitleBox  phone title zone as (x0, y0, x1, y1), in place of a named phoneTitle box
 #   titleInk       {"desktop": "light" | "dark", "phone": ...}: the ink the art direction asks for, when it differs
 #                  from the zone's best raw ink (a scrim is then needed; titleScrim says how much)
+#   scrim          {"desktop": "...", "phone": "..."}: the scrim the art direction asks for to calm a busy zone
+#                  (manifest titleScrim.<kind>.advice; the alphas beside it are for luminance contrast only)
 #   note           free text for the director (manifest "artNote")
 
 
@@ -272,7 +274,7 @@ def contrast(a, b) -> float:
     return (la + 0.05) / (lb + 0.05)
 
 
-def zone_tone(im: Image.Image, box) -> dict:
+def zone_tone(im: Image.Image, box, ink: str | None = None) -> dict:
     """Title zone: mean colour, the ink that reads on it, and WCAG contrast at the mean and at the zone's
     worst decile (the brightest 10% of pixels for light ink, the darkest 10% for dark ink)."""
     W, H = im.size
@@ -283,13 +285,13 @@ def zone_tone(im: Image.Image, box) -> dict:
     c = px / 255
     lin = np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
     L = lin @ np.array([0.2126, 0.7152, 0.0722], np.float32)
-    light = cw >= ci
+    light = cw >= ci if ink is None else ink == 'light'   # ink: the art direction's choice (staging)
     if light:
         worst = 1.05 / (np.percentile(L, 90) + 0.05)
     else:
         worst = (np.percentile(L, 10) + 0.05) / (lum(INK) + 0.05)
     return dict(bg='#%02X%02X%02X' % mean, ink='light' if light else 'dark',
-                contrast=round(max(cw, ci), 2), worst=round(float(worst), 2))
+                contrast=round(max(cw, ci) if ink is None else (cw if light else ci), 2), worst=round(float(worst), 2))
 
 
 PAPER = (232, 227, 212)   # --paper, the light scrim for dark ink
@@ -312,7 +314,8 @@ def scrim_need(im: Image.Image, box, ink: str) -> dict:
             return 1.05 / (np.percentile(L, 90) + 0.05)
         return (np.percentile(L, 10) + 0.05) / (lum(INK) + 0.05)
 
-    out = {'worst10': round(float(worst(0.0)), 2)}
+    y = px @ np.array([0.299, 0.587, 0.114], np.float32)
+    out = {'worst10': round(float(worst(0.0)), 2), 'lumaSd': round(float(y.std()), 1)}
     for name, target in (('title3', 3.0), ('dek4.5', 4.5)):
         need = next((a for a in np.arange(0, 0.91, 0.05) if worst(a) >= target), None)
         out[name] = None if need is None else round(float(need), 2)
@@ -339,7 +342,8 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
         h = round(w * DESKTOP[1] / DESKTOP[0])
         im = shrink(dm, w, h)
         if w == widths[0]:
-            tones['desktop'] = zone_tone(im, cfg.get('titleBox', TITLE_BOX[cfg.get('titleSide', 'left')]))
+            tones['desktop'] = zone_tone(im, cfg.get('titleBox', TITLE_BOX[cfg.get('titleSide', 'left')]),
+                                         cfg.get('titleInk', {}).get('desktop') if STAGED else None)
             if STAGED:
                 ink = cfg.get('titleInk', {}).get('desktop', tones['desktop']['ink'])
                 scrims['desktop'] = dict(ink=ink, **scrim_need(
@@ -367,7 +371,8 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
             h = round(w * PHONE[1] / PHONE[0])
             im = shrink(pm, w, h)
             if w == 1170:
-                tones['phone'] = zone_tone(im, cfg.get('phoneTitleBox', TITLE_BOX['phone-' + cfg['phoneTitle']]))
+                tones['phone'] = zone_tone(im, cfg.get('phoneTitleBox', TITLE_BOX['phone-' + cfg['phoneTitle']]),
+                                           cfg.get('titleInk', {}).get('phone') if STAGED else None)
                 if STAGED:
                     ink = cfg.get('titleInk', {}).get('phone', tones['phone']['ink'])
                     scrims['phone'] = dict(ink=ink, **scrim_need(
@@ -397,7 +402,8 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
         # the art direction's ink wins over the zone's raw best ink; titleScrim says what it costs
         man['titleInk'] = {k: scrims[k]['ink'] for k in scrims}
         man['titleScrim'] = {k: {'colour': 'ink' if v['ink'] == 'light' else 'paper', 'worst10Bare': v['worst10'],
-                                 'alphaForTitle3': v['title3'], 'alphaForDek4_5': v['dek4.5']}
+                                 'alphaForTitle3': v['title3'], 'alphaForDek4_5': v['dek4.5'], 'zoneLumaSd': v['lumaSd'],
+                                 **({'advice': cfg['scrim'][k]} if cfg.get('scrim', {}).get(k) else {})}
                              for k, v in scrims.items()}
         for k in ('masterpiece', 'note'):
             if cfg.get(k):
@@ -439,7 +445,7 @@ def sheet() -> None:
     if STAGED:
         title = 'Masters, modernised (staged): decoded from the AVIFs; magenta = title zone'
     DW, DH, PW = 1024, 576, 324           # desktop thumb, row height, phone thumb width (9:16)
-    TW, M = 470, 24
+    TW, M = (600 if STAGED else 470), 24
     W = M + DW + M + PW + M + TW + M
     H = 96 + len(rows) * (DH + M) + M
     s = Image.new('RGB', (W, H), (20, 16, 12))
@@ -481,9 +487,18 @@ def sheet() -> None:
             sc = man.get('titleScrim', {}).get(kind)
             if sc:
                 need = lambda a: 'none' if a == 0 else ('>0.9' if a is None else f'{a:.2f}')
-                g.text((tx + 12, ty), f"{sc['colour']} scrim: title 3:1 {need(sc['alphaForTitle3'])}, "
+                g.text((tx + 12, ty), f"{sc['colour']} scrim for contrast: title 3:1 {need(sc['alphaForTitle3'])}, "
                                       f"dek 4.5:1 {need(sc['alphaForDek4_5'])}", font=font(16), fill=(230, 170, 120))
                 ty += 24
+                g.text((tx + 12, ty), f"zone luma sd {sc['zoneLumaSd']} (busy above ~30)", font=font(16),
+                       fill=(230, 170, 120))
+                ty += 24
+                if sc.get('advice'):
+                    import textwrap
+                    for line in textwrap.wrap(f"art direction: {sc['advice']}", 64):
+                        g.text((tx + 12, ty), line, font=font(16), fill=(240, 120, 200))
+                        ty += 22
+                    ty += 2
             for fmt in ('avif', 'webp'):
                 for f in man[kind][fmt]:
                     g.text((tx + 12, ty), f"{fmt} {f['w']}x{f['h']}  q{f['q']}  {f['bytes'] / 1024:.0f} KB",
