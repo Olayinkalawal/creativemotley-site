@@ -35,6 +35,20 @@
    }
   ]
  },
+ "thumb": [
+  {
+   "src": "/assets/scenes/storytellers/thumb-320.avif",
+   "w": 320,
+   "h": 180,
+   "bytes": 6668
+  },
+  {
+   "src": "/assets/scenes/storytellers/thumb-320.webp",
+   "w": 320,
+   "h": 180,
+   "bytes": 6174
+  }
+ ],
  "phone": {
   "avif": [
    {
@@ -79,6 +93,20 @@
  ],
  "titleSide": "left",
  "phoneTitle": "top",
+ "titleBox": {
+  "desktop": [
+   0.0,
+   0.18,
+   0.33,
+   0.82
+  ],
+  "phone": [
+   0.06,
+   0.04,
+   0.94,
+   0.3
+  ]
+ },
  "key": "#D81B7E",
  "titleBg": {
   "desktop": "#020505",
@@ -89,8 +117,14 @@
   "phone": "light"
  },
  "titleContrast": {
-  "desktop": 20.46,
-  "phone": 20.15
+  "desktop": {
+   "mean": 20.46,
+   "worst10": 20.06
+  },
+  "phone": {
+   "mean": 20.15,
+   "worst10": 19.71
+  }
  },
  "placeholder": {
   "desktop": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQBACdASogABIAPu1srlIppaQiqAgBMB2JZQDM0FbPHXGNf6KDDLiI5/RvegecAAD+/EYxAjsynH90ADJMBSVahY2lqPmaMsTj9Q8d3fpkRiQIUh+/+PgZPl/irKEqbARbL4KgXoiU8O+W/lALDQAA",

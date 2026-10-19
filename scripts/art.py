@@ -69,11 +69,20 @@ BUDGET = {
 QMAX = {'avif': 72, 'webp': 86}
 QMIN = {'avif': 36, 'webp': 58}
 
+# Title zones as (x0, y0, x1, y1) fractions of the delivered frame. Every new painting keeps its left third calm;
+# two older paintings were composed before that rule and get their calm zone named instead.
+TITLE_BOX = {
+    'left': (0.0, 0.18, 0.33, 0.82),        # desktop default: the left third
+    'top': (0.02, 0.03, 0.62, 0.30),        # desktop Results: the sky above the three figures
+    'phone-top': (0.06, 0.04, 0.94, 0.30),  # phone default: the top of the frame
+    'phone-left': (0.04, 0.24, 0.48, 0.50), # phone hero: the cloud bank left of the flying woman
+}
+
 # One entry per painted chapter.
 #   focus       the subject's centre in the 16:9 frame (x, y as fractions), for cover-fit and camera keys
 #   phoneFocus  the same in the 9:16 frame; x is also where to centre a side trim on very tall screens
-#   titleSide   desktop title zone: the left third, kept calm in every painting
-#   phoneTitle  phone title zone: the top of the frame (hero: top-left, the woman flies in top-right)
+#   titleSide   desktop title zone (TITLE_BOX): the left third, kept calm in every new painting
+#   phoneTitle  phone title zone: the top of the frame (hero: the cloud bank at the left, mid-height)
 #   key         the chapter's colour key (its identity hue, for chrome accents and the loading fill)
 J = lambda name: CDN + name
 CHAPTERS = {
@@ -83,7 +92,7 @@ CHAPTERS = {
                      note='live film frame f_0001 (creativemotley.com/frames/f_0001.webp), 4K upscale, job 3845158a'),
         phone=dict(src=J('hf_20261019_141525_e51061e5-0798-4b21-aaf5-03963ff094e4.png'),
                    note='portrait recomposition of the hero painting, job e51061e5'),
-        focus=[0.5, 0.45], phoneFocus=[0.56, 0.55], phoneTitle='top-left', key='#C8643C'),
+        focus=[0.5, 0.45], phoneFocus=[0.56, 0.55], phoneTitle='left', key='#C8643C'),
     'storytellers': dict(
         name='I Storytellers: the three, out of the night',
         desktop=dict(src=J('hf_20261019_142042_0f6104cd-93d1-4121-bbc6-b31298b984ea.png'),
@@ -112,7 +121,7 @@ CHAPTERS = {
                           'painting only inside a video), so desktop stops at 2048'),
         phone=dict(src=J('hf_20261019_142422_141b5c72-6df1-4792-97f8-9657b7ab7b5f.png'),
                    note='portrait painted from the same brief (the desktop painting cannot be imported), job 141b5c72'),
-        focus=[0.4, 0.6], phoneFocus=[0.5, 0.76], phoneTitle='top', key='#7FA3AE'),
+        focus=[0.4, 0.6], phoneFocus=[0.5, 0.76], titleSide='top', phoneTitle='top', key='#7FA3AE'),
     'directors': dict(
         name='IX Directors: The Empty Set',
         desktop=dict(src=J('hf_20261019_142024_0c9f02b1-fb78-47ab-9c02-f562d61a11f7.png'),
@@ -126,7 +135,8 @@ CHAPTERS = {
                      note='new painting, job 4b22d074'),
         phone=dict(src=J('hf_20261019_142338_397c34ba-c726-4099-a81e-70c105d07cae.png'),
                    note='portrait recomposition, job 397c34ba'),
-        focus=[0.74, 0.55], phoneFocus=[0.56, 0.72], phoneTitle='top', key='#DFAFA0'),
+        focus=[0.74, 0.55], phoneFocus=[0.56, 0.72], phoneTitle='top', key='#DFAFA0',
+        titleBox=(0.0, 0.08, 0.40, 0.46)),   # the sky only; the parapet below is darker stone
 }
 
 
@@ -226,13 +236,23 @@ def contrast(a, b) -> float:
 
 
 def zone_tone(im: Image.Image, box) -> dict:
-    """Mean colour of the title zone and which ink reads on it (WCAG ratio against white and the site ink)."""
+    """Title zone: mean colour, the ink that reads on it, and WCAG contrast at the mean and at the zone's
+    worst decile (the brightest 10% of pixels for light ink, the darkest 10% for dark ink)."""
     W, H = im.size
     z = np.asarray(im.crop((int(box[0] * W), int(box[1] * H), int(box[2] * W), int(box[3] * H))), np.float32)
-    mean = tuple(int(round(v)) for v in z.reshape(-1, 3).mean(0))
+    px = z.reshape(-1, 3)
+    mean = tuple(int(round(v)) for v in px.mean(0))
     cw, ci = contrast((255, 255, 255), mean), contrast(INK, mean)
-    return dict(bg='#%02X%02X%02X' % mean, ink='light' if cw >= ci else 'dark',
-                contrast=round(max(cw, ci), 2))
+    c = px / 255
+    lin = np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+    L = lin @ np.array([0.2126, 0.7152, 0.0722], np.float32)
+    light = cw >= ci
+    if light:
+        worst = 1.05 / (np.percentile(L, 90) + 0.05)
+    else:
+        worst = (np.percentile(L, 10) + 0.05) / (lum(INK) + 0.05)
+    return dict(bg='#%02X%02X%02X' % mean, ink='light' if light else 'dark',
+                contrast=round(max(cw, ci), 2), worst=round(float(worst), 2))
 
 
 def placeholder(im: Image.Image, w: int, h: int) -> str:
@@ -255,8 +275,14 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
         h = round(w * DESKTOP[1] / DESKTOP[0])
         im = shrink(dm, w, h)
         if w == widths[0]:
-            tones['desktop'] = zone_tone(im, (0.0, 0.18, 0.33, 0.82))
+            tones['desktop'] = zone_tone(im, cfg.get('titleBox', TITLE_BOX[cfg.get('titleSide', 'left')]))
             ph['desktop'] = placeholder(im, 32, 18)
+            thumb = im.resize((320, 180), Image.LANCZOS)   # menu / rail thumbnail (plan section 3.7)
+            man['thumb'] = []
+            for fmt, q in (('avif', 60), ('webp', 78)):
+                data = encode(thumb, fmt, q, speed)
+                (out / f'thumb-320.{fmt}').write_bytes(data)
+                man['thumb'].append(dict(src=f'{URL_ROOT}/{ch}/thumb-320.{fmt}', w=320, h=180, bytes=len(data)))
         for fmt in ('avif', 'webp'):
             data, q = fit(im, fmt, BUDGET[('desktop', fmt, w)], speed)
             name = f'desktop-{w}.{fmt}'
@@ -273,7 +299,7 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
             h = round(w * PHONE[1] / PHONE[0])
             im = shrink(pm, w, h)
             if w == 1170:
-                tones['phone'] = zone_tone(im, (0.06, 0.04, 0.94, 0.30))
+                tones['phone'] = zone_tone(im, cfg.get('phoneTitleBox', TITLE_BOX['phone-' + cfg['phoneTitle']]))
                 ph['phone'] = placeholder(im, 12, 26)
             for fmt in ('avif', 'webp'):
                 data, q = fit(im, fmt, BUDGET[('phone', fmt, w)], speed)
@@ -285,10 +311,13 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
         print(f'  {ch}: no phone master yet')
 
     man.update(
-        focus=cfg['focus'], phoneFocus=cfg['phoneFocus'], titleSide='left', phoneTitle=cfg['phoneTitle'],
+        focus=cfg['focus'], phoneFocus=cfg['phoneFocus'],
+        titleSide=cfg.get('titleSide', 'left'), phoneTitle=cfg['phoneTitle'],
+        titleBox={'desktop': list(cfg.get('titleBox', TITLE_BOX[cfg.get('titleSide', 'left')])),
+                  'phone': list(cfg.get('phoneTitleBox', TITLE_BOX['phone-' + cfg['phoneTitle']]))},
         key=cfg['key'], titleBg={k: v['bg'] for k, v in tones.items()},
         titleInk={k: v['ink'] for k, v in tones.items()},
-        titleContrast={k: v['contrast'] for k, v in tones.items()},
+        titleContrast={k: {'mean': v['contrast'], 'worst10': v['worst']} for k, v in tones.items()},
         placeholder=ph,
         credit={'desktop': d['note'], 'phone': p['note']},
     )
@@ -322,13 +351,16 @@ def sheet() -> None:
         d0 = man['desktop']['avif'][0]
         im = Image.open(OUT / ch / Path(d0['src']).name).convert('RGB').resize((DW, DH), Image.LANCZOS)
         s.paste(im, (M, y))
-        g.rectangle([M, y + int(DH * .18), M + DW // 3, y + int(DH * .82)], outline=(255, 0, 255), width=2)
+        b = man['titleBox']['desktop']
+        g.rectangle([M + int(DW * b[0]), y + int(DH * b[1]), M + int(DW * b[2]), y + int(DH * b[3])],
+                    outline=(255, 0, 255), width=2)
         x = M + DW + M
         if man.get('phone'):
             p0 = man['phone']['avif'][0]
             pim = Image.open(OUT / ch / Path(p0['src']).name).convert('RGB').resize((PW, DH), Image.LANCZOS)
             s.paste(pim, (x, y))
-            g.rectangle([x + int(PW * .06), y + int(DH * .04), x + int(PW * .94), y + int(DH * .30)],
+            b = man['titleBox']['phone']
+            g.rectangle([x + int(PW * b[0]), y + int(DH * b[1]), x + int(PW * b[2]), y + int(DH * b[3])],
                         outline=(255, 0, 255), width=2)
         tx, ty = x + PW + M, y
         g.text((tx, ty), man['name'], font=font(22, True), fill=(236, 226, 208))
@@ -339,7 +371,8 @@ def sheet() -> None:
             if not man.get(kind):
                 continue
             ink = man['titleInk'].get(kind, '')
-            g.text((tx, ty), f"{kind}  (title ink: {ink}, {man['titleContrast'].get(kind, '')}:1)",
+            tc = man['titleContrast'].get(kind, {})
+            g.text((tx, ty), f"{kind}  (title ink {ink}: {tc.get('mean')}:1, worst 10% {tc.get('worst10')}:1)",
                    font=font(17, True), fill=(220, 205, 180))
             ty += 28
             for fmt in ('avif', 'webp'):
@@ -352,6 +385,18 @@ def sheet() -> None:
     SHEET.parent.mkdir(parents=True, exist_ok=True)
     s.save(SHEET, quality=86, optimize=True)
     print(f'sheet: {SHEET.relative_to(ROOT)} ({SHEET.stat().st_size / 1024:.0f} KB)')
+
+
+def index() -> None:
+    """public/assets/scenes/index.json: every chapter's manifest path, key and placeholder, for preloading."""
+    rows = {}
+    for ch in CHAPTERS:
+        f = OUT / ch / 'manifest.json'
+        if f.exists():
+            m = json.loads(f.read_text())
+            rows[ch] = dict(manifest=f'{URL_ROOT}/{ch}/manifest.json', name=m['name'], key=m['key'],
+                            placeholder=m['placeholder'], thumb=m.get('thumb', []))
+    (OUT / 'index.json').write_text(json.dumps(rows, indent=1, ensure_ascii=False) + '\n')
 
 
 def main() -> None:
@@ -369,6 +414,7 @@ def main() -> None:
             t = time.time()
             build(ch, CHAPTERS[ch], speed=8 if a.fast else 6)
             print(f'  {ch}: {time.time() - t:.0f} s')
+        index()
     sheet()
 
 

@@ -35,6 +35,20 @@
    }
   ]
  },
+ "thumb": [
+  {
+   "src": "/assets/scenes/hero/thumb-320.avif",
+   "w": 320,
+   "h": 180,
+   "bytes": 7726
+  },
+  {
+   "src": "/assets/scenes/hero/thumb-320.webp",
+   "w": 320,
+   "h": 180,
+   "bytes": 7666
+  }
+ ],
  "phone": {
   "avif": [
    {
@@ -78,19 +92,39 @@
   0.55
  ],
  "titleSide": "left",
- "phoneTitle": "top-left",
+ "phoneTitle": "left",
+ "titleBox": {
+  "desktop": [
+   0.0,
+   0.18,
+   0.33,
+   0.82
+  ],
+  "phone": [
+   0.04,
+   0.24,
+   0.48,
+   0.5
+  ]
+ },
  "key": "#C8643C",
  "titleBg": {
   "desktop": "#534630",
-  "phone": "#918B83"
+  "phone": "#B19F89"
  },
  "titleInk": {
   "desktop": "light",
   "phone": "dark"
  },
  "titleContrast": {
-  "desktop": 9.18,
-  "phone": 5.92
+  "desktop": {
+   "mean": 9.18,
+   "worst10": 3.59
+  },
+  "phone": {
+   "mean": 7.79,
+   "worst10": 1.89
+  }
  },
  "placeholder": {
   "desktop": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAADwBACdASogABIAPu1kqE2ppaOiMAgBMB2JQBUfVpYXEdE1BaTf/aPNTvSGtdZpGWAA/un72iYhQCUWGZ1+VY15BAg00M1dpJjqqW8jUG5FsXhjTi0HzCQgfHkAuGnih8B0AEU5o7aRA9++l29MJscJY+B1P/OVOuddAOWYhiNbC6+PRxHQAB36DnT8fVT6AKoCezvqY+Rx9ynbgIzzgAAA",

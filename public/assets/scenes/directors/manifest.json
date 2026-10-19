@@ -35,6 +35,20 @@
    }
   ]
  },
+ "thumb": [
+  {
+   "src": "/assets/scenes/directors/thumb-320.avif",
+   "w": 320,
+   "h": 180,
+   "bytes": 5299
+  },
+  {
+   "src": "/assets/scenes/directors/thumb-320.webp",
+   "w": 320,
+   "h": 180,
+   "bytes": 5994
+  }
+ ],
  "phone": {
   "avif": [
    {
@@ -79,6 +93,20 @@
  ],
  "titleSide": "left",
  "phoneTitle": "top",
+ "titleBox": {
+  "desktop": [
+   0.0,
+   0.18,
+   0.33,
+   0.82
+  ],
+  "phone": [
+   0.06,
+   0.04,
+   0.94,
+   0.3
+  ]
+ },
  "key": "#20264F",
  "titleBg": {
   "desktop": "#040210",
@@ -89,8 +117,14 @@
   "phone": "light"
  },
  "titleContrast": {
-  "desktop": 20.56,
-  "phone": 11.74
+  "desktop": {
+   "mean": 20.56,
+   "worst10": 20.31
+  },
+  "phone": {
+   "mean": 11.74,
+   "worst10": 2.87
+  }
  },
  "placeholder": {
   "desktop": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAAAwBQCdASogABIAPu1wsVKppiSiqAgBMB2JYwDCgFbQskdilNRnXhWmONQOUgjqr5VeAAD++9yToyZxC0JVuqOiVoqJ3BM0P2+6TabT9nM0fsgYWZoPj3smVqqWofiLZ9vL40fKpmc0phi62ZTGxkciJY7OYiq4RpJO15/CxI/IumGkPDJBLDAAAAA=",

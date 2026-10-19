@@ -134,7 +134,10 @@ export class Stage {
     if (s.scene && !s.compiled) {
       const prev = r.getRenderTarget();
       r.setRenderTarget(this.rtA);                // compile for the target the scene draws into
-      const p = r.compileAsync ? r.compileAsync(s.scene, s.camera) : Promise.resolve(r.compile(s.scene, s.camera));
+      // compileAsync where the driver compiles in parallel (KHR_parallel_shader_compile); otherwise a plain compile,
+      // still here at idle rather than inside the first frame that draws the scene
+      const par = r.compileAsync && r.extensions.has('KHR_parallel_shader_compile');
+      const p = par ? r.compileAsync(s.scene, s.camera) : Promise.resolve(r.compile(s.scene, s.camera));
       r.setRenderTarget(prev);
       await p;
       s.compiled = true;

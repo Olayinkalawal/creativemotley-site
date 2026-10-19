@@ -51,6 +51,7 @@ export const TIER_STILL = 'still';
 export const QUALITY = (() => {
   const q = Q.get('q');
   if (q === 'low' || q === 'medium' || q === 'high') return q;
+  if (STILL) return 'high';   // one texture per pixel: the phone path starts at native resolution (the governor steps down)
   if (SOFTWARE_GL) return 'low';
   return TIER >= 2 ? 'high' : 'medium';
 })();
