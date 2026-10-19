@@ -3,12 +3,13 @@
    - [data-theme] regions (dark | light) drive chrome colour: the innermost region under
      the nav's centre line sets html.nav-light; the one under the rail index sets html.rail-light.
    - a rail piece over a painted scene (a plate or the film, not paper) also gets .is-plate: its type takes an ink
-     halo there, since a painting's light passages sit right under the dimmed names. */
+     halo there, since a painting's light passages sit right under the dimmed names. Over a light painting (a light
+     region that is not an opaque paper panel: X Apply) it gets .is-plate too, and the halo is cream. */
 import { onFrame, view } from './scroll.js';
 import { geo, onLayout } from './layout.js';
 
 const root = document.documentElement;
-let chapters = [], themes = [], paints = [];
+let chapters = [], themes = [], paints = [], opaque = [];
 const listeners = new Set();
 export let active = null;
 export function onChapter(fn) { listeners.add(fn); fn(active); return () => listeners.delete(fn); }
@@ -21,6 +22,11 @@ function collect() {
     return { el, depth, x0: r.left, x1: r.right, wide: r.width >= window.innerWidth * 0.9 };
   }).sort((a, b) => b.depth - a.depth);
   paints = [...document.querySelectorAll('[data-scene^="plate:"]:not([data-scene="plate:umber"]), [data-scene="film"]')];
+  opaque = [...document.querySelectorAll('[data-opaque]')];
+}
+function opaqueAt(y) {
+  for (const el of opaque) { const g = geo(el); if (y >= g.top && y < g.bottom) return true; }
+  return false;
 }
 function paintedAt(y) {
   for (const el of paints) { const g = geo(el); if (y >= g.top && y < g.bottom) return true; }
@@ -62,7 +68,7 @@ export function initChapters() {
     for (const p of probes) {
       const light = themeAt(v.y + p.y, p.x) === 'light';
       if (light !== p.light) { p.el.classList.toggle('is-light', light); p.light = light; }
-      const plate = !light && paintedAt(v.y + p.y);
+      const plate = light ? paintedAt(v.y + p.y) && !opaqueAt(v.y + p.y) : paintedAt(v.y + p.y);
       if (plate !== p.plate) { p.el.classList.toggle('is-plate', plate); p.plate = plate; }
     }
   });
