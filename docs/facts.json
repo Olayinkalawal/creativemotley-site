@@ -365,7 +365,7 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-row:nth-of-type(1) .ed-body p",
   "kind": "positioning",
-  "note": "Creators one-liner (two sentences; either works alone)."
+  "note": "Creators one-liner (two sentences; either works alone). | Each sentence shown once: F41 is the Creators opener dek, F42 the Creators feature block."
  },
  {
   "id": "F42",
@@ -374,7 +374,7 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-row:nth-of-type(1) .ed-body p",
   "kind": "positioning",
-  "note": "Second sentence of the Creators line."
+  "note": "Second sentence of the Creators line. | Each sentence shown once: F41 is the Creators opener dek, F42 the Creators feature block."
  },
  {
   "id": "F43",
@@ -428,7 +428,7 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-row:nth-of-type(3) .ed-body p",
   "kind": "positioning",
-  "note": "Brands one-liner. 'Most trusted' is the site's own superlative — use verbatim only, never extend it."
+  "note": "Brands one-liner. 'Most trusted' is the site's own superlative — use verbatim only, never extend it. | Split once: the first sentence is the Brands opener dek, \"One contract.\" the Brands feature block."
  },
  {
   "id": "F49",
@@ -874,7 +874,7 @@
   "url": "https://creativemotley.com/",
   "location": "#results .rx-copy p",
   "kind": "positioning",
-  "note": "Serif line over the TV painting; fades out (p .16–.26) before the counters arrive. Rebuild: split across the Kit → Results hand-over (docs/teardown-v2.md): 'The work went out.' heads the Kit's last teardown (the phone, #td-phone), and 'The world watched.' is the Results opener dek over the TV painting."
+  "note": "Serif line over the TV painting; fades out (p .16–.26) before the counters arrive. Rebuild: split across the Kit → Results hand-over (docs/teardown-v2.md): 'The work went out.' heads the Kit's last teardown (the phone, #td-phone), and 'The world watched.' is the Results opener dek over the TV painting. | Shown whole as the Results opener dek (Chapter VIII)."
  },
  {
   "id": "F99",
