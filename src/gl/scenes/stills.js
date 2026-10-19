@@ -42,6 +42,8 @@ function portraitPick(chapter, needW) {
 /* what a section shows: { kind: 'img', srcs, focus, zoom } | { kind: 'color', color } | { kind: 'umber' } */
 function sourceFor(el, needW) {
   if (!el) return { kind: 'color', color: COLORS.dark };
+  // a region that names the umber room for itself (IX Directors' film run) keeps it, as on desktop
+  if (el.dataset.scene === 'plate:umber') return { kind: 'umber' };
   const chapter = el.closest('[data-chapter]')?.id || (el.closest('.hero') ? 'hero' : el.id);
   const srcs = chapter && portraitPick(chapter, needW);
   if (srcs) {

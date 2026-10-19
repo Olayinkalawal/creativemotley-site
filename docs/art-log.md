@@ -169,3 +169,15 @@ a 32 x 18 and a 12 x 26 WebP placeholder as data URIs in each manifest, and `pub
 
 Re-running: `python3 scripts/art.py` downloads the masters from d8j0ntlcm91z4.cloudfront.net into
 `$ART_CACHE` (default `~/.cache/cm-art`) and re-encodes; `--sheet` rebuilds only the sheet.
+
+## Phase 1 integration (no credits spent)
+- Depth maps for the four new paintings, so the desktop plates keep the v2 pointer parallax and depth-weighted push:
+  `public/assets/scenes/{creators,brands,directors,apply}/depth.webp` (MiDaS small, local ONNX:
+  `python3 -I scripts/depth.py /home/user/models/midas_small.onnx public/assets/scenes/<ch>/desktop-2048.webp
+  <out>.png 3`, then 1920 x 1080 greyscale WebP q85, 10-11 KB each). Not in `scripts/art.py`; re-run by hand if a
+  painting changes.
+- The v2 depth maps re-encoded as greyscale WebP q85 next to the PNGs (`public/assets/plates/*-depth.webp`,
+  `public/assets/teardown/*/depth.webp`): 200-310 KB to 10-15 KB, mean error 0.4 of 255 (max 14). The engine reads
+  the WebP; the PNGs are unused.
+- Poster cards: 640 and 960 px WebP q80 variants (`public/assets/posters/*-{640,960}.webp`) for the phone carousel's
+  srcset; WebGL and the modal keep the 1200 px files.
