@@ -18,7 +18,8 @@
   <link rel="preload" href="/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/imperial-script-caps.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/assets/plates/hero.webp" as="image" fetchpriority="high">
+  <link rel="preload" href="/assets/plates/hero.webp" as="image" fetchpriority="high" media="not all and (orientation: portrait) and (max-width: 1023px)">
+  <link rel="preload" as="image" type="image/avif" imagesrcset="/assets/scenes/hero/phone-828.avif 828w, /assets/scenes/hero/phone-1170.avif 1170w" imagesizes="100vw" fetchpriority="high" media="(orientation: portrait) and (max-width: 1023px)">
   <script>document.documentElement.classList.add('js');</script>
   <link rel="stylesheet" href="/src/styles/index.css">
 </head>
@@ -66,9 +67,19 @@
 
   <!-- the persistent stage: still plates (first paint + no-WebGL fallback) under one WebGL canvas -->
   <div class="plates" aria-hidden="true">
-    <div class="plate is-on" data-plate="hero"><img src="/assets/plates/hero.webp" alt="" fetchpriority="high" width="1920" height="1080"></div>
-    <div class="plate" data-plate="storytellers" data-bg="/assets/plates/storytellers.webp"></div>
-    <div class="plate" data-plate="results" data-bg="/assets/plates/results.webp"></div>
+    <!-- portrait screens (the phone still path) paint the hero's portrait recomposition, the same file the stage then
+         draws (public/assets/scenes/hero), so phones never fetch the landscape plate and nothing swaps at boot -->
+    <div class="plate is-on" data-plate="hero"><picture>
+      <source media="(orientation: portrait) and (max-width: 1023px)" type="image/avif" srcset="/assets/scenes/hero/phone-828.avif 828w, /assets/scenes/hero/phone-1170.avif 1170w" sizes="100vw">
+      <source media="(orientation: portrait) and (max-width: 1023px)" type="image/webp" srcset="/assets/scenes/hero/phone-828.webp 828w, /assets/scenes/hero/phone-1170.webp 1170w" sizes="100vw">
+      <img src="/assets/plates/hero.webp" alt="" fetchpriority="high" width="1920" height="1080"></picture></div>
+    <!-- the rest load when first shown (src/main.js): data-bg, or data-bg-phone on portrait screens -->
+    <div class="plate" data-plate="storytellers" data-bg="/assets/plates/storytellers.webp" data-bg-phone="/assets/scenes/storytellers/phone-828.webp"></div>
+    <div class="plate" data-plate="creators" data-bg="/assets/scenes/creators/desktop-2048.webp" data-bg-phone="/assets/scenes/creators/phone-828.webp"></div>
+    <div class="plate" data-plate="brands" data-bg="/assets/scenes/brands/desktop-2048.webp" data-bg-phone="/assets/scenes/brands/phone-828.webp"></div>
+    <div class="plate" data-plate="results" data-bg="/assets/plates/results.webp" data-bg-phone="/assets/scenes/results/phone-828.webp"></div>
+    <div class="plate" data-plate="directors" data-bg="/assets/scenes/directors/desktop-2048.webp" data-bg-phone="/assets/scenes/directors/phone-828.webp"></div>
+    <div class="plate" data-plate="apply" data-bg="/assets/scenes/apply/desktop-2048.webp" data-bg-phone="/assets/scenes/apply/phone-828.webp"></div>
     <div class="plate" data-plate="paper" style="background:var(--paper)"></div>
     <div class="plate" data-plate="ink" style="background:#000"></div>
     <div class="plate" data-plate="umber" style="background:radial-gradient(120% 90% at 60% 40%, #3a2814, #0b0805 70%)"></div>

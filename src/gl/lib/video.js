@@ -39,7 +39,10 @@ export class VideoScrub {
       v.addEventListener('loadeddata', () => {
         this.size = [v.videoWidth, v.videoHeight];
         this.ready = true;
-        this.seekTo(this.target);
+        // at rest on frame 0 the element already holds it (currentTime 0 is inside frame 0): show it as is. A seek
+        // here, even to frame 0, makes Chrome buffer ~5 s of film (≈1.2 MB) on the first load instead of ~1 s.
+        if (this.target === 0 && v.currentTime < 1 / this.fps) { this.shown = 0; this.tex.needsUpdate = true; this.onShow?.(); }
+        else this.seekTo(this.target);
         resolve();
       }, { once: true });
       // a source that fails (missing, or a decoder that refuses it): the next playable one, then give up

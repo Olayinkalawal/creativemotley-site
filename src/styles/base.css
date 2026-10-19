@@ -48,7 +48,10 @@ html.gl-ready #stage { opacity: 1; }
   background: var(--ink) center / cover no-repeat;
 }
 .plates .plate.is-on { opacity: 1; }
+.plates .plate picture { display: contents; }
 .plates .plate img { width: 100%; height: 100%; object-fit: cover; }
+/* the hero's portrait painting, framed as the phone stage frames it (its manifest's phoneFocus .56 on a ~.46 screen) */
+@media (orientation: portrait) and (max-width: 1023px) { .plates .plate[data-plate='hero'] img { object-position: 83% 50%; } }
 html.gl-ready .plates { visibility: hidden; }
 
 main { position: relative; z-index: 2; overflow-x: clip; }
@@ -140,6 +143,13 @@ main { position: relative; z-index: 2; overflow-x: clip; }
 @media (max-width: 1023px) {   /* phones: the portrait stills are brighter behind the type, so the halo is deeper */
   .scrim::before { background: radial-gradient(closest-side, rgba(11, 8, 5, 0.62), rgba(11, 8, 5, 0.36) 62%, rgba(11, 8, 5, 0)); }
   .scrim { text-shadow: 0 1px 2px rgba(11, 8, 5, 0.4), 0 0 28px rgba(11, 8, 5, 0.5); }
+}
+/* an opener over a light painting (its manifest's titleInk is "dark": X Apply): ink type, a pale halo */
+.opener--light { color: var(--ink); }
+.opener--light .scrim::before { background: radial-gradient(closest-side, rgba(244, 237, 223, 0.5), rgba(244, 237, 223, 0.24) 62%, rgba(244, 237, 223, 0)); }
+@media (max-width: 1023px) {
+  .opener--light .scrim::before { background: radial-gradient(closest-side, rgba(244, 237, 223, 0.6), rgba(244, 237, 223, 0.32) 62%, rgba(244, 237, 223, 0)); }
+  .opener--light .scrim { text-shadow: 0 1px 2px rgba(244, 237, 223, 0.4), 0 0 28px rgba(244, 237, 223, 0.5); }
 }
 
 /* paper panel: opaque, arrives with a torn top edge */

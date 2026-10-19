@@ -20,6 +20,16 @@ export function texture(img, { linear = true, mips = false, repeat = false } = {
   return t;
 }
 export async function loadTexture(url, opts) { return texture(await bitmap(url, opts), opts); }
+/* AVIF support, decided once by decoding a 1x1 AVIF (every texture list tries AVIF first only where it decodes) */
+let avif = null;
+export function avifOK() {
+  return (avif ||= new Promise((resolve) => {
+    const i = new Image();
+    i.onload = () => resolve(i.width > 0);
+    i.onerror = () => resolve(false);
+    i.src = 'data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADrbWV0YQAAAAAAAAAhaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAAAAAAAOcGl0bQAAAAAAAQAAAB5pbG9jAAAAAEQAAAEAAQAAAAEAAAETAAAAIQAAAChpaW5mAAAAAAABAAAAGmluZmUCAAAAAAEAAGF2MDFDb2xvcgAAAABqaXBycAAAAEtpcGNvAAAAFGlzcGUAAAAAAAAAAQAAAAEAAAAQcGl4aQAAAAADCAgIAAAADGF2MUOBAAwAAAAAE2NvbHJuY2x4AAEADQAGgAAAABdpcG1hAAAAAAAAAAEAAQQBAoMEAAAAKW1kYXQSAAoIGAAGiAhoNCAyExlHh4Yhh5555oAAAJBAyRxhQr4=';
+  }));
+}
 /* a video element as a texture (muted, inline, looped); play/pause is the caller's job */
 export function videoTexture(sources) {
   const v = document.createElement('video');

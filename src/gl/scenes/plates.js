@@ -3,13 +3,17 @@
    - keys: the chapter's sheet in src/gl/keys/plates.json (gl/timeline.js: per-channel keyframes in viewports of the
      section's pass, cubic-bezier eases); a chapter without a sheet falls back to the section's
      data-cam-from / data-cam-to = "zoom focusX focusY push", interpolated (smoothstep) over its pass progress (pe).
-   - plate:storytellers  (Creators, Brands)
-   - plate:hero          (Apply: the hands, a bookend to the hero)
+   - plate:<chapter> for every chapter painting in public/assets/scenes/<chapter>/manifest.json (the art track's
+     encodes, scripts/art.py): AVIF where it decodes, else WebP, at the smallest width that covers the canvas at the
+     pixel budget (2048 on a 1x desktop, 2880 at 2x). Depth: the plate's own map (public/assets/scenes/<chapter>/
+     depth.webp, MiDaS via scripts/depth.py), or the old plate's map where the painting is the same composition
+     (hero, storytellers: 4K upscales of the 1920 px plates).
+     In use: plate:creators (II), plate:brands (III), plate:directors (IX, its opener), plate:apply (X).
    - plate:results       (Results: the watchers; the TV plays — a video texture over the plate)
    (Method is the camera teardown now, td:camera in teardowns.js: no painted plate.) */
 import { Scene, OrthographicCamera } from 'three';
 import { plateMaterial, fullscreenQuad } from '../lib/plate.js';
-import { loadTexture, videoTexture } from '../lib/loaders.js';
+import { loadTexture, videoTexture, avifOK } from '../lib/loaders.js';
 import { sheet, passT, cameraAt } from '../timeline.js';
 import KEYS from '../keys/plates.json';
 import { smooth } from '../../core/scroll.js';
@@ -17,6 +21,32 @@ import { smooth } from '../../core/scroll.js';
 const parseCam = (s, d) => (s ? s.trim().split(/\s+/).map(Number) : d);
 const SHEETS = Object.fromEntries(Object.entries(KEYS).filter(([k]) => !k.startsWith('//')).map(([k, v]) => [k, sheet(v)]));
 const chapterOf = (el) => el.closest('[data-chapter]')?.id || el.id;
+
+/* the art track's desktop encode lists, bundled at build time (only the "desktop" field of each manifest) */
+const DESK = import.meta.glob('/public/assets/scenes/*/manifest.json', { eager: true, import: 'desktop' });
+const DEPTH = {
+  hero: '/assets/plates/hero-depth.webp', storytellers: '/assets/plates/storytellers-depth.webp',
+  creators: '/assets/scenes/creators/depth.webp', brands: '/assets/scenes/brands/depth.webp',
+  directors: '/assets/scenes/directors/depth.webp', apply: '/assets/scenes/apply/depth.webp',
+};
+/* the sources to try, best first: the smallest encode that covers the canvas (cover fit, plus headroom for the
+   camera's zoom), AVIF before WebP */
+async function paintingFor(chapter, ctx) {
+  const d = DESK[`/public/assets/scenes/${chapter}/manifest.json`];
+  const best = (l) => {
+    l = [...(l || [])].filter((v) => v && v.src && v.w && v.h).sort((a, b) => a.w - b.w);
+    if (!l.length) return null;
+    const need = Math.max(ctx.w, ctx.h * (l[0].w / l[0].h)) * 1.15 * 0.9;
+    return l.find((v) => v.w >= need) || l[l.length - 1];
+  };
+  const a = (await avifOK()) ? best(d.avif) : null;
+  return [a, best(d.webp)].filter(Boolean).map((v) => v.src);
+}
+async function loadFirst(srcs) {
+  for (let i = 0; i < srcs.length; i++) {
+    try { return await loadTexture(srcs[i]); } catch (e) { if (i === srcs.length - 1) throw e; }
+  }
+}
 
 export function plateScene({ id, image, depth, video = null, strength = 0.022, post }) {
   const scene = new Scene();
@@ -28,8 +58,9 @@ export function plateScene({ id, image, depth, video = null, strength = 0.022, p
   return {
     id, scene, camera, post,
     async load(ctx) {
-      [map, dep] = await Promise.all([loadTexture(image), loadTexture(depth)]);
-      mat.uniforms.map.value = map; mat.uniforms.depth.value = dep; mat.uniforms.hasDepth.value = 1;
+      const srcs = typeof image === 'function' ? await image(ctx) : [image];
+      [map, dep] = await Promise.all([loadFirst(srcs), depth ? loadTexture(depth) : null]);
+      mat.uniforms.map.value = map; mat.uniforms.depth.value = dep; mat.uniforms.hasDepth.value = dep ? 1 : 0;
       mat.uniforms.imgSize.value.set(map.image.width, map.image.height);
       if (video && !ctx.reduced) {
         vid = videoTexture(video(ctx));
@@ -70,8 +101,12 @@ export function plateScene({ id, image, depth, video = null, strength = 0.022, p
 }
 
 export default function register(stage) {
-  stage.add(plateScene({ id: 'plate:storytellers', image: '/assets/plates/storytellers.webp', depth: '/assets/plates/storytellers-depth.webp' }));
-  stage.add(plateScene({ id: 'plate:hero', image: '/assets/plates/hero.webp', depth: '/assets/plates/hero-depth.webp' }));
+  // one scene per chapter painting (Results keeps its own entry below: the TV video over the 1920 px plate)
+  for (const path of Object.keys(DESK)) {
+    const chapter = path.split('/').slice(-2)[0];
+    if (chapter === 'results' || !DESK[path]) continue;
+    stage.add(plateScene({ id: `plate:${chapter}`, image: (ctx) => paintingFor(chapter, ctx), depth: DEPTH[chapter] || null }));
+  }
   stage.add(plateScene({
     id: 'plate:results', image: '/assets/plates/results.webp', depth: '/assets/plates/results-depth.webp',
     // the full-screen backdrop video (scripts/encode-results.sh: AV1 where it plays, H.264 otherwise; ~1/5 of the old

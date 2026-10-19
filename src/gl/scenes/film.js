@@ -9,7 +9,10 @@
    Scroll position → frame comes from [data-film="hero"][data-frames="a-b"] ranges in the markup:
    each element maps its pin progress linearly onto frames a..b (holds between ranges).
    At rest on frame 0 and at the end (frame 569, which is the Storytellers plate) the frame becomes a
-   depth diorama with pointer parallax and a slow push. Desktop only: phones take the still path (gl/scenes/stills.js). */
+   depth diorama with pointer parallax and a slow push. Desktop only: phones take the still path (gl/scenes/stills.js).
+   First load: frame 0 is the hero plate (public/assets/plates/hero.webp, already fetched as the first paint), so at
+   rest the scene draws that and opens the film only at the first sign of scrolling (wheel, touch, a key, a click, or
+   a playhead past frame 0). Opening it at load cost 1–1.7 MB of buffered film before any scroll. */
 import { Scene, OrthographicCamera } from 'three';
 import { FrameStream } from '../lib/frameStream.js';
 import { VideoScrub } from '../lib/video.js';
@@ -35,7 +38,7 @@ export default function register(stage) {
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const mat = plateMaterial();
   scene.add(fullscreenQuad(mat));
-  let src = null, depthRest = null, depthEnd = null, endLoading = null, sparks = null, ranges = [];
+  let src = null, plate = null, opening = null, gen = 0, depthRest = null, depthEnd = null, endLoading = null, sparks = null, ranges = [];
   let push = 0;
   const redraw = () => stage.invalidate();
 
@@ -59,37 +62,56 @@ export default function register(stage) {
     return s;
   }
 
+  const INTENT = ['wheel', 'touchstart', 'keydown', 'pointerdown'];
+  const unlisten = () => INTENT.forEach((e) => window.removeEventListener(e, go));
+  // open the film once (per load): the plate stands in until its first frame is ready
+  function go() {
+    unlisten();
+    if (opening || !plate) return;
+    const g = gen;
+    opening = open(stage.ctx).then((s) => {
+      if (g !== gen) { s?.dispose(); return; }
+      src = s; stage.film = s; redraw();
+    }).catch((e) => console.warn('[film] open failed', e));
+  }
+
   stage.add({
     id: 'film', scene, camera,
     async load(ctx) {
       ranges = filmRanges('hero');
       // the end plate's depth map is needed only once the film nears its end (loaded then, in update)
-      [src, depthRest] = await Promise.all([open(ctx), loadTexture('/assets/plates/hero-depth.webp')]);
+      [plate, depthRest] = await Promise.all([loadTexture('/assets/plates/hero.webp'), loadTexture('/assets/plates/hero-depth.webp')]);
+      if (ctx.scrollY > 0) go();
+      else INTENT.forEach((e) => window.addEventListener(e, go, { passive: true }));
       if (ctx.tier >= 1 && !ctx.reduced && !sparks) {
         sparks = createSparks(ctx.tier >= 2 ? 2600 : 900);
         sparks.u.px.value = ctx.dpr * 1.6;
         sparks.u.aspect.value = ctx.w / ctx.h;
         scene.add(sparks.points);
       }
-      stage.film = src;   // QA: seek stats (window.__stage.film.stats())
     },
     dispose() {
-      src?.dispose(); src = null;
+      gen++; unlisten(); opening = null;
+      src?.dispose(); src = null; stage.film = null;   // stage.film: QA seek stats (window.__stage.film.stats())
+      plate?.dispose(); plate = null;
       depthRest?.dispose(); depthEnd?.dispose(); depthRest = depthEnd = null; endLoading = null;
       mat.uniforms.map.value = null; mat.uniforms.depth.value = null;
     },
     resize(w, h, dpr) { mat.uniforms.res.value.set(w, h); if (sparks) { sparks.u.aspect.value = w / h; sparks.u.px.value = dpr * 1.6; } },
     update(ctx, s) {
-      if (!src) return;
+      if (!src && !plate) return;
       if (!ranges.length || !document.body.contains(ranges[0].el)) ranges = filmRanges('hero');
       const f = ctx.reduced ? 0 : frameAt(ranges, ctx.scrollY, ctx.vh);
-      src.seek(f);
+      if (!src && f > 0) go();
+      src?.seek(f);
       if (f > 300 && !depthEnd && !endLoading) {
         endLoading = loadTexture('/assets/plates/storytellers-depth.webp').then((t) => { if (src) { depthEnd = t; redraw(); } else t.dispose(); }).catch(() => {});
       }
       const u = mat.uniforms;
-      u.map.value = src.texture;
-      u.imgSize.value.set(src.size[0], src.size[1]);
+      // the plate (= frame 0) until the film's first frame is in
+      const live = src && src.ready !== false && (src.shown === undefined || src.shown >= 0);
+      if (live) { u.map.value = src.texture; u.imgSize.value.set(src.size[0], src.size[1]); }
+      else { u.map.value = plate; u.imgSize.value.set(plate.image.width, plate.image.height); }
       // depth parallax only where the frame is the plate the depth map was computed from
       const atRest = 1 - smooth(seg(f, 0, 6));
       const atEnd = smooth(seg(f, COUNT - 7, COUNT - 1));
