@@ -80,7 +80,7 @@ function splitLines(el) {
    (alpha: the rail's edge, the top bar, a feathered hole for the copy, the device dimmed to 45 %) and applied as a
    CSS mask-image. The blurred SVG mask that was redrawn with every scroll step (6 fps in Method) is gone.
    Portrait screens keep only the great circle and the arch (with the ticker): on a phone the rest is a cage. */
-function lineLayers(W, H, D, rail, tall) {
+function lineLayers(W, H, D, rail, tall, id) {
   const phi = 1.618034;
   const cx = (D.x0 + D.x1) / 2, cy = (D.y0 + D.y1) / 2, w = D.x1 - D.x0, h = D.y1 - D.y0;
   const R = Math.hypot(w, h) * (tall ? 0.5 : 0.43);
@@ -105,13 +105,18 @@ function lineLayers(W, H, D, rail, tall) {
     add(2, 'line', `x1="${r(cx - gw)}" y1="${r(cy + gh)}" x2="${r(cx + gw)}" y2="${r(cy - gh)}"`);
     add(2, 'line', `x1="${r(cx - gw)}" y1="${r(cy - gh)}" x2="${r(cx + gw)}" y2="${r(cy + gh)}"`);
   }
-  return L.filter((l) => l.length).map((l) => `<svg class="td__lines" viewBox="0 0 ${r(W)} ${r(H)}" width="${r(W)}" height="${r(H)}">${l.join('')}</svg>`);
+  // each layer masks its lines with the shared mask image (an SVG <mask>: rasterised with the layer once, then only
+  // the layer's opacity changes: a CSS mask-image would cost a render surface per layer on every composited frame)
+  return L.filter((l) => l.length).map((l, i) => `<svg class="td__lines" viewBox="0 0 ${r(W)} ${r(H)}" width="${r(W)}" height="${r(H)}">`
+    + `<defs><mask id="${id}${i}" maskUnits="userSpaceOnUse" x="0" y="0" width="${r(W)}" height="${r(H)}"><image width="${r(W)}" height="${r(H)}" preserveAspectRatio="none"/></mask></defs>`
+    + `<g mask="url(#${id}${i})">${l.join('')}</g></svg>`);
 }
 /* each layer's reveal window, in the run's line clock k (0 → 1 from 0.8 viewports before the pin to p 0.24) */
 const LAYER_K = [[0, 0.42], [0.22, 0.74], [0.4, 0.9]];
 
-/* the lines' mask, as alpha (opaque = lines show), painted once on a half-resolution canvas: shapes are blurred with
-   the shadow trick (shadowBlur = 2σ, in device px), which every browser's canvas supports */
+/* the lines' mask (white = lines show), painted once on a half-resolution canvas: built in alpha, shapes blurred with
+   the shadow trick (shadowBlur = 2σ, in device px, which every browser's canvas supports), then flattened to
+   white-on-black for an SVG luminance mask */
 function lineMask(W, H, D, M, rail, tall) {
   const s = 0.5, c = document.createElement('canvas');
   c.width = Math.max(1, Math.ceil(W * s)); c.height = Math.max(1, Math.ceil(H * s));
@@ -137,6 +142,8 @@ function lineMask(W, H, D, M, rail, tall) {
   const w = D.x1 - D.x0, h = D.y1 - D.y0;
   if (!tall) soft(D.x0 + w * 0.06, D.y0 + h * 0.06, w * 0.88, h * 0.88, Math.min(w, h) * 0.2, Math.max(18, Math.min(w, h) * 0.1), 0.55);
   if (M) soft(M.x - 28, M.y - 22, M.w + 56, M.h + 44, 24, 22, 1);
+  g.globalCompositeOperation = 'source-in'; g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+  g.globalCompositeOperation = 'destination-over'; g.fillStyle = '#000'; g.fillRect(0, 0, c.width, c.height);
   return c;
 }
 
@@ -222,7 +229,7 @@ function block(el, idx) {
     // fx: lines (static layers under a painted mask), ticker, markers
     fx.textContent = '';
     const railR = desk && rail ? rail.offsetWidth : 0;   // the lines are gone under the rail
-    fx.insertAdjacentHTML('beforeend', lineLayers(heroR.w, heroR.h, D, railR, tall).join(''));
+    fx.insertAdjacentHTML('beforeend', lineLayers(heroR.w, heroR.h, D, railR, tall, `tdm${idx}-`).join(''));
     lineEls = [...fx.querySelectorAll('.td__lines')];
     lineEls.forEach((ln) => put(ln, 'opacity', '0'));
     const mask = lineMask(heroR.w, heroR.h, D, M, railR, tall), ver = ++maskVer;
@@ -230,9 +237,9 @@ function block(el, idx) {
       if (!b || ver !== maskVer) return;
       if (maskURL) URL.revokeObjectURL(maskURL);
       maskURL = URL.createObjectURL(b);
-      for (const ln of lineEls) { ln.style.webkitMaskImage = ln.style.maskImage = `url(${maskURL})`; }
+      for (const ln of lineEls) ln.querySelector('mask image')?.setAttribute('href', maskURL);
       masked = true;
-    });
+    }, 'image/png');
     masked = false;
     tick = document.createElement('div');
     tick.className = 'td__tick';

@@ -93,13 +93,11 @@ html.js .td[data-td-ready]:not(.td-static) .td__spec {
 html.js .td[data-td-ready]:not(.td-static) .td__spec:is(.is-hot, .is-hl) b { color: var(--gold); }
 html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hl { opacity: var(--in, 1); }
 
-/* construction lines: three static layers, each revealed by its opacity (JS), under one mask image painted once per
-   resize (JS: the rail's edge, the top bar, the copy's hole, the device dimmed). Nothing in them is redrawn per frame. */
-.td__lines {
-  position: absolute; left: 0; top: 0; overflow: visible; opacity: 0; will-change: opacity; pointer-events: none;
-  -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-}
-.td__lines > * { fill: none; stroke: var(--td-gold); stroke-width: 1; }
+/* construction lines: three static layers, each revealed by its opacity (JS), each masked inside its SVG by one mask
+   image painted once per resize (JS: the rail's edge, the top bar, the copy's hole, the device dimmed). Nothing in
+   them is redrawn per frame. */
+.td__lines { position: absolute; left: 0; top: 0; overflow: visible; opacity: 0; will-change: opacity; pointer-events: none; }
+.td__lines > g > * { fill: none; stroke: var(--td-gold); stroke-width: 1; }
 .td__lines .is-strong { stroke: var(--td-gold-hi); }
 
 /* degree ticker: a turntable scale tilted into an ellipse under the device, turning with the orbit; front arc only */

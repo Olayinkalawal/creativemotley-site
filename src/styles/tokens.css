@@ -19,6 +19,15 @@
   font-style: italic;
   font-display: swap;
 }
+/* the swash drop cap: Imperial Script (OFL, public/fonts/ImperialScript-OFL.txt), capitals only (12 KB) */
+@font-face {
+  font-family: 'Imperial Script';
+  src: url('/fonts/imperial-script-caps.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0041-005A;
+}
 
 :root {
   --ink: #0b0805;
@@ -35,19 +44,54 @@
   --paper-ink: #14100a;
   --paper-mute: #6e675a;   /* grey descriptions on paper: 4.9:1 on --paper */
   --cream-mute: rgba(244, 237, 223, 0.62);
+  --hair: rgba(244, 237, 223, 0.14);   /* 1px rules on ink (top bar, menu rows) */
 
   --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
   --serif: 'Instrument Serif', 'Times New Roman', serif;
+  --script: 'Imperial Script', 'Instrument Serif', serif;   /* drop caps only; falls back to the serif italic */
 
-  /* type scale */
-  --t-giant: clamp(4.25rem, 11.2vw, 12rem);     /* chapter titles */
-  --t-display: clamp(2.6rem, 5.2vw, 5.4rem);
-  --t-dek: clamp(1.6rem, 2.75vw, 2.75rem);       /* serif decks over scenes */
-  --t-head: clamp(1.9rem, 3.1vw, 3.1rem);        /* editorial heads on paper */
-  --t-lead: clamp(1.15rem, 1.45vw, 1.45rem);     /* serif body on paper */
-  --t-body: 1.0625rem;
-  --t-small: 0.9375rem;
-  --t-label: 0.8125rem;
+  /* ── type scale (v3): the only sizes on the page ─────────────────────────────────────────────────────
+     Eight roles, one family and weight each. Desktop values at 1440 px, phone values at 390 px.
+     role      face                size (1440 / 390)   line-height  tracking   used for
+     title     Archivo 700         190 / 71            0.86         -0.045em   chapter titles (.giant)
+     numeral   Archivo 700         = title             0.84         -0.05em    the Results counters (never above the title)
+     display   Instrument Serif    121 / 56            1            -0.02em    serif display lines: names band, contact mail, "One machine"
+                                                                               (the contact marquee runs at the title size)
+     dek       Instrument Serif    44 / 28             0.96         -0.04em    decks over scenes, serif heads on paper (.head)
+     cap       Imperial Script     2.6 x dek           0            0          drop caps (.dc)
+     head      Archivo 700         28                  1            -0.035em   sans heads: teardown heads, list names, credits, the mark
+     lead      Instrument Serif    28 / 24             1.06         -0.02em    serif body on paper, captions
+     label     Archivo 600         18                  1.15         -0.015em   feature labels, index names, card titles, part names
+     body      Archivo 500         16                  1.45         -0.005em   descriptions, nav, UI text
+     small     Archivo 600         12                  1.35         0.01em     boxed links, pills, legal, counters (caps: 0.08em)
+     Serif companions at a sans size (index numerals, the mark's "New") take that size, so they add no new sizes.
+     Use the --f-* shorthands (font: var(--f-label); letter-spacing: var(--ls-label)) and nothing else. */
+  --t-title: min(calc(11.24vw + 1.76rem), 18.3vw, 12rem);
+  --t-numeral: var(--t-title);
+  --t-display: min(var(--t-title), clamp(3.5rem, calc(6.19vw + 1.99rem), 9.375rem));
+  --t-dek: clamp(1.75rem, calc(1.524vw + 1.38rem), 2.75rem);
+  --t-cap: calc(var(--t-dek) * 2.6);
+  --t-head: 1.75rem;
+  --t-lead: 1.5rem;
+  --t-label: 1.125rem;
+  --t-body: 1rem;
+  --t-small: 0.75rem;
+
+  --lh-title: 0.86; --lh-numeral: 0.84; --lh-display: 1; --lh-dek: 0.96; --lh-head: 1;
+  --lh-lead: 1.06; --lh-label: 1.15; --lh-body: 1.45; --lh-small: 1.35;
+  --ls-title: -0.045em; --ls-numeral: -0.05em; --ls-display: -0.02em; --ls-dek: -0.04em; --ls-head: -0.035em;
+  --ls-lead: -0.02em; --ls-label: -0.015em; --ls-body: -0.005em; --ls-small: 0.01em; --ls-caps: 0.08em;
+  --fw-title: 700; --fw-head: 700; --fw-label: 600; --fw-body: 500; --fw-small: 600;
+
+  --f-title: 700 var(--t-title) / var(--lh-title) var(--sans);
+  --f-numeral: 700 var(--t-numeral) / var(--lh-numeral) var(--sans);
+  --f-display: 400 var(--t-display) / var(--lh-display) var(--serif);
+  --f-dek: 400 var(--t-dek) / var(--lh-dek) var(--serif);
+  --f-head: 700 var(--t-head) / var(--lh-head) var(--sans);
+  --f-lead: 400 var(--t-lead) / var(--lh-lead) var(--serif);
+  --f-label: 600 var(--t-label) / var(--lh-label) var(--sans);
+  --f-body: 500 var(--t-body) / var(--lh-body) var(--sans);
+  --f-small: 600 var(--t-small) / var(--lh-small) var(--sans);
 
   /* layout: the right 4/5 column, as in the Editions grid */
   --gutter: clamp(16px, 2.2vw, 32px);
@@ -57,4 +101,7 @@
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
+}
+@media (min-width: 640px) {
+  :root { --t-lead: 1.75rem; }
 }

@@ -7,10 +7,8 @@ body {
   margin: 0;
   background: var(--ink);
   color: var(--cream);
-  font-family: var(--sans);
-  font-size: var(--t-body);
-  line-height: 1.45;
-  font-weight: 450;
+  font: var(--f-body);
+  letter-spacing: var(--ls-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -28,7 +26,7 @@ ul, ol { list-style: none; }
 .skip {
   position: fixed; left: 12px; top: 10px; z-index: 1000;
   padding: 10px 14px; background: var(--cream); color: var(--ink);
-  font-weight: 600; font-size: var(--t-small); border-radius: 4px;
+  font: var(--f-label); letter-spacing: var(--ls-label); border-radius: 4px;
   transform: translateY(-160%); transition: transform 0.2s var(--ease-out);
 }
 .skip:focus { transform: none; }
@@ -55,31 +53,20 @@ html.gl-ready .plates { visibility: hidden; }
 
 main { position: relative; z-index: 2; overflow-x: clip; }
 
-/* ── type ────────────────────────────────────────────────────────────── */
-.kicker {
-  font-family: var(--sans); font-weight: 650; font-size: var(--t-label);
-  text-transform: uppercase; letter-spacing: 0.14em; line-height: 1.2;
-}
-.giant {
-  font-family: var(--sans); font-weight: 600; font-size: var(--t-giant);
-  letter-spacing: -0.052em; line-height: 0.86; margin-left: -0.05em;
+/* ── type: the role classes of the scale in tokens.css (no other sizes, weights or trackings) ──── */
+.giant {   /* chapter titles: title */
+  font: var(--f-title); letter-spacing: var(--ls-title); margin-left: -0.05em;
   text-wrap: balance;
 }
-.display {
-  font-family: var(--sans); font-weight: 600; font-size: var(--t-display);
-  letter-spacing: -0.045em; line-height: 0.92;
-}
-.dek {
-  font-family: var(--serif); font-weight: 400; font-size: var(--t-dek);
-  line-height: 1.04; letter-spacing: -0.012em; text-wrap: balance;
-}
-.head {
-  font-family: var(--serif); font-weight: 400; font-size: var(--t-head);
-  line-height: 1.04; letter-spacing: -0.015em; text-wrap: balance;
-}
-.lead { font-family: var(--serif); font-size: var(--t-lead); line-height: 1.16; letter-spacing: -0.005em; }
-.label { font-family: var(--sans); font-weight: 650; font-size: var(--t-small); letter-spacing: -0.005em; line-height: 1.25; }
-.body { font-size: var(--t-body); line-height: 1.45; max-width: 34em; }
+.display { font: var(--f-display); letter-spacing: var(--ls-display); }   /* serif display lines */
+.dek { font: var(--f-dek); letter-spacing: var(--ls-dek); text-wrap: balance; }
+.head { font: var(--f-dek); letter-spacing: var(--ls-dek); text-wrap: balance; }   /* serif head on paper: the dek's size, as in Editions */
+.t-head { font: var(--f-head); letter-spacing: var(--ls-head); text-wrap: balance; }   /* sans head */
+.lead { font: var(--f-lead); letter-spacing: var(--ls-lead); }
+.label { font: var(--f-label); letter-spacing: var(--ls-label); }
+.body { font: var(--f-body); letter-spacing: var(--ls-body); max-width: 34em; }
+.small { font: var(--f-small); letter-spacing: var(--ls-small); }
+.numeral { font: var(--f-numeral); letter-spacing: var(--ls-numeral); font-variant-numeric: lining-nums tabular-nums; }
 /* theme colours as inherited custom properties, so the innermost [data-theme] region wins
    (paper inside a dark chapter, a dark card on paper) without ancestry selectors */
 :root, [data-theme='light'] {
@@ -96,31 +83,31 @@ main { position: relative; z-index: 2; overflow-x: clip; }
 }
 .mute { color: var(--th-mute); }
 
-/* drop cap: an oversized italic serif initial that hangs across two lines (Editions swash cap) */
+/* drop cap: a swash initial (Imperial Script, the cap role: 2.6 x the dek) that hangs into the margin and rises a
+   line above the text; it sits on the baseline with a zero line-height, so the line box never grows. Without the
+   script font it falls back to the serif italic, scaled to the script's cap height so the line does not jump. */
 .dc {
-  font-family: var(--serif); font-style: italic; font-weight: 400;
-  display: inline; font-size: 2.15em; line-height: 0.5;
-  vertical-align: -0.2em; margin-right: -0.04em; margin-left: -0.06em;
-  letter-spacing: 0;
+  font-family: var(--script); font-style: italic; font-weight: 400; font-synthesis: none;
+  font-size: var(--t-cap); font-size-adjust: cap-height 0.62;
+  line-height: 0; letter-spacing: 0; vertical-align: baseline;
+  margin-left: -0.1em; margin-right: -0.04em;
 }
 
 /* boxed link ("Read help doc ↗" pattern) */
 .boxlink {
   display: inline-flex; align-items: center; gap: 0.45em;
-  font-family: var(--sans); font-weight: 650; font-size: var(--t-label);
-  text-decoration: none; padding: 0.42em 0.6em 0.4em; border-radius: 3px;
+  font: var(--f-small); letter-spacing: var(--ls-small);
+  text-decoration: none; padding: 0.5em 0.7em 0.48em; border-radius: 3px;
   background: var(--th-box-bg); color: var(--th-box-fg);
   box-shadow: inset 0 0 0 1px var(--th-box-ring);
   transition: background 0.2s, box-shadow 0.2s, transform 0.2s var(--ease-out);
 }
 .boxlink:hover { background: var(--th-box-bg-h); box-shadow: inset 0 0 0 1px var(--th-box-ring-h); }
-.boxlink .ar { font-size: 0.9em; }
 
 /* brand pill */
 .pill {
   display: inline-flex; align-items: center; justify-content: center;
-  font-family: var(--sans); font-weight: 600; font-size: 0.75rem;
-  letter-spacing: 0.07em; text-transform: uppercase; text-decoration: none; white-space: nowrap;
+  font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; text-decoration: none; white-space: nowrap;
   padding: 0.78em 1.25em 0.74em; border-radius: 100px;
   box-shadow: inset 0 0 0 1px currentColor;
   transition: background 0.25s, color 0.25s, box-shadow 0.25s;
@@ -141,7 +128,6 @@ main { position: relative; z-index: 2; overflow-x: clip; }
   padding-block: calc(var(--nav-h) + 8vh) 12vh;
   color: var(--cream);
 }
-.opener .kicker { margin-bottom: 1.4rem; opacity: 0.86; }
 .opener .giant { margin-bottom: clamp(1.5rem, 4vh, 3rem); }
 .opener .dek { max-width: 17em; }
 /* soft scrim behind opener text so cream type holds on bright paintings */
