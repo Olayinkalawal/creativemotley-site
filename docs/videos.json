@@ -1,0 +1,291 @@
+{
+  "note": "Track C research (plan §5 Showcase 'watch the work', §9). One or two public YouTube videos per showcased creator, for the XXL video cards (thumbnail first, player in a modal only on click). Researched 2026-10-19. Showcase rule (F64 note): the site attaches no stats, results or client wording to any creator; 'why' is for the builder and the client, never for the page.",
+  "verification": {
+    "method": "search-index title match only",
+    "oembed": "NOT RUN. WebFetch fails DNS for every host in this session (youtube.com and even creativemotley.com), and Bash curl to youtube.com / web.archive.org is refused by the egress proxy (403, policy). Not routed around.",
+    "levels": {
+      "indexed": "The search index lists https://www.youtube.com/watch?v=<id> with this title, and its description or a news source ties it to the creator.",
+      "channel-confirmed": "A second source (news, podcast listing, channel mirror listing) names the uploading channel.",
+      "channel-probable": "The title format matches the channel's own uploads, but no source names the uploader.",
+      "unverified": "The id was found, but neither the uploader nor the content could be tied to the creator. Do not ship it until checked."
+    },
+    "how_to_verify": "Where youtube.com is reachable: for id in $(node -e \"const v=require('./docs/videos.json');console.log(v.creators.flatMap(c=>c.videos.map(x=>x.id)).join(' '))\"); do curl -s \"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=$id&format=json\" | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{const j=JSON.parse(s);console.log('$id',j.author_name,'|',j.title)}catch{console.log('$id','NOT FOUND')}})\"; done  (check author_name against 'channel' below).",
+    "thumbnails": "i.ytimg.com is blocked here, so no thumbnail was fetched or checked. Card faces could use the site's own posters (public/assets/posters/<slug>.webp) until real thumbnails are fetched at build time somewhere unblocked."
+  },
+  "official_channel": {
+    "creative_motley": {
+      "url": "https://www.youtube.com/@creativemotley",
+      "source": "Live site footer sticker / F121 (https://creativemotley.com/, captured 2026-10-19).",
+      "status": "Linked from the live site; its contents could not be checked (youtube.com unreachable). Search found no videos or showreel under this handle."
+    },
+    "showreel": {
+      "status": "NOT FOUND",
+      "note": "No public Creative Motley showreel turned up in search (YouTube, Vimeo, Instagram, TikTok). An earlier version of creativemotley.com, as summarised by the search index, mentioned a 'Success Stories Reel' / 'Campaign Highlights 2024'; that version is no longer live and no reel URL was found. Ask the client for the reel's URL; if one exists it is the natural first XXL card and the Brands chapter's brand video card."
+    }
+  },
+  "creators": [
+    {
+      "creator": "Layi Wasabi",
+      "fact": "F64",
+      "poster": "public/assets/posters/layi-wasabi.webp",
+      "videos": [
+        {
+          "id": "6aheOxb7GPU",
+          "title": "THE LAW VS. THE MACHINE",
+          "title_full_as_indexed": "THE LAW VS. THE MACHINE | OdumoduBLVCK, Darasimi Nadi, Layi Wasabi comedy",
+          "channel": "Layi Wasabi",
+          "channel_id": "UCJWrb-dnwFY0GTAeA2gKHPg",
+          "url": "https://www.youtube.com/watch?v=6aheOxb7GPU",
+          "duration": null,
+          "published": "about mid-2026 (index: 'about 113 days ago')",
+          "why": "A recent episode of his own lawyer character, 'The Law': the poster's 'The Law' tagline and courtroom props are this format. Recent, so it shows the channel as it is now.",
+          "verification": "channel-confirmed",
+          "evidence": "Search index lists the watch URL with this title; a channel listing for UCJWrb-dnwFY0GTAeA2gKHPg titled 'Layi Wasabi' (seen in search results via an Invidious mirror, not fetched) shows it alongside his 'Court in Session' sketches."
+        },
+        {
+          "id": "gc_CdEdEVrQ",
+          "title": "RUGGED LAWYER",
+          "title_full_as_indexed": "RUGGED LAWYER | Layi WASABI comedy video",
+          "channel": "Layi Wasabi",
+          "url": "https://www.youtube.com/watch?v=gc_CdEdEVrQ",
+          "duration": null,
+          "why": "Another 'The Law' episode (a loyal client asks him to help someone close to them); the same character in a self-contained story.",
+          "verification": "channel-probable",
+          "evidence": "Search index title and description ('The Law is called upon by a loyal client…'); the 'Layi WASABI comedy video' title suffix matches his own uploads."
+        }
+      ],
+      "context_sources": [
+        "https://nation.africa/kenya/life-and-style/buzz/layi-wasabi-became-africas-favourite-struggling-lawyer--5413438"
+      ]
+    },
+    {
+      "creator": "Omoni Oboli TV",
+      "fact": "F65",
+      "poster": "public/assets/posters/omoni-oboli-tv.webp",
+      "videos": [
+        {
+          "id": "H9qoC981BAU",
+          "title": "LOVE WAS NOT INVITED - Nigerian Movies 2026 Latest Full Movies",
+          "channel": "Omoni Oboli TV",
+          "url": "https://www.youtube.com/watch?v=H9qoC981BAU",
+          "duration": "≈1 h 43 min (FilmFlux listing; unconfirmed on YouTube)",
+          "published": "2026-08-14 (FilmFlux listing; unconfirmed)",
+          "why": "A woman is pushed into attending her ex's destination wedding and meets the bride's ex: this is the poster's 'Two exes. One wedding.' A full feature, so it shows the channel's 'a feature every week' format.",
+          "verification": "channel-probable",
+          "evidence": "Search index lists the watch URL with this title; the ' - Nigerian Movies 2026 Latest Full Movies' suffix matches the channel's own uploads (e.g. 'THE THIRD PARTY - Nigerian Movies 2025 Latest Full Movies'). Zikoko lists the film among Omoni Oboli's YouTube romances but does not confirm her production credit; FilmFlux credits Uduak Obong Patrick as director.",
+          "sources": [
+            "https://www.zikoko.com/pop/omoni-oboli-youtube-romance-movies/",
+            "https://filmflux.app/movie/cd17fd9f-59db-45d7-bcd4-d15feb24ff9a-love-was-not-invited"
+          ]
+        },
+        {
+          "id": "OQQaDqLCgKg",
+          "title": "LOVE IN EVERY WORD 2 - THE WEDDING",
+          "channel": "Omoni Oboli TV",
+          "url": "https://www.youtube.com/watch?v=OQQaDqLCgKg",
+          "duration": null,
+          "published": "2025-10-24 (press)",
+          "why": "The channel's best-known premiere (the sequel to Love in Every Word), a wedding story in which a returning ex tests the engagement. Widely covered in Nigerian press, so it is the safest single title if only one card is used.",
+          "verification": "channel-probable",
+          "evidence": "Search summary calls this the main listing, with the cast (Uzor Arukwe, BamBam, Patience Ozokwo, Chris Attoh…) in its description; an Omoni Oboli TV community post says to watch the film 'only on Omoni Oboli TV'. Several re-uploads exist on other channels (e.g. 9dTRJalYO_0, MgKfecE8FPE): do not use those.",
+          "sources": [
+            "https://www.youtube.com/post/UgkxJ31jwSl8qCrDVtibuqTlP62IHMm_jUkJ",
+            "https://www.pulse.ng/story/omoni-obolis-love-in-every-word-sequel-1-million-views-reaction-2025102511574512966",
+            "https://thewittyreview.medium.com/movie-review-love-in-every-word-the-wedding-56f5e0732de1"
+          ]
+        }
+      ],
+      "flags": [
+        "The original 'Love in Every Word' (March 2025) was taken down and restored after a copyright claim, so its id may have changed; it is not listed here. Candidates seen in search (8tmreiYy78Q, DRXCOZTnVHc) could not be tied to the official channel."
+      ]
+    },
+    {
+      "creator": "Isbae U",
+      "fact": "F66",
+      "poster": "public/assets/posters/isbae-u.webp",
+      "videos": [
+        {
+          "id": "nOedKYSXuPU",
+          "title": "RMD ON CURIOSITY MADE ME ASK!",
+          "channel": "Isbae U",
+          "url": "https://www.youtube.com/watch?v=nOedKYSXuPU",
+          "duration": null,
+          "published": "April 2025 (press)",
+          "why": "A full 'Curiosity Made Me Ask' episode (the poster's tagline) with Richard Mofe-Damijo; the polygamy exchange matches the poster's 'Could he be a polygamist?' bubble. Widely covered.",
+          "verification": "channel-probable",
+          "evidence": "Search index title; New Telegraph, Talk Talk Nigeria and InformationNG cover the episode. The 'NAME ON CURIOSITY MADE ME ASK!' title format matches the show's own uploads (Apple Podcasts lists the same format under 'Isbae U').",
+          "sources": [
+            "https://newtelegraphng.com/rmd-slams-isbae-u-for-calling-him-by-his-first-name/",
+            "https://www.talktalknigeria.com/home/2025/4/12/rmd-claps-back-at-isbae-u-on-curiosity-made-me-ask-show-dragging-late-father-into-the-mix",
+            "https://www.informationng.com/2025/04/my-father-had-five-wives-having-just-one-feels-unfair-rmd.html"
+          ]
+        },
+        {
+          "id": "U-xB3IOipac",
+          "title": "Former President Olusegun Obasanjo on curiosity made me ask",
+          "channel": "Isbae U",
+          "url": "https://www.youtube.com/watch?v=U-xB3IOipac",
+          "duration": "≈42 min (Apple Podcasts video episode; YouTube length unconfirmed)",
+          "published": "2026-09-19 (Legit.ng; Apple Podcasts)",
+          "why": "The show's season finale with a former head of state: the most recent and most talked-about episode, which shows the reach of the format.",
+          "verification": "channel-confirmed",
+          "evidence": "Search index title; Apple Podcasts lists the same episode under the show 'Isbae U'; Legit.ng reports the appearance.",
+          "sources": [
+            "https://podcasts.apple.com/ng/podcast/former-president-olusegun-obasanjo-on-curiosity-made/id1888130719?i=1000791031097",
+            "https://www.legit.ng/entertainment/celebrities/1731714-former-president-obasanjos-unexpected-appearance-isbae-us-podcast-leaves-talking/"
+          ]
+        }
+      ],
+      "channel_url": "https://www.youtube.com/@Isbae_u"
+    },
+    {
+      "creator": "Broda Shaggi",
+      "fact": "F67",
+      "poster": "public/assets/posters/broda-shaggi.webp",
+      "videos": [
+        {
+          "id": "MTZlMqXgUZA",
+          "title": "FDI - FEDERAL DISTURBANCE INTELLIGENCE (Epi 1) Brodashaggi",
+          "channel": "Broda Shaggi",
+          "url": "https://www.youtube.com/watch?v=MTZlMqXgUZA",
+          "duration": null,
+          "why": "Episode 1 of FDI, one of the four series named on his poster ('FDI'); a series opener explains itself to a new viewer.",
+          "verification": "channel-probable",
+          "evidence": "Search index title and description (Jide Kosoko, Officer Woos, Small Stout); 'Brodashaggi' in the title."
+        },
+        {
+          "id": "HcZDHLW7cKA",
+          "title": "New Love Story",
+          "channel": "Broda Shaggi",
+          "url": "https://www.youtube.com/watch?v=HcZDHLW7cKA",
+          "duration": null,
+          "published": "about May 2026 (index: 'about 142 days ago')",
+          "why": "'New Love Story' is also named on the poster; a compilation of his romantic-comedy sketches, so a viewer sees range in one click.",
+          "verification": "channel-probable",
+          "evidence": "Search index title; its description says it gathers the love stories 'Brodashaggi has brought you over the past few months'. No source names the uploader."
+        }
+      ],
+      "flags": [
+        "'DR SHAGGI IN DISTRESS' (RdlXuz1_iKo), also named on his poster, is a KieKieTV upload: it is listed under Kie Kie.",
+        "Press in 2026 reported an alleged shooting and a five-month absence. Not for the page; avoid any card wording about his health or return."
+      ]
+    },
+    {
+      "creator": "Diary of a Naija Girl",
+      "fact": "F68",
+      "poster": "public/assets/posters/diary-of-a-naija-girl.webp",
+      "videos": [
+        {
+          "id": "2FY9NcE2lbw",
+          "title": "Bisola Aiyeola speaks on Intentional Friendships",
+          "channel": "Diary of A Naija Girl (@diaryofanaijagirl)",
+          "url": "https://www.youtube.com/watch?v=2FY9NcE2lbw",
+          "duration": "≈53 min (Apple Podcasts; YouTube length unconfirmed)",
+          "why": "A 'Dear Ife' conversation episode, the show's flagship long-form format, with a well-known guest; matches the poster's warm, advice-led tone.",
+          "verification": "channel-confirmed",
+          "evidence": "Search index title; Apple Podcasts lists the same episode under 'Diary of A Naija Girl'; Spotify has the episode too; several news outlets quote it.",
+          "sources": [
+            "https://podcasts.apple.com/ng/podcast/bisola-aiyeola-speaks-on-intentional-friendships-dear/id1888131074?i=1000757479765",
+            "https://open.spotify.com/episode/7jFrUCxhxkNlUk5TvJzsx9",
+            "https://pmnewsnigeria.com/2026/07/17/bisola-aiyeola-opens-up-on-loyalty-friendship-dynamics/"
+          ]
+        },
+        {
+          "id": "7OBeFS70vpg",
+          "title": "Kunle Remi on Real-Life Marriage Struggles",
+          "channel": "Diary of A Naija Girl (@diaryofanaijagirl)",
+          "url": "https://www.youtube.com/watch?v=7OBeFS70vpg",
+          "duration": null,
+          "why": "A second 'Dear Ife' episode (marriage, trust, friendship in marriage): same format, different guest.",
+          "verification": "channel-probable",
+          "evidence": "Search index title; search summary places it in the Dear Ife series on the DANG channel. No second source names the uploader."
+        }
+      ],
+      "flags": [
+        "'Dear DANG' (the poster's tagline) is a recurring advice segment inside episodes, not a single video. Several third-party gossip channels post about Ifedayo Agoro (e.g. surrogacy commentary): do not use any of those."
+      ],
+      "channel_url": "https://www.youtube.com/@diaryofanaijagirl"
+    },
+    {
+      "creator": "Kie Kie",
+      "fact": "F69",
+      "poster": "public/assets/posters/kie-kie.webp",
+      "videos": [
+        {
+          "id": "QoZJOlmynbw",
+          "title": "REHEATED PASSION | Nigerian movies 2026 Latest full movies",
+          "channel": "KieKieTV",
+          "url": "https://www.youtube.com/watch?v=QoZJOlmynbw",
+          "duration": null,
+          "published": "June 2026 (her birthday post, 20 June, asked fans to watch it)",
+          "why": "The feature named on her poster ('Reheated Passion / KieKie TV') and the 'and now features' part of 'Skits, fashion, and now features.'",
+          "verification": "channel-confirmed",
+          "evidence": "Search summary links the listing to the @KieKieTV handle; Leadership, Legit.ng and allAfrica report her asking fans to watch it on her channel.",
+          "sources": [
+            "https://leadership.ng/kiekie-marks-birthday-with-simple-but-meaningful-request/",
+            "https://www.legit.ng/entertainment/celebrities/1715522-gift-i-kiekie-marks-birthday-special-request-fans/"
+          ]
+        },
+        {
+          "id": "RdlXuz1_iKo",
+          "title": "DR SHAGGI IN DISTRESS",
+          "title_full_as_indexed": "DR SHAGGI IN DISTRESS | Broda Shaggi | KieKieTV",
+          "channel": "KieKieTV",
+          "url": "https://www.youtube.com/watch?v=RdlXuz1_iKo",
+          "duration": null,
+          "published": "about July 2026 (index: 'about 93 days ago')",
+          "why": "A skit (Dr Shaggi and Nurse Kiekie in a hospital) that joins two showcased creators in one video; named on the Broda Shaggi poster. Gives Kie Kie a 'skits' card beside the feature.",
+          "verification": "channel-probable",
+          "evidence": "Search index title includes '| KieKieTV'; description: 'Dr. Shaggi and Nurse Kiekie are just trying to survive their patients'."
+        }
+      ],
+      "alternates": [
+        {
+          "id": "DW2c985ZYDY",
+          "title": "HEATED PASSION",
+          "channel": "KieKieTV",
+          "note": "Her 2025 feature with Kunle Remi (premiered on KiekieTV, 19 Dec 2025, ≈100 min per PartyJollof). Channel-probable. Not to be confused with 'Reheated Passion'.",
+          "source": "https://www.partyjolloftv.com/movies/heated-passion-1439"
+        }
+      ]
+    },
+    {
+      "creator": "Kunle Afolayan",
+      "fact": "F70",
+      "poster": "public/assets/posters/kunle-afolayan.webp",
+      "videos": [
+        {
+          "id": "7A3M-n54gG8",
+          "title": "The Figurine: Araromire (2009)",
+          "channel": "KAPStream (@kapstream_tv)",
+          "url": "https://www.youtube.com/watch?v=7A3M-n54gG8",
+          "duration": null,
+          "why": "His 2009 film, named on the poster, re-released free on his family's own YouTube channel after its Netflix licence ended: the poster's 'Celluloid to YouTube, in one family.'",
+          "verification": "channel-probable",
+          "evidence": "Search index title and description ('a Nigerian cinema classic'); Film Efiko reports the film streams exclusively on YouTube via @kapstream_tv. No source ties this exact id to that channel.",
+          "sources": [
+            "https://filmefiko.com/cinema/kunle-afolayan-is-bringing-2009-movie-the-figurine-to-youtube/",
+            "https://whatkeptmeup.com/nigerian-film-industry-articles/after-a-netflix-focused-era-kunle-afolayan-brings-recall-to-the-big-screen/"
+          ]
+        },
+        {
+          "id": "bebw28CTnHA",
+          "title": "The CEO",
+          "channel": "KAPStream (@kapstream_tv) — UNCONFIRMED",
+          "url": "https://www.youtube.com/watch?v=bebw28CTnHA",
+          "duration": null,
+          "why": "His 2016 film, also moved to KAPStream; a second era of his work beside The Figurine.",
+          "verification": "unverified",
+          "evidence": "Only the bare title 'The CEO' appeared in search beside trailers; QED.NG and Film Efiko confirm the film is on KAPStream but give no URL. Do not ship this id until checked; the fallback is a link to https://www.youtube.com/@kapstream_tv.",
+          "sources": [
+            "https://www.qed.ng/kunle-afolayan-brings-the-ceo-to-youtube/",
+            "https://filmefiko.com/news/kunle-afolayan-the-ceo-rerelease/"
+          ]
+        }
+      ],
+      "flags": [
+        "Two channels exist: KAPTV (https://www.youtube.com/user/kafolayan, older trailers) and KAPStream (@kapstream_tv, full films). Many 'full movie' uploads of his films on other channels are unofficial (e.g. Anikulapo, October 1): do not use them."
+      ]
+    }
+  ]
+}

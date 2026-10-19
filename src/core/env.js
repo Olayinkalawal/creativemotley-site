@@ -47,10 +47,10 @@ export const STILL = (() => {
 export const TIER_STILL = 'still';
 
 /* the stage's starting quality (pixel budget: longest side 1280 / 1920 / 2880 px, DPR ≤ 2); a frame-rate average
-   steps it down (gl/stage.js). ?q=low|medium|high forces it. */
+   steps it down, to a 960-px floor (gl/stage.js). ?q=min|low|medium|high forces it. */
 export const QUALITY = (() => {
   const q = Q.get('q');
-  if (q === 'low' || q === 'medium' || q === 'high') return q;
+  if (q === 'min' || q === 'low' || q === 'medium' || q === 'high') return q;
   if (STILL) return 'high';   // one texture per pixel: the phone path starts at native resolution (the governor steps down)
   if (SOFTWARE_GL) return 'low';
   return TIER >= 2 ? 'high' : 'medium';
