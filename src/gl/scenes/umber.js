@@ -93,6 +93,7 @@ export default function register(stage) {
     id: 'plate:umber', scene, camera,
     post: { grain: 0.05, vignette: 0.4 },
     load(ctx) { collect(); u.layers.value = ctx.tier >= 2 ? 3 : 2; },
+    ambient(ctx) { return !ctx.reduced; },   // the dust is alive: the stage keeps drawing this room (≤ 30 fps idle)
     resize(w, h) { u.res.value.set(w, h); },
     update(ctx) {
       if (!keys.length || !document.body.contains(keys[0].el)) collect();

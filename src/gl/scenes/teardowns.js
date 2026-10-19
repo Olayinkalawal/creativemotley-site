@@ -10,11 +10,15 @@
    Phases, framing and the uv → screen mapping live in gl/lib/tdcore.js (shared with the section).
    Once the parts settle, the exploded frame becomes a depth diorama: pointer parallax and a slow push.
    Tiers: each stream picks its source (lg 1920/1600 px, sm 1080/960) from the device pixels it will cover
-   (viewport or column × zoom × devicePixelRatio, capped at 2), and asks the stage for full-DPR rendering (hiDpr).
+   (viewport or column × zoom × devicePixelRatio, capped at 2). The stage renders at its pixel budget (no per-scene
+   resolution switch, so the canvas is never reallocated mid-run).
+   Streams (gl/lib/frameStream.js) hold a ±24-frame window around the playhead: the explode is never fetched in one
+   burst at the section edge; it starts (its first 25 frames) a viewport before the run and streams with the scroll.
+   Desktop only: on the phone still path the sections show their stills over a black stage (gl/scenes/stills.js).
    Portrait screens: the 16:9 frame is a band across the middle, so its top and bottom edges feather long (no hard
    line where a close render runs past its own frame), and data-td-orbit-tall keeps the orbit to its clean range.
    Scene ids: td:camera (Method), td:mixer, td:mic, td:headphones, td:phone (Kit). One draw per scene. */
-import * as THREE from 'three';
+import { Scene, OrthographicCamera, ShaderMaterial, Mesh, PlaneGeometry, Vector2, Vector4 } from 'three';
 import { FrameStream } from '../lib/frameStream.js';
 import { loadTexture } from '../lib/loaders.js';
 import { TD_EXPLODE, TD_ASPECT, tdLive, tdRun, tdPhases, tdFlags, tdOrbitRange, tdOrbitFrame, tdExplodeFrame, tdFraming, tdFit, tdView, tdContain, tdLerpRect, tdPinTop } from '../lib/tdcore.js';
@@ -68,42 +72,50 @@ function tiers(section) {
 
 function teardown(name, stage) {
   const id = `td:${name}`;
-  const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  const mat = new THREE.ShaderMaterial({
+  const scene = new Scene();
+  const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const mat = new ShaderMaterial({
     vertexShader: vert, fragmentShader: frag, depthTest: false, depthWrite: false,
     uniforms: {
       mapA: { value: null }, mapB: { value: null }, depth: { value: null }, mixT: { value: 0 },
-      rect: { value: new THREE.Vector4(0, 0, 1, 1) }, aspect: { value: TD_ASPECT },
-      pointer: { value: new THREE.Vector2() }, strength: { value: 0 }, push: { value: 0 },
-      zoom: { value: 1 }, fade: { value: 1 }, shift: { value: new THREE.Vector2() }, feather: { value: new THREE.Vector2(0.03, 0.03) },
+      rect: { value: new Vector4(0, 0, 1, 1) }, aspect: { value: TD_ASPECT },
+      pointer: { value: new Vector2() }, strength: { value: 0 }, push: { value: 0 },
+      zoom: { value: 1 }, fade: { value: 1 }, shift: { value: new Vector2() }, feather: { value: new Vector2(0.03, 0.03) },
     },
   });
-  const quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);
+  const quad = new Mesh(new PlaneGeometry(2, 2), mat);
   quad.frustumCulled = false;
   scene.add(quad);
   const live = tdLive(id);
   const V = {}, S = {};
-  let orbit = null, orbitKey = '', explode = null, T = { o: 'lg', x: 'lg', tall: false };
+  let orbit = null, orbitKey = '', explode = null, dep = null, T = { o: 'lg', x: 'lg', tall: false };
+  const redraw = () => stage.invalidate();
   let section = null, run = null, F = null, fl = null, tall = null, vw = 0, vh = 0, heroR = null, colR = null, pinH = 0;
   const orbitStream = (lo, hi) => {
     const key = `${lo}-${hi}`;
     if (key === orbitKey && orbit) return orbit;
     orbitKey = key;
+    orbit?.dispose();
     const n = hi - lo + 1, small = T.tall && T.o === 'lg';
-    return (orbit = new FrameStream({ dir: `/assets/teardown/${name}/orbit/${T.o}`, count: n, name: (i) => `f_${String(lo + i).padStart(4, '0')}.webp`, rev: 1, ahead: n, behind: n, decoded: small ? 6 : 10 }));
+    return (orbit = new FrameStream({ dir: `/assets/teardown/${name}/orbit/${T.o}`, count: n, name: (i) => `f_${String(lo + i).padStart(4, '0')}.webp`, rev: 1, decoded: small ? 6 : 10, onShow: redraw }));
   };
 
   stage.add({
-    id, scene, camera, hiDpr: true,
+    id, scene, camera, device: true,
     post: { vignette: 0.16, grain: 0.03, fringe: 0.5 },
     async load() {
       const sec = document.querySelector(`[data-scene="${id}"]`);
       T = sec ? tiers(sec) : T;
       const [lo, hi] = sec ? tdOrbitRange(sec, T.tall) : [1, 97];
+      orbitKey = ''; section = null;
       orbitStream(lo, hi);
-      const [dep] = await Promise.all([loadTexture(`/assets/teardown/${name}/depth.png`), orbit.first()]);
+      [dep] = await Promise.all([loadTexture(`/assets/teardown/${name}/depth.png`), orbit.first()]);
       mat.uniforms.depth.value = dep;
+    },
+    dispose() {
+      orbit?.dispose(); explode?.dispose(); orbit = explode = null; orbitKey = '';
+      dep?.dispose(); dep = null;
+      mat.uniforms.mapA.value = mat.uniforms.mapB.value = mat.uniforms.depth.value = null;
     },
     deactivate() { orbit?.trim(); explode?.trim(); },
     update(ctx, s) {
@@ -126,10 +138,10 @@ function teardown(name, stage) {
       const ph = tdPhases(r.pv, r.vp, fl);
       const Fx = (live.F && live.F.tall === tall) ? live.F : F;   // the section's framing (it fits the measured column)
       const reduced = ctx.reduced;
-      // the explode streams once its run is within a viewport (the orbit, shown first, loads first)
-      if (!explode && (r.pv > -r.vp || orbit.complete)) {
+      // the explode starts streaming (its first 25 frames, then with the playhead) once its run is within a viewport
+      if (!explode && r.pv > -r.vp) {
         const small = T.tall && T.x === 'lg';
-        explode = new FrameStream({ dir: `/assets/teardown/${name}/${T.x}`, count: TD_EXPLODE, rev: 1, ahead: 150, behind: 40, decoded: small ? 8 : 12 });
+        explode = new FrameStream({ dir: `/assets/teardown/${name}/${T.x}`, count: TD_EXPLODE, rev: 1, decoded: small ? 8 : 12, onShow: redraw });
       }
       const u = mat.uniforms;
       if (ph.mix < 1 || !explode?.ready) orbit.seek(reduced ? orbit.count - 1 : tdOrbitFrame(ph, orbit.count));
@@ -141,7 +153,7 @@ function teardown(name, stage) {
       // slot rect (viewport px): the section JS computed it this frame (it drives the slot element from the same
       // numbers); if it has not (it rests while far away), the same rect from the same clock
       let x, y, w, h;
-      if (live.t === ctx.time) { x = live.x; y = live.y; w = live.w; h = live.h; }
+      if (live.f === ctx.frame) { x = live.x; y = live.y; w = live.w; h = live.h; }
       else { tdLerpRect(heroR, colR, ph.hand, S); x = S.x; y = S.y + tdPinTop(r, ctx.scrollY, pinH); w = S.w; h = S.h; }
       const k = ctx.dpr;
       u.rect.value.set(x * k, (ctx.vh - y - h) * k, Math.max(1, w * k), Math.max(1, h * k));

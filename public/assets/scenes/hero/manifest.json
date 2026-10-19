@@ -1,0 +1,103 @@
+{
+ "chapter": "hero",
+ "name": "Hero: the Creation, with kit",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/assets/scenes/hero/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 155578,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/hero/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 229200,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/hero/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 194836,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/hero/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 290820,
+    "q": 86
+   }
+  ]
+ },
+ "phone": {
+  "avif": [
+   {
+    "src": "/assets/scenes/hero/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 177305,
+    "q": 72
+   },
+   {
+    "src": "/assets/scenes/hero/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 99456,
+    "q": 67
+   }
+  ],
+  "webp": [
+   {
+    "src": "/assets/scenes/hero/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 216414,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/hero/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 133214,
+    "q": 86
+   }
+  ]
+ },
+ "focus": [
+  0.5,
+  0.45
+ ],
+ "phoneFocus": [
+  0.56,
+  0.55
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top-left",
+ "key": "#C8643C",
+ "titleBg": {
+  "desktop": "#534630",
+  "phone": "#918B83"
+ },
+ "titleInk": {
+  "desktop": "light",
+  "phone": "dark"
+ },
+ "titleContrast": {
+  "desktop": 9.18,
+  "phone": 5.92
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAADwBACdASogABIAPu1kqE2ppaOiMAgBMB2JQBUfVpYXEdE1BaTf/aPNTvSGtdZpGWAA/un72iYhQCUWGZ1+VY15BAg00M1dpJjqqW8jUG5FsXhjTi0HzCQgfHkAuGnih8B0AEU5o7aRA9++l29MJscJY+B1P/OVOuddAOWYhiNbC6+PRxHQAB36DnT8fVT6AKoCezvqY+Rx9ynbgIzzgAAA",
+  "phone": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABwBACdASoMABoAPu1iqU2ppaOiMAgBMB2JYgCsABn2l2OEZlJ+4f7DT+rD4AD4p880nsylhWWsidC6i+re/vmerAA8Ef4/SPPxwT5dyA0TGBo5Itm7r3V+iWPHbaMSTrL+aq33P8TIkBeRNVD5Uz3wmbx9B3X0H0PmZ061H/O+2JxHGInHiruh2bC2qR7FQkWHjhsKBJSaHFXPxIAAAA=="
+ },
+ "credit": {
+  "desktop": "live film frame f_0001 (creativemotley.com/frames/f_0001.webp), 4K upscale, job 3845158a",
+  "phone": "portrait recomposition of the hero painting, job e51061e5"
+ }
+}

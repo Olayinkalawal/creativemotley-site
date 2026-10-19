@@ -167,7 +167,7 @@ export default function register(stage) {
 
   const o = { d: 0, x: 0, z: 0, ry: 0, dim: 1, alpha: 1 };
   const ray = new THREE.Raycaster(), ndc = new THREE.Vector2(), hits = [];
-  let drawn = false, pickKey = NaN;
+  let drawn = false, pickKey = NaN, section = null;
 
   function project(cx, cy, vw, vh, D) {
     // off-axis frustum: world (X, Y, 0) lands on screen (cx + X, cy - Y), whatever the slot's position
@@ -212,13 +212,20 @@ export default function register(stage) {
         texs[k] = t;
       }));
     },
+    // outside the stage's mount window: free the seven textures, and hand the posters back to the section's proxy
+    // (it shows them again until the scene is back)
+    dispose() {
+      for (let k = 0; k < N; k++) { texs[k]?.dispose(); texs[k] = null; }
+      if (state.gl) { state.gl = false; section?.classList.remove('is-gl'); }
+    },
     resize(w, h) { mat.uniforms.res.value.set(w, h); room.uniforms.res.value.set(w, h); },
     activate() { drawn = true; },
     deactivate() { drawn = false; },
-    update(ctx) {
+    update(ctx, sg) {
       const L = state.L;
       if (!L) return;
       const s = arcAt(ctx.scrollY);
+      section = sg.el;
       if (!state.gl) { state.gl = true; state.onGL?.(); }
       const cy = L.cy + s.pinTop;
       project(L.cx, cy, ctx.vw, ctx.vh, L.D);

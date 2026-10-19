@@ -1,65 +1,83 @@
 /* The hero film (570 painted frames): the figures and the floating kit → the camera handed across
    → the lens → the vortex → the machine draws → the Storytellers painting.
+   Delivered as video (v3): one short-GOP encode scrubbed by scroll (gl/lib/video.js): AV1 where the browser plays it,
+   H.264 everywhere else, 1920×1080 (public/assets/video/film/, scripts/encode-film.sh). The WebP frame streams stay
+   as the fallback (no playable source, a decode error, or ?film=frames).
    Scroll position → frame comes from [data-film="hero"][data-frames="a-b"] ranges in the markup:
    each element maps its pin progress linearly onto frames a..b (holds between ranges).
    At rest on frame 0 and at the end (frame 569, which is the Storytellers plate) the frame becomes a
-   depth diorama with pointer parallax and a slow push. */
-import * as THREE from 'three';
+   depth diorama with pointer parallax and a slow push. Desktop only: phones take the still path (gl/scenes/stills.js). */
+import { Scene, OrthographicCamera } from 'three';
 import { FrameStream } from '../lib/frameStream.js';
+import { VideoScrub } from '../lib/video.js';
 import { plateMaterial, fullscreenQuad } from '../lib/plate.js';
 import { loadTexture } from '../lib/loaders.js';
 import { createSparks } from '../lib/sparks.js';
-import { geo } from '../../core/layout.js';
-import { clamp, smooth, seg } from '../../core/scroll.js';
+import { filmRanges, frameAt } from '../lib/filmRanges.js';
+import { smooth, seg } from '../../core/scroll.js';
 
-export function filmRanges(name) {
-  return [...document.querySelectorAll(`[data-film="${name}"][data-frames]`)].map((el) => {
-    const [a, b] = el.dataset.frames.split('-').map(Number);
-    return { el, a, b };
-  });
-}
-export function frameAt(ranges, y, vh) {
-  let f = ranges.length ? ranges[0].a : 0;
-  for (const r of ranges) {
-    const g = geo(r.el);
-    if (y < g.top) break;
-    const p = clamp((y - g.top) / Math.max(1, g.height - vh));
-    f = r.a + (r.b - r.a) * p;
-  }
-  return f;
-}
+export { filmRanges, frameAt };
+
+const COUNT = 570, FPS = 30;
+export const FILM_SOURCES = [
+  { src: '/assets/video/film/hero-1920-av1.mp4?v=1', type: 'video/mp4; codecs="av01.0.08M.08"' },
+  { src: '/assets/video/film/hero-1920-h264.mp4?v=1', type: 'video/mp4; codecs="avc1.640028"' },
+];
+const timeout = (ms) => new Promise((r) => setTimeout(r, ms));
 
 export default function register(stage) {
   const small = () => window.innerWidth * Math.min(2, window.devicePixelRatio || 1) < 1500;
-  const COUNT = 570;
-  const scene = new THREE.Scene();
-  const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+  const scene = new Scene();
+  const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const mat = plateMaterial();
   scene.add(fullscreenQuad(mat));
-  let stream, depthRest, depthEnd, sparks, ranges = [];
+  let src = null, depthRest = null, depthEnd = null, sparks = null, ranges = [];
   let push = 0;
+  const redraw = () => stage.invalidate();
+
+  async function open(ctx) {
+    const frames = new URLSearchParams(location.search).get('film') === 'frames';
+    if (!frames) {
+      const v = new VideoScrub({ sources: FILM_SOURCES, fps: FPS, count: COUNT, onShow: redraw });
+      if (v.ok) {
+        await Promise.race([v.first, timeout(6000)]);
+        if (v.ok && v.ready) return v;
+        v.dispose();
+      }
+    }
+    // fallback: the frame streams (the lg tier is 1920×1080 to f_0417, then 2400×1350: FrameStream reallocates)
+    const s = new FrameStream({ dir: `/assets/frames/hero/${small() ? 'sm' : 'lg'}`, count: COUNT, rev: 2, onShow: redraw });
+    await s.first();
+    return s;
+  }
 
   stage.add({
     id: 'film', scene, camera,
     async load(ctx) {
-      stream = new FrameStream({ dir: `/assets/frames/hero/${small() ? 'sm' : 'lg'}`, count: COUNT, rev: 1 });
       ranges = filmRanges('hero');
-      const first = stream.first();
-      [depthRest, depthEnd] = await Promise.all([loadTexture('/assets/plates/hero-depth.png'), loadTexture('/assets/plates/storytellers-depth.png'), first]);
-      if (ctx.tier >= 1 && !ctx.reduced) {
+      [src, depthRest, depthEnd] = await Promise.all([open(ctx), loadTexture('/assets/plates/hero-depth.png'), loadTexture('/assets/plates/storytellers-depth.png')]);
+      if (ctx.tier >= 1 && !ctx.reduced && !sparks) {
         sparks = createSparks(ctx.tier >= 2 ? 2600 : 900);
         sparks.u.px.value = ctx.dpr * 1.6;
+        sparks.u.aspect.value = ctx.w / ctx.h;
         scene.add(sparks.points);
       }
+      stage.film = src;   // QA: seek stats (window.__stage.film.stats())
+    },
+    dispose() {
+      src?.dispose(); src = null;
+      depthRest?.dispose(); depthEnd?.dispose(); depthRest = depthEnd = null;
+      mat.uniforms.map.value = null; mat.uniforms.depth.value = null;
     },
     resize(w, h, dpr) { mat.uniforms.res.value.set(w, h); if (sparks) { sparks.u.aspect.value = w / h; sparks.u.px.value = dpr * 1.6; } },
     update(ctx, s) {
+      if (!src) return;
       if (!ranges.length || !document.body.contains(ranges[0].el)) ranges = filmRanges('hero');
       const f = ctx.reduced ? 0 : frameAt(ranges, ctx.scrollY, ctx.vh);
-      stream.seek(f);
+      src.seek(f);
       const u = mat.uniforms;
-      u.map.value = stream.texture;
-      u.imgSize.value.set(stream.size[0], stream.size[1]);
+      u.map.value = src.texture;
+      u.imgSize.value.set(src.size[0], src.size[1]);
       // depth parallax only where the frame is the plate the depth map was computed from
       const atRest = 1 - smooth(seg(f, 0, 6));
       const atEnd = smooth(seg(f, COUNT - 7, COUNT - 1));

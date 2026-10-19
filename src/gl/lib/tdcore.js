@@ -189,12 +189,12 @@ export function tdLerpRect(a, b, k, out = {}) {
 export function tdPinTop(r, y, pinH) { return r.top - y + clamp(y - r.top, 0, Math.max(0, r.height - pinH)); }
 
 /* per scene id, shared between the section and the scene each frame:
-   - the section writes the slot's viewport rect (x, y, w, h) and the clock it was computed at (t), so the scene never
-     measures the DOM in its frame;
+   - the section writes the slot's viewport rect (x, y, w, h) and the frame number it was computed at (f: view.frame),
+     so the scene never measures the DOM in its frame;
    - the scene writes its live values (pointer, push) so DOM markers can ride the parallax. */
 export const TD_LIVE = new Map();
 export function tdLive(id) {
   let L = TD_LIVE.get(id);
-  if (!L) TD_LIVE.set(id, (L = { px: 0, py: 0, push: 0, strength: 0, x: 0, y: 0, w: 0, h: 0, t: -1 }));
+  if (!L) TD_LIVE.set(id, (L = { px: 0, py: 0, push: 0, strength: 0, x: 0, y: 0, w: 0, h: 0, f: -1 }));
   return L;
 }

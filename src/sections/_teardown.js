@@ -13,8 +13,9 @@
    Per frame, as pure functions of scroll (so scrolling back is exact): the slot rect, the stills' framing, the
    opener (rises in through its mask, drifts up and fades), the copy (runs 2+: its hero position glides to the
    column), head lines through their masks, spec rows (stagger in with the hand-off, light in step with the
-   explode), the construction lines (drawn by --k via CSS), the ticker (turns with the orbit), the part markers.
-   Style writes are diffed; rects are measured on layout only (the slot's rect is computed, never read here, and
+   explode), the construction lines (three static layers, opacity only), the ticker (turns with the orbit), the part
+   markers. Style writes are diffed and are transforms and opacity (plus a few custom properties on small
+   composited elements); rects are measured on layout only (the slot's rect is computed, never laid out, and
    handed to the scene with the framing through tdLive, so the WebGL frame and the DOM follow the same numbers).
    Reduced motion / no JS: .td-static, a calm static layout (hero still with the opener or head, then the
    exploded still beside the list), no pin. */
@@ -38,6 +39,7 @@ function put(el, prop, val) {
   if (prop.charCodeAt(0) === 45) el.style.setProperty(prop, val); else el.style[prop] = val;
 }
 const f3 = (v) => v.toFixed(3);
+const f2 = (v) => v.toFixed(2);
 const px = (v) => `${v.toFixed(1)}px`;
 
 /* split a heading into masked lines (kinetic copy): <span.td-ln><span.td-ln__in>words </span></span> per line.
@@ -73,47 +75,69 @@ function splitLines(el) {
 
 /* construction lines around the device (Da Vinci, as in the hero): the great circle and its golden inner circle,
    an arch, the golden-section verticals of the stage, the device's golden rectangle and its diagonals, a horizon.
-   Each element draws by CSS from the run's --k between its own --a and --b. The mask keeps them off the copy (a
-   feathered hole), fully gone under the rail (desktop: from the rail's edge + 8 px, in over 60 px) and under the top
-   bar, and dims them where they cross the device, so they read as drawn around it, not over the photograph.
+   v3: no per-frame drawing. The lines are three static SVG layers (early, middle, late), each revealed by its own
+   opacity as the run arrives (composited: no repaint), under one mask painted once per resize on a small canvas
+   (alpha: the rail's edge, the top bar, a feathered hole for the copy, the device dimmed to 45 %) and applied as a
+   CSS mask-image. The blurred SVG mask that was redrawn with every scroll step (6 fps in Method) is gone.
    Portrait screens keep only the great circle and the arch (with the ticker): on a phone the rest is a cage. */
-function linesSVG(W, H, D, M, rail, id, tall) {
+function lineLayers(W, H, D, rail, tall) {
   const phi = 1.618034;
   const cx = (D.x0 + D.x1) / 2, cy = (D.y0 + D.y1) / 2, w = D.x1 - D.x0, h = D.y1 - D.y0;
   const R = Math.hypot(w, h) * (tall ? 0.5 : 0.43);
-  const L = [];
-  const add = (tag, at, a, b, cls) => L.push(`<${tag} ${at} pathLength="1" style="--a:${a};--b:${b}"${cls ? ` class="${cls}"` : ''}/>`);
   const r = (v) => v.toFixed(1);
-  add('circle', `cx="${r(cx)}" cy="${r(cy)}" r="${r(R)}"`, 0, 0.5, 'is-strong');
+  const L = [[], [], []];
+  const add = (layer, tag, at, cls) => L[layer].push(`<${tag} ${at}${cls ? ` class="${cls}"` : ''}/>`);
+  add(0, 'circle', `cx="${r(cx)}" cy="${r(cy)}" r="${r(R)}"`, 'is-strong');
   // the arch: the top of a larger circle centred below the device
   const R2 = R * 1.32, ay = cy + R * 0.86, a0 = (-162 * Math.PI) / 180, a1 = (-18 * Math.PI) / 180;
-  add('path', `d="M ${r(cx + R2 * Math.cos(a0))} ${r(ay + R2 * Math.sin(a0))} A ${r(R2)} ${r(R2)} 0 0 1 ${r(cx + R2 * Math.cos(a1))} ${r(ay + R2 * Math.sin(a1))}"`, 0.22, 0.74);
+  add(1, 'path', `d="M ${r(cx + R2 * Math.cos(a0))} ${r(ay + R2 * Math.sin(a0))} A ${r(R2)} ${r(R2)} 0 0 1 ${r(cx + R2 * Math.cos(a1))} ${r(ay + R2 * Math.sin(a1))}"`);
   if (!tall) {
-    add('circle', `cx="${r(cx)}" cy="${r(cy)}" r="${r(R / phi)}"`, 0.14, 0.56);
+    add(0, 'circle', `cx="${r(cx)}" cy="${r(cy)}" r="${r(R / phi)}"`);
     // golden-section verticals of the stage (right of the rail) and a golden horizontal
     const S = W - rail;
-    add('line', `x1="${r(rail + S / (phi * phi))}" y1="0" x2="${r(rail + S / (phi * phi))}" y2="${r(H)}"`, 0.04, 0.42);
-    add('line', `x1="${r(rail + S / phi)}" y1="${r(H)}" x2="${r(rail + S / phi)}" y2="0"`, 0.1, 0.48);
-    add('line', `x1="${r(rail)}" y1="${r(H / phi)}" x2="${r(W)}" y2="${r(H / phi)}"`, 0.3, 0.7);
+    add(0, 'line', `x1="${r(rail + S / (phi * phi))}" y1="0" x2="${r(rail + S / (phi * phi))}" y2="${r(H)}"`);
+    add(0, 'line', `x1="${r(rail + S / phi)}" y1="${r(H)}" x2="${r(rail + S / phi)}" y2="0"`);
+    add(1, 'line', `x1="${r(rail)}" y1="${r(H / phi)}" x2="${r(W)}" y2="${r(H / phi)}"`);
     // the device's golden rectangle, its diagonals, and the horizon it stands on
     const gw = R * 1.02, gh = gw / phi;
-    add('rect', `x="${r(cx - gw)}" y="${r(cy - gh)}" width="${r(gw * 2)}" height="${r(gh * 2)}"`, 0.26, 0.78);
-    add('line', `x1="${r(cx - gw)}" y1="${r(cy + gh)}" x2="${r(cx + gw)}" y2="${r(cy - gh)}"`, 0.4, 0.86);
-    add('line', `x1="${r(cx - gw)}" y1="${r(cy - gh)}" x2="${r(cx + gw)}" y2="${r(cy + gh)}"`, 0.46, 0.92);
-    add('line', `x1="${r(rail)}" y1="${r(D.y1 - h * 0.06)}" x2="${r(W)}" y2="${r(D.y1 - h * 0.06)}"`, 0.34, 0.8);
+    add(1, 'rect', `x="${r(cx - gw)}" y="${r(cy - gh)}" width="${r(gw * 2)}" height="${r(gh * 2)}"`);
+    add(1, 'line', `x1="${r(rail)}" y1="${r(D.y1 - h * 0.06)}" x2="${r(W)}" y2="${r(D.y1 - h * 0.06)}"`);
+    add(2, 'line', `x1="${r(cx - gw)}" y1="${r(cy + gh)}" x2="${r(cx + gw)}" y2="${r(cy - gh)}"`);
+    add(2, 'line', `x1="${r(cx - gw)}" y1="${r(cy - gh)}" x2="${r(cx + gw)}" y2="${r(cy + gh)}"`);
   }
-  const g0 = rail ? (rail + 8) / W : 0, g1 = rail ? (rail + 68) / W : 0;
-  const top = 150 / H;   // fade out under the top bar
-  const mask = `<defs><linearGradient id="${id}g" x1="0" x2="1" y1="0" y2="0"><stop offset="${g0.toFixed(3)}" stop-color="#000"/><stop offset="${g1.toFixed(3)}" stop-color="#fff"/></linearGradient>`
-    + `<linearGradient id="${id}v" x1="0" x2="0" y1="0" y2="1"><stop offset="${(top * 0.35).toFixed(3)}" stop-color="#000"/><stop offset="${top.toFixed(3)}" stop-color="#000" stop-opacity="0"/></linearGradient>`
-    + `<filter id="${id}b" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="22"/></filter>`
-    + `<filter id="${id}d" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${r(Math.max(18, Math.min(w, h) * 0.1))}"/></filter>`
-    + `<mask id="${id}m" maskUnits="userSpaceOnUse" x="0" y="0" width="${r(W)}" height="${r(H)}"><rect width="${r(W)}" height="${r(H)}" fill="${rail ? `url(#${id}g)` : '#fff'}"/>`
-    + `<rect width="${r(W)}" height="${r(H)}" fill="url(#${id}v)"/>`
-    + (tall ? '' : `<rect x="${r(D.x0 + w * 0.06)}" y="${r(D.y0 + h * 0.06)}" width="${r(w * 0.88)}" height="${r(h * 0.88)}" rx="${r(Math.min(w, h) * 0.2)}" fill="#000" fill-opacity="0.55" filter="url(#${id}d)"/>`)
-    + (M ? `<rect x="${r(M.x - 28)}" y="${r(M.y - 22)}" width="${r(M.w + 56)}" height="${r(M.h + 44)}" rx="24" fill="#000" filter="url(#${id}b)"/>` : '')
-    + `</mask></defs>`;
-  return `<svg class="td__lines" viewBox="0 0 ${r(W)} ${r(H)}" width="${r(W)}" height="${r(H)}">${mask}<g mask="url(#${id}m)">${L.join('')}</g></svg>`;
+  return L.filter((l) => l.length).map((l) => `<svg class="td__lines" viewBox="0 0 ${r(W)} ${r(H)}" width="${r(W)}" height="${r(H)}">${l.join('')}</svg>`);
+}
+/* each layer's reveal window, in the run's line clock k (0 → 1 from 0.8 viewports before the pin to p 0.24) */
+const LAYER_K = [[0, 0.42], [0.22, 0.74], [0.4, 0.9]];
+
+/* the lines' mask, as alpha (opaque = lines show), painted once on a half-resolution canvas: shapes are blurred with
+   the shadow trick (shadowBlur = 2σ, in device px), which every browser's canvas supports */
+function lineMask(W, H, D, M, rail, tall) {
+  const s = 0.5, c = document.createElement('canvas');
+  c.width = Math.max(1, Math.ceil(W * s)); c.height = Math.max(1, Math.ceil(H * s));
+  const g = c.getContext('2d');
+  if (rail) { const lg = g.createLinearGradient((rail + 8) * s, 0, (rail + 68) * s, 0); lg.addColorStop(0, 'rgba(0,0,0,0)'); lg.addColorStop(1, '#000'); g.fillStyle = lg; }
+  else g.fillStyle = '#000';
+  g.fillRect(0, 0, c.width, c.height);
+  g.globalCompositeOperation = 'destination-out';
+  // gone under the top bar
+  const top = 150 * s, tg = g.createLinearGradient(0, 0, 0, top);
+  tg.addColorStop(0, '#000'); tg.addColorStop(0.35, '#000'); tg.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = tg; g.fillRect(0, 0, c.width, top);
+  const soft = (x, y, w, h, rad, sigma, alpha) => {
+    const BIG = 4 * (c.width + c.height);
+    g.save();
+    g.globalAlpha = alpha; g.fillStyle = '#000';
+    g.shadowColor = '#000'; g.shadowBlur = 2 * sigma * s; g.shadowOffsetX = BIG;
+    g.beginPath();
+    if (g.roundRect) g.roundRect(x * s - BIG, y * s, w * s, h * s, rad * s); else g.rect(x * s - BIG, y * s, w * s, h * s);
+    g.fill();
+    g.restore();
+  };
+  const w = D.x1 - D.x0, h = D.y1 - D.y0;
+  if (!tall) soft(D.x0 + w * 0.06, D.y0 + h * 0.06, w * 0.88, h * 0.88, Math.min(w, h) * 0.2, Math.max(18, Math.min(w, h) * 0.1), 0.55);
+  if (M) soft(M.x - 28, M.y - 22, M.w + 56, M.h + 44, 24, 22, 1);
+  return c;
 }
 
 /* the degree ticker: a turntable scale under the device (ticks every 5°, long every 30°), tilted into an ellipse */
@@ -155,7 +179,8 @@ function block(el, idx) {
   });
 
   let F, heroR, colR, desk = false, tall = false, drawn = false, parked = false, lastHot = -2, hs = 1, copyTop = 0;
-  let giantLines = [], headLines = [], linesEl = null, tick = null, marks = [];
+  let giantLines = [], headLines = [], lineEls = [], tick = null, disc = null, marks = [];
+  let maskURL = '', maskVer = 0, masked = false;
   const dCopy = { x: 0, y: 0 };
   const S = {}, V = {}, Q = {}, VS = {}, PH = {};
 
@@ -194,14 +219,25 @@ function block(el, idx) {
     const a = tdProject(box[0], box[1], heroR, Vh, null), b = tdProject(box[2], box[3], heroR, Vh, null);
     const D = { x0: a.x, y0: a.y, x1: b.x, y1: b.y };
     if (M && hs < 1) { M.w *= hs; M.h *= hs; }
-    // fx: lines, ticker, markers
+    // fx: lines (static layers under a painted mask), ticker, markers
     fx.textContent = '';
     const railR = desk && rail ? rail.offsetWidth : 0;   // the lines are gone under the rail
-    fx.insertAdjacentHTML('beforeend', linesSVG(heroR.w, heroR.h, D, M, railR, `tdl${idx}`, tall));
-    linesEl = fx.lastElementChild;
+    fx.insertAdjacentHTML('beforeend', lineLayers(heroR.w, heroR.h, D, railR, tall).join(''));
+    lineEls = [...fx.querySelectorAll('.td__lines')];
+    lineEls.forEach((ln) => put(ln, 'opacity', '0'));
+    const mask = lineMask(heroR.w, heroR.h, D, M, railR, tall), ver = ++maskVer;
+    mask.toBlob((b) => {
+      if (!b || ver !== maskVer) return;
+      if (maskURL) URL.revokeObjectURL(maskURL);
+      maskURL = URL.createObjectURL(b);
+      for (const ln of lineEls) { ln.style.webkitMaskImage = ln.style.maskImage = `url(${maskURL})`; }
+      masked = true;
+    });
+    masked = false;
     tick = document.createElement('div');
     tick.className = 'td__tick';
     tick.innerHTML = `<div class="td__tick-disc">${tickSVG()}</div><i class="td__tick-idx"></i>`;
+    disc = tick.firstElementChild;
     const tw = Math.min((D.x1 - D.x0) * 1.12, heroR.w * (desk ? 0.62 : 0.96));
     const ty = Math.min(D.y1 - (D.y1 - D.y0) * 0.05, heroR.h - tw * 0.16 - 8);
     tick.style.cssText = `width:${px(tw)};height:${px(tw * 0.3)};transform:translate(${px((D.x0 + D.x1) / 2 - tw / 2)},${px(ty - tw * 0.15)})`;
@@ -235,26 +271,31 @@ function block(el, idx) {
     const ph = tdPhases(r.pv, r.vp, fl);
     const p = ph.p, vp = r.vp;
     if (!drawn && window.__stage?.drawn) {
-      for (const s of window.__stage.drawn) if (s.id === id) { drawn = true; el.classList.add('is-drawn'); }
+      for (const s of window.__stage.drawn) if (s.id === id && s.device) { drawn = true; el.classList.add('is-drawn'); }
     }
 
-    // the slot: the whole viewport → the column rect
+    // the slot: the whole viewport → the column rect. Computed, never laid out: the slot element stays the size of
+    // the pin (v3: no left/top/width/height per frame, so no layout and no layout shift); the stills inside it and
+    // the WebGL frame are both placed from this rect
     tdLerpRect(heroR, colR, ph.hand, S);
-    put(slot, 'left', px(S.x)); put(slot, 'top', px(S.y)); put(slot, 'width', px(S.w)); put(slot, 'height', px(S.h));
     tdView(F, ph, V);
-    // hand the scene the same rect, in the viewport, with this frame's clock
-    live.x = S.x; live.y = S.y + tdPinTop(r, v.y, heroR.h); live.w = S.w; live.h = S.h; live.t = v.time;
+    // hand the scene the same rect, in the viewport, with this frame's number
+    live.x = S.x; live.y = S.y + tdPinTop(r, v.y, heroR.h); live.w = S.w; live.h = S.h; live.f = v.frame;
 
-    // stills (WebGL off, or until the scene draws): the same framing as the shader; hero angle → exploded
+    // stills (WebGL off, the phone still path, or until the scene draws): the same framing as the shader; hero angle →
+    // exploded. Each is contain-fit in the pin and moved by one transform onto where it would sit in the slot rect.
     if (!drawn) {
       // each still at its own state: the whole device at the column's opening framing, the exploded one at the final
-      const c = tdContain(S.w, S.h);
-      const tf = (W) => `translate3d(${px(-W.sx * W.zoom * c.w)}, ${px(W.sy * W.zoom * c.h)}, 0) scale(${W.zoom.toFixed(4)})`;
+      const c = tdContain(S.w, S.h), c0 = tdContain(heroR.w, heroR.h);
+      const tf = (W) => {
+        const x = S.x + S.w / 2 - W.sx * W.zoom * c.w - heroR.w / 2, y = S.y + S.h / 2 + W.sy * W.zoom * c.h - heroR.h / 2;
+        return `translate3d(${px(x)}, ${px(y)}, 0) scale(${((W.zoom * c.w) / c0.w).toFixed(4)})`;
+      };
       PH.hand = ph.hand; PH.orbit = ph.orbit; PH.settle = ph.settle;
       PH.explode = 0; put(stillH, 'transform', tf(tdView(F, PH, VS)));
       PH.explode = 1; put(stillP, 'transform', tf(tdView(F, PH, VS)));
       const k = smooth(seg(p, 0.5, 0.64));
-      put(stillH, '--o', f3((1 - k) * ph.fade)); put(stillP, '--o', f3(k * ph.fade));
+      put(stillH, 'opacity', f2((1 - k) * ph.fade)); put(stillP, 'opacity', f2(k * ph.fade));
     }
 
     // the opener: rises in through its mask as the run arrives, then drifts up and fades as the orbit gets going
@@ -297,15 +338,17 @@ function block(el, idx) {
     if (p > 0.86) hot = -1;
     if (hot !== lastHot) { rows.forEach((row, j) => row.classList.toggle('is-hot', j === hot)); lastHot = hot; }
 
-    // construction lines and the ticker: drawn as the orbit runs, gone as the hand-off begins
+    // construction lines and the ticker: the layers come in one after another as the orbit runs, gone as the
+    // hand-off begins (opacity only: composited, nothing is redrawn)
     const linesOut = 1 - smooth(seg(p, 0.25, 0.33));
-    if (linesEl) {
-      put(linesEl, '--k', f3(seg(r.pv, -0.8 * vp, 0.24)));
-      put(linesEl, 'opacity', f3(linesOut * smooth(seg(r.pv, -0.9 * vp, -0.5 * vp))));
-    }
+    const kl = seg(r.pv, -0.8 * vp, 0.24), lin = linesOut * smooth(seg(r.pv, -0.9 * vp, -0.5 * vp));
+    lineEls.forEach((ln, j) => {
+      const W = LAYER_K[Math.min(j, LAYER_K.length - 1)];
+      put(ln, 'opacity', masked ? f2(lin * smooth(seg(kl, W[0], W[1]))) : '0');
+    });
     if (tick) {
-      put(tick, '--deg', `${(-150 * ph.orbit).toFixed(2)}deg`);
-      put(tick, 'opacity', f3(linesOut * smooth(seg(r.pv, -0.7 * vp, -0.2 * vp))));
+      put(disc, 'transform', `translateY(-50%) rotateX(73deg) rotate(${(-150 * ph.orbit).toFixed(2)}deg)`);
+      put(tick, 'opacity', f2(linesOut * smooth(seg(r.pv, -0.7 * vp, -0.2 * vp))));
     }
 
     // part markers (desktop): on their parts in the exploded frame, through the shader's transform
