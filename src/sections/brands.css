@@ -28,8 +28,7 @@
 .credits { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 clamp(16px, 2.4vw, 32px); }
 .credits li {
   padding-block: 12px 18px; box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.2);
-  font-family: var(--sans); font-weight: 620; font-size: clamp(1.35rem, 2.15vw, 2.15rem);
-  letter-spacing: -0.04em; line-height: 1;
+  font: var(--f-head); letter-spacing: var(--ls-head);
 }
 @media (min-width: 900px) { .credits { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 

@@ -39,23 +39,20 @@
 
 .rx-num {
   display: flex; align-items: baseline; white-space: nowrap;
-  font-family: var(--sans); font-weight: 600; font-size: clamp(4.5rem, 24vw, 7rem);
-  line-height: 0.84; letter-spacing: -0.05em; margin-left: -0.04em;
+  font: var(--f-numeral); letter-spacing: var(--ls-numeral); margin-left: -0.04em;   /* the numeral role: never above the title */
   font-variant-numeric: lining-nums tabular-nums; font-feature-settings: 'lnum' 1, 'tnum' 1;
 }
 .rx-digits { font-weight: inherit; }
 .rx-digits i { font-style: normal; }
 .rx-digits i.is-off { opacity: 0.14; }   /* places not reached yet: a ghost of the final figure */
-.rx-unit, .rx-suf { letter-spacing: -0.03em; }   /* the unit (M) always shows; the + waits for the landing */
+/* the unit (M) always shows; the + waits for the landing */
 .rx-lbl {
-  font-family: var(--serif); font-weight: 400; font-size: clamp(1.45rem, 6.4vw, 2rem);
-  line-height: 1.06; letter-spacing: -0.01em; color: var(--gold); max-width: 13em; text-wrap: balance;
+  font: var(--f-dek); letter-spacing: var(--ls-dek); color: var(--gold); max-width: 13em; text-wrap: balance;
 }
-/* Instrument Serif's 1 reads as an l: the one figure inside a label is set in the sans */
-.rx-fig { font-family: var(--sans); font-weight: 450; font-size: 0.8em; letter-spacing: -0.02em; }
+/* Instrument Serif's 1 reads as an l: the one figure inside a label is set in the sans, at the body weight and 0.8 of
+   the dek (the scale's one documented exception: a figure inside a serif line) */
+.rx-fig { font-family: var(--sans); font-weight: var(--fw-body); font-size: 0.8em; letter-spacing: -0.02em; }
 
 @media (min-width: 900px) {
   .rx-list { grid-template-columns: minmax(0, max-content); }
-  .rx-num { font-size: clamp(6rem, 12.4vw, 13rem); }
-  .rx-lbl { font-size: var(--t-dek); }
 }

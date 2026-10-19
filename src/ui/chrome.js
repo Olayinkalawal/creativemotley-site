@@ -1,9 +1,27 @@
 /* Top bar, chapters dropdown, side rail and mobile menu. The index markup lives once, in the
-   hero frame ([data-index-source]); the rail, the dropdown and the menu are clones of it. */
+   hero frame ([data-index-source]); the rail, the dropdown and the menu are clones of it.
+   - html.scrolled: the top bar turns into an opaque ink bar once the hero has gone (transparent over the hero).
+   - The dropdown shows a tiny thumbnail of each chapter's scene, fetched the first time it is about to open
+     (the art pipeline's /assets/scenes/index.json; chapters without a painted scene yet use /assets/thumbs/).
+   - Hovering or focusing a chapter in the rail or the dropdown announces it (a "cm:chapter-intent" event on
+     document, detail = the chapter id), so the stage can start loading that chapter's scene early. */
 import { onChapter, registerProbes } from '../core/chapters.js';
-import { scrollTo, lockScroll } from '../core/scroll.js';
+import { scrollTo, lockScroll, onFrame } from '../core/scroll.js';
+import { geo } from '../core/layout.js';
 
 const root = document.documentElement;
+const THUMBS = {   // chapters with no painted scene in the art index yet (tiny crops of their existing art)
+  method: '/assets/thumbs/method.webp', showcase: '/assets/thumbs/showcase.webp',
+  process: '/assets/thumbs/process.webp', kit: '/assets/thumbs/kit.webp',
+};
+
+function thumbFor(idx, id) {
+  const t = idx?.[id]?.thumb;
+  const list = Array.isArray(t) ? t : [];
+  const webp = list.find((x) => /\.webp$/i.test(x.src));
+  const avif = list.find((x) => /\.avif$/i.test(x.src));
+  return { src: webp?.src || THUMBS[id] || '', avif: avif?.src || '' };
+}
 
 export function initChrome() {
   const src = document.querySelector('[data-index-source]');
@@ -23,6 +41,15 @@ export function initChrome() {
     }
   });
 
+  // the top bar: transparent over the hero, opaque ink after it
+  const hero = document.querySelector('.hero');
+  const navH = parseFloat(getComputedStyle(root).getPropertyValue('--nav-h')) || 56;
+  let scrolled = null;
+  onFrame((v) => {
+    const s = hero ? v.y > geo(hero).bottom - navH - 1 : v.y > 8;
+    if (s !== scrolled) { root.classList.toggle('scrolled', s); scrolled = s; }
+  });
+
   // in-page links glide with Lenis
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
@@ -35,10 +62,56 @@ export function initChrome() {
     history.replaceState(null, '', id === '#top' ? location.pathname : id);
   });
 
-  // chapters dropdown
+  // chapter intent (rail + dropdown): lets the stage preload a scene before the jump
+  let lastIntent = '';
+  const intent = (e) => {
+    const li = e.target.closest?.('li[data-for]');
+    if (!li || li.dataset.for === lastIntent) return;
+    lastIntent = li.dataset.for;
+    document.dispatchEvent(new CustomEvent('cm:chapter-intent', { detail: lastIntent }));
+  };
+  for (const list of document.querySelectorAll('.rail .index, .chapters__panel .index')) {
+    list.addEventListener('pointerover', intent);
+    list.addEventListener('focusin', intent);
+  }
+
+  // chapters dropdown, with a thumbnail slot per chapter (filled on first intent to open)
   const dd = document.querySelector('[data-chapters]');
   const ddBtn = dd?.querySelector('button');
-  const setDD = (open) => { dd.classList.toggle('open', open); ddBtn.setAttribute('aria-expanded', String(open)); };
+  const panel = dd?.querySelector('.chapters__panel');
+  for (const a of panel ? panel.querySelectorAll('li[data-for] a') : []) {
+    const th = document.createElement('span');
+    th.className = 'th'; th.setAttribute('aria-hidden', 'true');
+    a.prepend(th);
+  }
+  let thumbs = null;
+  const loadThumbs = () => {
+    if (thumbs || !panel) return;
+    thumbs = fetch('/assets/scenes/index.json').then((r) => (r.ok ? r.json() : null)).catch(() => null).then((idx) => {
+      for (const li of panel.querySelectorAll('li[data-for]')) {
+        const { src: s, avif } = thumbFor(idx, li.dataset.for);
+        const th = li.querySelector('.th');
+        if (!s || !th) continue;
+        const img = new Image();
+        img.alt = ''; img.decoding = 'async'; img.loading = 'lazy'; img.width = 96; img.height = 54;
+        img.addEventListener('load', () => img.classList.add('is-in'), { once: true });
+        if (avif) {
+          const pic = document.createElement('picture');
+          const so = document.createElement('source');
+          so.type = 'image/avif'; so.srcset = avif;
+          pic.append(so, img);
+          img.src = s;
+          th.append(pic);
+        } else { img.src = s; th.append(img); }
+      }
+    });
+  };
+  const setDD = (open) => {
+    if (open) loadThumbs();
+    dd.classList.toggle('open', open); ddBtn.setAttribute('aria-expanded', String(open));
+  };
+  ddBtn?.addEventListener('pointerenter', loadThumbs);
+  ddBtn?.addEventListener('focus', loadThumbs);
   ddBtn?.addEventListener('click', () => setDD(!dd.classList.contains('open')));
   document.addEventListener('click', (e) => { if (dd && !dd.contains(e.target)) setDD(false); });
 

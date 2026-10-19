@@ -28,6 +28,8 @@ function usable(n) {   // rendered, and no bigger than a card (a click on a whol
   return r.width > 8 && r.height > 8 && r.width * r.height < innerWidth * innerHeight * 0.6
     && r.bottom > 0 && r.top < innerHeight;
 }
+// the update may wait (briefly) for the new picture to decode, so the morph never lands on an empty frame
+const ready = (n) => (n?.decode ? Promise.race([n.decode().catch(() => {}), new Promise((r) => setTimeout(r, 300))]) : null);
 function morph(update, done) {
   el.classList.add('vt');
   const t = document.startViewTransition(update);
@@ -46,11 +48,11 @@ export function openModal(node, { onClose, from } = {}) {
     const target = pictureIn(body.firstElementChild);
     openedWith = mediaKey(target);
     if (source) { source.style.viewTransitionName = ''; if (target) target.style.viewTransitionName = VT; }
+    requestAnimationFrame(() => el.querySelector('.modal__close').focus({ preventScroll: true }));
   };
   lockScroll(true);
-  if (source) { source.style.viewTransitionName = VT; morph(show); }
+  if (source) { source.style.viewTransitionName = VT; morph(() => { show(); return ready(pictureIn(body.firstElementChild)); }); }
   else show();
-  requestAnimationFrame(() => el.querySelector('.modal__close').focus());
 }
 
 export function closeModal() {

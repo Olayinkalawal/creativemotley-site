@@ -29,6 +29,7 @@ if (lenis) {
     }
     lenis.options.duration = input.trackpad ? PAD : MOUSE;
   }, { capture: true, passive: true });
+  window.__lenis = lenis;   // for QA scripts (duration, scroll)
 } else {
   window.addEventListener('scroll', () => { view.y = window.scrollY; }, { passive: true });
 }
