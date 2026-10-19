@@ -1,32 +1,35 @@
 /* Teardown runs, the Editions Retail choreography (markup: partials/method.html, partials/kit.html; scene:
-   gl/scenes/teardowns.js; the shared clock and framing math: gl/lib/tdcore.js).
-     <section class="td [td--open]" data-td [data-td-open] data-scene="td:NAME" data-td-hero… data-td-frame… data-td-box…>
+   gl/scenes/teardowns.js; the shared clock, timeline and framing math: gl/lib/tdcore.js).
+     <section class="td [td--open] [td--seq]" data-td [data-td-open] data-wipe data-scene="td:ID" …>
        <div class="td__run" data-td-run>               pinned for --td-run (phones: --td-run-m)
          <div class="td__pin">
-           <div class="td__slot" data-td-slot>         where the frame is drawn; glides from the viewport to the column rect
-             <img class="td__still td__still--hero">   stills: WebGL off, or until the scene has drawn
-             <img class="td__still td__still--poster">
+           <div class="td__keys">                      the colour keys as DOM (the still path; WebGL draws its own)
+           <div class="td__slot" data-td-slot>         where the frame is drawn; its rect glides from the viewport to the column
+             <img class="td__still td__still--hero|--poster" [data-td-still="k"]>   stills: WebGL off, phones, or until the scene draws
            <div class="td__target" data-td-target>     the column rect (CSS-defined, measured)
            <div class="td__fx" data-td-fx>             construction lines, degree ticker, part markers (built here)
-           <header class="td__hero">                   opener runs: kicker + giant over the orbit
-           <div class="td__copy">                      .td__intro (label + head) + ol.td__specs (li[data-anchor])
-   Per frame, as pure functions of scroll (so scrolling back is exact): the slot rect, the stills' framing, the
-   opener (rises in through its mask, drifts up and fades), the copy (runs 2+: its hero position glides to the
-   column), head lines through their masks, spec rows (stagger in with the hand-off, light in step with the
-   explode), the construction lines (three static layers, opacity only), the ticker (turns with the orbit), the part
-   markers. Style writes are diffed and are transforms and opacity (plus a few custom properties on small
-   composited elements); rects are measured on layout only (the slot's rect is computed, never laid out, and
-   handed to the scene with the framing through tdLive, so the WebGL frame and the DOM follow the same numbers).
-   Reduced motion / no JS: .td-static, a calm static layout (hero still with the opener or head, then the
-   exploded still beside the list), no pin. */
+           <header class="td__hero">                   the chapter title over the orbit
+           <div class="td__copy" [data-td-shot]>       per shot: .td__intro (label + head) + ol.td__specs (li[data-anchor])
+   One shot (Method: the section carries the device's data) or several (the Kit: each .td__copy[data-td-shot] carries
+   its device's data, and shot k's stills and key carry data-td-still="k").
+   Per frame, as pure functions of scroll (so scrolling back is exact), from tdcore's timeline: the slot rect, the
+   stills' framing (and, across a cut, the outgoing device fading under the incoming one), the DOM keys (the incoming
+   colour slides in from the right with a feathered edge), the title (rises in through its mask, drifts up and fades),
+   each shot's copy (label, the head line by line, rows staggering in; out again at the next cut), rows lighting in
+   step with the explode, part markers, and shot 0's construction lines (one static layer, opacity only) and ticker.
+   Style writes are diffed and are transforms and opacity (plus a few custom properties on small composited
+   elements); rects are measured on layout only (the slot's rect is computed, never laid out, and handed to the scene
+   with the fitted framing through tdLive, so the WebGL frame and the DOM follow the same numbers).
+   Reduced motion / no JS: .td-static, a calm static layout (no pin). */
 import './_teardown.css';
 import { onFrame, onResize, smooth, seg } from '../core/scroll.js';
 import { onLayout } from '../core/layout.js';
-import { REDUCED, isDesktop } from '../core/env.js';
-import { tdLive, tdRun, tdPhases, tdFlags, tdFraming, tdFit, tdView, tdContain, tdProject, tdLerpRect, tdPinTop } from '../gl/lib/tdcore.js';
+import { REDUCED, TIER, STILL, isDesktop } from '../core/env.js';
+import { coverPlates } from './_paper.js';   // shared helper (read-only): hides the fixed plates under an opaque block
+import { tdLive, tdRun, tdFlags, tdShots, tdDev, tdKey, tdTimeline, tdState, tdFraming, tdFit, tdView, tdContain, tdProject, tdLerpRect, tdPinTop } from '../gl/lib/tdcore.js';
 
-const NS = 'http://www.w3.org/2000/svg';
 const LEAD = { ne: -38, nw: -142, se: 38, sw: 142, n: -90, s: 90, e: 0, w: 180 };
+const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
 /* diffed style writes */
 const cache = new WeakMap();
@@ -37,6 +40,12 @@ function put(el, prop, val) {
   if (m[prop] === val) return;
   m[prop] = val;
   if (prop.charCodeAt(0) === 45) el.style.setProperty(prop, val); else el.style[prop] = val;
+}
+/* opacity plus visibility (a hidden layer is not composited at all) */
+function show(el, o) {
+  const v = o.toFixed(3);
+  put(el, 'opacity', v);
+  put(el, 'visibility', o <= 0.001 ? 'hidden' : 'visible');
 }
 const f3 = (v) => v.toFixed(3);
 const f2 = (v) => v.toFixed(2);
@@ -75,11 +84,10 @@ function splitLines(el) {
 
 /* construction lines around the device (Da Vinci, as in the hero): the great circle and its golden inner circle,
    an arch, the golden-section verticals of the stage, the device's golden rectangle and its diagonals, a horizon.
-   v3: no per-frame drawing. The lines are three static SVG layers (early, middle, late), each revealed by its own
-   opacity as the run arrives (composited: no repaint), under one mask painted once per resize on a small canvas
-   (alpha: the rail's edge, the top bar, a feathered hole for the copy, the device dimmed to 45 %) and applied as a
-   CSS mask-image. The blurred SVG mask that was redrawn with every scroll step (6 fps in Method) is gone.
-   Portrait screens keep only the great circle and the arch (with the ticker): on a phone the rest is a cage. */
+   One static SVG layer revealed by its opacity as the run arrives (composited: no repaint), under one mask painted
+   once per resize on a small canvas (alpha: the rail's edge, the top bar, a feathered hole for the title, the device
+   dimmed to 45 %). Portrait screens keep only the great circle and the arch
+   (with the ticker): on a phone the rest is a cage. */
 function lineLayers(W, H, D, rail, tall, id) {
   const phi = 1.618034;
   const cx = (D.x0 + D.x1) / 2, cy = (D.y0 + D.y1) / 2, w = D.x1 - D.x0, h = D.y1 - D.y0;
@@ -88,38 +96,29 @@ function lineLayers(W, H, D, rail, tall, id) {
   const L = [[], [], []];
   const add = (layer, tag, at, cls) => L[layer].push(`<${tag} ${at}${cls ? ` class="${cls}"` : ''}/>`);
   add(0, 'circle', `cx="${r(cx)}" cy="${r(cy)}" r="${r(R)}"`, 'is-strong');
-  // the arch: the top of a larger circle centred below the device
   const R2 = R * 1.32, ay = cy + R * 0.86, a0 = (-162 * Math.PI) / 180, a1 = (-18 * Math.PI) / 180;
   add(1, 'path', `d="M ${r(cx + R2 * Math.cos(a0))} ${r(ay + R2 * Math.sin(a0))} A ${r(R2)} ${r(R2)} 0 0 1 ${r(cx + R2 * Math.cos(a1))} ${r(ay + R2 * Math.sin(a1))}"`);
   if (!tall) {
     add(0, 'circle', `cx="${r(cx)}" cy="${r(cy)}" r="${r(R / phi)}"`);
-    // golden-section verticals of the stage (right of the rail) and a golden horizontal
     const S = W - rail;
     add(0, 'line', `x1="${r(rail + S / (phi * phi))}" y1="0" x2="${r(rail + S / (phi * phi))}" y2="${r(H)}"`);
     add(0, 'line', `x1="${r(rail + S / phi)}" y1="${r(H)}" x2="${r(rail + S / phi)}" y2="0"`);
     add(1, 'line', `x1="${r(rail)}" y1="${r(H / phi)}" x2="${r(W)}" y2="${r(H / phi)}"`);
-    // the device's golden rectangle, its diagonals, and the horizon it stands on
     const gw = R * 1.02, gh = gw / phi;
     add(1, 'rect', `x="${r(cx - gw)}" y="${r(cy - gh)}" width="${r(gw * 2)}" height="${r(gh * 2)}"`);
     add(1, 'line', `x1="${r(rail)}" y1="${r(D.y1 - h * 0.06)}" x2="${r(W)}" y2="${r(D.y1 - h * 0.06)}"`);
     add(2, 'line', `x1="${r(cx - gw)}" y1="${r(cy + gh)}" x2="${r(cx + gw)}" y2="${r(cy - gh)}"`);
     add(2, 'line', `x1="${r(cx - gw)}" y1="${r(cy - gh)}" x2="${r(cx + gw)}" y2="${r(cy + gh)}"`);
   }
-  // each layer masks its lines with the shared mask image (an SVG <mask>: rasterised with the layer once, then only
-  // the layer's opacity changes: a CSS mask-image would cost a render surface per layer on every composited frame)
-  // plus one layer with all of them: once every layer is fully in, it replaces the three (one composited layer, not
-  // three, for the rest of the orbit)
-  const layers = L.filter((l) => l.length);
-  return [...layers, layers.flat()].map((l, i) => `<svg class="td__lines" viewBox="0 0 ${r(W)} ${r(H)}" width="${r(W)}" height="${r(H)}">`
+  // one layer (the lines masked by the shared mask image: an SVG <mask>, rasterised with the layer once, then only its
+  // opacity changes). v3 phase 2: one layer, not three staggered ones: each was a full-screen quad for the compositor
+  return [L.flat()].map((l, i) => `<svg class="td__lines" viewBox="0 0 ${r(W)} ${r(H)}" width="${r(W)}" height="${r(H)}">`
     + `<defs><mask id="${id}${i}" maskUnits="userSpaceOnUse" x="0" y="0" width="${r(W)}" height="${r(H)}"><image width="${r(W)}" height="${r(H)}" preserveAspectRatio="none"/></mask></defs>`
     + `<g mask="url(#${id}${i})">${l.join('')}</g></svg>`);
 }
-/* each layer's reveal window, in the run's line clock k (0 → 1 from 0.8 viewports before the pin to p 0.24) */
-const LAYER_K = [[0, 0.42], [0.22, 0.74], [0.4, 0.9]];
 
 /* the lines' mask (white = lines show), painted once on a half-resolution canvas: built in alpha, shapes blurred with
-   the shadow trick (shadowBlur = 2σ, in device px, which every browser's canvas supports), then flattened to
-   white-on-black for an SVG luminance mask */
+   the shadow trick (shadowBlur = 2σ, in device px), then flattened to white-on-black for an SVG luminance mask */
 function lineMask(W, H, D, M, rail, tall) {
   const s = 0.5, c = document.createElement('canvas');
   c.width = Math.max(1, Math.ceil(W * s)); c.height = Math.max(1, Math.ceil(H * s));
@@ -128,7 +127,6 @@ function lineMask(W, H, D, M, rail, tall) {
   else g.fillStyle = '#000';
   g.fillRect(0, 0, c.width, c.height);
   g.globalCompositeOperation = 'destination-out';
-  // gone under the top bar
   const top = 150 * s, tg = g.createLinearGradient(0, 0, 0, top);
   tg.addColorStop(0, '#000'); tg.addColorStop(0.35, '#000'); tg.addColorStop(1, 'rgba(0,0,0,0)');
   g.fillStyle = tg; g.fillRect(0, 0, c.width, top);
@@ -150,15 +148,14 @@ function lineMask(W, H, D, M, rail, tall) {
   return c;
 }
 
-/* the degree ticker: a turntable scale under the device (ticks every 5°, long every 30°), tilted into an ellipse
-   (rotateX 73°) with only its front arc showing. v3: drawn on a small canvas, only when its angle changes (no 3D
-   transform under a CSS mask, which cost a render surface on every frame). */
+/* the degree ticker: a turntable scale under the device (ticks every 5°, long every 30°), tilted into an ellipse,
+   front arc only; drawn on a small canvas only when its angle changes */
 const TILT = Math.cos((73 * Math.PI) / 180);
 function drawTick(cv, deg) {
   const g = cv.getContext('2d'), W = cv.width, H = cv.height, k = cv._k || 1;
   g.globalCompositeOperation = 'source-over';
   g.clearRect(0, 0, W, H);
-  const cx = W / 2, cy = H / 2, u = W / 200;   // disc units (−100 … 100) → px
+  const cx = W / 2, cy = H / 2, u = W / 200;
   const ring = (r, col) => { g.strokeStyle = col; g.beginPath(); g.ellipse(cx, cy, r * u, r * u * TILT, 0, 0, Math.PI * 2); g.stroke(); };
   g.lineWidth = k;
   ring(96, 'rgba(201,165,92,0.58)');
@@ -174,7 +171,6 @@ function drawTick(cv, deg) {
     }
     g.stroke();
   }
-  // the front arc only: fade out the upper part (was a CSS mask over the 3D-transformed disc)
   g.globalCompositeOperation = 'destination-in';
   const fade = g.createLinearGradient(0, 0, 0, H);
   fade.addColorStop(0.3, 'rgba(0,0,0,0)'); fade.addColorStop(0.7, '#000');
@@ -188,68 +184,77 @@ function block(el, idx) {
   const target = el.querySelector('[data-td-target]');
   const fx = el.querySelector('[data-td-fx]');
   const hero = el.querySelector('.td__hero');
-  const copy = el.querySelector('.td__copy');
-  const intro = el.querySelector('.td__intro');
-  const kicker = hero?.querySelector('.kicker');
   const giant = hero?.querySelector('[data-td-lines]');
-  const label = intro?.querySelector('.td__label');
-  const head = intro?.querySelector('[data-td-lines]');
-  const rows = [...el.querySelectorAll('.td__spec')];
-  const stillH = el.querySelector('.td__still--hero');
-  const stillP = el.querySelector('.td__still--poster');
   const fl = tdFlags(el);
-  const open = fl.open;
   const id = el.dataset.scene;
   const live = tdLive(id);
   const rail = document.querySelector('.rail');
   if (!run || !pin || !slot || !target) return;
-  const box = (el.dataset.tdBox || '0.25 0.2 0.75 0.8').trim().split(/\s+/).map(Number);
-  const anchors = rows.map((r) => {
-    const [u, v, d, lead] = (r.dataset.anchor || '').trim().split(/\s+/);
-    return r.dataset.anchor ? { u: +u, v: +v, d: +d || 0.5, lead: LEAD[lead] ?? LEAD.ne } : null;
+  const shotEls = tdShots(el);
+  const multi = shotEls[0] !== el;
+  const shots = shotEls.map((sEl, j) => {
+    const copy = multi ? sEl : el.querySelector('.td__copy');
+    const intro = copy?.querySelector('.td__intro');
+    const rows = copy ? [...copy.querySelectorAll('.td__spec')] : [];
+    const q = (c) => (multi ? slot.querySelector(`.${c}[data-td-still="${j}"]`) : slot.querySelector(`.${c}`));
+    return {
+      el: sEl, dev: tdDev(sEl, el), copy, intro, rows,
+      label: intro?.querySelector('.td__label'), head: intro?.querySelector('[data-td-lines]'),
+      stillH: q('td__still--hero'), stillP: q('td__still--poster'),
+      keyEl: el.querySelector(`.td__key[data-td-still="${j}"]`) || (!multi ? el.querySelector('.td__key') : null),
+      box: (sEl.dataset.tdBox || '0.25 0.2 0.75 0.8').trim().split(/\s+/).map(Number),
+      anchors: rows.map((r) => {
+        const [u, v, d, lead] = (r.dataset.anchor || '').trim().split(/\s+/);
+        return r.dataset.anchor ? { u: +u, v: +v, d: +d || 0.5, lead: LEAD[lead] ?? LEAD.ne } : null;
+      }),
+      F: null, headLines: [], marks: [], lastHot: -2,
+    };
   });
 
-  let F, heroR, colR, desk = false, tall = false, drawn = false, parked = false, lastHot = -2, hs = 1, copyTop = 0;
-  let giantLines = [], headLines = [], lineEls = [], tick = null, disc = null, marks = [];
+  // with the WebGL stage (desktop), the stills are only a stand-in until the scene draws: they load only if the run is
+  // near and the scene has not drawn yet (src parked in data-src; without JS the markup's src stands)
+  const lazy = TIER > 0 && !STILL ? [...slot.querySelectorAll('img.td__still[src]')] : [];
+  for (const im of lazy) { im.dataset.src = im.getAttribute('src'); im.removeAttribute('src'); }
+  let heroR, colR, desk = false, tall = false, drawn = false, parked = false, copyTop = 0;
+  let giantLines = [], lineEls = [], tick = null, disc = null, timeline = null, TL = -1;
   let maskURL = '', maskVer = 0, masked = false;
-  const dCopy = { x: 0, y: 0 };
-  const S = {}, V = {}, Q = {}, VS = {}, PH = {};
+  const S = {}, V = {}, Q = {}, VS = {}, PH = {}, ST = { ph: {}, phN: {} };
 
-  const copyTopNow = () => { const f = intro || rows[0]; return f ? f.offsetTop + copy.offsetTop : 0; };
+  const copyTopOf = (x) => { const f = x.intro || x.rows[0]; return f && x.copy ? f.offsetTop + x.copy.offsetTop : 0; };
+  const copyTopNow = () => Math.min(...shots.map(copyTopOf).filter((v) => v > 0), Infinity);
   const measure = () => {
     desk = isDesktop();
     tall = innerHeight > innerWidth;
     heroR = { x: 0, y: 0, w: pin.clientWidth, h: pin.clientHeight };
     giantLines = giant ? splitLines(giant) : [];
-    headLines = head ? splitLines(head) : [];
-    // portrait: the column slot runs from under the bar down to just above the copy (whatever its length), so the
-    // device sits in the middle of the free black, not high above a gap
+    for (const x of shots) x.headLines = x.head ? splitLines(x.head) : [];
+    // portrait: the column slot runs from under the bar down to just above the copy (the tallest of the shots'), so
+    // the device sits in the middle of the free black, not high above a gap
     target.style.height = '';
     copyTop = copyTopNow();
-    if (tall && copyTop) target.style.height = px(Math.max(heroR.h * 0.4, copyTop - 18 - target.offsetTop));
+    if (tall && Number.isFinite(copyTop)) target.style.height = px(Math.max(heroR.h * 0.4, copyTop - 18 - target.offsetTop));
     colR = { x: target.offsetLeft, y: target.offsetTop, w: target.offsetWidth, h: target.offsetHeight };
-    F = tdFit(tdFraming(el, tall), colR, heroR.w, heroR.h);
-    live.F = F;
-    // runs 2+ on desktop: the head sits over the orbit at the Editions hero scale and grows into the column
-    hs = desk && !open && intro ? 0.78 : 1;
-    // runs without an opener: the intro's hero position vs its column position (FLIP), the copy glides between them
-    let M = null;
-    if (intro) {
-      const cx = intro.offsetLeft + copy.offsetLeft, cy = intro.offsetTop + copy.offsetTop;
-      if (!open) {
-        el.classList.add('td-measure-hero');
-        const hx = intro.offsetLeft + copy.offsetLeft, hy = intro.offsetTop + copy.offsetTop;
-        el.classList.remove('td-measure-hero');
-        dCopy.x = hx - cx; dCopy.y = hy - cy;
-        M = { x: hx, y: hy, w: intro.offsetWidth, h: intro.offsetHeight };
-      }
+    for (const x of shots) x.F = tdFit(tdFraming(x.el, tall, x.dev), colR, heroR.w, heroR.h);
+    // a list whose lines show as a caption (Method on short screens and phones: method.css) keeps its last lit row
+    const capMode = window.matchMedia('(min-width: 1024px) and (max-height: 820px), (max-width: 1023px)').matches;
+    for (const x of shots) x.keepHot = capMode && !!x.copy?.querySelector('.td__specs--lines');
+    live.Fs = shots.map((x) => x.F);
+    TL = -1;
+    // the DOM keys (the still path): a radial field round the column (a cut slides it in from the right, its
+    // feathered edge leading)
+    const cx = colR.x + colR.w / 2, cy = colR.y + colR.h / 2;
+    for (const x of shots) {
+      if (!x.keyEl) continue;
+      const st = x.keyEl.style;
+      st.setProperty('--kx', px(cx)); st.setProperty('--ky', px(cy));
+      st.setProperty('--krx', px(colR.w * 0.7)); st.setProperty('--kry', px(colR.h * 0.8));
     }
-    if (hero) M = { x: hero.offsetLeft, y: hero.offsetTop, w: hero.offsetWidth, h: hero.offsetHeight };
-    // the device's box in the hero framing (orbit end), in pin px
-    const Vh = { zoom: F.hero.z, sx: F.hero.x, sy: F.hero.y };
-    const a = tdProject(box[0], box[1], heroR, Vh, null), b = tdProject(box[2], box[3], heroR, Vh, null);
+    // the title's box (the lines' mask leaves a hole for it), and shot 0's device box in the hero framing
+    const M = hero ? { x: hero.offsetLeft, y: hero.offsetTop, w: hero.offsetWidth, h: hero.offsetHeight } : null;
+    const F0 = shots[0].F, b0 = shots[0].box;
+    const Vh = { zoom: F0.hero.z, sx: F0.hero.x, sy: F0.hero.y };
+    const a = tdProject(b0[0], b0[1], heroR, Vh, null), b = tdProject(b0[2], b0[3], heroR, Vh, null);
     const D = { x0: a.x, y0: a.y, x1: b.x, y1: b.y };
-    if (M && hs < 1) { M.w *= hs; M.h *= hs; }
     // fx: lines (static layers under a painted mask), ticker, markers
     fx.textContent = '';
     const railR = desk && rail ? rail.offsetWidth : 0;   // the lines are gone under the rail
@@ -257,10 +262,10 @@ function block(el, idx) {
     lineEls = [...fx.querySelectorAll('.td__lines')];
     lineEls.forEach((ln) => put(ln, 'opacity', '0'));
     const mask = lineMask(heroR.w, heroR.h, D, M, railR, tall), ver = ++maskVer;
-    mask.toBlob((b) => {
-      if (!b || ver !== maskVer) return;
+    mask.toBlob((bl) => {
+      if (!bl || ver !== maskVer) return;
       if (maskURL) URL.revokeObjectURL(maskURL);
-      maskURL = URL.createObjectURL(b);
+      maskURL = URL.createObjectURL(bl);
       for (const ln of lineEls) ln.querySelector('mask image')?.setAttribute('href', maskURL);
       masked = true;
     }, 'image/png');
@@ -275,134 +280,153 @@ function block(el, idx) {
     const dk = Math.min(2, window.devicePixelRatio || 1);
     disc.width = Math.round(tw * dk); disc.height = Math.round(tw * 0.3 * dk); disc._k = dk; disc._deg = NaN;
     fx.append(tick);
-    marks = anchors.map((A, j) => {
-      if (!A) return null;
-      const m = document.createElement('div');
-      m.className = 'td__mk';
-      const t = (A.lead * Math.PI) / 180;
-      m.style.cssText = `--ang:${A.lead}deg;--lx:${px(Math.cos(t) * 42)};--ly:${px(Math.sin(t) * 42)}`;
-      m.innerHTML = `<i class="td__mk-lead"></i><i class="td__mk-dot"></i><b class="td__mk-n">${String(j + 1).padStart(2, '0')}</b>`;
-      fx.append(m);
-      return m;
-    });
-    lastHot = -2; parked = false;
+    for (const x of shots) {
+      x.marks = x.anchors.map((A, j) => {
+        if (!A) return null;
+        const m = document.createElement('div');
+        m.className = 'td__mk';
+        const t = (A.lead * Math.PI) / 180;
+        m.style.cssText = `--ang:${A.lead}deg;--lx:${px(Math.cos(t) * 42)};--ly:${px(Math.sin(t) * 42)}`;
+        m.innerHTML = `<i class="td__mk-lead"></i><i class="td__mk-dot"></i><b class="td__mk-n">${String(j + 1).padStart(2, '0')}</b>`;
+        fx.append(m);
+        return m;
+      });
+      x.lastHot = -2;
+    }
+    parked = false;
   };
 
   // hovering a row lights it and its marker (pointer only: the rows are plain list items and the markers are
   // aria-hidden decoration, so they add no tab stops)
-  rows.forEach((r, j) => {
-    const on = (v) => { r.classList.toggle('is-hl', v); marks[j]?.classList.toggle('is-hl', v); el.classList.toggle('has-hl', v && !!marks[j]); };
-    r.addEventListener('pointerenter', () => on(true));
-    r.addEventListener('pointerleave', () => on(false));
-  });
+  for (const x of shots) {
+    x.rows.forEach((r, j) => {
+      const on = (v) => { r.classList.toggle('is-hl', v); x.marks[j]?.classList.toggle('is-hl', v); el.classList.toggle('has-hl', v && !!x.marks[j]); };
+      r.addEventListener('pointerenter', () => on(true));
+      r.addEventListener('pointerleave', () => on(false));
+    });
+  }
+
+  /* a still at a framing: contain-fit in the pin, moved by one transform onto where it would sit in the slot rect */
+  const stillTf = (F, W) => {
+    const c = tdContain(S.w, S.h), c0 = tdContain(heroR.w, heroR.h);
+    tdView(F, W, VS);
+    const x = S.x + S.w / 2 - VS.sx * VS.zoom * c.w - heroR.w / 2, y = S.y + S.h / 2 + VS.sy * VS.zoom * c.h - heroR.h / 2;
+    return `translate3d(${px(x)}, ${px(y)}, 0) scale(${((VS.zoom * c.w) / c0.w).toFixed(4)})`;
+  };
 
   const frame = (v) => {
-    if (!F) return;
-    const r = tdRun(run, v.y, v.vh);
-    // far away: write the clamped state once, then rest (every value is a pure function of p)
-    if (r.pv < -1.8 * r.vp || r.pv > 1 + 1.6 * r.vp) { if (parked) return; parked = true; } else parked = false;
-    const ph = tdPhases(r.pv, r.vp, fl);
-    const p = ph.p, vp = r.vp;
+    if (!heroR) return;
+    const r = tdRun(run, v.y, v.vh), s = r.s;
+    // far away: write the clamped state once, then rest (every value is a pure function of s)
+    if (s < -2.0 || s > r.L + 1.8) { if (parked) return; parked = true; } else parked = false;
+    if (Math.abs(r.L - TL) > 1e-3) { timeline = tdTimeline(shots.length, r.L); TL = r.L; }
+    const st = tdState(s, timeline, r.L, fl, ST);
+    const k = st.k, ph = st.ph, sh = shots[k], T0 = timeline[0];
+    const cut = easeIO(st.cut);
     if (!drawn && window.__stage?.drawn) {
-      for (const s of window.__stage.drawn) if (s.id === id && s.device) { drawn = true; el.classList.add('is-drawn'); }
+      for (const sc of window.__stage.drawn) if (sc.id === id && sc.device) { drawn = true; el.classList.add('is-drawn'); }
     }
+    const hand = k === 0 ? ph.hand : 1;
 
-    // the slot: the whole viewport → the column rect. Computed, never laid out: the slot element stays the size of
-    // the pin (v3: no left/top/width/height per frame, so no layout and no layout shift); the stills inside it and
-    // the WebGL frame are both placed from this rect
-    tdLerpRect(heroR, colR, ph.hand, S);
-    tdView(F, ph, V);
-    // hand the scene the same rect, in the viewport, with this frame's number
+    // the slot: the whole viewport → the column rect (computed, never laid out); the scene gets the same rect
+    tdLerpRect(heroR, colR, hand, S);
+    tdView(sh.F, ph, V);
     live.x = S.x; live.y = S.y + tdPinTop(r, v.y, heroR.h); live.w = S.w; live.h = S.h; live.f = v.frame;
 
-    // stills (WebGL off, the phone still path, or until the scene draws): the same framing as the shader; hero angle →
-    // exploded. Each is contain-fit in the pin and moved by one transform onto where it would sit in the slot rect.
+    // stills and keys (WebGL off, the phone still path, or until the scene draws)
     if (!drawn) {
-      // each still at its own state: the whole device at the column's opening framing, the exploded one at the final
-      const c = tdContain(S.w, S.h), c0 = tdContain(heroR.w, heroR.h);
-      const tf = (W) => {
-        const x = S.x + S.w / 2 - W.sx * W.zoom * c.w - heroR.w / 2, y = S.y + S.h / 2 + W.sy * W.zoom * c.h - heroR.h / 2;
-        return `translate3d(${px(x)}, ${px(y)}, 0) scale(${((W.zoom * c.w) / c0.w).toFixed(4)})`;
-      };
-      PH.hand = ph.hand; PH.orbit = ph.orbit; PH.settle = ph.settle;
-      PH.explode = 0; put(stillH, 'transform', tf(tdView(F, PH, VS)));
-      PH.explode = 1; put(stillP, 'transform', tf(tdView(F, PH, VS)));
-      const k = smooth(seg(p, 0.5, 0.64));
-      put(stillH, 'opacity', f2((1 - k) * ph.fade)); put(stillP, 'opacity', f2(k * ph.fade));
+      if (lazy.length && s > -0.3) { for (const im of lazy) im.src = im.dataset.src; lazy.length = 0; }
+      shots.forEach((x, j) => {
+        let oh = 0, op = 0, ko = 0, kx = 0;
+        if (j === k) {
+          const xk = smooth(seg(ph.explodeLin, 0.2, 0.4)), out = 1 - smooth(seg(cut, 0.3, 0.7));
+          oh = (1 - xk) * out; op = xk * out;
+          ko = x.F.key ? hand : 0;
+        } else if (j === k + 1 && cut > 0) {
+          oh = smooth(seg(cut, 0.45, 0.85));
+          ko = 1; kx = (1 - cut) * heroR.w * 1.16;
+        }
+        if (oh > 0) { PH.hand = 1; PH.orbit = 1; PH.settle = 0; PH.explode = 0; if (j === 0 && k === 0) { PH.hand = ph.hand; PH.orbit = ph.orbit; } put(x.stillH, 'transform', stillTf(x.F, PH)); }
+        if (op > 0) { PH.hand = hand; PH.orbit = j === 0 ? ph.orbit : 1; PH.settle = ph.settle; PH.explode = 1; put(x.stillP, 'transform', stillTf(x.F, PH)); }
+        show(x.stillH, oh * st.fade); show(x.stillP, op * st.fade);
+        if (x.keyEl) { show(x.keyEl, ko); if (ko > 0) put(x.keyEl, 'transform', `translate3d(${px(kx)}, 0, 0)`); }
+      });
     }
 
-    // the opener: rises in through its mask as the run arrives, then drifts up and fades as the orbit gets going
+    // the title: rises in through its mask as the run arrives, then drifts up and fades before the hand-off
     if (hero) {
-      const kin = smooth(seg(r.pv, -0.9 * vp, -0.4 * vp));
+      const h0 = T0.hand[0];
+      const kin = smooth(seg(s, -0.9, -0.4));
       giantLines.forEach((ln) => put(ln, '--k', f3(kin)));
-      put(kicker, 'opacity', f3(smooth(seg(r.pv, -0.95 * vp, -0.5 * vp))));
-      const up = seg(p, 0, 0.24);
-      put(hero, 'transform', `translate3d(0, ${px(-up * (tall ? 0.05 : 0.11) * heroR.h)}, 0)`);
-      put(hero, 'opacity', f3(1 - smooth(seg(p, 0.07, 0.21))));
+      put(hero, 'transform', `translate3d(0, ${px(-seg(s, 0, h0) * (tall ? 0.05 : 0.11) * heroR.h)}, 0)`);
+      show(hero, 1 - smooth(seg(s, h0 - 0.4, h0 - 0.1)));
     }
 
-    // the copy
-    if (open) {
-      // arrives with the hand-off, in its column place: label, the head line by line, then the rows
-      // (after the slot has cleared the column, so no line rises over the device as it passes)
-      if (label) { const k = smooth(seg(p, 0.335, 0.395)); put(label, 'opacity', f3(k)); put(label, 'transform', `translate3d(0, ${px((1 - k) * 14)}, 0)`); }
-      headLines.forEach((ln, j) => put(ln, '--k', f3(smooth(seg(p, 0.355 + 0.026 * j, 0.425 + 0.026 * j)))));
-    } else if (intro) {
-      // arrives with the run (label, then the head line by line), sits over the orbit, then glides to the column
-      if (label) { const k = smooth(seg(r.pv, -0.75 * vp, -0.42 * vp)); put(label, 'opacity', f3(k)); put(label, 'transform', `translate3d(0, ${px((1 - k) * 14)}, 0)`); }
-      headLines.forEach((ln, j) => put(ln, '--k', f3(smooth(seg(r.pv, (-0.7 + 0.07 * j) * vp, (-0.36 + 0.07 * j) * vp)))));
-      const k = 1 - ph.hand;
-      put(copy, 'transform', `translate3d(${px(dCopy.x * k)}, ${px(dCopy.y * k)}, 0)`);
-      if (hs < 1) put(intro, 'transform', `scale(${(hs + (1 - hs) * ph.hand).toFixed(4)})`);
-    }
-    put(el, '--td-hand', f3(ph.hand));
-
-    // spec rows: stagger in with the hand-off, then light in step with the explode (the newest one gold)
-    const n = rows.length;
-    let hot = -1;
-    rows.forEach((row, j) => {
-      const a = 0.395 + (0.06 * j) / Math.max(1, n - 1);
-      put(row, '--in', f3(smooth(seg(p, a, a + 0.05))));
-      const b = 0.47 + (0.34 * j) / Math.max(1, n);
-      const on = smooth(seg(p, b, b + 0.045));
-      put(row, '--on', f3(on));
-      if (on > 0.5) hot = j;
+    // each shot's copy: in with its hand-off (shot 0) or its cut (the rest), out at the next cut
+    shots.forEach((x, j) => {
+      const t = timeline[j], nxt = timeline[j + 1];
+      let a0, a1;   // the arrival window
+      if (j === 0) { a0 = t.hand[0] + 0.36 * (t.hand[1] - t.hand[0]); a1 = t.hand[1]; }
+      else { a0 = t.cut[0] + 0.45 * (t.cut[1] - t.cut[0]); a1 = t.explode[0]; }
+      const out = nxt ? smooth(seg(s, nxt.cut[0], nxt.cut[0] + 0.45 * (nxt.cut[1] - nxt.cut[0]))) : 0;
+      const vis = s >= a0 - 0.05 && out < 1;
+      if (!multi) put(x.copy, 'visibility', 'visible');
+      else {
+        show(x.copy, vis ? 1 - out : 0);
+        put(x.copy, 'transform', out > 0 ? `translate3d(0, ${px(-out * 18)}, 0)` : 'none');
+      }
+      if (!vis && multi) return;
+      const span = a1 - a0;
+      if (x.label) { const kl = smooth(seg(s, a0, a0 + 0.5 * span)); put(x.label, 'opacity', f3(kl)); put(x.label, 'transform', `translate3d(0, ${px((1 - kl) * 14)}, 0)`); }
+      x.headLines.forEach((ln, i) => put(ln, '--k', f3(smooth(seg(s, a0 + (0.15 + 0.2 * i) * span, a0 + (0.75 + 0.2 * i) * span)))));
+      // spec rows: stagger in with the arrival, then light in step with the explode (the newest one gold)
+      const n = x.rows.length, ex = timeline[j].explode, es = ex[1] - ex[0];
+      let hot = -1;
+      x.rows.forEach((row, i) => {
+        const b0 = a0 + (0.45 + (0.5 * i) / Math.max(1, n - 1)) * span;
+        put(row, '--in', f3(smooth(seg(s, b0, b0 + 0.45 * span))));
+        const b = ex[0] + (0.02 + (0.83 * i) / Math.max(1, n)) * es;
+        const on = smooth(seg(s, b, b + 0.11 * es));
+        put(row, '--on', f3(on));
+        if (on > 0.5) hot = i;
+      });
+      if (!x.keepHot && s > timeline[j].settle[0] + 0.3 * (timeline[j].settle[1] - timeline[j].settle[0])) hot = -1;
+      if (hot !== x.lastHot) { x.rows.forEach((row, i) => row.classList.toggle('is-hot', i === hot)); x.lastHot = hot; }
     });
-    if (p > 0.86) hot = -1;
-    if (hot !== lastHot) { rows.forEach((row, j) => row.classList.toggle('is-hot', j === hot)); lastHot = hot; }
+    put(el, '--td-hand', f3(hand));
 
-    // construction lines and the ticker: the layers come in one after another as the orbit runs, gone as the
-    // hand-off begins (opacity only: composited, nothing is redrawn)
-    const linesOut = 1 - smooth(seg(p, 0.25, 0.33));
-    const kl = seg(r.pv, -0.8 * vp, 0.24), lin = linesOut * smooth(seg(r.pv, -0.9 * vp, -0.5 * vp));
-    const nl = lineEls.length - 1, all = kl >= LAYER_K[Math.min(nl - 1, LAYER_K.length - 1)][1];
-    lineEls.forEach((ln, j) => {
-      let o = 0;
-      if (masked && lin > 0) o = j === nl ? (all ? lin : 0) : (all ? 0 : lin * smooth(seg(kl, LAYER_K[Math.min(j, LAYER_K.length - 1)][0], LAYER_K[Math.min(j, LAYER_K.length - 1)][1])));
-      const v = f2(o);
-      put(ln, 'opacity', v);
-      put(ln, 'visibility', v === '0.00' ? 'hidden' : 'visible');   // a hidden layer is not composited at all
-    });
+    // shot 0's construction lines and ticker: the lines come up as the run arrives and the orbit gets going, gone as
+    // the hand-off begins (opacity only: composited, nothing is redrawn)
+    const h0 = T0.hand[0];
+    const linesOut = 1 - smooth(seg(s, h0 - 0.05, h0 + 0.14));
+    const lin = masked ? linesOut * smooth(seg(s, -0.8, 0.1)) : 0;
+    lineEls.forEach((ln) => { const v2 = f2(lin); put(ln, 'opacity', v2); put(ln, 'visibility', v2 === '0.00' ? 'hidden' : 'visible'); });
     if (tick) {
-      const deg = Math.round(-150 * ph.orbit * 4) / 4;
-      if (deg !== disc._deg && tick.style.opacity !== '0.00') { disc._deg = deg; drawTick(disc, deg); }
-      const to = f2(linesOut * smooth(seg(r.pv, -0.7 * vp, -0.2 * vp)));
+      // the scale turns with the orbit, redrawn in 0.5° steps and at most every other frame (each redraw re-uploads the
+      // canvas: at 30 Hz a turntable scale reads the same and costs half)
+      const deg = Math.round(-150 * (k === 0 ? ph.orbit : 1) * 2) / 2;
+      if (deg !== disc._deg && tick.style.opacity !== '0.00' && v.frame - (disc._at || -9) >= 2) { disc._deg = deg; disc._at = v.frame; drawTick(disc, deg); }
+      const to = f2(linesOut * smooth(seg(s, -0.7, -0.2)));
       put(tick, 'opacity', to); put(tick, 'visibility', to === '0.00' ? 'hidden' : 'visible');
     }
 
-    // part markers (desktop): on their parts in the exploded frame, through the shader's transform
+    // part markers (desktop): the current shot's, on their parts in the exploded frame, through the shader's transform
     if (desk) {
-      const fout = fl.wout ? 1 : 1 - smooth(seg(r.pv, 1 + 0.25 * vp, 1 + 0.48 * vp));
+      const fout = fl.wout ? 1 : 1 - smooth(seg(s, r.L + 0.25, r.L + 0.48));
       const lv = drawn ? live : null;
-      marks.forEach((m, j) => {
-        if (!m) return;
-        const k = smooth(seg(p, 0.8 + 0.013 * j, 0.84 + 0.013 * j)) * fout;
-        put(m, 'opacity', f3(Math.min(1, k * 1.6)));
-        put(m, '--k', f3(k));
-        if (k <= 0) return;
-        const A = anchors[j];
-        tdProject(A.u, A.v, S, V, lv, A.d, Q);
-        put(m, 'transform', `translate3d(${px(Q.x)}, ${px(Q.y)}, 0)`);
+      shots.forEach((x, j) => {
+        const ex = timeline[j].explode, es = ex[1] - ex[0];
+        x.marks.forEach((m, i) => {
+          if (!m) return;
+          const kk = j === k ? smooth(seg(s, ex[0] + (0.85 + 0.032 * i) * es, ex[0] + (0.95 + 0.032 * i) * es)) * fout * (1 - smooth(seg(cut, 0, 0.3))) : 0;
+          put(m, 'opacity', f3(Math.min(1, kk * 1.6)));
+          put(m, 'visibility', kk > 0 ? 'visible' : 'hidden');
+          put(m, '--k', f3(kk));
+          if (kk <= 0) return;
+          const A = x.anchors[i];
+          tdProject(A.u, A.v, S, V, lv, A.d, Q);
+          put(m, 'transform', `translate3d(${px(Q.x)}, ${px(Q.y)}, 0)`);
+        });
       });
     }
   };
@@ -413,16 +437,30 @@ function block(el, idx) {
     // fonts / late layout: re-measure only when something that matters moved
     if (pin.clientWidth !== heroR.w || pin.clientHeight !== heroR.h || target.offsetTop !== colR.y || target.offsetWidth !== colR.w
       || (tall && copyTopNow() !== copyTop)
-      || (head && head.clientWidth !== head._td?.w) || (giant && giant.clientWidth !== giant._td?.w)) measure();
+      || shots.some((x) => x.head && x.head.clientWidth !== x.head._td?.w) || (giant && giant.clientWidth !== giant._td?.w)) measure();
   });
-  document.fonts?.ready.then(() => { if (head) head._td.w = -1; if (giant) giant._td.w = -1; measure(); });
+  document.fonts?.ready.then(() => { for (const x of shots) if (x.head) x.head._td.w = -1; if (giant) giant._td.w = -1; measure(); });
   onFrame(frame);
+  // WebGL off: the fixed plate under the run is not composited while the run (its own black) covers the screen
+  coverPlates(el);
+}
+
+/* each shot's colour key onto its DOM layer (--k0 centre, --k1 edge): the still path and the static layout use it */
+function keys(el) {
+  const shotEls = tdShots(el);
+  shotEls.forEach((sEl, j) => {
+    const key = tdKey(sEl.dataset.tdKey), k = el.querySelector(`.td__key[data-td-still="${j}"]`);
+    if (!key || !k) return;
+    const c = (o) => `rgb(${Math.round(key[o] * 255)},${Math.round(key[o + 1] * 255)},${Math.round(key[o + 2] * 255)})`;
+    k.style.setProperty('--k0', c(0)); k.style.setProperty('--k1', c(3));
+  });
 }
 
 export function init() {
   const blocks = [...document.querySelectorAll('.td[data-td]')];
   blocks.forEach((el, i) => {
     el.dataset.tdReady = '';
+    keys(el);
     if (REDUCED) { el.classList.add('td-static'); return; }
     block(el, i);
   });

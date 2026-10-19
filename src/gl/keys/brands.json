@@ -1,59 +1,24 @@
 {
- "//": "Camera keys for plate:brands (gl/timeline.js). One file per chapter.",
+ "//": "Camera keys for plate:brands (gl/timeline.js; focus y is measured from the painting's bottom, as the plate shader reads it; t = viewports of the opener's pass, 0 = its top enters at the bottom). Track O1.",
+ "//1": "1 · t 0–1.04, the title's frame: close on the red velvet and the globe (window x .03–.5), the manifest's calm third under the giant title and dek.",
+ "//2": "2 · t 1.04–1.55, as the title leaves: a truck right that eases back a little, to the commission (window x .39–.95): the scroll passing hand to hand, the kit on the table.",
+ "//3": "3 · t 1.55–2.3, a gentle push toward the handover as the paper rises; it eases out and lands still.",
  "camera": {
   "zoom": [
-   {
-    "t": 0,
-    "v": 1.04,
-    "ease": [
-     0.3333,
-     0,
-     0.6667,
-     1
-    ]
-   },
-   {
-    "t": 2.4,
-    "v": 1.2
-   }
+   { "t": 0, "v": 1.9 },
+   { "t": 1.04, "v": 1.9, "ease": [0.62, 0, 0.32, 1] },
+   { "t": 1.55, "v": 1.6, "ease": [0.25, 0.1, 0.25, 1] },
+   { "t": 2.3, "v": 1.7 }
   ],
   "focus": [
-   {
-    "t": 0,
-    "v": [
-     0.6,
-     0.48
-    ],
-    "ease": [
-     0.3333,
-     0,
-     0.6667,
-     1
-    ]
-   },
-   {
-    "t": 2.4,
-    "v": [
-     0.66,
-     0.5
-    ]
-   }
+   { "t": 0, "v": [0.0, 0.3] },
+   { "t": 1.04, "v": [0.0, 0.3], "ease": [0.62, 0, 0.32, 1] },
+   { "t": 1.55, "v": [1.0, 0.76], "ease": [0.25, 0.1, 0.25, 1] },
+   { "t": 2.3, "v": [0.98, 0.7] }
   ],
   "push": [
-   {
-    "t": 0,
-    "v": 0.03,
-    "ease": [
-     0.3333,
-     0,
-     0.6667,
-     1
-    ]
-   },
-   {
-    "t": 2.4,
-    "v": 0.09
-   }
+   { "t": 0, "v": 0.015, "ease": [0.45, 0, 0.55, 1] },
+   { "t": 2.3, "v": 0.06 }
   ]
  }
 }

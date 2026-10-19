@@ -6,11 +6,14 @@
        as invisible keyboard / screen-reader targets exactly over the WebGL posters;
      - the caption: the creator name (from F64–F70) and "0N / 07" (F72's pattern).
    Static mode (no JS, ?tier=0, reduced motion): the list is a plain grid / scroll-snap row.
-   The active index is exposed as state.active and as a "showcase:active" event on the section. */
+   The active index is exposed as state.active and as a "showcase:active" event on the section.
+   Posters are <picture>s (AVIF, WebP fallback): small files for the static grid; in the animated run on desktop the
+   proxy asks for the 1200-px file, the one the WebGL scene uploads, so each poster is fetched once.
+   After the run: "Watch the work" (initVideos below), the XXL video cards. */
 import './showcase.css';
 import { onFrame, clamp, smooth, seg, lenis } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
-import { REDUCED, TIER, FINE } from '../core/env.js';
+import { REDUCED, TIER, FINE, STILL } from '../core/env.js';
 import { openModal } from '../ui/modal.js';
 
 export const N = 7;
@@ -77,10 +80,16 @@ export function init() {
   state.items = lis.map((li) => {
     const img = li.querySelector('img');
     const [name, tag] = img.alt.split(' — ');
-    return { slug: li.dataset.slug, src: img.getAttribute('src'), title: img.alt, name, tag, aspect: +img.getAttribute('width') / +img.getAttribute('height') };
+    const avif = li.querySelector('source[type="image/avif"]')?.srcset.match(/(\S+)\s+1200w/)?.[1] || null;
+    return { slug: li.dataset.slug, src: img.getAttribute('src'), avif, title: img.alt, name, tag, aspect: +img.getAttribute('width') / +img.getAttribute('height') };
   });
 
   const animated = TIER > 0 && !REDUCED;
+  initVideos(sec);
+  // the animated run on desktop: the proxy shows the 1200-px poster (the WebGL texture: one fetch per poster)
+  if (animated && !STILL) lis.forEach((li) => li.querySelectorAll('source, img').forEach((n) => n.setAttribute('sizes', '1200px')));
+  // the modal's poster: the AVIF the page already has where the browser takes AVIF
+  const big = (it) => (it.avif && lis.some((li) => li.querySelector('img').currentSrc.endsWith('.avif')) ? it.avif : it.src);
   let quiet = false;
 
   /* ── modal: the large poster, its full title, Previous / Next ─────────── */
@@ -105,12 +114,12 @@ export function init() {
       prev.disabled = n === 0; next.disabled = n === N - 1;
       if (document.activeElement === prev && prev.disabled) next.focus();
       if (document.activeElement === next && next.disabled) prev.focus();
-      const apply = () => { img.src = it.src; img.alt = it.title; img.width = 1200; img.height = Math.round(1200 / it.aspect); fig.classList.remove('is-swapping'); };
+      const apply = () => { img.src = big(it); img.alt = it.title; img.width = 1200; img.height = Math.round(1200 / it.aspect); fig.classList.remove('is-swapping'); };
       if (first) return apply();
       // decode the next poster before swapping, so the frame never flashes empty
       const my = ++token, pre = new Image();
       fig.classList.add('is-swapping');
-      pre.src = it.src;
+      pre.src = big(it);
       pre.decode().catch(() => {}).then(() => { if (my === token) apply(); });
     };
     prev.addEventListener('click', () => cur > 0 && show(cur - 1));
@@ -255,4 +264,136 @@ export function init() {
       sec.dispatchEvent(new CustomEvent('showcase:active', { detail: { index: a, name: state.items[a].name } }));
     }
   });
+}
+
+/* ── Watch the work: the XXL video cards (markup: src/partials/showcase.html, from docs/videos.json) ───────────
+   - art: each card starts with its creator's poster composed 16:9 (no third-party request). Once Showcase is within
+     about a screen, cards near the row's view ask i.ytimg.com for maxresdefault, then hqdefault; a 120×90 answer is
+     YouTube's placeholder: no maxres → try hq; no hq → the id does not exist and the card is hidden. A blocked or
+     failed request keeps the poster art.
+   - play: the shared modal morphs from the card art (View Transitions); the youtube-nocookie iframe is created once
+     the modal has opened and removed before it closes. No iframe exists until a click.
+   - the row: native horizontal scroll with snap; Previous / Next and the 0N / 0M counter from 720 px. */
+const YT = (id, q) => `https://i.ytimg.com/vi/${id}/${q}.jpg`;
+const probe = (src) => new Promise((res) => {
+  const im = new Image();
+  im.onload = () => res(im.naturalWidth > 120 ? src : 'placeholder');
+  im.onerror = () => res(null);
+  im.src = src;
+});
+export function initVideos(sec) {
+  const wv = sec.querySelector('[data-wv]');
+  if (!wv) return;
+  const scroller = wv.querySelector('[data-wv-scroller]');
+  const items = [...wv.querySelectorAll('.wv__item')];
+  const nav = wv.querySelector('[data-wv-nav]');
+  const prev = wv.querySelector('[data-wv-prev]'), next = wv.querySelector('[data-wv-next]');
+  const num = wv.querySelector('[data-wv-num]'), total = wv.querySelector('[data-wv-total]');
+  const pad2 = (n) => String(n).padStart(2, '0');
+  const shown = () => items.filter((li) => !li.hidden);
+
+  /* art */
+  async function art(li) {
+    if (li.dataset.art) return;
+    li.dataset.art = 'pending';
+    const id = li.dataset.yt;
+    let got = await probe(YT(id, 'maxresdefault'));
+    if (got === 'placeholder' || got === null) {
+      const hq = await probe(YT(id, 'hqdefault'));
+      if (hq === 'placeholder' && got === 'placeholder') { li.hidden = true; li.dataset.art = 'missing'; update(true); return; }
+      got = hq === 'placeholder' ? null : hq;
+    }
+    if (!got) { li.dataset.art = 'poster'; return; }
+    const pic = li.querySelector('.wv__art'), img = pic.querySelector('img');
+    pic.querySelectorAll('source').forEach((n) => n.remove());
+    img.removeAttribute('srcset'); img.removeAttribute('sizes');
+    img.src = got;
+    li.dataset.art = 'youtube';
+  }
+  if ('IntersectionObserver' in window) {
+    const near = new IntersectionObserver((es) => {
+      for (const e of es) if (e.isIntersecting) { art(e.target); near.unobserve(e.target); }
+    }, { root: scroller, rootMargin: '0px 120% 0px 120%' });
+    const gate = new IntersectionObserver((es) => {
+      if (!es.some((e) => e.isIntersecting)) return;
+      gate.disconnect();
+      items.forEach((li) => near.observe(li));
+    }, { rootMargin: '100% 0px 100% 0px' });
+    gate.observe(wv);
+  }
+
+  /* the row */
+  let step = 1, lastI = -1;
+  const measure = () => {
+    const a = shown();
+    step = a.length > 1 ? a[1].offsetLeft - a[0].offsetLeft : (a[0]?.offsetWidth || 1);
+  };
+  function update(force) {
+    const a = shown();
+    if (force) { measure(); if (total) total.textContent = pad2(a.length); lastI = -1; }
+    const max = scroller.scrollWidth - scroller.clientWidth;
+    const i = scroller.scrollLeft >= max - 2 ? a.length - 1 : Math.min(a.length - 1, Math.round(scroller.scrollLeft / Math.max(1, step)));
+    if (prev) prev.disabled = scroller.scrollLeft <= 2;
+    if (next) next.disabled = scroller.scrollLeft >= max - 2;
+    if (i === lastI && !force) return;
+    lastI = i;
+    if (num) num.textContent = pad2(i + 1);
+  }
+  let raf = 0;
+  scroller.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); }, { passive: true });
+  const go = (d) => {
+    const i = Math.max(0, Math.round(scroller.scrollLeft / Math.max(1, step)) + d);
+    scroller.scrollTo({ left: i * step, behavior: REDUCED ? 'auto' : 'smooth' });
+  };
+  prev?.addEventListener('click', () => go(-1));
+  next?.addEventListener('click', () => go(1));
+  if (nav) nav.hidden = false;
+  onLayout(() => update(true));
+  requestAnimationFrame(() => update(true));
+  // a focused card is brought fully into the row's view (keyboard)
+  wv.addEventListener('focusin', (e) => {
+    const li = e.target.closest('.wv__item');
+    if (!li) return;
+    const l = li.offsetLeft - (items[0].offsetLeft || 0), sl = scroller.scrollLeft;
+    if (l < sl || l + li.offsetWidth > sl + scroller.clientWidth) scroller.scrollTo({ left: l, behavior: REDUCED ? 'auto' : 'smooth' });
+  });
+
+  /* play */
+  wv.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-wv-play]');
+    if (b) openVideo(b.closest('.wv__item'));
+  });
+  function openVideo(li) {
+    const id = li.dataset.yt;
+    const card = li.querySelector('.wv__art img');
+    const t = li.querySelector('.wv__t'), by = li.querySelector('.wv__by');
+    const fig = document.createElement('figure');
+    fig.className = 'wvm'; fig.dataset.theme = 'dark';
+    fig.innerHTML = `<div class="wvm__frame"><img class="wvm__art" alt="" decoding="async" width="1920" height="1080"></div>
+      <figcaption class="wvm__cap"><p class="wvm__by"></p><h2 class="wvm__t" id="modal-title"></h2>
+        <a class="boxlink wvm__yt" target="_blank" rel="noopener" data-draft="DC62">Watch on YouTube <span class="ar">↗</span></a></figcaption>`;
+    fig.querySelector('.wvm__art').src = card.currentSrc || card.src;
+    fig.querySelector('.wvm__by').textContent = by.textContent;
+    const h = fig.querySelector('.wvm__t');
+    h.textContent = t.textContent;
+    if (t.dataset.draft) h.dataset.draft = t.dataset.draft;
+    fig.querySelector('.wvm__yt').href = `https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
+    let frame = null;
+    openModal(fig, {
+      from: card,
+      onOpen() {
+        frame = document.createElement('iframe');
+        frame.className = 'wvm__player';
+        frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&playsinline=1`;
+        frame.title = t.textContent;
+        frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        frame.allowFullscreen = true;
+        frame.referrerPolicy = 'strict-origin-when-cross-origin';
+        frame.addEventListener('load', () => frame?.classList.add('is-in'), { once: true });
+        fig.querySelector('.wvm__frame').append(frame);
+      },
+      beforeClose() { frame?.remove(); frame = null; },
+      onClose() { frame?.remove(); frame = null; },
+    });
+  }
 }

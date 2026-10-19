@@ -1,5 +1,12 @@
-<!-- HERO · scene: film (hero frames 1–260) · owner: shell -->
-<section class="hero" id="top" data-theme="dark" data-scene="film" data-plate="hero" data-film="hero" data-frames="0-399" aria-label="Creative Motley — Edition I">
+<!-- HERO · scene: film · owner: track S (v3 phase 2)
+     One screen of hero, then the film. The section is 190svh: its pin holds the golden frame (mark, dek, index) at rest
+     while the painting pushes in on load (the copy is DOM, never gated on it), then the three beats while the film
+     plays. data-film-map keys the film in screens of scroll since the top (s) onto its source frames (f), "s f s f …"
+     (gl/lib/filmRanges.js): rest → the camera handed across and the push into the lens (0.09–0.40) → the lens, the
+     glint and the vortex, crossed fast (0.40–0.62) → the machine drawing the Storytellers painting, finishing as the
+     Storytellers title rises (0.62–1.40). The beats (ui/hero.js) read the same screens. -->
+<section class="hero" id="top" data-theme="dark" data-scene="film" data-plate="hero" data-film="hero" data-frames="0-569"
+  data-film-map="0 0 0.05 0 0.09 200 0.4 344 0.62 420 1.16 530 1.4 569" style="height: 190svh" aria-label="Creative Motley — Edition I">
   <div class="hero__pin">
     <div class="lines" aria-hidden="true" data-lines></div>
     <div class="frame" data-frame>
@@ -21,9 +28,9 @@
       </nav>
     </div>
     <div class="beats" aria-live="off">
-      <p class="beat dek" data-beat="0"><span class="dc">A</span>frica’s stories were never the problem.</p>
-      <p class="beat dek" data-beat="1"><span class="dc">T</span>he distribution was.</p>
-      <p class="beat dek" data-beat="2"><span class="dc">S</span>o we built the machine that carries them.</p>
+      <p class="beat dek" data-beat="0.12 0.36"><span class="dc">A</span>frica’s stories were never the problem.</p>
+      <p class="beat dek" data-beat="0.42 0.62"><span class="dc">T</span>he distribution was.</p>
+      <p class="beat dek" data-beat="0.68 0.9"><span class="dc">S</span>o we built the machine that carries them.</p>
     </div>
   </div>
 </section>

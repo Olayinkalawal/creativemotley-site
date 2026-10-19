@@ -11,7 +11,7 @@
      contact shadow under each poster.
    Click / hover: state.pick ray-casts the posters (the section turns the arc or opens the modal). */
 import * as THREE from 'three';
-import { texture } from '../lib/loaders.js';
+import { texture, avifOK } from '../lib/loaders.js';
 import { state, arcAt, place, N } from '../../sections/showcase.js';
 
 const roomVert = /* glsl */`void main() { gl_Position = vec4(position.xy, 0.0, 1.0); }`;
@@ -198,9 +198,12 @@ export default function register(stage) {
       const small = ctx.vw < 900;
       const aniso = Math.min(8, ctx.renderer.capabilities.getMaxAnisotropy());
       const opts = { colorSpaceConversion: 'none', premultiplyAlpha: 'none' };
+      // the 1200-px AVIF where it decodes (the same file the section's proxy shows, so it is fetched once), else WebP
+      const avif = await avifOK();
       await Promise.all(state.items.map(async (it, k) => {
-        const res = await fetch(it.src);
-        if (!res.ok) throw new Error(`${res.status} ${it.src}`);
+        const src = avif && it.avif ? it.avif : it.src;
+        const res = await fetch(src);
+        if (!res.ok) throw new Error(`${res.status} ${src}`);
         const blob = await res.blob();
         let bmp;
         // phones get a 720 px texture (the centred poster is ~330 CSS px wide there); desktops the 1200 px source

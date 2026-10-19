@@ -30,14 +30,19 @@ const DEPTH = {
   creators: '/assets/scenes/creators/depth.webp', brands: '/assets/scenes/brands/depth.webp',
   directors: '/assets/scenes/directors/depth.webp', apply: '/assets/scenes/apply/depth.webp',
 };
+/* the deepest zoom a chapter's keys reach (the painting must stay sharp there) */
+const maxZoom = (chapter) => {
+  const k = SHEETS[chapter]?.channels['camera.zoom'];
+  return k ? Math.max(1.15, ...k.map((x) => x.v)) : 1.15;
+};
 /* the sources to try, best first: the smallest encode that covers the canvas (cover fit, plus headroom for the
-   camera's zoom), AVIF before WebP */
+   camera's deepest zoom; 10% upscale allowed), AVIF before WebP */
 async function paintingFor(chapter, ctx) {
   const d = DESK[`/public/assets/scenes/${chapter}/manifest.json`];
   const best = (l) => {
     l = [...(l || [])].filter((v) => v && v.src && v.w && v.h).sort((a, b) => a.w - b.w);
     if (!l.length) return null;
-    const need = Math.max(ctx.w, ctx.h * (l[0].w / l[0].h)) * 1.15 * 0.9;
+    const need = Math.max(ctx.w, ctx.h * (l[0].w / l[0].h)) * maxZoom(chapter) * 0.9;
     return l.find((v) => v.w >= need) || l[l.length - 1];
   };
   const a = (await avifOK()) ? best(d.avif) : null;
@@ -47,6 +52,22 @@ async function loadFirst(srcs) {
   for (let i = 0; i < srcs.length; i++) {
     try { return await loadTexture(srcs[i]); } catch (e) { if (i === srcs.length - 1) throw e; }
   }
+}
+
+/* data-rise on the scene element: until its top reaches the top of the screen, the painting rises with it (it enters
+   like the next sheet, under the paper above), then holds still while the copy scrolls over it. So an opener's title,
+   set near its top, stays over the same calm part of the painting all the way in. A shift of the view centre:
+   at zoom z the painting moves D screens when the focus moves D / (z - 1) (the shader's uv is bottom-up). Opt-in;
+   reduced motion and zooms under 1.05 never rise. Shared with gl/scenes/stills.js (the phone path). */
+export function riseOf(s, ctx) {
+  if (ctx.reduced || !s.el.hasAttribute('data-rise')) return 0;
+  return Math.max(0, 1 - passT(s, ctx.vh));
+}
+function riseShift(s, ctx, zoom, img) {
+  const D = riseOf(s, ctx);
+  if (!D || zoom < 1.05) return 0;
+  const ra = ctx.vw / ctx.vh, ia = img.x / img.y;
+  return (D * (ra > ia ? ia / ra : 1)) / (zoom - 1);
 }
 
 export function plateScene({ id, image, depth, video = null, strength = 0.022, post }) {
@@ -93,7 +114,7 @@ export function plateScene({ id, image, depth, video = null, strength = 0.022, p
       }
       const u = mat.uniforms;
       u.zoom.value = cam.zoom;
-      u.focus.value.set(cam.focus[0], cam.focus[1]);
+      u.focus.value.set(cam.focus[0], cam.focus[1] + riseShift(s, ctx, cam.zoom, u.imgSize.value));
       u.push.value = cam.push + (ctx.reduced ? 0 : 0.012 * Math.sin(ctx.time * 0.3));
       u.strength.value = ctx.reduced ? 0 : strength;
       u.pointer.value.copy(ctx.pointer);

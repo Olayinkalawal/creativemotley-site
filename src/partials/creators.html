@@ -1,88 +1,96 @@
-<!-- II · CREATORS · scene: plate:creators ("The Atelier", public/assets/scenes/creators: push in on the desk and the
-     wall of portraits) · owner: builder A
-     The scene and its camera keys sit on the opener, so the push runs from "opener enters" to "paper covers",
-     whatever the paper's length. Keys: src/gl/keys/creators.json (data-cam-* is the fallback). Phones draw
-     the portrait recomposition from the same manifest (gl/scenes/stills.js). -->
+<!-- II · CREATORS · scene: plate:creators ("The Atelier", public/assets/scenes/creators) · owner: track O1
+     Opener: the title and dek sit near the top, over the painting's calm third (manifest titleBox: the curtain and the
+     lit wall); data-rise: the painting rises with the opener, then holds, so the title rides that calm third all the way
+     in. Keys (src/gl/keys/creators.json): the title's frame is close on that corner; as the title leaves, the
+     camera trucks right to the atelier and pushes in gently, landing before the paper covers. Phones draw the portrait
+     recomposition (gl/scenes/stills.js), whose calm top third holds the title. data-cam-* is the no-sheet fallback.
+     Paper (≈ 1.45 screens at 1440×900): head + Creators block, the notes fan · "What we run" (DC10–DC17, drafts) · the command
+     cloud beside Media Owners (+ DC19). The fan's thumbnails are crops of this chapter's own painting
+     (public/assets/thumbs/crops), never a creator's thumbnail beside an illustrative number. -->
 <section class="chapter" id="creators" data-chapter data-theme="dark" aria-labelledby="creators-title">
-  <div class="opener col" data-scene="plate:creators" data-plate="creators"
-    data-cam-from="1.04 0.6 0.5 0.03" data-cam-to="1.2 0.66 0.55 0.09">
+  <div class="opener opener--top col" data-scene="plate:creators" data-plate="creators" data-rise
+    data-cam-from="1.65 0 0.3 0.015" data-cam-to="1.7 0.92 0.56 0.06">
     <div class="scrim">
       <h2 class="giant" id="creators-title" data-reveal>Creators</h2>
       <p class="dek" data-reveal="0.08"><span class="dc">M</span>ove from creator to media company.</p>
     </div>
   </div>
-  <div class="paper" data-theme="light" data-opaque>
+  <div class="paper paper--baked" data-theme="light" data-opaque>
     <div class="paper-grain" aria-hidden="true"></div>
     <div class="col cr">
-      <h3 class="head cr__head" data-reveal><span class="dc">B</span>uilt for serious storytellers.</h3>
-
-      <!-- Creators -->
-      <div class="pf cr__block" data-reveal>
-        <h4 class="pf__label">Creators</h4>
-        <p class="pf__body">Systems, not chaos.</p>
-        <a class="boxlink" href="mailto:info@creativemotley.com?subject=Creator%20network">Join the network <span class="ar">↗</span></a>
-      </div>
-
-      <!-- production notes (illustrative, from the live site's feed) -->
-      <ul class="fan cr__fan" data-fan>
-        <li class="fan__card">
-          <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/storytellers.webp);--cx:.632;--cy:.47;--zoom:5.4"></span>
-          <p class="fan__note">Retention dips at 0:42 — recut the cold open</p>
-        </li>
-        <li class="fan__card">
-          <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/storytellers.webp);--cx:.6;--cy:.17;--zoom:4.2"></span>
-          <p class="fan__note">Thumbnail B outperformed A by 34%</p>
-        </li>
-        <li class="fan__card">
-          <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/storytellers.webp);--cx:.78;--cy:.33;--zoom:4.4"></span>
-          <p class="fan__note">Watch time up 3.1× since March</p>
-        </li>
-        <li class="fan__card">
-          <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/storytellers.webp);--cx:.52;--cy:.73;--zoom:4.6"></span>
-          <p class="fan__note">End screens added to 40 videos</p>
-        </li>
-      </ul>
-
-      <!-- slash commands: three real ones (a list), faint echoes behind them for depth -->
-      <div class="cloud cr__cloud" data-cloud>
-        <div class="cloud__echoes" aria-hidden="true">
-          <span class="cloud__node" style="--x:14;--y:10;--z:.24;--mx:28;--my:3">/thumbnail-test</span>
-          <span class="cloud__node" style="--x:87;--y:6;--z:.16;--mx:86;--my:27">/upload-calendar</span>
-          <span class="cloud__node" style="--x:92;--y:42;--z:.12;--mx:14;--my:64">/retention-check</span>
-          <span class="cloud__node" style="--x:9;--y:76;--z:.3;--mx:82;--my:93">/retention-check</span>
-          <span class="cloud__node" style="--x:47;--y:94;--z:.2;--mx:24;--my:97">/upload-calendar</span>
-          <span class="cloud__node" style="--x:90;--y:90;--z:.14;--mx:90;--my:60">/thumbnail-test</span>
+      <div class="cr__intro">
+        <div class="cr__lede">
+          <h3 class="head cr__head" data-reveal><span class="dc">B</span>uilt for serious storytellers.</h3>
+          <div class="pf cr__block" data-reveal="0.06">
+            <h4 class="pf__label">Creators</h4>
+            <p class="pf__body">Systems, not chaos.</p>
+            <a class="boxlink" href="mailto:info@creativemotley.com?subject=Creator%20network">Join the network <span class="ar">↗</span></a>
+          </div>
         </div>
-        <ul class="cloud__list">
-          <li class="cloud__node" style="--x:62;--y:19;--z:.78;--mx:52;--my:14">/retention-check</li>
-          <li class="cloud__node cloud__card" data-theme="dark" style="--x:31;--y:47;--z:1;--mx:46;--my:45">
-            <span class="cloud__cmd">/upload-calendar</span>
-            <span class="cloud__note">Series bible approved</span>
+        <!-- production notes (illustrative, from the live site's feed); the thumbnails are crops of the Atelier painting -->
+        <ul class="fan cr__fan" data-fan>
+          <li class="fan__card">
+            <span class="fan__thumb" aria-hidden="true"><picture><source type="image/avif" srcset="/assets/thumbs/crops/creators-edit-240.avif 240w, /assets/thumbs/crops/creators-edit-480.avif 480w" sizes="(max-width: 899px) 44vw, 240px"><img src="/assets/thumbs/crops/creators-edit-480.webp" srcset="/assets/thumbs/crops/creators-edit-240.webp 240w, /assets/thumbs/crops/creators-edit-480.webp 480w" sizes="(max-width: 899px) 44vw, 240px" alt="" width="480" height="360" loading="lazy" decoding="async"></picture></span>
+            <p class="fan__note">Retention dips at 0:42 — recut the cold open</p>
           </li>
-          <li class="cloud__node" style="--x:71;--y:73;--z:.64;--mx:56;--my:78">/thumbnail-test</li>
+          <li class="fan__card">
+            <span class="fan__thumb" aria-hidden="true"><picture><source type="image/avif" srcset="/assets/thumbs/crops/creators-camera-240.avif 240w, /assets/thumbs/crops/creators-camera-480.avif 480w" sizes="(max-width: 899px) 44vw, 240px"><img src="/assets/thumbs/crops/creators-camera-480.webp" srcset="/assets/thumbs/crops/creators-camera-240.webp 240w, /assets/thumbs/crops/creators-camera-480.webp 480w" sizes="(max-width: 899px) 44vw, 240px" alt="" width="480" height="360" loading="lazy" decoding="async"></picture></span>
+            <p class="fan__note">Thumbnail B outperformed A by 34%</p>
+          </li>
+          <li class="fan__card">
+            <span class="fan__thumb" aria-hidden="true"><picture><source type="image/avif" srcset="/assets/thumbs/crops/creators-wall-240.avif 240w, /assets/thumbs/crops/creators-wall-480.avif 480w" sizes="(max-width: 899px) 44vw, 240px"><img src="/assets/thumbs/crops/creators-wall-480.webp" srcset="/assets/thumbs/crops/creators-wall-240.webp 240w, /assets/thumbs/crops/creators-wall-480.webp 480w" sizes="(max-width: 899px) 44vw, 240px" alt="" width="480" height="360" loading="lazy" decoding="async"></picture></span>
+            <p class="fan__note">Watch time up 3.1× since March</p>
+          </li>
+          <li class="fan__card">
+            <span class="fan__thumb" aria-hidden="true"><picture><source type="image/avif" srcset="/assets/thumbs/crops/creators-boards-240.avif 240w, /assets/thumbs/crops/creators-boards-480.avif 480w" sizes="(max-width: 899px) 44vw, 240px"><img src="/assets/thumbs/crops/creators-boards-480.webp" srcset="/assets/thumbs/crops/creators-boards-240.webp 240w, /assets/thumbs/crops/creators-boards-480.webp 480w" sizes="(max-width: 899px) 44vw, 240px" alt="" width="480" height="360" loading="lazy" decoding="async"></picture></span>
+            <p class="fan__note">End screens added to 40 videos</p>
+          </li>
         </ul>
       </div>
 
-      <!-- Media Owners -->
-      <div class="pf cr__block cr__block--owners" data-reveal>
-        <h4 class="pf__label">Media Owners</h4>
-        <p class="pf__body">Film, TV and digital IP, earning every month.</p>
-        <a class="boxlink" href="mailto:info@creativemotley.com?subject=Catalogue">Monetize your catalogue <span class="ar">↗</span></a>
+      <!-- the services (drafts DC10–DC17, docs/copy-drafts.md): a numbered hairline list, two columns from 1024 px -->
+      <div class="svc" data-reveal>
+        <h4 class="svc__label" id="cr-svc" data-draft="DC10">What we run</h4>
+        <ol class="svc__list" aria-labelledby="cr-svc">
+          <li class="svc__row" data-draft="DC11"><span class="svc__n" aria-hidden="true">01</span><span class="svc__name">Channel strategy</span><span class="svc__line">What the channel is for, and what it makes next.</span></li>
+          <li class="svc__row" data-draft="DC12"><span class="svc__n" aria-hidden="true">02</span><span class="svc__name">Programming</span><span class="svc__line">Series, formats and the order they go out.</span></li>
+          <li class="svc__row" data-draft="DC13"><span class="svc__n" aria-hidden="true">03</span><span class="svc__name">SEO</span><span class="svc__line">Written so the right viewer finds the work.</span></li>
+          <li class="svc__row" data-draft="DC14"><span class="svc__n" aria-hidden="true">04</span><span class="svc__name">Thumbnails</span><span class="svc__line">Designed and tested: the click comes first.</span></li>
+          <li class="svc__row" data-draft="DC15"><span class="svc__n" aria-hidden="true">05</span><span class="svc__name">Monetisation</span><span class="svc__line">Ads and sponsorship, set up so views pay.</span></li>
+          <li class="svc__row" data-draft="DC16"><span class="svc__n" aria-hidden="true">06</span><span class="svc__name">Rights and Content ID</span><span class="svc__line">Re-uploads found, claimed and earning for you.</span></li>
+          <li class="svc__row" data-draft="DC17"><span class="svc__n" aria-hidden="true">07</span><span class="svc__name">Brand deals</span><span class="svc__line">Access to the brand briefs that come to us.</span></li>
+        </ol>
       </div>
-      <ul class="fan cr__fan cr__fan--owners" data-fan data-fan-spread="0.92">
-        <li class="fan__card">
-          <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/hero.webp);--cx:.12;--cy:.34;--zoom:6"></span>
-          <p class="fan__note">Rights claim cleared on 3 uploads</p>
-        </li>
-        <li class="fan__card">
-          <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/hero.webp);--cx:.33;--cy:.78;--zoom:5.2"></span>
-          <p class="fan__note">Catalogue: 212 titles matched</p>
-        </li>
-        <li class="fan__card">
-          <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/hero.webp);--cx:.495;--cy:.385;--zoom:7"></span>
-          <p class="fan__note">Content ID match resolved</p>
-        </li>
-      </ul>
+
+      <div class="cr__owners">
+        <!-- the studio's chatter: three slash commands, faint echoes for depth -->
+        <div class="cloud cr__cloud" data-cloud>
+          <div class="cloud__echoes" aria-hidden="true">
+            <span class="cloud__node" style="--x:24;--y:7;--z:.22;--mx:26;--my:6">/thumbnail-test</span>
+            <span class="cloud__node" style="--x:24;--y:90;--z:.18;--mx:27;--my:92">/retention-check</span>
+          </div>
+          <ul class="cloud__list">
+            <li class="cloud__node" style="--x:78;--y:9;--z:.78;--mx:72;--my:10">/retention-check</li>
+            <li class="cloud__node cloud__card" data-theme="dark" style="--x:45;--y:50;--z:1;--mx:48;--my:50">
+              <span class="cloud__cmd">/upload-calendar</span>
+              <span class="cloud__note">Series bible approved</span>
+            </li>
+            <li class="cloud__node" style="--x:78;--y:91;--z:.62;--mx:72;--my:90">/thumbnail-test</li>
+          </ul>
+        </div>
+        <!-- Media Owners (+ DC19, draft) and the catalogue's notes (illustrative, from the live site's feed) -->
+        <div class="pf cr__block cr__block--owners" data-reveal>
+          <h4 class="pf__label">Media Owners</h4>
+          <p class="pf__body">Film, TV and digital IP, earning every month.</p>
+          <p class="svc__row svc__row--solo" data-draft="DC19"><span class="svc__name">Catalogue channels</span><span class="svc__line">Your film and TV library, launched and programmed on YouTube.</span></p>
+          <ul class="feed">
+            <li>Rights claim cleared on 3 uploads</li>
+            <li>Content ID match resolved</li>
+            <li>Catalogue: 212 titles matched</li>
+          </ul>
+          <a class="boxlink" href="mailto:info@creativemotley.com?subject=Catalogue">Monetize your catalogue <span class="ar">↗</span></a>
+        </div>
+      </div>
     </div>
   </div>
 </section>

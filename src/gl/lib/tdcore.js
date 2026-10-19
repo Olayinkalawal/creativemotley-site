@@ -1,82 +1,116 @@
 /* Teardown choreography, shared by the scene (gl/scenes/teardowns.js) and the section (sections/_teardown.js),
-   so the WebGL frame, the CSS stills, the construction lines and the part markers all follow one clock.
-   Pure functions of scroll; no three.js in here (the section bundle imports it).
+   so the WebGL frame, the CSS stills, the colour keys, the construction lines and the part markers all follow one
+   clock. Pure functions of scroll and of the markup's data; nothing here knows how a device is drawn (frame streams
+   today; real-time 3D or video in phase 3 only has to answer "show device d at orbit o / explode e, framed so").
+   No three.js in here (the section bundle imports it).
 
-   One run = one [data-td-run] (a pinned block). pv is its pin progress, unclamped: 0 when the run's top meets the
-   viewport top, 1 when its bottom meets the viewport bottom (negative while it is still arriving).
-     orbit     pv -0.45vp → 0.36   orbit frames 1 → 97 (the view travels around the device), +4% push
-     hand-off  p  0.27 → 0.45      the slot glides from the whole viewport to the column rect; zoom hero → frame
-     junction  p  0.355 → 0.375    orbit f_0097 crossfades into explode f_0001 (the same picture)
-     explode   p  0.45 → 0.86      explode frames 1 → 145, eased
-     settle    p  0.86 → 0.97      depth parallax + slow push; markers draw in
-   Leaving: a run marked data-wipe is a black sheet that scrolls off the next scene (the stage splits the two at the
-   boundary, feathered; gl/stage.js), so its device rides up with its copy and never fades. Arriving under such a
-   sheet, a run is already lit. Otherwise a run fades in from black (and out, if it had no wipe).
-   (vp = one viewport of scroll, in pv units: the run's pre-roll is measured in viewports, not in run length.) */
+   A run is one pinned block ([data-td-run]) showing a list of shots, one device each: the elements marked
+   [data-td-shot] in the run's section (the Kit: console, microphone, headphones, phone), or the section itself (Method:
+   the camera). Each shot's data sits on its element: data-td-dev (the device), data-td-hero / data-td-frame0 /
+   data-td-frame (framing, "zoom shiftX shiftY"), data-td-box / data-td-pbox (its extent, uv), data-td-xmap (explode
+   re-timing), data-td-key ("centre edge": its colour key; none = the black stage).
+     shot 0   orbit      the device fills the screen while the view travels around it (the chapter title over it)
+              hand-off   it glides from the whole viewport into the column; its colour key comes up
+              junction   the orbit's last frame crossfades into the explode's first (the same picture)
+              explode    it comes apart beside its copy, rows lighting in step
+              settle     depth parallax and a slow push; the part markers draw in
+     shot k   cut        a wipe in shot k's colour: the previous device and its copy leave, this one arrives whole
+              explode, settle (as above)
+   Times are screens of scroll since the pin's top met the viewport top (s; negative while the run arrives), from a
+   plan drawn for a pin span of plan.L screens and scaled to the run's measured span (the pre-roll is not scaled),
+   so the run's CSS height (--td-run, phones --td-run-m) is the only length to tune.
+   Leaving: a run marked data-wipe is a sheet that scrolls off the next scene (the stage splits the two at the
+   boundary, feathered; gl/stage.js), so its device rides up with its copy and never fades. A run marked
+   data-td-open opens a chapter out of paper: its device is lit early, under the paper's edge. */
 import { clamp, lerp, smooth, seg } from '../../core/scroll.js';
 import { geo } from '../../core/layout.js';
 
-export const TD_ORBIT = 97;
-export const TD_EXPLODE = 145;
-export const TD_ASPECT = 16 / 9;   // every frame, orbit and explode, and both stills
-export const TD_PHASE = {
-  orbit: [-0.45, 0.36],     // start in viewports before the pin (scaled by vp), end in p
-  hand: [0.27, 0.45],
-  junction: [0.355, 0.375],
-  explode: [0.45, 0.86],
-  settle: [0.86, 0.97],
+export const TD_ORBIT = 97;     // orbit renders: source frames 1 … 97 (far angle → hero angle, constant visual speed)
+export const TD_EXPLODE = 145;  // explode renders: 1 … 145 (hero angle → fully exploded)
+export const TD_ASPECT = 16 / 9;
+
+/* the plans (screens). single: one device with its orbit (Method); seq: an orbit and then cuts (the Kit). */
+export const TD_PLAN = {
+  single: { L: 2.3, first: { orbit: [-0.45, 0.83], hand: [0.62, 1.04], junction: [0.82, 0.86], explode: [1.04, 1.98], settle: [1.98, 2.23] } },
+  seq: {
+    L: 4.2,
+    first: { orbit: [-0.45, 0.62], hand: [0.45, 0.85], junction: [0.6, 0.64], explode: [0.85, 1.27], settle: [1.27, 1.45] },
+    cut: 0.22, whole: 0.08, explode: 0.42, settle: 0.18,
+  },
 };
 
 const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const easeSine = (t) => 0.5 - 0.5 * Math.cos(Math.PI * t);
 
-/* run geometry → { pv, vp } (vp: one viewport of scroll in pv units) */
+/* run geometry → s (screens since the pin's top met the viewport top) and L (the pin's span, screens) */
 export function tdRun(run, y, vh) {
   const g = geo(run);
-  const len = Math.max(1, g.height - vh);
-  return { pv: (y - g.top) / len, vp: vh / len, top: g.top, height: g.height };
+  return { s: (y - g.top) / Math.max(1, vh), L: Math.max(0.01, (g.height - vh) / Math.max(1, vh)), top: g.top, height: g.height };
+}
+/* how a run meets its neighbours: open (lit early under the paper before it), wout (leaves as a wiping sheet) */
+export function tdFlags(el) {
+  return { open: el.hasAttribute('data-td-open'), wout: el.hasAttribute('data-wipe') };
+}
+/* the shots of a run's section, in order */
+export function tdShots(section) {
+  const l = [...section.querySelectorAll('[data-td-shot]')];
+  return l.length ? l : [section];
+}
+/* the device a shot shows */
+export function tdDev(shotEl, section) {
+  return shotEl.dataset.tdDev || section.dataset.tdDev || (section.dataset.scene || '').split(':')[1] || '';
 }
 
-/* how a run meets its neighbours: open (it opens a chapter straight out of paper: its device is revealed by the
-   paper's edge, so it is lit early), win (it arrives under a wiping run: lit as it slides in), wout (it leaves as a
-   wiping sheet: never fades) */
-export function tdFlags(el) {
-  const prev = el.previousElementSibling;
-  return { open: el.hasAttribute('data-td-open'), wout: el.hasAttribute('data-wipe'), win: !!(prev && prev.matches('[data-td][data-wipe]')) };
+/* the run's timeline: one entry per shot, every phase as [from, to] in screens */
+export function tdTimeline(n, L, plan = n > 1 ? TD_PLAN.seq : TD_PLAN.single) {
+  const k = L / plan.L, sc = (t) => (t < 0 ? t : t * k), m = (a) => a.map(sc);
+  const f = plan.first;
+  const T = [{ orbit: m(f.orbit), hand: m(f.hand), junction: m(f.junction), explode: m(f.explode), settle: m(f.settle), cut: null }];
+  let t = f.settle[1];
+  for (let i = 1; i < n; i++) {
+    const c = [t, t + plan.cut], e0 = c[1] + plan.whole, e = [e0, e0 + plan.explode], st = [e[1], e[1] + plan.settle];
+    T.push({ cut: m(c), explode: m(e), settle: m(st), orbit: null, hand: null, junction: null });
+    t = st[1];
+  }
+  return T;
 }
-const NOFLAGS = { open: false, win: false, wout: false };
-/* phase fractions for pin progress pv (unclamped) of a run whose viewport is vp pv-units long (flags: tdFlags) */
-export function tdPhases(pv, vp = 0.25, fl = NOFLAGS) {
-  const P = TD_PHASE;
-  const p = clamp(pv);
-  const o = seg(pv, P.orbit[0] * vp, P.orbit[1]);
-  const fin = fl.win ? 1 : fl.open ? smooth(seg(pv, -1.0 * vp, -0.5 * vp)) : smooth(seg(pv, -0.5 * vp, -0.12 * vp));
-  const fout = fl.wout ? 1 : 1 - smooth(seg(pv, 1 + 0.25 * vp, 1 + 0.48 * vp));
-  return {
-    p, pv,
-    orbit: 0.72 * o + 0.28 * easeSine(o),       // the orbit frames are re-timed to constant speed: ease only the ends
-    hand: easeIO(seg(p, P.hand[0], P.hand[1])),
-    handLin: seg(p, P.hand[0], P.hand[1]),
-    mix: smooth(seg(p, P.junction[0], P.junction[1])),
-    explode: easeSine(seg(p, P.explode[0], P.explode[1])),
-    explodeLin: seg(p, P.explode[0], P.explode[1]),
-    settle: smooth(seg(p, P.settle[0], P.settle[1])),
-    fade: fin * fout,
-  };
+
+/* one shot's phases at s: { orbit, hand, handLin, mix, explode, explodeLin, settle } (0 … 1) */
+export function tdShotPhases(t, s, out = {}) {
+  if (t.orbit) {
+    const o = seg(s, t.orbit[0], t.orbit[1]);
+    out.orbit = 0.72 * o + 0.28 * easeSine(o);   // the orbit renders are re-timed to constant speed: ease only the ends
+    out.handLin = seg(s, t.hand[0], t.hand[1]);
+    out.hand = easeIO(out.handLin);
+    out.mix = smooth(seg(s, t.junction[0], t.junction[1]));
+  } else { out.orbit = 1; out.hand = 1; out.handLin = 1; out.mix = 1; }
+  out.explodeLin = seg(s, t.explode[0], t.explode[1]);
+  out.explode = easeSine(out.explodeLin);
+  out.settle = smooth(seg(s, t.settle[0], t.settle[1]));
+  return out;
 }
-/* the orbit plays frames a…b of the render (data-td-orbit="a-b", data-td-orbit-tall on portrait screens; 1-based,
-   default all 97): a sub-range keeps one clean move where a render wobbles or runs past its own frame */
-export function tdOrbitRange(el, tall) {
-  const s = (tall && el.dataset.tdOrbitTall) || el.dataset.tdOrbit;
-  const [a, b] = (s || '').split('-').map(Number);
-  const lo = Math.max(1, Math.min(TD_ORBIT, a || 1)), hi = Math.max(lo, Math.min(TD_ORBIT, b || TD_ORBIT));
-  return [lo, hi];
+
+/* the run's state at s: k (the shot on screen; during a cut, the one leaving), ph (its phases), cut (0 … 1: the wipe
+   to shot k + 1), phN (the incoming shot's phases), fade (arrival × exit) */
+export function tdState(s, T, L, fl, out = { ph: {}, phN: {} }) {
+  let k = 0;
+  for (let i = 1; i < T.length; i++) if (s >= T[i].cut[1]) k = i;
+  out.k = k; out.s = s;
+  const nx = T[k + 1];
+  out.cut = nx ? seg(s, nx.cut[0], nx.cut[1]) : 0;
+  tdShotPhases(T[k], s, out.ph);
+  if (nx) tdShotPhases(nx, s, out.phN);
+  const fin = fl.open ? smooth(seg(s, -1.0, -0.5)) : smooth(seg(s, -0.5, -0.12));
+  const fout = fl.wout ? 1 : 1 - smooth(seg(s, L + 0.25, L + 0.48));
+  out.fade = fin * fout;
+  return out;
 }
-/* playhead inside the range's own stream (0 … n−1) */
-export const tdOrbitFrame = (ph, n = TD_ORBIT) => ph.orbit * (n - 1);
+
+/* playheads, in source frames (0-based floats): the scene maps them onto whatever it streams (a frame map, a video) */
+export const tdOrbitFrame = (ph) => ph.orbit * (TD_ORBIT - 1);
 /* explode playhead; xmap (data-td-xmap="e f e f …", explode progress → frame fraction, piecewise linear) re-times a
-   render whose camera moves mid-explode (the mic's pushes in on the capsule: crossed quickly, so the whole mic is
-   back while its rows light) */
+   render whose parts spread unevenly (most fly in the first half of the render: played at an even pace) or whose
+   camera moves mid-explode (the mic's pushes in on the capsule: crossed quickly) */
 export function tdExplodeFrame(ph, xmap) {
   let e = ph.explode;
   if (xmap) {
@@ -86,6 +120,17 @@ export function tdExplodeFrame(ph, xmap) {
   }
   return e * (TD_EXPLODE - 1);
 }
+/* a source frame (0-based float) → the index (float) in a frame map (sorted source frames, 1-based as set.json has
+   them), piecewise linear between kept frames */
+export function tdIndex(map, f) {
+  if (!map) return f;
+  const g = f + 1, n = map.length - 1;
+  if (g <= map[0]) return 0;
+  if (g >= map[n]) return n;
+  let lo = 0, hi = n;
+  while (hi - lo > 1) { const m = (lo + hi) >> 1; if (map[m] <= g) lo = m; else hi = m; }
+  return lo + (g - map[lo]) / (map[hi] - map[lo]);
+}
 
 /* framing: "zoom shiftX shiftY" (shift in frame-uv units, +x samples further right, +y further up) */
 const parse = (s, d) => {
@@ -93,19 +138,24 @@ const parse = (s, d) => {
   const [z, x, y] = s.trim().split(/\s+/).map(Number);
   return { z: z || d.z, x: x || 0, y: y || 0 };
 };
-/* three keys: hero (the full-screen orbit), frame0 (the column, as the hand-off lands: the whole device, big) and
-   frame (the column, fully exploded): the view pulls back from frame0 to frame as the parts spread */
-const box = (s) => (s ? s.trim().split(/\s+/).map(Number) : null);
-export function tdFraming(el, tall) {
+const nums = (s) => (s ? s.trim().split(/\s+/).map(Number) : null);
+/* a colour key "#rrggbb #rrggbb" (centre, edge) → [r, g, b, r, g, b] (0 … 1), or null (the black stage) */
+export function tdKey(s) {
+  const m = (s || '').match(/#[0-9a-f]{6}/gi);
+  if (!m || m.length < 2) return null;
+  return m.slice(0, 2).flatMap((h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255));
+}
+/* three framing keys: hero (the full-screen orbit), frame0 (the column, as the device lands: whole, big) and frame
+   (the column, fully exploded): the view pulls back from frame0 to frame as the parts spread */
+export function tdFraming(el, tall, dev = '') {
   const d = el.dataset;
   const frame = parse((tall && d.tdFrameTall) || d.tdFrame, { z: tall ? 1.3 : 1.1, x: 0, y: 0 });
   const frame0 = parse((tall && d.tdFrame0Tall) || d.tdFrame0, frame);
   const hero = parse((tall && d.tdHeroTall) || d.tdHero, { z: tall ? 1.6 : 1.3, x: 0, y: 0 });
-  const name = (d.scene || '').split(':')[1];
   // bleed: how far (fraction of the pin's width) the device may run past the viewport's side edges in the column phase
   const bleed = parseFloat((tall && d.tdBleedTall) || d.tdBleed) || 0;
-  const xmap = box(d.tdXmap);
-  return { hero, frame0, frame, tall, bleed, xmap: xmap && xmap.length >= 4 ? xmap : null, hbox: box(d.tdBox), pbox: box(d.tdPbox), ext: TD_EXT[name] || null, col: null };
+  const xmap = nums(d.tdXmap);
+  return { hero, frame0, frame, tall, bleed, xmap: xmap && xmap.length >= 4 ? xmap : null, hbox: nums(d.tdBox), pbox: nums(d.tdPbox), ext: TD_EXT[dev] || null, key: tdKey(d.tdKey), col: null };
 }
 
 /* the device's extent in the explode frames (u0 v0 u1 v1, every 4th frame, measured from the renders): the parts
@@ -190,11 +240,11 @@ export function tdPinTop(r, y, pinH) { return r.top - y + clamp(y - r.top, 0, Ma
 
 /* per scene id, shared between the section and the scene each frame:
    - the section writes the slot's viewport rect (x, y, w, h) and the frame number it was computed at (f: view.frame),
-     so the scene never measures the DOM in its frame;
+     plus the framing it fitted to the measured column (Fs, per shot), so the scene never measures the DOM in its frame;
    - the scene writes its live values (pointer, push) so DOM markers can ride the parallax. */
 export const TD_LIVE = new Map();
 export function tdLive(id) {
   let L = TD_LIVE.get(id);
-  if (!L) TD_LIVE.set(id, (L = { px: 0, py: 0, push: 0, strength: 0, x: 0, y: 0, w: 0, h: 0, f: -1 }));
+  if (!L) TD_LIVE.set(id, (L = { px: 0, py: 0, push: 0, strength: 0, x: 0, y: 0, w: 0, h: 0, f: -1, Fs: null }));
   return L;
 }

@@ -4,6 +4,11 @@
    .sc-on.is-gl under html.gl-ready: WebGL draws the posters; the proxy is invisible and lets the pointer
    through, but keeps its buttons for keyboard focus and screen readers. */
 
+/* the opener holds the title alone, so it is shorter than the shell's 140svh (phase-1 issue f: two nearly empty dark
+   screens before the posters rose on phones) */
+#showcase > .opener { min-height: 112svh; }
+@media (max-width: 719px) { #showcase > .opener { min-height: 96svh; } }
+
 /* ── static ─────────────────────────────────────────────────────────── */
 .sc-run { position: relative; padding-block: clamp(8px, 2vh, 24px) clamp(96px, 16vh, 180px); }
 .sc-pin { position: relative; }
@@ -125,4 +130,106 @@ html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none
 }
 @media (max-width: 899px) {
   .scm__img { height: auto; max-height: 60svh; margin-inline: auto; }
+}
+
+/* ── Watch the work: XXL 16:9 video cards in a horizontal snap row (src/sections/showcase.js initVideos) ───────
+   The row starts at the column's text edge and runs off the right edge of the screen, so the next card always peeks
+   in. No backdrop filters, no animated shadows: a hover moves the art by transform only. */
+.wv {
+  --wv-x: var(--col-pad);                                  /* the column's text edge */
+  --wv-w: min(86vw, 520px);                                /* one card */
+  --wv-gap: 14px;
+  position: relative; color: var(--cream);
+  padding-block: clamp(56px, 9vh, 112px) clamp(96px, 16vh, 180px);
+}
+@media (min-width: 720px) { .wv { --wv-w: min(78vw, 860px); --wv-gap: clamp(18px, 2vw, 32px); } }
+@media (min-width: 1024px) {
+  .wv { --wv-x: calc(var(--rail-w) + clamp(24px, 4.4vw, 72px)); --wv-w: min(calc((100vw - var(--wv-x)) * 0.8), 1080px); }
+}
+.wv__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: clamp(24px, 4.4vh, 48px); }
+.wv__title { max-width: 12em; }
+.wv__nav { display: none; align-items: center; gap: 10px; flex: none; }
+@media (min-width: 720px) { .wv__nav:not([hidden]) { display: flex; } }
+.wv__n {
+  margin-right: 8px; font: var(--f-small); letter-spacing: var(--ls-caps); color: var(--cream-mute);
+  font-variant-numeric: lining-nums tabular-nums; white-space: nowrap;
+}
+.wv__n b { font-weight: inherit; color: var(--cream); }
+.wv__btn {
+  font: var(--f-small); text-transform: uppercase; letter-spacing: var(--ls-caps);
+  min-height: 40px; padding: 10px 16px; border-radius: 100px; box-shadow: inset 0 0 0 1px rgba(244, 237, 223, 0.4);
+  transition: background 0.2s, opacity 0.2s;
+}
+.wv__btn:hover:not(:disabled) { background: rgba(244, 237, 223, 0.12); }
+.wv__btn:disabled { opacity: 0.32; cursor: default; }
+
+.wv__scroller {
+  overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory; scroll-padding-inline: var(--wv-x);
+  scrollbar-width: none;
+}
+.wv__scroller::-webkit-scrollbar { display: none; }
+.wv__list { display: flex; gap: var(--wv-gap); width: max-content; padding: 8px var(--col-pad) 12px var(--wv-x); }
+.wv__item { flex: 0 0 var(--wv-w); width: var(--wv-w); scroll-snap-align: start; }
+.wv__item[hidden] { display: none; }
+.wv__card { display: grid; gap: clamp(14px, 2.2vh, 22px); }
+
+.wv__play {
+  position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 4px;
+  background: #1b150e; text-align: left;
+  box-shadow: 0 0 0 1px rgba(244, 237, 223, 0.08), 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+}
+.wv__art, .wv__art img { display: block; width: 100%; height: 100%; }
+.wv__art img { object-fit: cover; transition: transform 0.9s var(--ease-out); }
+.wv__play:hover .wv__art img { transform: scale(1.025); }
+.wv__play:focus-visible { outline-offset: 5px; }
+/* the play mark: a cream disc with a triangle (pure CSS), and the "Play video" label beside it, lower left */
+.wv__icon {
+  position: absolute; left: clamp(16px, 2.4vw, 32px); bottom: clamp(16px, 2.4vw, 32px);
+  width: clamp(48px, 5.4vw, 72px); aspect-ratio: 1; border-radius: 50%;
+  background: var(--cream); box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.6);
+  transition: transform 0.5s var(--ease-out);
+}
+.wv__icon::before {
+  content: ''; position: absolute; left: 50%; top: 50%; translate: -36% -50%;
+  border-style: solid; border-width: 0.5em 0 0.5em 0.84em; border-color: transparent transparent transparent var(--ink);
+  font-size: clamp(14px, 1.5vw, 20px);
+}
+.wv__play:hover .wv__icon { transform: scale(1.06); }
+.wv__cta {
+  position: absolute; bottom: clamp(16px, 2.4vw, 32px); left: calc(clamp(16px, 2.4vw, 32px) + clamp(48px, 5.4vw, 72px) + 14px);
+  height: clamp(48px, 5.4vw, 72px); display: flex; align-items: center;
+  font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream);
+  text-shadow: 0 1px 2px rgba(11, 8, 5, 0.6), 0 0 18px rgba(11, 8, 5, 0.6);
+}
+@media (max-width: 719px) {   /* phones: the disc alone; the label stays in the button's name */
+  .wv { padding-bottom: clamp(64px, 10vh, 96px); }
+  .wv__cta { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+.wv__meta { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px 24px; align-items: end; padding-right: 4px; }
+.wv__by { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream-mute); }
+.wv__t { font: var(--f-dek); letter-spacing: var(--ls-dek); text-wrap: balance; max-width: 20em; }
+.wv__yt { justify-self: start; margin-top: 4px; }
+@media (min-width: 720px) {
+  .wv__meta { grid-template-columns: minmax(0, 1fr) auto; }
+  .wv__by { grid-column: 1; }
+  .wv__t { grid-column: 1; }
+  .wv__yt { grid-column: 2; grid-row: 1 / span 2; align-self: end; margin: 0 0 6px; }
+}
+
+/* ── the video modal (src/ui/modal.js; the shared modal's own rules are in src/styles/modal.css) ─────────────── */
+.wvm { display: grid; gap: clamp(14px, 2.4vh, 24px); width: min(1100px, calc(100vw - 32px), calc((100svh - 200px) * 16 / 9)); color: var(--cream); }
+.wvm__frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 4px; background: #000;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(244, 237, 223, 0.08); }
+.wvm__art, .wvm__player { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.wvm__art { object-fit: cover; }
+.wvm__player { opacity: 0; transition: opacity 0.4s var(--ease-out); background: #000; }
+.wvm__player.is-in { opacity: 1; }
+.wvm__cap { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px 20px; align-items: end; padding-right: 96px; }
+.wvm__by { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream-mute); }
+.wvm__t { grid-column: 1; font: var(--f-lead); letter-spacing: var(--ls-lead); }
+.wvm__yt { grid-column: 2; grid-row: 1 / span 2; margin-bottom: 2px; }
+@media (max-width: 639px) {
+  .wvm__cap { grid-template-columns: minmax(0, 1fr); padding-right: 0; }
+  .wvm__yt { grid-column: 1; grid-row: auto; justify-self: start; }
 }

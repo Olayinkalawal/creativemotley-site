@@ -35,6 +35,13 @@
   "Camera module",
   "Rear glass",
   "Microphone",
-  "Phone"
+  "Phone",
+  "Front element",
+  "Aperture",
+  "Lens mount",
+  "Body and grip",
+  "Viewfinder (EVF)",
+  "Stabiliser (IBIS)",
+  "Rear screen (LCD)"
  ]
 }

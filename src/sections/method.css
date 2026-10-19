@@ -1,7 +1,33 @@
 /* IV · Method: the camera teardown (shared block styles in _teardown.css). The giant title sits over the camera's
-   dark body: a slightly deeper ink scrim keeps it at full contrast while the orbit turns under it. The copy column
-   is as narrow as the Kit's, so the camera gets the room (Editions: the hub at a third of the screen). */
+   dark body: a slightly deeper ink scrim keeps it at full contrast while the orbit turns under it. The column carries
+   the camera's parts, each a name and a line, so it is a little wider than the Kit's (the camera keeps the room to
+   its right, and may run off the right edge). */
 @media (min-width: 1024px) {
-  #method { --td-col-w: clamp(250px, 21vw, 300px); }
+  #method { --td-col-w: clamp(290px, 24vw, 350px); }
+  #method .td__head { max-width: 15em; }
+  #method .td__specs { margin-top: clamp(0.9rem, 2.4vh, 1.6rem); }
+  #method .td__spec { padding: 8px 0 9px; }
 }
+/* short desktop screens and phones: the nine rows with their lines would not fit, so the list shows the names and the
+   lit part's line (or the hovered one's) sits under it as a caption, all lines stacked in one place (opacity only) */
+@media (min-width: 1024px) and (max-height: 820px), (max-width: 1023px) {
+  html.js #method[data-td-ready]:not(.td-static) .td__specs--lines { position: relative; padding-bottom: calc(2.9em + 14px); }
+  /* no transform on the rows here (a transformed row would contain its line): they fade in without the slide */
+  html.js #method[data-td-ready]:not(.td-static) .td__specs--lines .td__spec { transform: none; will-change: opacity; }
+  html.js #method[data-td-ready]:not(.td-static) .td__specs--lines .td__l {
+    position: absolute; left: 38px; right: 0; bottom: 0; margin: 0; min-height: 2.9em;
+    opacity: 0; transition: opacity 0.35s var(--ease-out); pointer-events: none;
+  }
+  html.js #method[data-td-ready]:not(.td-static) .td__specs--lines .td__spec:is(.is-hot, .is-hl) .td__l { opacity: 1; }
+  html.js #method.has-hl[data-td-ready]:not(.td-static) .td__specs--lines .td__spec.is-hot:not(.is-hl) .td__l { opacity: 0; }
+}
+@media (min-width: 1024px) and (max-height: 820px) {
+  #method .td__spec { padding: 5px 0 6px; }
+}
+@media (max-width: 1023px) {
+  html.js #method[data-td-ready]:not(.td-static) .td__specs--lines .td__l { left: 28px; }
+  /* static (reduced motion, no JS): every part with its line, one column */
+  :is(#method.td-static, html:not(.js) #method) .td__specs--lines { grid-template-columns: minmax(0, 1fr); }
+}
+#method .td__spec .td__l { color: var(--th-mute); }
 #method .td__hero.scrim::before { inset: -26% -22% -34% -14%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.45) 58%, rgba(0, 0, 0, 0)); }

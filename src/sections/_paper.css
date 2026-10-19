@@ -65,7 +65,10 @@
   backface-visibility: hidden;
 }
 .fan.is-live .fan__card { position: absolute; left: 50%; top: 50%; translate: -50% -50%; will-change: transform; }
-.fan__thumb { display: block; aspect-ratio: 4 / 3; border-radius: 10px; --box-ar: 0.75; box-shadow: inset 0 0 0 1px rgba(20, 16, 10, 0.08); }
+.fan__thumb { display: block; position: relative; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; background: var(--umber); --box-ar: 0.75; }
+.fan__thumb::after { content: ''; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(20, 16, 10, 0.1); pointer-events: none; }
+.fan__thumb picture { display: contents; }
+.fan__thumb img { width: 100%; height: 100%; object-fit: cover; }
 .fan__note {
   font: var(--f-label); letter-spacing: var(--ls-label); text-wrap: balance;
   padding: 13px 20px 0 6px; min-height: calc(3 * 1.15em + 30px);   /* wide right inset: the next card may lie over it */
@@ -74,9 +77,16 @@
   content: ''; display: block; width: 18px; height: 2px; margin-top: 12px; margin-bottom: 14px; border-radius: 2px;
   background: var(--ochre); opacity: 0.8;
 }
-@media (max-width: 899px) {
-  .fan { --fan-w: min(250px, 70vw); --fan-mode: stack; }
-  .fan.is-live { height: auto; }   /* JS sets the cascade height */
+@media (max-width: 899px) {   /* phones and narrow windows: two columns of notes, laid out by CSS; JS only tilts them */
+  .fan, .fan.is-live {
+    --fan-w: auto; --fan-mode: grid;
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 14px; height: auto; align-items: start;
+  }
+  .fan.is-live .fan__card { position: relative; left: auto; top: auto; translate: none; width: auto; }
+  .fan__card { padding: 7px 7px 0; border-radius: 13px; }
+  .fan__thumb { border-radius: 8px; }
+  .fan__note { font: var(--f-body); letter-spacing: var(--ls-body); font-weight: 600; padding: 10px 6px 0 4px; min-height: calc(4 * 1.45em + 22px); }
+  .fan__note::after { margin-top: 10px; margin-bottom: 10px; }
 }
 
 /* ── 3 · command cloud ──────────────────────────────────────────────── */
@@ -119,12 +129,13 @@
 
 /* ── 4 · photo card ─────────────────────────────────────────────────── */
 .pc { --pc-ar: 0.625; --pc-inset: 0.78; position: relative; margin: 0; }
-.pc__frame {
-  position: relative; aspect-ratio: calc(1 / var(--pc-ar)); transform-style: preserve-3d;
-  transform-origin: 50% 50%; will-change: transform;
-}
+.pc__frame { position: relative; aspect-ratio: calc(1 / var(--pc-ar)); transform-origin: 50% 50%; }
+.pc__frame.is-tilt { transform-style: preserve-3d; }   /* 3D only while the pointer tilts the card (_paper.js) */
 .pc__mat { position: absolute; inset: 0; overflow: hidden; background: var(--umber); }
 .pc__paint { position: absolute; inset: -7% -3%; --box-ar: calc(var(--pc-ar) * 1.14 / 1.06); will-change: transform; }
+.pc__paint picture { display: contents; }
+.pc__paint img { width: 100%; height: 100%; object-fit: cover; }
+.pc__frame > picture { display: contents; }
 .pc__mat::after { /* a breath of shade so the photo sits in the paint */
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(70% 70% at 50% 50%, rgba(11, 8, 5, 0.22), rgba(11, 8, 5, 0) 70%);
@@ -145,3 +156,44 @@
   .dense__row { grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: 20px; padding-block: 16px 18px; align-items: baseline; }
 }
 @media (min-width: 1024px) { .dense { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ── 6 · numbered hairline list (services, steps): "01  Name  line" rows ─────────────────────────────
+   <ol class="svc__list"><li class="svc__row"><span class="svc__n">01</span><span class="svc__name">Name</span>
+   <span class="svc__line">Line.</span></li> …</ol>   (.svc__row--solo: one row, no numeral) */
+.svc__label { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--pp-mute, var(--paper-mute)); margin-bottom: 14px; }
+.svc__list { display: grid; grid-template-columns: minmax(0, 1fr); }
+.svc__row {
+  display: grid; grid-template-columns: 2.2em minmax(0, 1fr); column-gap: 10px; row-gap: 3px; align-items: baseline;
+  padding-block: 14px 15px; box-shadow: inset 0 1px 0 var(--pp-rule, rgba(20, 16, 10, 0.18));
+}
+.svc__n { grid-row: span 2; font: var(--f-small); letter-spacing: var(--ls-caps); color: var(--pp-mute, var(--paper-mute)); font-variant-numeric: lining-nums tabular-nums; }
+.svc__name { font: var(--f-label); letter-spacing: var(--ls-label); color: var(--pp-ink, inherit); }
+.svc__line { font: var(--f-body); letter-spacing: var(--ls-body); color: var(--pp-mute, var(--paper-mute)); text-wrap: pretty; }
+.svc__row--solo { grid-template-columns: minmax(0, 1fr); padding-block: 12px 14px; margin-bottom: 1.15rem; }
+@media (min-width: 640px) {
+  .svc__row:not(.svc__row--solo) { grid-template-columns: 2.4em minmax(0, 0.85fr) minmax(0, 1.4fr); column-gap: 14px; }
+  .svc__n { grid-row: auto; }
+}
+
+/* ── 7 · feed: short status lines, each after an ochre dot (illustrative notes from the live site's feed) ── */
+.feed { display: grid; gap: 7px; margin: 0 0 1.25rem; }
+.feed li { display: flex; align-items: baseline; gap: 10px; font: var(--f-body); letter-spacing: var(--ls-body); color: var(--pp-ink, inherit); }
+.feed li::before { content: ''; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--ochre); translate: 0 -2px; }
+
+/* ── an opener whose title sits near its top: the painting's calm zone is the upper part of the screen at the
+   moment the opener fills it (II, III: manifest titleBox; the keys start close on that zone) ────────────────── */
+.opener.opener--top { justify-content: flex-start; min-height: 128svh; padding-top: calc(var(--nav-h) + 6vh); padding-bottom: 0; }
+@media (max-width: 1023px) { .opener.opener--top { min-height: 116svh; padding-top: calc(var(--nav-h) + 3svh); } }
+
+/* ── grain baked into the sheet (II, III; smoothness): the shell's .paper-grain is a full-sheet layer blended with
+   mix-blend-mode: multiply, which the compositor redraws every scrolled frame (≈ 8 ms a frame with WebGL off,
+   36 → 50 fps in III). Painted as the sheet's own background instead (background-blend-mode runs once, at raster):
+   the same noise at the same strength (.55 alpha × .5 opacity = .275), the same 220 px tile from the sheet's corner. */
+.paper.paper--baked {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .42  0 0 0 0 .36  0 0 0 0 .26  0 0 0 .275 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E") 0 0 / 220px 220px,
+    linear-gradient(var(--paper), var(--paper));
+  background-blend-mode: multiply, normal;
+}
+.paper.paper--baked > .paper-grain { display: none; }
+html.is-papered .plates { visibility: hidden; }   /* an opaque sheet covers the screen (coverPlates in _paper.js) */

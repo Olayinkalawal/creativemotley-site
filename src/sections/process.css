@@ -4,9 +4,11 @@
    .proc-on (JS + a WebGL tier): a tall pinned run. The pin carries its own paper (.proc-bg) that covers the stage
    while it dissolves in from the posters (the scene marker sits ~0.9 viewport into the run), then clears; the list
    becomes a CSS-3D proxy of the WebGL desk and the live caption (title + short line + a seven-step marker) follows
-   the active object. .is-crisp (phones): the proxy stays the object layer over the WebGL desk and shadows. The long
-   lines then arrive on a second sheet laid over the desk (torn top edge, soft shadow).
-   Both modes: the chapter's last sheet tears off at the bottom onto chapter VII's black stage (the Kit). */
+   the active object. .is-crisp (phones): the proxy stays the object layer over the WebGL desk and shadows.
+   v3 (phase 2): the run is ≈2.8 screens; the caption carries each step's long line too (title, short line, long
+   line), and the desk itself tears off at the run's end onto chapter VII's stage (the Kit). The sheet of long lines is
+   the static layout's (in the pinned run it stays only for screen readers).
+   Both modes: the chapter's last sheet tears off at the bottom onto the Kit. */
 
 /* ── the sheet: paper with a torn top edge (and, at the end of the chapter, a torn bottom edge) ─────────── */
 .proc {
@@ -20,7 +22,13 @@
 .proc .proc-more { --pp-mute: var(--proc-mute); }
 .proc-run { position: relative; }
 .proc-pin { position: relative; padding-block: calc(var(--nav-h) + clamp(40px, 9vh, 96px)) clamp(64px, 12vh, 140px); }
-.proc-bg { position: absolute; inset: 0; background: var(--paper); pointer-events: none; }
+/* the pin's paper, its grain baked in (one raster; a multiply-blended layer the size of the screen cost the compositor
+   a pass every scrolled frame): the same noise at the same strength as the shell's .paper-grain */
+.proc-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  background: var(--proc-noise) 0 0 / 220px 220px, linear-gradient(var(--paper), var(--paper)); background-blend-mode: multiply, normal;
+}
+.proc-bg > .paper-grain { display: none; }
 /* the torn rims: paper + the half-strength grain, overlapping their sheet by 2px (no hairline gap can open at
    fractional positions). On a top rim the grain stops 2px short, so on the overlap rows the sheet's own .paper-grain
    (painted later) is the only grain: no darker seam. The grain tile is phased to continue the sheet's. */
@@ -81,7 +89,21 @@
 .proc-dense { box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.16); padding-top: 10px; }
 
 /* ── animated: the pinned run ───────────────────────────────────────────────────────────────────────── */
-.proc-on .proc-run { --proc-intro: 34; --proc-dwell: 56; height: calc((var(--proc-intro) + 7 * var(--proc-dwell) + 100) * 1svh); }
+.proc-on .proc-run { --proc-intro: 16; --proc-dwell: 24; height: calc((var(--proc-intro) + 7 * var(--proc-dwell) + 100) * 1svh); }
+/* the run's end: the desk tears off onto the Kit's stage (the stage splits the two scenes at this edge) */
+.proc-on .proc-run::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -22px; height: 24px; z-index: 3; pointer-events: none;
+  background: var(--proc-noise) 0 0 / 220px 220px, linear-gradient(var(--paper), var(--paper));
+  background-blend-mode: multiply, normal; transform: scaleY(-1);
+  -webkit-mask: var(--tear) top / 1200px 24px repeat-x; mask: var(--tear) top / 1200px 24px repeat-x;
+  -webkit-mask-position: 37% 0; mask-position: 37% 0;
+}
+/* the long lines' sheet is the static layout's; in the pinned run the caption carries them, and the sheet stays only
+   for screen readers (out of the flow) */
+.proc-on .proc-more {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip-path: inset(50%); white-space: normal; border: 0;
+}
 /* where the stage switches to the objects scene: its top sits deep enough that the pin's paper already covers the
    screen for the whole ±0.4 viewport dissolve (lvh ≥ the stage's innerHeight, so ≥ 0.9 of it on every phone). It
    reaches down to the run's end, so the stage's preload (scenes within 1.5 viewports of their element) still loads
@@ -132,7 +154,7 @@
 }
 .proc-slot {
   align-self: center; justify-self: center;
-  width: min(31vw, 440px); height: min(94%, 400px);
+  width: min(28vw, 400px); height: min(92%, 380px);
 }
 .proc-cap { width: min(100%, 31rem); }
 .proc-cap__items { display: grid; }
@@ -141,6 +163,7 @@
   font: var(--f-head); letter-spacing: var(--ls-head);
 }
 .proc-cap__s { font: var(--f-lead); letter-spacing: var(--ls-lead); text-wrap: pretty; }
+.proc-cap__l { font: var(--f-body); letter-spacing: var(--ls-body); color: var(--proc-mute); max-width: 31em; text-wrap: pretty; }
 
 /* seven short rules; the chapter's one accent slides along them with the track */
 .proc-cap__ticks {
@@ -160,14 +183,7 @@
   .proc-slot { width: min(58vw, 460px); height: min(36svh, 400px); }
 }
 @media (max-width: 719px) {
-  .proc-on .proc-run { --proc-dwell: 50; }
+  .proc-on .proc-run { --proc-dwell: 20; }
   .proc-slot { width: min(80vw, 340px); height: min(36svh, 300px); }
 }
 
-/* the sheet over the desk must still cover the screen above it while the stage dissolves into the Kit (the
-   dissolve starts when the Kit's top is 0.9 viewport down): 92lvh does, and the grid sits centred on it, so the exit
-   hands off from the content, with the blank split above and below rather than left as half a screen of paper */
-.proc-on .proc-more {
-  min-height: 92lvh; display: flex; flex-direction: column; justify-content: center;
-  padding-block: clamp(56px, 8vh, 96px);
-}

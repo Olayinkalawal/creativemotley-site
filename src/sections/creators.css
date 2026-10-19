@@ -1,11 +1,47 @@
-/* II · Creators paper: generous Editions rhythm in the right 4/5 column */
-.cr { display: flex; flex-direction: column; }
-.cr__head { max-width: 15em; }
-.cr__block { margin-top: clamp(40px, 7vh, 76px); }
-.cr__fan { margin-top: clamp(28px, 5vh, 64px); }
-.cr__cloud { margin-top: clamp(64px, 14vh, 160px); }
-.cr__block--owners { margin-top: clamp(64px, 12vh, 150px); }
-.cr__fan--owners { margin-top: clamp(32px, 6vh, 72px); }
+/* II · Creators paper (track O1). Desktop: head | Creators block · the notes fan, full width · "What we run" (7/12)
+   beside the command cloud over Media Owners (5/12). Phones: one column, the fan as two columns of notes. */
+#creators > .paper { padding-block: clamp(64px, 9vh, 104px) clamp(72px, 10vh, 112px); }
+.cr { display: grid; row-gap: clamp(40px, 6vh, 72px); }
+.cr__lede { display: grid; gap: clamp(22px, 3.6vh, 36px); align-items: end; }
+.cr__head { max-width: 11em; }
+.cr__fan { margin-top: clamp(20px, 3vh, 36px); }
+.cr__owners { display: grid; gap: clamp(28px, 4vh, 44px); }
+/* a compact cloud: the commands at the lead size, the dark card's command at the dek size */
+.cr__cloud { height: clamp(220px, 30vh, 260px); --cloud-drift: 0.16; }
+.cr__cloud .cloud__node:not(.cloud__card) { font: var(--f-lead); letter-spacing: var(--ls-lead); }
+.cr__cloud .cloud__card { padding: 16px 18px 13px; }
+.cr__cloud .cloud__cmd { padding-bottom: 12px; }
+.cr__block--owners .pf__body { margin-bottom: 0.4rem; }
+.cr__block--owners .svc__row--solo { margin-bottom: 0.9rem; }
+
 @media (min-width: 1024px) {
-  .cr__fan { margin-inline: -2%; }
+  .cr__lede { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); column-gap: clamp(32px, 4vw, 72px); }
+  .cr__lede .cr__block { padding-bottom: 6px; }
+  .cr__fan { --fan-w: clamp(190px, 15.4vw, 224px); margin-inline: -1%; }
+  /* services beside the cloud and Media Owners */
+  .cr { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(36px, 4.4vw, 80px); }
+  .cr__intro { grid-column: 1 / -1; }
+  .cr .svc { grid-column: 1; align-self: start; }
+  .cr__owners { grid-column: 2; align-self: start; }
+  .cr__cloud { margin-top: -10px; }
+}
+@media (max-width: 639px) {
+  .cr__cloud { height: 240px; }
+}
+
+/* the CSS plate (no WebGL: ?tier=0, reduced motion) holds the keys' first frame on wide screens: close on the
+   curtain and the lit wall, so the title sits on the calm third (zoom 1.65 about the painting's left edge, .7 down) */
+@media (min-width: 1024px) and (orientation: landscape) {
+  .plates .plate[data-plate='creators'] {
+    --cw: max(100vw, 177.78vh); --ch: max(56.25vw, 100vh);
+    background-size: calc(var(--cw) * 1.65) auto;
+    background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.7 * (1 - 1.65));
+  }
+}
+/* …and, once the title has left, the keys' landing frame: the atelier (zoom 1.65 about x .97, .43 down) (landPlate in _paper.js: a cut, not a move) */
+@media (min-width: 1024px) and (orientation: landscape) {
+  html.is-landed-creators .plates .plate[data-plate='creators'] {
+    background-size: calc(var(--cw) * 1.65) auto;
+    background-position: calc((100vw - var(--cw)) / 2 + var(--cw) * 0.97 * (1 - 1.65)) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.43 * (1 - 1.65));
+  }
 }

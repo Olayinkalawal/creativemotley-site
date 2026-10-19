@@ -7,15 +7,18 @@
          phones, where the stage renders below the screen's density, it stays the visible object layer); the live
          caption follows the active step. The pin's own paper (torn top edge) wipes up over the posters, covers the
          stage while it dissolves into the objects scene (the data-scene marker below), then clears to the WebGL desk.
-     Then the dense two-column grid (title | long line) on a paper sheet that lies over the desk and tears off at the
-     bottom onto chapter VII's black stage (the Kit: the console, microphone, headphones and phone taken apart).
+     v3 (phase 2, ≈2.8 screens): in the pinned run the live caption carries each step's long line too (title, short
+     line, long line), and the run ends on a torn edge: the desk is a sheet (data-wipe on the scene marker) that
+     scrolls off the Kit's stage. The dense two-column grid (title | long line) below is the static layout's (no JS,
+     ?tier=0, reduced motion), a paper sheet that tears off onto the Kit; in the pinned run it stays only for screen
+     readers.
      data-plate="umber": with WebGL off the still behind this opaque chapter stays the dark room, so both torn edges
      read against it. -->
 <section class="chapter proc" id="process" data-chapter data-theme="light" data-plate="umber" aria-labelledby="process-title">
   <div class="proc-run" data-proc-run>
     <!-- the stage switches to the objects scene at this marker, ~0.9 viewport into the run: by then the pin's own
          paper covers the screen, so the posters keep drawing above the rising tear and the dissolve happens under paper -->
-    <div class="proc-scene" data-scene="objects" data-proc-scene aria-hidden="true"></div>
+    <div class="proc-scene" data-scene="objects" data-proc-scene data-wipe aria-hidden="true"></div>
     <div class="proc-pin" data-proc-pin>
       <div class="proc-bg" data-proc-bg aria-hidden="true"><div class="paper-grain"></div></div>
 
@@ -62,13 +65,13 @@
         <div class="proc-slot" data-proc-slot></div>
         <div class="proc-cap" data-proc-cap>
           <div class="proc-cap__items" data-proc-items>
-            <p class="proc-cap__item"><b class="proc-cap__t">Blank page</b><span class="proc-cap__s">The channel as it stands — nothing assumed.</span></p>
-            <p class="proc-cap__item"><b class="proc-cap__t">Moodboard</b><span class="proc-cap__s">Look, palette, references. What it should feel like.</span></p>
-            <p class="proc-cap__item"><b class="proc-cap__t">Storyboard</b><span class="proc-cap__s">Series design and upload calendar, mapped out.</span></p>
-            <p class="proc-cap__item"><b class="proc-cap__t">Production</b><span class="proc-cap__s">Shoot days, kit, crew — or your own, better run.</span></p>
-            <p class="proc-cap__item"><b class="proc-cap__t">Sound</b><span class="proc-cap__s">Because bad audio loses the audience first.</span></p>
-            <p class="proc-cap__item"><b class="proc-cap__t">Edit</b><span class="proc-cap__s">Thumbnails, titles, metadata, cut to retain.</span></p>
-            <p class="proc-cap__item"><b class="proc-cap__t">Published</b><span class="proc-cap__s">Then measured, and done again.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Blank page</b><span class="proc-cap__s">The channel as it stands — nothing assumed.</span><span class="proc-cap__l">We audit what is already there — watch time, retention, the shape of the back catalogue.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Moodboard</b><span class="proc-cap__s">Look, palette, references. What it should feel like.</span><span class="proc-cap__l">Palette, typography, thumbnail language. Agreed before a frame is shot.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Storyboard</b><span class="proc-cap__s">Series design and upload calendar, mapped out.</span><span class="proc-cap__l">Series design and an upload calendar you can actually keep to.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Production</b><span class="proc-cap__s">Shoot days, kit, crew — or your own, better run.</span><span class="proc-cap__l">Crew and kit where you need them, or your own team run properly.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Sound</b><span class="proc-cap__s">Because bad audio loses the audience first.</span><span class="proc-cap__l">Mixed and mastered for phone speakers, because that is where it is heard.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Edit</b><span class="proc-cap__s">Thumbnails, titles, metadata, cut to retain.</span><span class="proc-cap__l">Titles, tags, chapters and thumbnails — cut for retention, not for us.</span></p>
+            <p class="proc-cap__item"><b class="proc-cap__t">Published</b><span class="proc-cap__s">Then measured, and done again.</span><span class="proc-cap__l">Then measured against the audit, and the loop starts again.</span></p>
           </div>
           <div class="proc-cap__ticks" data-proc-ticks><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </div>
@@ -77,7 +80,7 @@
   </div>
 
   <!-- the long lines: a calm sheet laid over the desk (torn top, with a soft shadow), torn off at the bottom onto the Kit's black -->
-  <div class="paper proc-more" data-theme="light" data-opaque>
+  <div class="paper paper--baked proc-more" data-theme="light" data-opaque>
     <div class="proc-more__shade" aria-hidden="true"><i></i></div>
     <div class="paper-grain" aria-hidden="true"></div>
     <div class="col">

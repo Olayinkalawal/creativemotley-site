@@ -1,63 +1,71 @@
-<!-- III · BRANDS · scene: plate:brands ("The Commission", public/assets/scenes/brands: push in on the handover of the
-     scroll) · owner: builder A
+<!-- III · BRANDS · scene: plate:brands ("The Commission", public/assets/scenes/brands) · owner: track O1
      Creators' paper covers the screen at the boundary, so the change of painting is a cut under the torn edge.
-     Keys: src/gl/keys/brands.json (data-cam-* is the fallback); phones draw the portrait recomposition. -->
+     Opener: the title and dek near the top, over the red velvet (the manifest's calm third); data-rise: the painting
+     rises with the opener, then holds. Keys
+     (src/gl/keys/brands.json): close on the velvet and the globe; as the title leaves, a truck right that eases back
+     to the handover of the scroll, then a gentle push. Phones draw the portrait recomposition (calm top third).
+     Paper (≈ 1.45 screens at 1440×900): the Brands block (+ DC31) beside two notes · "How a brief runs" (DC32–DC37, drafts) · the
+     room and the set in velvet mats (crops of this chapter's painting). The "Leadership experience from" credits moved
+     to IX Directors (track O2, with DC91). -->
 <section class="chapter" id="brands" data-chapter data-theme="dark" aria-labelledby="brands-title">
-  <div class="opener col" data-scene="plate:brands" data-plate="brands"
-    data-cam-from="1.04 0.6 0.48 0.03" data-cam-to="1.2 0.66 0.5 0.09">
+  <div class="opener opener--top col" data-scene="plate:brands" data-plate="brands" data-rise
+    data-cam-from="1.9 0 0.3 0.015" data-cam-to="1.65 0.9 0.72 0.06">
     <div class="scrim">
       <h2 class="giant" id="brands-title" data-reveal>Brands</h2>
       <p class="dek" data-reveal="0.08"><span class="dc">A</span>frica’s most trusted creators.</p>
     </div>
   </div>
-  <div class="paper" data-theme="light" data-opaque>
+  <div class="paper paper--baked" data-theme="light" data-opaque>
     <div class="paper-grain" aria-hidden="true"></div>
     <div class="col br">
       <div class="br__intro">
         <div class="pf br__block" data-reveal>
           <h3 class="pf__label">Brands</h3>
           <p class="pf__body">One contract.</p>
+          <p class="br__lead" data-draft="DC31">We also work with brands and agencies looking to partner with African creators.</p>
           <a class="boxlink" href="mailto:info@creativemotley.com?subject=Brief">Brief our team <span class="ar">↗</span></a>
         </div>
-        <!-- production notes (illustrative, from the live site's feed) -->
+        <!-- production notes (illustrative, from the live site's feed); the thumbnails are crops of the Commission painting -->
         <ul class="fan br__fan" data-fan>
           <li class="fan__card">
-            <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/storytellers.webp);--cx:.83;--cy:.8;--zoom:5.6"></span>
+            <span class="fan__thumb" aria-hidden="true"><picture><source type="image/avif" srcset="/assets/thumbs/crops/brands-scroll-240.avif 240w, /assets/thumbs/crops/brands-scroll-480.avif 480w" sizes="(max-width: 899px) 44vw, 240px"><img src="/assets/thumbs/crops/brands-scroll-480.webp" srcset="/assets/thumbs/crops/brands-scroll-240.webp 240w, /assets/thumbs/crops/brands-scroll-480.webp 480w" sizes="(max-width: 899px) 44vw, 240px" alt="" width="480" height="360" loading="lazy" decoding="async"></picture></span>
             <p class="fan__note">Brand brief received — Lagos</p>
           </li>
           <li class="fan__card">
-            <span class="fan__thumb crop" aria-hidden="true" style="--plate:url(/assets/plates/hero.webp);--cx:.703;--cy:.64;--zoom:6.4"></span>
+            <span class="fan__thumb" aria-hidden="true"><picture><source type="image/avif" srcset="/assets/thumbs/crops/brands-rig-240.avif 240w, /assets/thumbs/crops/brands-rig-480.avif 480w" sizes="(max-width: 899px) 44vw, 240px"><img src="/assets/thumbs/crops/brands-rig-480.webp" srcset="/assets/thumbs/crops/brands-rig-240.webp 240w, /assets/thumbs/crops/brands-rig-480.webp 480w" sizes="(max-width: 899px) 44vw, 240px" alt="" width="480" height="360" loading="lazy" decoding="async"></picture></span>
             <p class="fan__note">Upload Thursday, 18:00 WAT</p>
           </li>
         </ul>
       </div>
 
+      <!-- how a brief runs (drafts DC32–DC37, docs/copy-drafts.md): five numbered steps, a row of columns from 1280 px -->
+      <div class="brief" data-reveal>
+        <h4 class="brief__label" id="br-brief" data-draft="DC32">How a brief runs</h4>
+        <ol class="brief__steps" aria-labelledby="br-brief">
+          <li class="brief__step" data-draft="DC33"><span class="brief__n" aria-hidden="true">01</span><span class="brief__name">Brief</span><span class="brief__line">You tell us the audience, the message and the budget.</span></li>
+          <li class="brief__step" data-draft="DC34"><span class="brief__n" aria-hidden="true">02</span><span class="brief__name">Match</span><span class="brief__line">We put forward creators from a vetted network whose audiences fit the brief.</span></li>
+          <li class="brief__step" data-draft="DC35"><span class="brief__n" aria-hidden="true">03</span><span class="brief__name">Contract</span><span class="brief__line">One agreement and one point of contact, however many creators are on it.</span></li>
+          <li class="brief__step" data-draft="DC36"><span class="brief__n" aria-hidden="true">04</span><span class="brief__name">Make</span><span class="brief__line">Made in the creator’s own voice, to your brief.</span></li>
+          <li class="brief__step" data-draft="DC37"><span class="brief__n" aria-hidden="true">05</span><span class="brief__name">Report</span><span class="brief__line">Performance tracked and brand lift measured, from first upload to final report.</span></li>
+        </ol>
+      </div>
+
+      <!-- the room and the set: the two photos in mats of the painting's red velvet -->
       <div class="br__photos">
         <figure class="pc br__pc br__pc--room" data-pc>
           <div class="pc__frame">
-            <div class="pc__mat" aria-hidden="true"><div class="pc__paint crop"></div></div>
-            <img class="pc__img" src="/assets/photos/room.webp" alt="The team around a table of storyboards and colour swatches, mid-discussion" width="1600" height="1073" loading="lazy" decoding="async">
+            <div class="pc__mat" aria-hidden="true"><div class="pc__paint"><picture><source type="image/avif" srcset="/assets/thumbs/crops/brands-velvet-a-640.avif 640w, /assets/thumbs/crops/brands-velvet-a-1200.avif 1200w" sizes="(max-width: 899px) 100vw, 40vw"><img src="/assets/thumbs/crops/brands-velvet-a-1200.webp" srcset="/assets/thumbs/crops/brands-velvet-a-640.webp 640w, /assets/thumbs/crops/brands-velvet-a-1200.webp 1200w" sizes="(max-width: 899px) 100vw, 40vw" alt="" width="1200" height="800" loading="lazy" decoding="async"></picture></div></div>
+            <picture><source type="image/avif" srcset="/assets/photos/room-640.avif 640w, /assets/photos/room-1280.avif 1280w, /assets/photos/room-1600.avif 1600w" sizes="(max-width: 899px) 80vw, 32vw"><source type="image/webp" srcset="/assets/photos/room-640.webp 640w, /assets/photos/room-1280.webp 1280w, /assets/photos/room.webp 1600w" sizes="(max-width: 899px) 80vw, 32vw"><img class="pc__img" src="/assets/photos/room-1280.webp" alt="The team around a table of storyboards and colour swatches, mid-discussion" width="1600" height="1073" loading="lazy" decoding="async"></picture>
           </div>
           <figcaption class="pc__cap">The room</figcaption>
         </figure>
         <figure class="pc br__pc br__pc--set" data-pc>
           <div class="pc__frame">
-            <div class="pc__mat" aria-hidden="true"><div class="pc__paint crop"></div></div>
-            <img class="pc__img" src="/assets/photos/set.webp" alt="A director giving direction on set, camera and boom operator working behind him" width="1600" height="1073" loading="lazy" decoding="async">
+            <div class="pc__mat" aria-hidden="true"><div class="pc__paint"><picture><source type="image/avif" srcset="/assets/thumbs/crops/brands-velvet-b-640.avif 640w, /assets/thumbs/crops/brands-velvet-b-1200.avif 1200w" sizes="(max-width: 899px) 100vw, 40vw"><img src="/assets/thumbs/crops/brands-velvet-b-1200.webp" srcset="/assets/thumbs/crops/brands-velvet-b-640.webp 640w, /assets/thumbs/crops/brands-velvet-b-1200.webp 1200w" sizes="(max-width: 899px) 100vw, 40vw" alt="" width="1200" height="800" loading="lazy" decoding="async"></picture></div></div>
+            <picture><source type="image/avif" srcset="/assets/photos/set-640.avif 640w, /assets/photos/set-1280.avif 1280w, /assets/photos/set-1600.avif 1600w" sizes="(max-width: 899px) 80vw, 32vw"><source type="image/webp" srcset="/assets/photos/set-640.webp 640w, /assets/photos/set-1280.webp 1280w, /assets/photos/set.webp 1600w" sizes="(max-width: 899px) 80vw, 32vw"><img class="pc__img" src="/assets/photos/set-1280.webp" alt="A director giving direction on set, camera and boom operator working behind him" width="1600" height="1073" loading="lazy" decoding="async"></picture>
           </div>
           <figcaption class="pc__cap">The set</figcaption>
         </figure>
-      </div>
-
-      <div class="br__credits" data-reveal>
-        <p class="pf__label" id="brands-credits">Leadership experience from</p>
-        <ul class="credits" aria-labelledby="brands-credits">
-          <li>YouTube</li>
-          <li>Paramount</li>
-          <li>Multichoice</li>
-          <li>Africa Magic</li>
-          <li>Circo Live</li>
-        </ul>
       </div>
     </div>
   </div>

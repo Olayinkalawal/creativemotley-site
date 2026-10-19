@@ -3,10 +3,12 @@ import './storytellers.css';
 import { onFrame, onResize, seg, smooth } from '../core/scroll.js';
 import { geo } from '../core/layout.js';
 import { REDUCED } from '../core/env.js';
+import { coverPlates } from './_paper.js';   // shared paper helper (read-only): hides the fixed plates under the sheet
 
 export function init() {
   const box = document.querySelector('[data-ways]');
   if (!box) return;
+  coverPlates(box.closest('.paper'));   // WebGL off: the plate under the opaque sheet is not composited while it covers
   const svg = box.querySelector('[data-ways-lines]');
   const target = box.querySelector('[data-ways-machine]');
   const names = [...box.querySelectorAll('.way__need')];
