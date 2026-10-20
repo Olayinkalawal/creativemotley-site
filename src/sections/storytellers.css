@@ -6,8 +6,10 @@
    rest), the dek sits over the arch; the scrim below, a dark gradient from the top-left over the vault, veils the lit
    Apollo niche and calms the arch sky behind the dek (the art direction's required scrim: about 0.6 over u 0-0.5,
    v 0-0.40, gone by v 0.5). It belongs to the opener, so it rises with the painting and leaves with the title.
-   Phones: the portrait's dark vault holds the title (cap above v 0.19); a soft top scrim (about 0.35, gone by
-   v 0.30) takes the dark field to the dek. */
+   Phones: the portrait's dark vault holds the title (cap above v 0.19, 12:1 bare); the title's way in, though, runs
+   over the hero still's bright sky in the bleed band under the edge, so a soft shadow (not a bar: about 0.34 at its
+   core, fading down and to the right) travels with it and fades out as the section's top reaches the top of the
+   screen (a scroll-driven animation where supported; elsewhere the shadow simply stays, harmless on the dark vault). */
 .st-open { min-height: 0; justify-content: flex-start; padding-block: 3svh 62svh; }
 .st-open::before {
   content: ''; position: absolute; z-index: -1; pointer-events: none; top: 0; left: calc(-1 * var(--rail-w)); right: 0; height: 56svh;
@@ -16,12 +18,19 @@
   mask-image: linear-gradient(90deg, #000 30%, rgba(0, 0, 0, 0.82) 58%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.3));
 }
 @media (max-width: 1023px) {
-  .st-open { padding-block: 3svh 74svh; }
+  .st-open { padding-block: 3svh 74svh; view-timeline: --st-in block; }
   .st-open::before {
-    left: 0; height: 34svh; -webkit-mask-image: none; mask-image: none;
-    background: linear-gradient(180deg, rgba(11, 8, 5, 0), rgba(11, 8, 5, 0.38) 5svh, rgba(11, 8, 5, 0.3) 55%, rgba(11, 8, 5, 0));
+    left: 0; height: 30svh;
+    background: linear-gradient(180deg, rgba(11, 8, 5, 0), rgba(11, 8, 5, 0.34) 14svh, rgba(11, 8, 5, 0.24) 60%, rgba(11, 8, 5, 0));
+    -webkit-mask-image: linear-gradient(90deg, #000 40%, rgba(0, 0, 0, 0.35)); mask-image: linear-gradient(90deg, #000 40%, rgba(0, 0, 0, 0.35));
+  }
+  @supports (animation-timeline: view()) {
+    /* entry 0% → 100%: the section's top from the screen's foot to its top (the rise and the bleed) */
+    .st-open::before { animation: st-shadow linear both; animation-timeline: --st-in; animation-range: entry 0% entry 100%; }
   }
 }
+@media (min-width: 640px) and (max-width: 1023px) { .st-open::before { height: 24svh; } }
+@keyframes st-shadow { 0%, 45% { opacity: 1; } 100% { opacity: 0; } }
 
 /* the paper: the three ways in, converging on one machine, then who we are */
 .st-paper { padding-block: clamp(72px, 12vh, 140px) clamp(96px, 16vh, 180px); }

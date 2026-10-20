@@ -1,49 +1,57 @@
 /* VIII · Results: the opener in the oculus sky (The Oculus, after Mantegna), then four counters over the same painting
    under an ink veil.
    Opener: title and dek set near the top (the painting's open sky, its manifest's titleBox), a short region, so the
-   first figure arrives at the foot of the first screen. Wide screens: cream type under a dark halo (the sky is mid
-   cerulean: the title needs about 0.1 of ink for 3:1, the dek about 0.3 for 4.5:1); the dek is indented under the
-   title, so its swash cap clears the first turbaned man at the ring's top left. Phones: dark ink on the sky (5:1 bare),
-   the title's cap line below the ring's top arc.
+   first figure arrives at the foot of the first screen. Every width: dark ink on the sky (the oculus is mid cerulean
+   with pale clouds: ink holds 5:1 and more bare, so there is no dark halo to smudge the sky; the same rule as
+   Creators and Apply, ink on light skies), a faint pale halo only. Wide screens: the dek is indented under the title,
+   so its swash cap clears the first turbaned man at the ring's top left. Phones and tablets: the title's cap line
+   below the ring's top arc, title and dek moved in from the ring's inner curve.
    The ledger: each figure sits on a hairline with its label right under it, rows set close (≈ 0.29 screen each on
-   desktop). On wide screens the ledger is only as wide as its widest row and runs on the sky; the left of the ring
-   is under the ink veil, the right group of watchers stays clear. The figure is set in tabular lining figures (the
-   numeral role: never above the title) and laid out at its final width from the start; while it counts, places not
-   reached yet show as faint zeros and the + waits. */
+   desktop). On wide screens the ledger is only as wide as its widest row and runs on the sky, under an ink veil shaped
+   to it (an ellipse centred on the ledger: it fades out toward both groups of watchers, so the ring keeps Mantegna's
+   symmetry). The figure is set in tabular lining figures (the numeral role: never above the title) and laid out at its
+   final width from the start; while it counts, places not reached yet show as faint zeros and the + waits. */
 .opener.rx-open {
   min-height: 56svh; justify-content: flex-start;
   padding-top: calc(var(--nav-h) + 4.5svh); padding-bottom: 0;
+  color: var(--ink); --halo: 244, 237, 223; --halo-cap: 0.28;
 }
 .rx-open .giant { margin-bottom: clamp(0.9rem, 2.6vh, 2rem); }
 .rx-open .dek { max-width: 13em; }
 @media (min-width: 1024px) { .rx-open .dek { margin-left: 2.4em; } }
-/* a soft ink veil travels with the type, so cream holds over the bright clouds (local: the sky beyond stays clean) */
+/* ink on the sky: a faint pale halo only, no text glow (a dark halo here left a smudge on the cerulean) */
+.rx-open .scrim { text-shadow: none; }
 .rx-open .scrim::before {
-  inset: -30% -22% -40% -16%;
-  background: radial-gradient(closest-side, rgba(11, 8, 5, 0.62), rgba(11, 8, 5, 0.38) 58%, rgba(11, 8, 5, 0));
+  inset: -12% -20% -18% -14%;
+  background: radial-gradient(closest-side, rgba(var(--halo), 0.24), rgba(var(--halo), 0.1) 62%, rgba(var(--halo), 0));
 }
 @media (max-width: 1023px) {
-  /* the portrait: dark ink on the sky (5:1 bare), the title's cap line below the ring's top arc (v 0.165), the dek
-     left of the flowerpot (u 0.76) */
-  .opener.rx-open { min-height: 54svh; padding-top: calc(var(--nav-h) + 9.5svh); color: var(--ink); --halo: 244, 237, 223; }
-  .rx-open .scrim::before { inset: -12% -20% -18% -14%; background: radial-gradient(closest-side, rgba(var(--halo), 0.34), rgba(var(--halo), 0.16) 62%, rgba(var(--halo), 0)); }
-  .rx-open .scrim { text-shadow: none; }
+  /* the portrait: the title's cap line below the ring's top arc (v 0.165), title and dek moved in from the ring's
+     inner curve (the R and the ascenders off its stone), the dek left of the flowerpot (u 0.76) */
+  .opener.rx-open { min-height: 54svh; padding-top: calc(var(--nav-h) + 9.5svh); }
+  .rx-open .scrim { margin-left: clamp(14px, 4vw, 40px); }
   .rx-open .dek { max-width: 11em; }
 }
 
 /* the counters start under the opener's tail */
 .rx { position: relative; color: var(--cream); padding-block: 2svh 6svh; }
 /* the ink veil under the ledger: it fades in above the first hairline and out over the start of chapter IX
-   (it runs a little past the region, so the painting never shows bare between the last figure and IX's title, and
-   it has faded out before IX's title band) */
+   (it runs past the region, so the painting never shows bare between the last figure and IX's title, and it has
+   faded out before IX's title band). Phones: the ledger spans the column, so the veil does too, and it runs on
+   further (IX bleeds up under Results through a band, so the ring would show bare above IX's rising title). */
 .rx::before {
-  content: ''; position: absolute; z-index: -1; top: -8svh; bottom: -14svh; left: 0; right: 0; pointer-events: none;
+  content: ''; position: absolute; z-index: -1; top: -8svh; bottom: -30svh; left: 0; right: 0; pointer-events: none;
   background: linear-gradient(90deg, rgba(11, 8, 5, 0.84), rgba(11, 8, 5, 0.74));
   -webkit-mask-image: linear-gradient(180deg, transparent, #000 18svh, #000 calc(100% - 20svh), transparent);
   mask-image: linear-gradient(180deg, transparent, #000 18svh, #000 calc(100% - 20svh), transparent);
 }
-@media (min-width: 900px) {
-  .rx::before { background: linear-gradient(90deg, rgba(11, 8, 5, 0.86), rgba(11, 8, 5, 0.8) 52%, rgba(11, 8, 5, 0.3) 76%, rgba(11, 8, 5, 0.16)); }
+/* tablets and wider: the ledger takes the left of the column, so the veil is an ellipse centred on it (tall: even
+   over every row), fading out toward both groups of watchers, the left one no darker than the right */
+@media (min-width: 600px) {
+  .rx::before {
+    bottom: -14svh;
+    background: radial-gradient(ellipse 56% 110% at 36% 50%, rgba(11, 8, 5, 0.8), rgba(11, 8, 5, 0.72) 36%, rgba(11, 8, 5, 0.46) 60%, rgba(11, 8, 5, 0) 90%);
+  }
 }
 
 .rx-list { display: grid; }

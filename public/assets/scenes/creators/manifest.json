@@ -52,6 +52,13 @@
  "phone": {
   "avif": [
    {
+    "src": "/assets/scenes/creators/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 271439,
+    "q": 72
+   },
+   {
     "src": "/assets/scenes/creators/phone-1170.avif",
     "w": 1170,
     "h": 2080,
@@ -67,6 +74,13 @@
    }
   ],
   "webp": [
+   {
+    "src": "/assets/scenes/creators/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 381620,
+    "q": 86
+   },
    {
     "src": "/assets/scenes/creators/phone-1170.webp",
     "w": 1170,

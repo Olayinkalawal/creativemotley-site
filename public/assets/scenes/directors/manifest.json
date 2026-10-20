@@ -52,34 +52,48 @@
  "phone": {
   "avif": [
    {
+    "src": "/assets/scenes/directors/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 294308,
+    "q": 70
+   },
+   {
     "src": "/assets/scenes/directors/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 176065,
-    "q": 61
+    "bytes": 178232,
+    "q": 67
    },
    {
     "src": "/assets/scenes/directors/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 101353,
-    "q": 59
+    "bytes": 100831,
+    "q": 62
    }
   ],
   "webp": [
    {
+    "src": "/assets/scenes/directors/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 413902,
+    "q": 86
+   },
+   {
     "src": "/assets/scenes/directors/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 272488,
-    "q": 84
+    "bytes": 258324,
+    "q": 86
    },
    {
     "src": "/assets/scenes/directors/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 151712,
-    "q": 83
+    "bytes": 150404,
+    "q": 85
    }
   ]
  },
@@ -110,7 +124,7 @@
  "key": "#3F4D1F",
  "titleBg": {
   "desktop": "#32412A",
-  "phone": "#1B1D0B"
+  "phone": "#1E1F0C"
  },
  "titleInk": {
   "desktop": "light",
@@ -122,13 +136,13 @@
    "worst10": 6.79
   },
   "phone": {
-   "mean": 17.11,
-   "worst10": 12.42
+   "mean": 16.71,
+   "worst10": 12.4
   }
  },
  "placeholder": {
   "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sqlEppaOiqAqpMB2JZQC06DTkBzqvVS/elO9DQtgJKH0n8TCgAP7s3MHSZHZonCyr5VPUU75nJFkHRYJwFy41tp/PP8s9uz75zQUCcxbbDRNWTFhXpDY5sqwesGYMyVr1IiVgXa5zJWqcVpV4IRsias7Oooo/vNhnva5F2AKOHDSf2AAAAA==",
-  "phone": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JQBYdjSw6mnzKABnn+mu4AP797Ef3nQR4njsxA1Hf75as9eROv/3L+1/zAsQQtoMkPT8i7lJxA7NAeENRYC0t1LsAeveAEg8/pa9TfuorVS0c/aTKY6CSCijHasRHr8YAAA=="
+  "phone": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADwAwCdASoMABoAPu1kqU2ppaQiMAgBMB2JQBYdjSv4JnshpLDaJ7+gAP79sAiZgSHtvIN0cEX/0AiTeCE6//c0D5I8KvOuvx3zKajkPCZLmdbBBgbPXe3PZTm/csa9gE8MwulvWta27PS20aKNYFpkQYDZ39MI1ligAAAA"
  },
  "credit": {
   "desktop": "Nano Banana Pro 4K text-only job 4e6bedc5 (hero 70d440b1 as a technique reference), local retouch (torquetum band to ticks, black lacquer chairs, hymn-book lines, camera badge; craquelure, varnish, grain; final round: chair latch, brace step and book headings blanked): masters/directors/final_d2.png",
@@ -144,10 +158,10 @@
   },
   "phone": {
    "colour": "ink",
-   "worst10Bare": 12.44,
+   "worst10Bare": 12.4,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 15.7
+   "zoneLumaSd": 14.8
   }
  },
  "masterpiece": "after Hans Holbein the Younger, The Ambassadors (1533)",
@@ -156,7 +170,7 @@
   "src": "/assets/scenes/directors/depth.webp",
   "w": 1920,
   "h": 1080,
-  "bytes": 10546,
+  "bytes": 11616,
   "note": "hand-layered: curtain far, stand + kit + chairs one mid plane, MiDaS floor (scripts/depth-directors.py)"
  }
 }

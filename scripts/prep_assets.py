@@ -51,7 +51,8 @@ for f in os.listdir(os.path.join(SRC, 'photos')):
 # plates: the stills each chapter scene is built on
 pl = mk('plates')
 jobs.append((os.path.join(SRC, 'frames', 'f_0001.webp'), os.path.join(pl, 'hero.webp'), 1920, 80))
-jobs.append((os.path.join(SRC, 'frames', 'f_0570.webp'), os.path.join(pl, 'storytellers.webp'), 1920, 80))
+# (the old Storytellers plate, the film's last frame f_0570, went on 2026-10-20: the film now ends on the line art and
+#  Storytellers is the School of Athens master, public/assets/scenes/storytellers)
 jobs.append((os.path.join(SRC, 'method', 'm_0001.jpg'), os.path.join(pl, 'method.webp'), 1800, 80))
 
 with Pool(4) as p: p.map(webp, jobs)

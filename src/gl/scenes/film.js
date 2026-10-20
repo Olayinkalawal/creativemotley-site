@@ -1,9 +1,11 @@
-/* The hero film (570 painted frames): the figures and the floating kit → the camera handed across
-   → the lens → the vortex → the machine draws → the Storytellers painting.
+/* The hero film (570 painted frames, 0 … 440 played): the figures and the floating kit → the camera handed across
+   → the lens → the vortex → the machine draws the crowd in line (it ends on the glowing line art, frame 440; the
+   School of Athens then bleeds up under it with I Storytellers' top edge).
    Delivered as video (v3): one short-GOP encode (a keyframe every 8 frames), AV1 where the browser decodes it, H.264
    everywhere else, 1920×1080 (public/assets/video/film/, scripts/encode-film.sh), scrubbed by scroll.
-   v3 phase 2: the encode is a cut of 161 of the 570 frames (FILM_CUT in gl/lib/filmRanges.js: no static opening, no
-   near-black lens, every other frame where the render doubles them); the markup and this scene still speak in source
+   v3 phase 2: the encode is a cut of the 570 frames (FILM_CUT in gl/lib/filmRanges.js: no static opening, no
+   near-black lens, every other frame where the render doubles them; 106 frames since the masters, which end it on the
+   line art before the render paints the old Storytellers painting); the markup and this scene still speak in source
    frames, and cutIndex() maps them onto the cut. Paths:
      1. WebCodecs on a hardware decoder (gl/lib/codecStream.js): each GOP decoded once into a cache around the
         playhead (exact frames, no per-seek re-decode); ?film=codec forces it on a software decoder too;
@@ -11,8 +13,8 @@
      3. else the WebP frame streams, the cut's frames only (no playable source, a decode error, or ?film=frames).
    Scroll position → source frame comes from [data-film="hero"] in the markup (the hero keys it in screens of scroll,
    data-film-map; gl/lib/filmRanges.js).
-   At rest on frame 0 and at the end (frame 569, which is the Storytellers plate) the frame becomes a
-   depth diorama with pointer parallax and a slow push. On load the rest frame pushes in (about 2.4 s, from the CSS
+   At rest on frame 0 the frame becomes a depth diorama with pointer parallax and a slow push (the hero plate's depth
+   map); the end frame (440) holds, a touch closer (zoom 1.06), through the Storytellers bleed. On load the rest frame pushes in (about 2.4 s, from the CSS
    plate's framing): the copy is DOM and never waits for it. Desktop only: phones take the still path (gl/scenes/stills.js).
    First load: frame 0 is the hero plate (public/assets/plates/hero.webp, already fetched as the first paint), so at
    rest the scene draws that and opens the film only at the first sign of scrolling (wheel, touch, a key, a click, or
@@ -29,12 +31,12 @@ import { smooth, seg } from '../../core/scroll.js';
 
 export { filmRanges, frameAt };
 
-const LAST = 569, FPS = 30;              // source frames 0 … 569
+const LAST = 440, FPS = 30;              // source frames 0 … 440 (the cut's last frame: the line art)
 const CUT = cutFrames();                  // the source frame of each encoded frame
 const COUNT = CUT.length;
 export const FILM_SOURCES = [
-  { src: '/assets/video/film/hero-cut-1920-av1.mp4?v=1', type: 'video/mp4; codecs="av01.0.08M.08"' },
-  { src: '/assets/video/film/hero-cut-1920-h264.mp4?v=1', type: 'video/mp4; codecs="avc1.640028"' },
+  { src: '/assets/video/film/hero-cut-1920-av1.mp4?v=2', type: 'video/mp4; codecs="av01.0.08M.08"' },
+  { src: '/assets/video/film/hero-cut-1920-h264.mp4?v=2', type: 'video/mp4; codecs="avc1.640028"' },
 ];
 const PUSH_MS = 2400;                     // the load push-in
 const easeOut = (t) => 1 - Math.pow(1 - t, 3);
@@ -46,7 +48,7 @@ export default function register(stage) {
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const mat = plateMaterial();
   scene.add(fullscreenQuad(mat));
-  let src = null, plate = null, opening = null, gen = 0, depthRest = null, depthEnd = null, endLoading = null, sparks = null, ranges = [];
+  let src = null, plate = null, opening = null, gen = 0, depthRest = null, sparks = null, ranges = [];
   let push = 0, t0 = 0;   // t0: the first draw (the load push-in starts there)
   const redraw = () => stage.invalidate();
 
@@ -91,7 +93,6 @@ export default function register(stage) {
     id: 'film', scene, camera, post,
     async load(ctx) {
       ranges = filmRanges('hero');
-      // the end plate's depth map is needed only once the film nears its end (loaded then, in update)
       [plate, depthRest] = await Promise.all([loadTexture('/assets/plates/hero.webp'), loadTexture('/assets/plates/hero-depth.webp')]);
       if (ctx.scrollY > 0) go();
       else INTENT.forEach((e) => window.addEventListener(e, go, { passive: true }));
@@ -106,7 +107,7 @@ export default function register(stage) {
       gen++; unlisten(); opening = null;
       src?.dispose(); src = null; stage.film = null;   // stage.film: QA seek stats (window.__stage.film.stats())
       plate?.dispose(); plate = null;
-      depthRest?.dispose(); depthEnd?.dispose(); depthRest = depthEnd = null; endLoading = null;
+      depthRest?.dispose(); depthRest = null;
       mat.uniforms.map.value = null; mat.uniforms.depth.value = null;
     },
     resize(w, h, dpr) { mat.uniforms.res.value.set(w, h); if (sparks) { sparks.u.aspect.value = w / h; sparks.u.px.value = dpr * 1.6; } },
@@ -118,19 +119,16 @@ export default function register(stage) {
       const f = ctx.reduced ? 0 : frameAt(ranges, ctx.scrollY, ctx.vh);   // source frame
       if (!src && f > 0) go();
       src?.seek(cutIndex(CUT, f));
-      if (f > 300 && !depthEnd && !endLoading) {
-        endLoading = loadTexture('/assets/plates/storytellers-depth.webp').then((t) => { if (src) { depthEnd = t; redraw(); } else t.dispose(); }).catch(() => {});
-      }
       const u = mat.uniforms;
       // the plate (= frame 0) until the film's first frame is in
       const live = src && src.ready !== false && (src.shown === undefined || src.shown >= 0);
       if (live) { u.map.value = src.texture; u.imgSize.value.set(src.size[0], src.size[1]); }
       else { u.map.value = plate; u.imgSize.value.set(plate.image.width, plate.image.height); }
-      // depth parallax only where the frame is the plate the depth map was computed from
+      // depth parallax only where the frame is the plate the depth map was computed from (frame 0); the line-art end
+      // frame has no map, so it only breathes (the zoom below)
       const atRest = 1 - smooth(seg(f, 0, 6));
-      const atEnd = smooth(seg(f, LAST - 7, LAST));
-      if (atEnd > 0 && depthEnd) { u.depth.value = depthEnd; u.hasDepth.value = 1; u.strength.value = 0.022 * atEnd; }
-      else if (atRest > 0) { u.depth.value = depthRest; u.hasDepth.value = 1; u.strength.value = 0.02 * atRest; }
+      const atEnd = smooth(seg(f, LAST - 8, LAST));
+      if (atRest > 0) { u.depth.value = depthRest; u.hasDepth.value = 1; u.strength.value = 0.02 * atRest; }
       else u.hasDepth.value = 0;
       // the load push-in: from the CSS plate's framing (cover, zoom 1) to the rest framing, once, from the first draw
       if (!t0) t0 = performance.now();
@@ -145,11 +143,12 @@ export default function register(stage) {
       u.pointer.value.copy(ctx.pointer);
       u.exposure.value = 1;
       if (sparks) {
-        // the vortex is frames ~384–430 (the lens's vanishing point at frame centre), dust settles by ~500
-        const sp = seg(f, 384, 500);
+        // the vortex is frames ~384–430 (the lens's vanishing point at frame centre); the dust has settled by the
+        // line-art end frame (440), which the film holds through the Storytellers bleed
+        const sp = seg(f, 384, LAST);
         sparks.points.visible = sp > 0 && sp < 1;
         sparks.u.prog.value = sp; sparks.u.time.value = ctx.time;
-        sparks.u.alpha.value = 1 - smooth(seg(f, 470, 500));
+        sparks.u.alpha.value = 1 - smooth(seg(f, 418, LAST));
       }
     },
   });

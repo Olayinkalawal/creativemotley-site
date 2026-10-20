@@ -26,14 +26,34 @@ const parseCam = (s, d) => (s ? s.trim().split(/\s+/).map(Number) : d);
    width, so the title would reach further into it; the narrow camera keeps it on the same calm zone. */
 const KEYS = import.meta.glob('../keys/*.json', { eager: true, import: 'default' });
 const NARROW_AR = 1.45;
-const notes = (o) => Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('//') && k !== 'narrow'));
-const SHEETS = {}, NARROW = {};
+const notes = (o) => Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('//') && k !== 'narrow' && k !== 'fit'));
+const SHEETS = {}, NARROW = {}, FIT = {};
 for (const [p, v] of Object.entries(KEYS)) {
   const ch = p.match(/([\w-]+)\.json$/)[1];
   SHEETS[ch] = sheet(notes(v));
   if (v.narrow) NARROW[ch] = sheet(notes(v.narrow));
+  if (v.fit) FIT[ch] = { ...v.fit, base: SHEETS[ch].channels['camera.zoom'].slice(0, v.fit.keys).map((k) => k.v), vw: 0, vh: 0 };
 }
 const sheetFor = (chapter, ctx) => (ctx.vw / ctx.vh < NARROW_AR && NARROW[chapter]) || SHEETS[chapter];
+/* "fit": { "title": "#id", "u": U, "keys": n, "min": a } in a sheet: the rest zoom (its first n zoom keys, anchored at the
+   painting's left edge) is fitted to the screen, as low as min, so that the title's right edge lands at u = U of the
+   painting and no further in. The giant title stops growing at 12rem (about 1460 px wide), so on wider screens it
+   spans less of the screen and the painting can be shown wider (III Brands: the man's hat starts at u 0.46; 1.48 at
+   1440x900, about 1.16 at 1920x1080). Refitted on resize; never above the sheet's own value. */
+function fitSheet(chapter, ctx) {
+  const f = FIT[chapter];
+  if (!f || (f.vw === ctx.vw && f.vh === ctx.vh)) return;
+  const el = document.querySelector(f.title);
+  if (!el) return;
+  const rg = document.createRange(); rg.selectNodeContents(el);
+  const r = rg.getBoundingClientRect();
+  if (!r.width) return;
+  f.vw = ctx.vw; f.vh = ctx.vh;
+  const ra = ctx.vw / ctx.vh, ia = 16 / 9, sx = ra > ia ? 1 : ra / ia;
+  const ux = (r.right / ctx.vw - 0.5) * sx + 0.5;
+  const keys = SHEETS[chapter].channels['camera.zoom'];
+  f.base.forEach((z, i) => { keys[i].v = Math.min(z, Math.max(f.min ?? 1, ux / f.u)); });
+}
 const chapterOf = (el) => el.closest('[data-chapter]')?.id || el.id;
 
 /* the art track's desktop encode lists, bundled at build time (only the "desktop" field of each manifest) */
@@ -70,21 +90,23 @@ async function loadFirst(srcs) {
 
 /* data-rise on the scene element: until its top reaches the top of the screen, the painting rises with it (it enters
    like the next sheet, under the paper above), then holds still while the copy scrolls over it. So an opener's title,
-   set near its top, stays over the same calm part of the painting all the way in. A shift of the view centre:
-   at zoom z the painting moves D screens when the focus moves D / (z - 1) (the shader's uv is bottom-up). Opt-in;
-   reduced motion and zooms under 1.05 never rise. Shared with gl/scenes/stills.js (the phone path). */
+   set near its top, stays over the same calm part of the painting all the way in. A translation of the view after
+   the zoom (the plate shader's `shift`; its uv is bottom-up): D screens are D·k/z of the painting's height at zoom z
+   (k: the share of the painting's height the cover fit shows at zoom 1). The push and the pointer parallax stay
+   centred on the screen while it rises. Opt-in; reduced motion never rises. Shared with gl/scenes/stills.js (the
+   phone path). */
 export function riseOf(s, ctx) {
   if (ctx.reduced || !s.el.hasAttribute('data-rise')) return 0;
   return Math.max(0, 1 - passT(s, ctx.vh));
 }
 function riseShift(s, ctx, zoom, img) {
   const D = riseOf(s, ctx);
-  if (!D || zoom < 1.05) return 0;
+  if (!D) return 0;
   const ra = ctx.vw / ctx.vh, ia = img.x / img.y;
-  return (D * (ra > ia ? ia / ra : 1)) / (zoom - 1);
+  return (D * (ra > ia ? ia / ra : 1)) / Math.max(1, zoom);
 }
 
-export function plateScene({ id, image, depth, strength = 0.022, post }) {
+export function plateScene({ id, image, depth, strength = 0.022, post = { fringe: 0.5 } }) {
   const scene = new Scene();
   const camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const mat = plateMaterial();
@@ -105,6 +127,7 @@ export function plateScene({ id, image, depth, strength = 0.022, post }) {
     },
     resize(w, h) { mat.uniforms.res.value.set(w, h); },
     update(ctx, s) {
+      fitSheet(chapterOf(s.el), ctx);
       const sh = sheetFor(chapterOf(s.el), ctx);
       if (sh && !ctx.reduced) cameraAt(sh, passT(s, ctx.vh), cam);
       else {
@@ -117,7 +140,8 @@ export function plateScene({ id, image, depth, strength = 0.022, post }) {
       }
       const u = mat.uniforms;
       u.zoom.value = cam.zoom;
-      u.focus.value.set(cam.focus[0], cam.focus[1] + riseShift(s, ctx, cam.zoom, u.imgSize.value));
+      u.focus.value.set(cam.focus[0], cam.focus[1]);
+      u.shift.value.set(0, riseShift(s, ctx, cam.zoom, u.imgSize.value));
       u.push.value = cam.push + (ctx.reduced ? 0 : 0.012 * Math.sin(ctx.time * 0.3));
       u.strength.value = ctx.reduced ? 0 : strength;
       u.pointer.value.copy(ctx.pointer);

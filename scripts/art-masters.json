@@ -97,12 +97,26 @@
   "desktop": {
    "src": "repo:.art/masters-2026-10-20/brands-desktop.png",
    "note": "Nano Banana Pro 4K edit 2c6c6c5e > 322047e0, then local retouch (seal, chair, mirror, painted skin, window-wall glaze, craquelure): masters/brands/d5_r3.png",
-   "pick": "brands/d5_r3.png"
+   "pick": "brands/d5_r3.png",
+   "widths": [
+    2048,
+    2880,
+    3840
+   ]
   },
   "phone": {
    "src": "repo:.art/masters-2026-10-20/brands-phone.png",
    "note": "9:16 recomposition from 322047e0, job b5fd8ac6, then local retouch (inscription, painted skin, calmer ceiling, mirror): masters/brands/p1_r3.png",
-   "pick": "brands/p1_r3.png"
+   "pick": "brands/p1_r3.png",
+   "finish": {
+    "shadowLift": 4,
+    "greenSat": 0.88,
+    "soften": 0.35,
+    "softenSigma": 2.0,
+    "crack": 0.14,
+    "cell": 190,
+    "seed": 13
+   }
   },
   "focus": [
    0.69,
@@ -110,7 +124,7 @@
   ],
   "phoneFocus": [
    0.52,
-   0.55
+   0.47
   ],
   "titleSide": "left",
   "titleBox": [
@@ -142,7 +156,12 @@
   "desktop": {
    "src": "repo:.art/masters-2026-10-20/results-desktop.png",
    "note": "Nano Banana Pro 4K e04207f9 > edit 922b10cb, then local retouch and grade (tub, orange branch, oculus sky to mid cerulean, varnish, canvas grain): masters/results/d9.png",
-   "pick": "results/d9.png"
+   "pick": "results/d9.png",
+   "widths": [
+    2048,
+    2880,
+    3840
+   ]
   },
   "phone": {
    "src": "repo:.art/masters-2026-10-20/results-phone.png",
@@ -191,7 +210,16 @@
   "phone": {
    "src": "repo:.art/masters-2026-10-20/directors-phone.png",
    "note": "9:16 recomposition from da8b8160, job add24dd7, local retouch (displays, sundial, hymn book; craquelure, varnish, grain), then the monitor given its own abstract light back and the crest plaque and sundial marks removed: masters/directors/final_p.png",
-   "pick": "directors/final_p.png"
+   "pick": "directors/final_p.png",
+   "finish": {
+    "shadowLift": 4,
+    "greenSat": 0.88,
+    "soften": 0.35,
+    "softenSigma": 2.0,
+    "crack": 0.14,
+    "cell": 190,
+    "seed": 21
+   }
   },
   "focus": [
    0.67,
@@ -241,7 +269,7 @@
   ],
   "phoneFocus": [
    0.52,
-   0.62
+   0.5
   ],
   "titleSide": "left",
   "titleBox": [
@@ -263,5 +291,7 @@
   },
   "key": "#DFAFA0",
   "note": "The site's one light painting: dark ink on the pale sky, desktop and phone. Phone: the wind drapery starts at v ~0.32 and the tree at v ~0.35; the attendant's face sits at u 0.93-1.0 and crops away on screens taller than 9:16, so phoneFocus u 0.52 keeps both wind-pair faces (u 0.14-0.28) in."
- }
+ },
+ "//phoneFocus": "2026-10-20 review: brands phoneFocus y 0.55 -> 0.47 and apply 0.62 -> 0.50. Phones (narrower than 9:16) are fitted by height, so y moves only tablets (fitted by width): there it drops the Brands chandelier below the dek and the Apply wind pair below the dek. brands and results add a 3840 desktop encode (their keys zoom to 1.48 / 1.42, so a 2x screen would upscale the 2880).",
+ "//finish": "2026-10-20 review: the Brands and Directors portraits read photographic beside Storytellers, Creators and Apply on a phone, so art.py lays an oil finish over those two masters before encoding (phone.finish: a warm umber lift in the deep shadows, greens 12% less saturated, a slight soften, a craquelure network at ~70 px cells on the 1170 encode)."
 }

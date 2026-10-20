@@ -35,8 +35,8 @@ Inputs
 
 Outputs (per chapter, in public/assets/scenes/<chapter>/)
   desktop-2048.avif  desktop-2880.avif  desktop-2048.webp  desktop-2880.webp   16:9, cut from the 16:9 master
-  phone-1170.avif    phone-828.avif     phone-1170.webp    phone-828.webp      1170x2080 / 828x1472, the whole
-                                                                              separate 9:16 portrait master
+  phone-1640.avif    phone-1170.avif    phone-828.avif   (and .webp)          1640x2916 / 1170x2080 / 828x1472, the
+                                                                              whole separate 9:16 portrait master
   manifest.json      {desktop:{avif:[...],webp:[...]}, phone:{...}, focus, phoneFocus, titleSide, phoneTitle,
                       key, titleBg, titleInk, placeholder, credit}
   plus qa/shots/v3-art-sheet.jpg (every chapter, decoded from the AVIFs, with sizes).
@@ -84,12 +84,17 @@ INK = (11, 8, 5)      # --ink, the site's dark (theme-color #0B0805)
 # Byte budgets (KB) and quality ceilings. Budgets come from the plan's first-load targets
 # (desktop <= 1.5 MB, phone <= 1.0 MB with the shell): one desktop scene <= 250 KB at 2048 px, one phone
 # scene <= 180 KB at 1170 px. Ceilings were set by eye: above them the files grow with no visible gain.
+# 3840 (opt-in per chapter, desktop.widths): for chapters whose keys zoom past ~1.35, so a 2x desktop (a 2880 canvas)
+# is not upscaled; only 2x screens fetch it (gl/scenes/plates.js picks the smallest width that covers the canvas at
+# the deepest zoom). 1640 portrait: tablets held upright (820 px wide at 2x) and 3x large phones; the stills path picks
+# it only when the 1170 would be stretched, so the phone budget is unchanged.
 BUDGET = {
-    ('desktop', 'avif', 2048): 250, ('desktop', 'avif', 2880): 440,
-    ('desktop', 'webp', 2048): 380, ('desktop', 'webp', 2880): 700,
-    ('phone', 'avif', 1170): 180, ('phone', 'avif', 828): 100,
-    ('phone', 'webp', 1170): 270, ('phone', 'webp', 828): 150,
+    ('desktop', 'avif', 2048): 250, ('desktop', 'avif', 2880): 440, ('desktop', 'avif', 3840): 760,
+    ('desktop', 'webp', 2048): 380, ('desktop', 'webp', 2880): 700, ('desktop', 'webp', 3840): 1200,
+    ('phone', 'avif', 1640): 300, ('phone', 'avif', 1170): 180, ('phone', 'avif', 828): 100,
+    ('phone', 'webp', 1640): 420, ('phone', 'webp', 1170): 270, ('phone', 'webp', 828): 150,
 }
+PHONE_WIDTHS = (1640, 1170, 828)
 QMAX = {'avif': 72, 'webp': 86}
 QMIN = {'avif': 36, 'webp': 58}
 
@@ -244,6 +249,69 @@ def shrink(im: Image.Image, w: int, h: int) -> Image.Image:
     return Image.fromarray(np.clip(np.rint(f + 0.5 * tpdf), 0, 255).astype(np.uint8), 'RGB')
 
 
+# ---------------------------------------------------------------- finish
+def crackle(h: int, w: int, cell: float, seed: int) -> np.ndarray:
+    """A craquelure network (0..1): warped Voronoi cell walls, some of them broken, so it reads as cracks in old paint
+    rather than a grid (the art round's local finish, scratchpad masters/_workA3/finish.py)."""
+    import cv2
+    r = np.random.default_rng(seed)
+    n = max(1, int(h * w / (cell * cell)))
+    pts = np.full((h, w), 255, np.uint8)
+    pts[r.integers(0, h, n), r.integers(0, w, n)] = 0
+    _, lab = cv2.distanceTransformWithLabels(pts, cv2.DIST_L2, 5, labelType=cv2.DIST_LABEL_PIXEL)
+    lab = lab.astype(np.float32)
+    s = cell / 5
+    dx = cv2.GaussianBlur(r.standard_normal((h, w)).astype(np.float32), (0, 0), s)
+    dy = cv2.GaussianBlur(r.standard_normal((h, w)).astype(np.float32), (0, 0), s)
+    k = cell / 11
+    dx *= k / (dx.std() + 1e-6); dy *= k / (dy.std() + 1e-6)
+    gx, gy = np.meshgrid(np.arange(w, dtype=np.float32), np.arange(h, dtype=np.float32))
+    lab = cv2.remap(lab, gx + dx, gy + dy, cv2.INTER_NEAREST, borderMode=cv2.BORDER_REFLECT)
+    del gx, gy, dx, dy
+    e = np.zeros((h, w), np.float32)
+    e[:, 1:] += lab[:, 1:] != lab[:, :-1]
+    e[1:, :] += lab[1:, :] != lab[:-1, :]
+    e = np.clip(e, 0, 1)
+    gate = cv2.GaussianBlur(r.standard_normal((h, w)).astype(np.float32), (0, 0), cell / 2)
+    gate = np.clip((gate / (gate.std() + 1e-6) + 0.6) * 1.5, 0, 1)
+    lw = max(0.6, cell / 110)   # the wall's softness, so a crack keeps ~1 px at the encode sizes
+    return np.clip(cv2.GaussianBlur(e * gate, (0, 0), lw) * 1.6, 0, 1)
+
+
+def finish(im: Image.Image, f: dict) -> Image.Image:
+    """Optional per-master oil finish (a config's desktop.finish / phone.finish), so a painting that came back
+    photographic sits in the edition's one hand: a warm umber lift in the deep shadows (shadowLift, 8-bit steps at
+    black, gone by mid-dark), less saturated greens (greenSat, a factor), a small high-frequency soften (soften: 0.3 =
+    30% of the way to a blur of `softenSigma` px), and a craquelure network darkening the paint along its cracks
+    (crack: strength, cell: mean cell size in px of this master, seed)."""
+    import cv2
+    a = np.asarray(im, np.float32)
+    h, w = a.shape[:2]
+    if f.get('soften'):
+        b = cv2.GaussianBlur(a, (0, 0), f.get('softenSigma', 2.0))
+        a += float(f['soften']) * (b - a)
+        del b
+    if f.get('greenSat', 1) != 1:
+        hsv = cv2.cvtColor(np.clip(a, 0, 255).astype(np.uint8), cv2.COLOR_RGB2HSV_FULL).astype(np.float32)
+        hue = hsv[..., 0] * (360 / 256)
+        wgt = np.clip(1 - np.abs(hue - 120) / 50, 0, 1) ** 0.7          # greens, 70-170 degrees, peak at 120
+        y = a @ np.array([0.299, 0.587, 0.114], np.float32)
+        a = y[..., None] + (a - y[..., None]) * (1 - (1 - float(f['greenSat'])) * wgt)[..., None]
+        del hsv, hue, wgt
+    if f.get('shadowLift'):
+        y = a @ np.array([0.299, 0.587, 0.114], np.float32)
+        wgt = np.exp(-(y / 34.0) ** 2)
+        a += float(f['shadowLift']) * wgt[..., None] * np.array([1.0, 0.72, 0.42], np.float32)
+        del wgt
+    if f.get('crack'):
+        cr = crackle(h, w, float(f.get('cell', 150)), int(f.get('seed', 7)))
+        y = np.clip(a @ np.array([0.299, 0.587, 0.114], np.float32), 0, 255) / 255
+        amt = float(f['crack']) * (0.35 + 0.65 * y) * cr
+        a *= (1 - amt)[..., None]
+        del cr, amt
+    return Image.fromarray(np.clip(np.rint(a), 0, 255).astype(np.uint8), 'RGB')
+
+
 # ---------------------------------------------------------------- encoding
 def encode(im: Image.Image, fmt: str, q: int, speed: int) -> bytes:
     buf = io.BytesIO()
@@ -349,6 +417,8 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
 
     d = cfg['desktop']
     dm = cut(load(d['src']), DESKTOP[0] / DESKTOP[1], *d.get('center', (0.5, 0.5)))
+    if d.get('finish'):
+        dm = finish(dm, d['finish'])
     widths = d.get('widths', [2048, 2880])
     man['desktop'] = {'avif': [], 'webp': []}
     for w in widths:
@@ -380,7 +450,9 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
     if src:
         pm = cut(load(src), PHONE[0] / PHONE[1])
         man['phone'] = {'avif': [], 'webp': []}
-        for w in (1170, 828):
+        if p.get('finish'):
+            pm = finish(pm, p['finish'])
+        for w in PHONE_WIDTHS:
             h = round(w * PHONE[1] / PHONE[0])
             im = shrink(pm, w, h)
             if w == 1170:

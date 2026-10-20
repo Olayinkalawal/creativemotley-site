@@ -6,7 +6,7 @@ the depth push would move only the pavement. This lays the map out by hand inste
   - the curtain far (0.08 at the top -> 0.14 at the hem, v 0.775);
   - the stand, the kit and both chairs as one mid plane (0.40), found as the non-green shapes above the hem;
   - the floor from MiDaS, rescaled so the hem line sits at 0.38 (just behind the set) -> 1.0 at the bottom edge.
-Edge-aware smoothed against the painting, written as <dir>/depth.webp (1920x1080 greyscale WebP q85, as
+Edge-aware smoothed against the painting, then feathered (the plane steps blend over ~40 px), written as <dir>/depth.webp (1920x1080 greyscale WebP q85, as
 `art.py --depth` writes it), and the manifest's depth.bytes updated.
 
 Run it after any `python3 scripts/art.py --depth ...` run that re-encodes directors (that writes the flat MiDaS map):
@@ -65,7 +65,10 @@ try:
     d = cv2.ximgproc.guidedFilter(img, d, 8, 1e-3)
 except Exception:
     d = cv2.bilateralFilter(d, 9, 0.1, 6)
-d = cv2.GaussianBlur(d, (0, 0), 1.5)
+# feather the plane steps (curtain 0.1 -> set 0.4 -> floor) over ~40 px of the 2048 encode: a hard step makes the
+# pointer parallax and the depth push tear the painting at every silhouette (the kit doubled, the chairs sliced);
+# a ramp stretches it a little instead, which reads as depth
+d = cv2.GaussianBlur(d, (0, 0), 10)
 g = Image.fromarray(np.clip(d * 255, 0, 255).astype(np.uint8)).resize((1920, 1080), Image.LANCZOS)
 g.save(E / 'depth.webp', 'WEBP', quality=85, method=6)
 mf = E / 'manifest.json'

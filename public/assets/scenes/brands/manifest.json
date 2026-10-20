@@ -16,6 +16,13 @@
     "h": 1620,
     "bytes": 154935,
     "q": 72
+   },
+   {
+    "src": "/assets/scenes/brands/desktop-3840.avif",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 219892,
+    "q": 72
    }
   ],
   "webp": [
@@ -31,6 +38,13 @@
     "w": 2880,
     "h": 1620,
     "bytes": 227812,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/brands/desktop-3840.webp",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 340512,
     "q": 86
    }
   ]
@@ -52,33 +66,47 @@
  "phone": {
   "avif": [
    {
+    "src": "/assets/scenes/brands/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 184315,
+    "q": 72
+   },
+   {
     "src": "/assets/scenes/brands/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 146797,
+    "bytes": 125108,
     "q": 72
    },
    {
     "src": "/assets/scenes/brands/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 92491,
+    "bytes": 82566,
     "q": 72
    }
   ],
   "webp": [
    {
+    "src": "/assets/scenes/brands/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 285860,
+    "q": 86
+   },
+   {
     "src": "/assets/scenes/brands/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 206144,
+    "bytes": 179372,
     "q": 86
    },
    {
     "src": "/assets/scenes/brands/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 123714,
+    "bytes": 112352,
     "q": 86
    }
   ]
@@ -89,7 +117,7 @@
  ],
  "phoneFocus": [
   0.52,
-  0.55
+  0.47
  ],
  "titleSide": "left",
  "phoneTitle": "top",
@@ -110,7 +138,7 @@
  "key": "#6E1418",
  "titleBg": {
   "desktop": "#4B3326",
-  "phone": "#2A130E"
+  "phone": "#2C150F"
  },
  "titleInk": {
   "desktop": "light",
@@ -122,13 +150,13 @@
    "worst10": 8.31
   },
   "phone": {
-   "mean": 17.53,
-   "worst10": 14.99
+   "mean": 17.2,
+   "worst10": 14.85
   }
  },
  "placeholder": {
   "desktop": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADQBACdASogABIAPu1qrFEppaQiqAqpMB2JQBUj6UAmzbdkLOK/0v+U9yHMDpXcgAD+8r4jN14s9qGI/OxwTpXf5uUtUwYNqf1dgtDqjPIAyPDib6PUnmd5sPNiRIg2HRHrKhEbGCQ91tZ4VyBjZypBMIYuYmhJRE9TLDX/17PPaUPaDb+bDljDiOKomJdsSsb/7STY9Y8OAAAA",
-  "phone": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAQBACdASoMABoAPu1iqU2ppaOiMAgBMB2JZACdMoADTZGrMXWkr48YAAD+8MVzIbZLHWUPA0y0IbNvajXv0mvpfVEnGUtQQjS438U3n0bYjUxlflM/HDGCduPwb2Jyunbv1dOu1YeYxVyk3fWBqAAA"
+  "phone": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQBACdASoMABoAPu1iqU2ppaOiMAgBMB2JZACdMoADTr6R73l94TK3AAD+7n8/FDva+jO4ckuglro4Tp9Y2mNLvYgpyXfyGc3NBr6+PkiFZcmuZ+O9vOdgijQ1JkpmnUv8M+ba7fT6PxcqQBQdQzQbpzAAAA=="
  },
  "credit": {
   "desktop": "Nano Banana Pro 4K edit 2c6c6c5e > 322047e0, then local retouch (seal, chair, mirror, painted skin, window-wall glaze, craquelure): masters/brands/d5_r3.png",
@@ -145,10 +173,10 @@
   },
   "phone": {
    "colour": "ink",
-   "worst10Bare": 14.98,
+   "worst10Bare": 14.84,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 11.3
+   "zoneLumaSd": 10.6
   }
  },
  "masterpiece": "after Jan van Eyck, The Arnolfini Portrait (1434)",
