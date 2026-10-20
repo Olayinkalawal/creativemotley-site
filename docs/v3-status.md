@@ -674,3 +674,155 @@ forced-3D phone read about 6.75 MB.
    console fills its orbit slot nearly edge to edge mid-orbit.
 5. Not given to the Kit (not in this brief): Method's P4 portrait orbit slot (`data-td-orbit-tall`), so on phones the
    console orbits at about 60 % of the width inside the great circle.
+
+# 3D Kit live (2026-10-20)
+A fix round on two critics' reviews of the real-time Kit: desktop D1–D11 (1440, 1280, 1024, 1920) and phone P1–P13
+(390, 360, the 820 tablet, tier 0, reduced motion). `src/gl/lib/kit3d.js` and `kit3d_devices.js` are still
+byte-identical to `.lab/kit3d`. The art direction goes through the scene, which sets the device keys before `create()`
+(as `camera3d.js` does with the camera's `KEYS`), and through the markup's framing. Every rule that changed is shared
+with Method's camera.
+
+## L.1 Numbers: the Kit in real time (K.1) → now
+`scripts/perf.mjs` on production builds, SwiftShader WebGL. Load average was 3–7 because captures ran alongside, so LCP
+is noisier than K.1's (load 2–3). Bytes are exact. The perf.mjs read moves half a screen every 1.2 s. On software GL
+that is too fast for every device to load, so that read pulls in only 2–3 of the 4 Kit GLBs. The ".lab per-shot" row
+uses the lab's `bytes.mjs` instead: it holds each shot until its device has drawn, which is the GPU case.
+
+| | Kit in real time (K.1) | **Now** | Target |
+|---|---|---|---|
+| First load, desktop @1× / @2× · phone @2× | 0.68 / 0.78 · 0.51 MB, no Kit request | **0.68 / 0.78 · 0.51 MB**, no Kit request at any size | ≤ 1.5 · ≤ 1.0 MB |
+| Full read, desktop @1× (perf.mjs pace) | 10.85 MB / 116 req | **8.24 MB / 112 req**; about 9.5 MB with all four GLBs (GPU) | ≤ 18 MB |
+| The Kit with each shot held until its device drew (.lab `bytes.mjs`), desktop · phone path | 3.82 · 2.56 MB | **2.39 · 1.60 MB** | |
+| Full read, phone @2× (gated: 3D stills) | 3.81 MB | **3.81 MB** | ≤ 6 MB |
+| Full read, phone @2× forced onto the 3D (`cam3d=1&q=high`) | 6.34 MB (~6.75 with every GLB) | **5.24 MB** at perf.mjs pace; **~5.9 MB** with all four phone GLBs (4.28 non-Kit + 1.60 Kit) | ≤ 6 MB: **passes** |
+| GLBs on the wire: Kit phone set · Kit desktop set · camera phone / desktop | 2.30 · 3.56 · 1.49 / 2.30 MB | **1.33 · 2.12 · 0.98 / 1.48 MB** (gzip -9 copies) | |
+| Lazy JS if every desktop scene loads (gzip -9, the same file list: everything but `index` and the preloaded `scroll` chunk) | 210.2 KB (K.1: 210.4) | **206.4 KB** | 185 KB accepted for the camera |
+| `kit3d` · `camera3d` chunks (gzip -9) | 30.4 · 14.7 KB | **28.5 · 14.2 KB** (+ `glbfetch` 0.3 KB, shared) | |
+| Entry JS (gzip -9, index) | 25.7 KB | **26.1 KB** (the deep-link landing) | ≤ 60 KB |
+| LCP unthrottled, desktop / phone (median of 5) | 0.39 / 0.31 s | **0.48 / 0.29 s** (load 6–7) | ≤ 1.0 s |
+| CLS scrolling the Kit (4 windows) and Method · steady wheel, WebGL off | 0 · 59.6–59.9 fps | **0 · 59.7–60 fps** | 0 · ≥ 50 |
+| Kit stills fetched: chapter-index jump to s = 0 · jump into the mic · a 3D phone's whole read | 4 · 8 · 4–8 | **1 · 2 (+1 the scene's, for the next cut) · 3** | |
+| Phone GLBs held at once (390, forward and back) | 3 | **2** | |
+| `dist` | 151 MB | **156 MB** (the .gz copies) | |
+
+## L.2 What changed (D = desktop review, P = phone review)
+- **Chapter-index arrival (D1, P4).** No spin and no shrink: in the first three quarters of an orbit the 3D no longer
+  turns from the hero still's pose (tdcore `tdIntroTurn`, both scenes); the 0.5 s dissolve hands over at the scroll's
+  pose. The hero still now shrinks with the view over the orbit (`tdView`'s `startK`: `data-td-hero-start` /
+  `-start-tall`, the start key's fill over the hero key's; Method 1.071 / 0.977, the console 0.857 / 0.913), so at s = 0
+  the stand-in is the size the 3D draws and stays in frame (1440, chapter-index click: the still covers x 535–1170,
+  y 325–830; the first 3D frame x 525–1185, y 325–835; was a still from x 275 past the right edge). The console's portrait hero framing is box-matched to the 3D: `data-td-hero-tall` 1.284 → 1.13
+  (width within 2 % at s = 0 and 4 % at the orbit's end, 390 and 360).
+- **Late GLB (D2).** A shot whose device is not in fetches both stills at once; the next shot's hero still comes 0.6
+  screens ahead (phones 0.5) when its device is not in; the scene frames each still at its own pose, as the section
+  does (it framed the exploded still at the scroll's partial explode: 21 % small); `live.ready` means "shot k is
+  shown" (device, or the still its phase calls for), so it no longer drops through the dip and the DOM still never pops
+  in over the scene's; a cut whose device and still are both late wipes in the bare key instead of freezing. Mic GLB held
+  back 25 min: the cut lands on the hero still, the dip, the exploded still at the 3D's size, no pop, no blank key.
+- **Console air (D3, P9).** The scene sets the console's keys before `create()` (the package's file untouched): hero
+  fill 0.80 → 0.70, column 0.84 → 0.80, portrait exploded 0.89 → 0.83. 1440 orbit: right edge 1337–1357 (83–103 px of
+  air; was ~10); 1280: 1187–1205 (75–93 px; was 15); 390 hold: 28 px each side (was 8), 360: 26 px. Stills re-matched:
+  `data-td-hero` 1 → 0.875, `data-td-frame0` 1.081 → 1.03, `data-td-frame` 1.895 → 1.87, `data-td-frame-tall` 1.984 → 1.99.
+- **Rim over the devices (D4).** The cut's rim is masked by both devices' coverage (stills included) and narrowed
+  (0.045 → 0.025): an ink-lit edge on the keys only.
+- **Headphones (D5).** Column fill 0.88 → 0.74, exploded 0.96 → 0.88, `fillMax` 0.96 → 0.92 (the family's; portrait
+  holds at 0.92): 1440 arrival 462 × 598 px (y 175–773; was 120–830); at the hold the right cup ends 53 px from the edge
+  at 1440 and 37 px at 1024 (was 21–28), the band ~120 px under the bar.
+  Stills re-matched (`data-td-frame0` 1.89 → 1.589, `data-td-frame` 1.358 → 1.213, `-frame-tall` 1.201 → 1.151). The
+  cushions' material is a lab item.
+- **Stills only where they show (D6, P7).** Per still, not per pair: shot 0's hero 1.6 screens ahead, its exploded one
+  0.6 before its explode; a later shot's hero 0.3 before its cut, its exploded one from its cut; each until just after
+  the next cut. The scene's `load()` makes only the still its phase shows eager. Chapter-index jump to s = 0: 1 Kit still
+  (was 4); jump into the mic: 2 (was 8); a 3D phone's whole read: 3 DOM stills (was 4–8).
+- **Labels readable (D7).** Pills 0.62 → 0.78 ink (all markers); the Kit's numbered labels sit 56 px out (Method 42:
+  `--td-lead`, the leader line follows), so the mic's 02/03/04 land beside their parts.
+- **Markers hand over without a blink (D8).** Both scenes publish `live.turning` while the device turns from the
+  still's pose; the section keeps the markers on the still's uv until then, and the first id pass after the turn hands
+  them to the 3D anchors. Unload and return at 1440 (mic hold): 6 markers at every capture (was 6 → 0 → 6).
+- **Deep links (D9).** `main.js`: a hash on load lands again after the sections' init, the fonts, the load and each
+  layout pass (until the reader scrolls, ≤ 6 s), `scrollRestoration` manual. `/#kit` lands on the Kit (y 20650, was
+  15854: 5 screens early in Showcase); `/#method` on Method; `/#results` on Results. (The browser's own jump at parse can
+  still start the Kit's lazy stills before JS parks them: a deep-link-only cost.)
+- **Lazy JS (D10, P13).** `scripts/three-slim.mjs` minifies the site's own GLSL template literals (`src/gl/**`: the
+  runtimes, the scenes; search strings and literals with `${}` left alone): `kit3d` chunk 30.9 → 28.9 KB gzip, `camera3d`
+  14.7 → 14.5. The rest is the decision below.
+- **Phone bytes (D11, P3).** The build writes a gzipped copy beside every GLB (`vite.config.js` `glbGzip`, level 9);
+  both scenes fetch it through `gl/lib/glbfetch.js` (`loadBuffer`, the runtimes' own hook): the .gz, inflated with
+  DecompressionStream, or as it came if the host already decoded it (glTF magic), or the plain .glb (dev, no
+  DecompressionStream, a host's fallback page). The Kit's phone GLBs 2.30 → 1.33 MB, the desktop ones 3.56 → 2.12 MB,
+  the camera's 2.30 → 1.48 / 1.49 → 0.98 MB. No .lab or runtime file changed (the runtimes' own `loadBuffer` hook).
+- **Phones name a part at every hold (P1).** On a run whose markers a real-time scene places, phones keep the last lit
+  row lit through the hold (Method already did): Chassis, XLR connector, Headband, Rear glass at 390, named on the part;
+  the gated phone's uv marker the same. The named marker also fades with the cut.
+- **No letter tops under a waiting heading (P2).** `.td-ln__in` waits a full line plus 0.45em below its mask and is
+  transparent at `--k` 0 (opacity only); shared, so Method's hand-off and the giant titles get it too.
+- **Phone loading (P5, P6, D11).** On phones the next device loads from the shot's hold (`settle[0]`, when the screen is
+  still) and no earlier than 0.35 screens before its cut, via `requestIdleCallback` (≤ 300 ms). Both ways: when the last
+  move was up, the previous device loads near its cut (and its exploded still if it is late) and the next one is dropped
+  above the hold, so a phone holds two GLBs (390 forward: console+mic, mic+headphones, headphones+phone, phone; reverse
+  path 3.42 → 1.85: the same, `live.ready` true at every step, no DOM still fetched). Desktop keeps k − 1 … k + 1.
+- **Give-up before the GLB (P10).** If the governor is already at "min" when the Kit (or Method) loads on a phone, the
+  scene gives up at the top of `load()`: no GLB, no bakes, `data-kit3d` / `data-cam3d` = "stills", a warning only.
+- **Reduced motion: the console's exploded still (P12).** Scaled 1.3 (transform) with matching room above and below.
+- **Not changed here (lab, `.lab/kit3d`):** the headphones' cushion material (D5); the console's rim light, side wall,
+  and the screen glare over the first third of the orbit (P11).
+
+## L.3 Checks
+- **Desktop run** (production build, `?tier=2&q=high`): 1440, 1024 and 1920 swept through the run (orbit, arrival,
+  take-apart, every cut, every hold, the ride-out). 1280 was read slowly in 0.1 steps and held at each hold. Every
+  hold showed 6 numbered markers, none during cuts, no horizontal overflow and no console errors. The only Kit requests
+  were one still, the four `.glb.gz` and the chunk.
+- **Arrivals at 1440:**
+  - Chapter-index click to s = 0: no spin; the still and the 3D share one box.
+  - Mic GLB held back for 25 min: the cut lands on the hero still, then the dip, then the exploded still at the 3D's
+    size. No pop and no blank key; `live.ready` stayed true.
+  - Jump into the mic: 2 DOM stills.
+  - Unload (bottom of the page) and back to the mic hold: 6 markers at every capture, from the still to the 3D.
+  - Deep links `/#kit`, `/#method`, `/#results` land exactly on their chapter (`/#results` was 69 px short until the
+    250 ms check).
+- **Phones and tablet** (`?cam3d=1&q=high`):
+  - 390, 360 and 820 swept.
+  - 390 holds: one named marker each (Chassis, XLR connector, Headband 13 px under the bar, Rear glass).
+  - 360: the Headband label is clear of the bar; the console hold is 26 px from each edge.
+  - 820: 6 numbered markers.
+  - A heading held mid-cut at 390 shows its label only, no letter tops.
+  - Jump to the Kit at 390: the still, then the 3D at the scroll pose. Widths match within 2–4 %. The heights differ,
+    because the still is the wide key's render.
+  - Reverse path 3.42 → 1.85 at 390: two GLBs at most, `live.ready` always true.
+  - Gated 390 (no Kit JS, no GLB) names the held part on the still.
+- **Method** at 1440: 12 markers at the hold, numbered rows, no errors. A jump to s = 0 shows the hero still, then the 3D
+  at the scroll pose, with no turn.
+- **Tier 0** at 1440, 1280, 1024, 1920 and 390, and **reduced motion** at 1440, 1280, 1024, 1920, 390, 360 and 820: complete,
+  with no GLB or Kit chunk, no overflow and no errors. With reduced motion the console's exploded still spans ~54 % of
+  the width at 390 (was 40–45 %).
+- **Not reproduced:** P10, the give-up before the GLB. It is checked in code only, because this machine's governor
+  stops at "low".
+- **Fact check** desktop and mobile (509 strings, 47 drafts) and `--drafts 0` (416): pass. Copy unchanged.
+- **Builds:** `npx vite build` passes and writes the `.glb.gz` copies. The Pages build under `/creativemotley-site/`
+  gave 0 failed requests on a full desktop read and a full 3D phone read, with all four Kit GLBs and the camera's
+  (`.gz`) loading under the base and no console errors.
+- **Sheets:**
+  - `qa/shots/v3k_kit_desk.jpg`: 1440, 1280 slow, 1024, 1920; the arrivals row; tier 0 and reduced; Method.
+  - `qa/shots/v3k_kit_mob.jpg`: 390 run, 390 holds, mid-cut and jump; 360; 820; gated and tier 0.
+  - `qa/shots/v3k_best.jpg`: each device arriving and taken apart, desktop and phone.
+
+## L.4 Open, ranked
+1. **Real-GPU frame rate is unmeasured.** On SwiftShader the Kit runs at about half the camera's rate through a cut. Before
+   launch, check on an integrated-GPU laptop and a mid-range phone. The levers are the camera's: quality, MSAA and shadow size.
+2. **Lazy JS is 206.4 KB against the 185 KB accepted for the camera.** Recommendation: accept it for this release; it is
+   lazy and Kit-only. Book the lab port of the camera onto `kit3d.js` with a parity check. That drops `camera3d.js`,
+   ~14 KB, to about 192 KB.
+3. **Forced-3D phone read is ~5.9 MB with all four devices**, under 6 MB but thin. The stand-in hero stills, 0.16 MB, are
+   fetched on every 3D phone read, because the next device now loads from the hold. If the CAM3D gate widens, revisit
+   `STILL_AHEAD_PHONE`. The gated phone reads 3.81 MB.
+4. **Lab items** (`.lab/kit3d`; the site must not edit it):
+   - The headphones' cushion material (D5).
+   - The console's rim light, its side wall, and the screen glare over the first third of the orbit (P11). Re-render
+     its stills after.
+   - A still at each orbit's start key, so a jump into the orbit dissolves between matching angles. Today the Kit's
+     console and Method's camera change angle over the 0.5 s dissolve, front three-quarter to rear.
+   - A portrait-key hero still for phones (P4: heights differ at s = 0).
+5. **Deep link to `/#kit`:** the browser's own jump at parse still starts the Kit's lazy stills before JS parks them
+   (deep links only, ~0.5 MB).
+6. **Headphones at 1024:** the hold keeps 37 px of air to the right edge, under the 50–70 px the review asked for
+   (1440: 53 px). Next step if wanted: exploded fill 0.86.

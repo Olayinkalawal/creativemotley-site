@@ -14,8 +14,10 @@ const deep = (() => { try { return location.hash.length > 1 ? document.getElemen
 if (deep && 'scrollRestoration' in history) history.scrollRestoration = 'manual';
 function landDeep() {
   let done = false;
-  const stop = () => { done = true; off(); };
+  const stop = () => { done = true; off(); clearInterval(iv); };
   const off = onLayout(() => { if (!done) jumpTo(deep); });
+  // (a section that moves without the page's height changing fires no layout pass: check its top four times a second)
+  const iv = setInterval(() => { if (!done && Math.abs(deep.getBoundingClientRect().top) > 1) jumpTo(deep); }, 250);
   for (const t of ['wheel', 'touchstart', 'keydown', 'pointerdown']) window.addEventListener(t, stop, { once: true, passive: true, capture: true });
   const land = () => { if (!done) jumpTo(deep); };
   land();
