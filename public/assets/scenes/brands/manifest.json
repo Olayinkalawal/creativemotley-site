@@ -7,21 +7,21 @@
     "src": "/assets/scenes/brands/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 102143,
+    "bytes": 90691,
     "q": 72
    },
    {
     "src": "/assets/scenes/brands/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 154935,
+    "bytes": 139279,
     "q": 72
    },
    {
     "src": "/assets/scenes/brands/desktop-3840.avif",
     "w": 3840,
     "h": 2160,
-    "bytes": 219892,
+    "bytes": 196626,
     "q": 72
    }
   ],
@@ -30,21 +30,21 @@
     "src": "/assets/scenes/brands/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 146874,
+    "bytes": 126430,
     "q": 86
    },
    {
     "src": "/assets/scenes/brands/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 227812,
+    "bytes": 205540,
     "q": 86
    },
    {
     "src": "/assets/scenes/brands/desktop-3840.webp",
     "w": 3840,
     "h": 2160,
-    "bytes": 340512,
+    "bytes": 305046,
     "q": 86
    }
   ]
@@ -54,13 +54,13 @@
    "src": "/assets/scenes/brands/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 6446
+   "bytes": 5311
   },
   {
    "src": "/assets/scenes/brands/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 6940
+   "bytes": 5824
   }
  ],
  "phone": {
@@ -112,8 +112,8 @@
   ]
  },
  "focus": [
-  0.69,
-  0.36
+  0.64,
+  0.58
  ],
  "phoneFocus": [
   0.52,
@@ -123,9 +123,9 @@
  "phoneTitle": "top",
  "titleBox": {
   "desktop": [
-   0.07,
-   0.08,
-   0.36,
+   0.04,
+   0.05,
+   0.47,
    0.4
   ],
   "phone": [
@@ -137,7 +137,7 @@
  },
  "key": "#6E1418",
  "titleBg": {
-  "desktop": "#4B3326",
+  "desktop": "#38271D",
   "phone": "#2C150F"
  },
  "titleInk": {
@@ -146,8 +146,8 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 11.66,
-   "worst10": 8.31
+   "mean": 14.23,
+   "worst10": 8.69
   },
   "phone": {
    "mean": 17.2,
@@ -155,21 +155,21 @@
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADQBACdASogABIAPu1qrFEppaQiqAqpMB2JQBUj6UAmzbdkLOK/0v+U9yHMDpXcgAD+8r4jN14s9qGI/OxwTpXf5uUtUwYNqf1dgtDqjPIAyPDib6PUnmd5sPNiRIg2HRHrKhEbGCQ91tZ4VyBjZypBMIYuYmhJRE9TLDX/17PPaUPaDb+bDljDiOKomJdsSsb/7STY9Y8OAAAA",
+  "desktop": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAQBQCdASogABIAPuFUpU2opCOiN/qoARAcCUAToAQ4kN7hIylOzEKEMZeJd9K9z/KAAP7sQUPUVgbkZSy/b5g0xwMmVmx37LGeRk5rnXBaz7ubMRGq0GhpvqHGOrxGhNkJmpFCfpIy4ClYBWc4CsIrbMxpUbJ8x0RJe6WmDA6btLcaQ52VgrImQRLl8CEqLEr0wAAA",
   "phone": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQBACdASoMABoAPu1iqU2ppaOiMAgBMB2JZACdMoADTr6R73l94TK3AAD+7n8/FDva+jO4ckuglro4Tp9Y2mNLvYgpyXfyGc3NBr6+PkiFZcmuZ+O9vOdgijQ1JkpmnUv8M+ba7fT6PxcqQBQdQzQbpzAAAA=="
  },
  "credit": {
-  "desktop": "Nano Banana Pro 4K edit 2c6c6c5e > 322047e0, then local retouch (seal, chair, mirror, painted skin, window-wall glaze, craquelure): masters/brands/d5_r3.png",
+  "desktop": "Wider room (painting fixes 2026-10-20): the live master (Nano Banana Pro 4K edit 2c6c6c5e > 322047e0 + local retouch, d5_r3) registered at 0.67 into 4K job fbcc3a18 (a zoom-out of the room), the outer room from 2K job 1afbee35, a shadow glaze over the window wall; seams repaired locally (middle window, bed curtain, far-left sill): masters/brands/wide_d_r2.png",
   "phone": "9:16 recomposition from 322047e0, job b5fd8ac6, then local retouch (inscription, painted skin, calmer ceiling, mirror): masters/brands/p1_r3.png"
  },
  "titleScrim": {
   "desktop": {
    "colour": "ink",
-   "worst10Bare": 8.3,
+   "worst10Bare": 8.69,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 19.1,
-   "advice": "dark gradient ~0.3-0.45 over u 0-0.52, v 0-0.45 (window glow at far left and middle)"
+   "zoneLumaSd": 22.9,
+   "advice": "optional: the glaze in the master carries the title; at most a ~0.2 dark gradient over u 0-0.47, v 0-0.40"
   },
   "phone": {
    "colour": "ink",
@@ -180,11 +180,11 @@
   }
  },
  "masterpiece": "after Jan van Eyck, The Arnolfini Portrait (1434)",
- "artNote": "Desktop: light ink over a dark gradient scrim on the window wall (u 0-0.52, v 0-0.45); the far-left window and the middle window stay the brightest parts of the zone. Phone: the title box ends at v 0.19, above the chandelier.",
+ "artNote": "Desktop (wider room, 2026-10-20 fixes): cream title and dek on the glazed window wall and the shadowed ceiling (u 0-0.47); the couple stands right of it (u 0.485-0.827, his hat top at v 0.43), the convex mirror at (0.62, 0.55), the chandelier candle at (0.637, 0.365). The site's title box at rest (about u 0.20-0.64, v 0.06-0.40) measures 8.8:1 worst decile bare. Phone: the title box ends at v 0.19, above the chandelier.",
  "depth": {
   "src": "/assets/scenes/brands/depth.webp",
   "w": 1920,
   "h": 1080,
-  "bytes": 12592
+  "bytes": 11420
  }
 }

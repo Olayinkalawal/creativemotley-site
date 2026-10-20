@@ -1,26 +1,24 @@
 {
- "//": "Camera keys for plate:brands (gl/timeline.js; focus y is measured from the painting's bottom, as the plate shader reads it; t = viewports of the opener's pass, 0 = its top enters at the bottom). The Arnolfini, signed (masters 2026-10-20): zoom at or below ~1.35.",
- "//1": "1 · t 0-1.04, the title's frame: zoom 1.48 about the painting's left edge, near its top, so the title and dek sit on the window wall (under the opener's dark gradient) and the man's hat starts just right of the title's last letter; the couple comes in with the truck. At the whole room (the art direction's zoom 1.06) the title ran across his hat and face.",
- "//2": "2 · t 1.04-1.55, as the title leaves: a truck right that eases back to the couple, the mirror and the joined hands with the contract.",
+ "//": "Camera keys for plate:brands with the wider master (painting fixes 2026-10-20, .art/masters-2026-10-20/brands-desktop.png; focus y from the painting's bottom). The room is wide enough that the rest frame is the whole painting (zoom 1.04 about u 0.62, 0.40 from the top): the couple stands below the dek and right of the title at 1024x768, 1280x800, 1366x768, 1440x900 and 1920x1080, so no title fit is needed.",
+ "//1": "1 · t 0-1.04, the title's frame: zoom 1.04, focus [0.62, 0.60]: the giant title and dek over the window wall and the shadowed ceiling, the whole couple (his hat at v 0.43 from the top, below the dek), the mirror, the chandelier, the contract and the dog in frame.",
+ "//2": "2 · t 1.04-1.55, as the title leaves: a push and truck into the couple (zoom 1.6 about the lower right, [0.917, 0.0]): both figures full-length, the mirror and the joined hands at the centre, the bed at the right.",
  "//3": "3 · t 1.55-2.3, a gentle push as the paper rises; it eases out and lands still.",
- "//fit": "fit (gl/scenes/plates.js): the rest zoom (the first two zoom keys, 1.48 at most) is refitted to the screen so the title's right edge lands at u 0.48 of the painting, just left of the hat's brim (u 0.52) and the fur shoulder (0.50): about 1.34 at 1440x900, which takes in the whole man, the contract and the joined hands (2026-10-20 review: at 1.48, u 0.432, the frame was a dim wall and half the man). The giant title stops growing at about 1460 px, so wider screens see more of the room at rest, never below 1.15.",
- "fit": {"title": "#brands-title", "u": 0.48, "keys": 2, "min": 1.15},
  "camera": {
   "zoom": [
-    {"t": 0, "v": 1.48},
-    {"t": 1.04, "v": 1.48, "ease": [0.62, 0, 0.32, 1]},
-    {"t": 1.55, "v": 1.25, "ease": [0.25, 0.1, 0.25, 1]},
-    {"t": 2.3, "v": 1.32}
+    {"t": 0, "v": 1.04},
+    {"t": 1.04, "v": 1.04, "ease": [0.62, 0, 0.32, 1]},
+    {"t": 1.55, "v": 1.6, "ease": [0.25, 0.1, 0.25, 1]},
+    {"t": 2.3, "v": 1.68}
    ],
   "focus": [
-    {"t": 0, "v": [0.0, 0.95]},
-    {"t": 1.04, "v": [0.0, 0.95], "ease": [0.62, 0, 0.32, 1]},
-    {"t": 1.55, "v": [0.75, 0.62], "ease": [0.25, 0.1, 0.25, 1]},
-    {"t": 2.3, "v": [0.7, 0.62]}
+    {"t": 0, "v": [0.62, 0.6]},
+    {"t": 1.04, "v": [0.62, 0.6], "ease": [0.62, 0, 0.32, 1]},
+    {"t": 1.55, "v": [0.917, 0.0], "ease": [0.25, 0.1, 0.25, 1]},
+    {"t": 2.3, "v": [0.9, 0.02]}
    ],
   "push": [
     {"t": 0, "v": 0.015, "ease": [0.45, 0, 0.55, 1]},
-    {"t": 2.3, "v": 0.06}
+    {"t": 2.3, "v": 0.05}
    ]
  }
 }

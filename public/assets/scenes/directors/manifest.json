@@ -55,22 +55,22 @@
     "src": "/assets/scenes/directors/phone-1640.avif",
     "w": 1640,
     "h": 2916,
-    "bytes": 274961,
+    "bytes": 255233,
     "q": 72
    },
    {
     "src": "/assets/scenes/directors/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 181482,
+    "bytes": 170314,
     "q": 72
    },
    {
     "src": "/assets/scenes/directors/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 97967,
-    "q": 65
+    "bytes": 100815,
+    "q": 69
    }
   ],
   "webp": [
@@ -78,21 +78,21 @@
     "src": "/assets/scenes/directors/phone-1640.webp",
     "w": 1640,
     "h": 2916,
-    "bytes": 369404,
+    "bytes": 348438,
     "q": 86
    },
    {
     "src": "/assets/scenes/directors/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 234180,
+    "bytes": 221058,
     "q": 86
    },
    {
     "src": "/assets/scenes/directors/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 146012,
+    "bytes": 135808,
     "q": 86
    }
   ]
@@ -102,7 +102,7 @@
   0.48
  ],
  "phoneFocus": [
-  0.58,
+  0.5,
   0.58
  ],
  "titleSide": "left",
@@ -142,11 +142,11 @@
  },
  "placeholder": {
   "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sqlEppaOiqAqpMB2JZQC06DTkBzqvVS/elO9DQtgJKH0n8TCgAP7s3MHSZHZonCyr5VPUU75nJFkHRYJwFy41tp/PP8s9uz75zQUCcxbbDRNWTFhXpDY5sqwesGYMyVr1IiVgXa5zJWqcVpV4IRsias7Oooo/vNhnva5F2AKOHDSf2AAAAA==",
-  "phone": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQBACdASoMABoAPu1qrU8ppiQiMAgBMB2JQAAj3iC6gXS9Y6iFIZhyAAD+/QOeBCz5p3HhC3n+jt8b4yu7/5cbiwoWSehkp4Yy/0H0ocDAzH13tz1o81YUC/xy9oa9FWWG6heALrl1E18Qx0+gSqQW3gAAAA=="
+  "phone": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JQBbZDSv4JqaCEKtO/ewAAP79sAiZgSHtvIN0cEX/0AiTeCE6//c0D5JMhnnk7yTVZbDEYyi57WA2CJBlT1I3LeFQRegV8YAy95+gXkX5xR3TyT1wAA=="
  },
  "credit": {
   "desktop": "Nano Banana Pro 4K text-only job 4e6bedc5 (hero 70d440b1 as a technique reference), local retouch (torquetum band to ticks, black lacquer chairs, hymn-book lines, camera badge; craquelure, varnish, grain; final round: chair latch, brace step and book headings blanked): masters/directors/final_d2.png",
-  "phone": "9:16 recomposition from da8b8160, job add24dd7, local retouch (displays, sundial, hymn book; craquelure, varnish, grain), then the monitor given its own abstract light back and the crest plaque and sundial marks removed: masters/directors/final_p.png"
+  "phone": "9:16 recomposition from da8b8160, job add24dd7, local retouch (displays, sundial, hymn book; craquelure, varnish, grain; monitor light, crest plaque and sundial marks removed: final_p), then (painting fixes 2026-10-20) the second empty black director's chair with a folded navy velvet jacket over its arm, right of the stand, composited from 4K job 2be55d4f: masters/directors/two_chairs_p.png"
  },
  "titleScrim": {
   "desktop": {
@@ -165,7 +165,7 @@
   }
  },
  "masterpiece": "after Hans Holbein the Younger, The Ambassadors (1533)",
- "artNote": "Cream ink on the plain green velvet and damask, no scrim. Desktop: the kit tops out at v 0.29-0.30 (from u 0.53) and the left chair top is at v 0.43 (it starts at u ~0.38), below the box; frame with the focus left (about u 0.40) at the opener so a left-set title clears the kit. Phone: dark velvet damask down to the monitor top at v ~0.35. The phone is a different set from the desktop (p3-based); each viewport shows only one.",
+ "artNote": "Cream ink on the plain green velvet and damask, no scrim. Desktop: the kit tops out at v 0.29-0.30 (from u 0.53) and the left chair top is at v 0.43 (it starts at u ~0.38), below the box; frame with the focus left (about u 0.40) at the opener so a left-set title clears the kit. Phone: dark velvet damask down to the monitor top at v ~0.35. The phone is a different set from the desktop (p3-based); each viewport shows only one. Phone (2026-10-20 fixes): both empty chairs flank the two-tier stand (right one with a folded jacket); phoneFocus x 0.50 keeps both in at 390 and 360.",
  "depth": {
   "src": "/assets/scenes/directors/depth.webp",
   "w": 1920,
