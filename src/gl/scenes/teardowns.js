@@ -1,5 +1,5 @@
-/* Photoreal teardowns (the Editions Retail moment). One scene per run (td:camera = Method, td:kit = the Kit's one
-   run of four devices), one draw per frame. The choreography is gl/lib/tdcore.js (shared with sections/_teardown.js);
+/* Photoreal teardowns (the Editions Retail moment). One scene per run (td:kit = the Kit's one run of four devices;
+   Method's td:camera3d is the real-time 3D camera, gl/scenes/camera3d.js, never registered here), one draw per frame. The choreography is gl/lib/tdcore.js (shared with sections/_teardown.js);
    this file only draws it: "device d at orbit o / explode e, framed so, over its colour key", plus the cut between
    two shots. Phase 3 can swap this renderer (real-time 3D, video) without touching the choreography.
    Frames: v3 sets (public/assets/teardown/<dev>/v3/set.json, scripts/prep_v3sets.py): each device streams a re-timed
@@ -284,6 +284,6 @@ function teardown(id, stage) {
 }
 
 export default function register(stage) {
-  const ids = new Set([...document.querySelectorAll('[data-scene^="td:"]')].map((el) => el.dataset.scene));
+  const ids = new Set([...document.querySelectorAll('[data-scene^="td:"]')].map((el) => el.dataset.scene).filter((id) => id !== 'td:camera3d'));
   for (const id of ids) teardown(id, stage);
 }

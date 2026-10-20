@@ -42,6 +42,9 @@
   "Body and grip",
   "Viewfinder (EVF)",
   "Stabiliser (IBIS)",
-  "Rear screen (LCD)"
+  "Rear screen (LCD)",
+  "Lens elements",
+  "Shutter",
+  "Image sensor"
  ]
 }

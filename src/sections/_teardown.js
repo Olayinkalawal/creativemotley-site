@@ -215,7 +215,7 @@ function block(el, idx) {
   // near and the scene has not drawn yet (src parked in data-src; without JS the markup's src stands)
   const lazy = TIER > 0 && !STILL ? [...slot.querySelectorAll('img.td__still[src]')] : [];
   for (const im of lazy) { im.dataset.src = im.getAttribute('src'); im.removeAttribute('src'); }
-  let heroR, colR, desk = false, tall = false, drawn = false, parked = false, copyTop = 0;
+  let heroR, orbR, colR, desk = false, tall = false, drawn = false, parked = false, copyTop = 0;
   let giantLines = [], lineEls = [], tick = null, disc = null, timeline = null, TL = -1;
   let maskURL = '', maskVer = 0, masked = false;
   const S = {}, V = {}, Q = {}, VS = {}, PH = {}, ST = { ph: {}, phN: {} };
@@ -228,15 +228,40 @@ function block(el, idx) {
     heroR = { x: 0, y: 0, w: pin.clientWidth, h: pin.clientHeight };
     giantLines = giant ? splitLines(giant) : [];
     for (const x of shots) x.headLines = x.head ? splitLines(x.head) : [];
+    // the orbit's slot: the whole pin, unless the device would run under the title's letters (landscape: the title sits
+    // over the top of the screen while the view turns round the device). data-td-orbit-fill is the largest share of its
+    // slot the 3D device fills while the title shows (camera3d.js KEYS.wide.start.fill): when that device, centred,
+    // would start above the letters' bottom, the slot becomes the tallest rect whose device starts just under the
+    // letters and ends 12 px above the screen's bottom edge. Beside the rail (desktop) the rect also moves right, so a
+    // device that wide clears the chapter index and keeps 12 px from the right edge (the photoreal frames' hero shift
+    // did the same). The stills, the lines and the hand-off follow the same rect.
+    orbR = { ...heroR };
+    const ofill = tall ? 0 : parseFloat(el.dataset.tdOrbitFill) || 0;
+    const railR = desk && rail ? rail.offsetWidth : 0;   // the lines are gone under the rail
+    if (ofill > 0 && railR) {
+      const m = (heroR.w * (1 - ofill)) / 2;
+      orbR.x = Math.max(0, Math.min(railR - 4 - m, m - 12));
+    }
+    if (ofill > 0 && giant) {
+      let gy = giant.offsetHeight - 0.21 * (parseFloat(getComputedStyle(giant).lineHeight) || giant.offsetHeight);   // the last line's baseline (no descenders)
+      for (let n = giant; n && n !== pin; n = n.offsetParent) gy += n.offsetTop;
+      const t = gy + Math.max(12, heroR.h * 0.015);
+      if (t > (heroR.h * (1 - ofill)) / 2) {
+        orbR.h = Math.min(heroR.h, (heroR.h - 12 - t) / ofill);
+        orbR.y = t - (orbR.h * (1 - ofill)) / 2;
+      }
+    }
+    live.orb = orbR;
     // portrait: the column slot runs from under the bar down to just above the copy (the tallest of the shots'), so
-    // the device sits in the middle of the free black, not high above a gap
+    // the device sits in the middle of the free black, not high above a gap (and never under the copy: the floor is
+    // only for screens too short for the list; Method's twelve rows leave 226 px at 360×780)
     target.style.height = '';
     copyTop = copyTopNow();
-    if (tall && Number.isFinite(copyTop)) target.style.height = px(Math.max(heroR.h * 0.4, copyTop - 18 - target.offsetTop));
+    if (tall && Number.isFinite(copyTop)) target.style.height = px(Math.max(heroR.h * 0.27, copyTop - 18 - target.offsetTop));
     colR = { x: target.offsetLeft, y: target.offsetTop, w: target.offsetWidth, h: target.offsetHeight };
     for (const x of shots) x.F = tdFit(tdFraming(x.el, tall, x.dev), colR, heroR.w, heroR.h);
     // a list whose lines show as a caption (Method on short screens and phones: method.css) keeps its last lit row
-    const capMode = window.matchMedia('(min-width: 1024px) and (max-height: 820px), (max-width: 1023px)').matches;
+    const capMode = window.matchMedia('(min-width: 1024px) and (max-height: 1180px), (max-width: 1023px)').matches;
     for (const x of shots) x.keepHot = capMode && !!x.copy?.querySelector('.td__specs--lines');
     live.Fs = shots.map((x) => x.F);
     TL = -1;
@@ -253,11 +278,10 @@ function block(el, idx) {
     const M = hero ? { x: hero.offsetLeft, y: hero.offsetTop, w: hero.offsetWidth, h: hero.offsetHeight } : null;
     const F0 = shots[0].F, b0 = shots[0].box;
     const Vh = { zoom: F0.hero.z, sx: F0.hero.x, sy: F0.hero.y };
-    const a = tdProject(b0[0], b0[1], heroR, Vh, null), b = tdProject(b0[2], b0[3], heroR, Vh, null);
+    const a = tdProject(b0[0], b0[1], orbR, Vh, null), b = tdProject(b0[2], b0[3], orbR, Vh, null);
     const D = { x0: a.x, y0: a.y, x1: b.x, y1: b.y };
     // fx: lines (static layers under a painted mask), ticker, markers
     fx.textContent = '';
-    const railR = desk && rail ? rail.offsetWidth : 0;   // the lines are gone under the rail
     fx.insertAdjacentHTML('beforeend', lineLayers(heroR.w, heroR.h, D, railR, tall, `tdm${idx}-`).join(''));
     lineEls = [...fx.querySelectorAll('.td__lines')];
     lineEls.forEach((ln) => put(ln, 'opacity', '0'));
@@ -328,8 +352,9 @@ function block(el, idx) {
     }
     const hand = k === 0 ? ph.hand : 1;
 
-    // the slot: the whole viewport → the column rect (computed, never laid out); the scene gets the same rect
-    tdLerpRect(heroR, colR, hand, S);
+    // the slot: the orbit's rect (the viewport, clear of the title) → the column rect (computed, never laid out); the
+    // scene gets the same rect
+    tdLerpRect(orbR, colR, hand, S);
     tdView(sh.F, ph, V);
     live.x = S.x; live.y = S.y + tdPinTop(r, v.y, heroR.h); live.w = S.w; live.h = S.h; live.f = v.frame;
 
@@ -410,15 +435,22 @@ function block(el, idx) {
       put(tick, 'opacity', to); put(tick, 'visibility', to === '0.00' ? 'hidden' : 'visible');
     }
 
-    // part markers (desktop): the current shot's, on their parts in the exploded frame, through the shader's transform
+    // part markers (desktop): the current shot's, on their parts in the exploded frame, through the shader's transform.
+    // Rows with data-anchor3d (td:camera3d): the section sets each marker's fade here and the scene places it, right
+    // after it poses this frame (live.place3d below), from its anchors relative to the pin: no lag behind the parts.
     if (desk) {
       const fout = fl.wout ? 1 : 1 - smooth(seg(s, r.L + 0.25, r.L + 0.48));
       const lv = drawn ? live : null;
+      const A3 = drawn && live.anchors3d ? live.anchors3d : null;
       shots.forEach((x, j) => {
         const ex = timeline[j].explode, es = ex[1] - ex[0];
+        const step = Math.min(0.032, 0.26 / Math.max(1, x.marks.length - 1));   // a long list (Method's twelve) staggers tighter: all in by the hold
         x.marks.forEach((m, i) => {
           if (!m) return;
-          const kk = j === k ? smooth(seg(s, ex[0] + (0.85 + 0.032 * i) * es, ex[0] + (0.95 + 0.032 * i) * es)) * fout * (1 - smooth(seg(cut, 0, 0.3))) : 0;
+          const kk = j === k ? smooth(seg(s, ex[0] + (0.85 + step * i) * es, ex[0] + (0.95 + step * i) * es)) * fout * (1 - smooth(seg(cut, 0, 0.3))) : 0;
+          const id3 = A3 ? x.rows[i]?.dataset.anchor3d : null;
+          if (id3) { m._kk = kk; m._id3 = id3; return; }
+          m._id3 = null;
           put(m, 'opacity', f3(Math.min(1, kk * 1.6)));
           put(m, 'visibility', kk > 0 ? 'visible' : 'hidden');
           put(m, '--k', f3(kk));
@@ -428,7 +460,27 @@ function block(el, idx) {
           put(m, 'transform', `translate3d(${px(Q.x)}, ${px(Q.y)}, 0)`);
         });
       });
+      live.place3d?.(live.anchors3d);
     }
+  };
+
+  // td:camera3d: the scene calls this right after it poses (anchors in pin px; visible = revealed x facing x not covered)
+  live.place3d = (A) => {
+    if (!A || !desk) return;
+    for (const x of shots) x.marks.forEach((m) => {
+      if (!m || !m._id3) return;
+      const a = A.find((q) => q.id === m._id3);
+      const kk = (m._kk || 0) * (a ? a.visible : 0);
+      put(m, 'opacity', f3(Math.min(1, kk * 1.6)));
+      put(m, 'visibility', kk > 0 ? 'visible' : 'hidden');
+      put(m, '--k', f3(kk));
+      if (kk <= 0) return;
+      if (a.lead && m._ang !== a.lead.angle) {      // the 3D anchor's own leader direction (labels spread round the parts)
+        m._ang = a.lead.angle;
+        m.style.setProperty('--ang', `${a.lead.angle}deg`); m.style.setProperty('--lx', px(a.lead.dx * 42)); m.style.setProperty('--ly', px(a.lead.dy * 42));
+      }
+      put(m, 'transform', `translate3d(${px(a.x)}, ${px(a.y)}, 0)`);
+    });
   };
 
   measure();

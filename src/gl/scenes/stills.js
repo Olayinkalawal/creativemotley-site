@@ -201,5 +201,5 @@ function stillScene(id, stage) {
 
 export default function register(stage) {
   const ids = new Set([...document.querySelectorAll('[data-scene]')].map((el) => el.dataset.scene));
-  for (const id of ids) stillScene(id, stage);
+  for (const id of ids) if (id !== 'td:camera3d') stillScene(id, stage);   // the 3D camera draws itself (phones too: gl/boot.js)
 }
