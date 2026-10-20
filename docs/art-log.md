@@ -329,3 +329,67 @@ magenta, sizes, ink and scrim) and `qa/shots/v3-masters-vs-current.jpg` (live pa
   monitor's lower bezel. The judge's text-only retake is the fix.
 - **Apply phone** is a post build (a scaled crop of d8 under a painted-sky extension): Venus is ~48% of the frame
   height and the wind pair is out of frame, so only their boom mic enters from the left edge.
+
+### Final retakes (2026-10-19 23:00 to 2026-10-20 00:45 UTC)
+The three chapters that fell short (Storytellers, Directors, Apply) got one more round: nine Nano Banana Pro 4K images
+against a 36-credit cap, then judging at 1:1, free local retouch and a re-encode of those three chapters only.
+
+**Spend: 36 credits, 9 images x 4.** Balance **301.03 before, 265.03 after** (`balance`; `transactions` shows exactly
+nine Nano Banana Pro spends of -4 at 23:03:03.8-23:03:04.2 x4, 23:08:42.4-23:08:42.8 x4 and 23:16:58.8, and nothing
+since). The encoder step spent nothing (265.03 before and after; floor 262 respected). The client's phase ledger is
+now about 403 of ~500 (367 before this round + 36).
+
+| Job | Chapter, kind | Result |
+|---|---|---|
+| `eaef7734` | storytellers desktop, recomposition from `d32e86f3` + `cbee6a1a` | rejected: brighter vault, child with glowing eyes, pseudo-text on a spine |
+| `1480ad44` | storytellers desktop, `d32e86f3` widened to 16:9 | rejected: side groups reverted to white philosophers |
+| `f6d5f9bd` | storytellers phone, six-point edit of `d32e86f3` | used: palm-down hand, plain laptop, ochre boot |
+| `086cb8f3` | storytellers phone, gimbal-only edit | unused (gimbal did not move) |
+| `767948c8` | storytellers phone, gimbal arm as a new pose | used: gimbal held at the chest, 18% in from the edge |
+| `0b76ad33` | directors desktop, text-only Holbein + hero `70d440b1` for technique | rejected: kit up to v 0.08, camcorder |
+| `4e6bedc5` | directors desktop, same brief set lower and right, solid smear | **base of the pick** |
+| `dc709a9c` | apply phone, text-only + hero for technique | rejected: seam at v 0.29, bare torso |
+| `efface4c` | apply phone, text-only, no reference | **base of the pick** |
+
+**Picks (judge) and why**
+- **Storytellers desktop: `d7_r3` kept**, shipped as `d7_r4`. Neither retake beats it; it reads at a glance as the
+  School of Athens with a modern Black cast and matches the hero's warm amber. Local fixes: the melted hand on the
+  laptop repainted as a hand (skin ramp, finger creases, knuckle lights), the sunglasses' blue rim neutralised. The
+  title zone needs the **required** dark scrim (~0.6 over u 0-0.5, v 0-0.40, gone by v 0.5): the lit Apollo statue,
+  a classical nude, sits in it.
+- **Storytellers phone: `final_p` (new)**, shipped as `final_p2`: plain silver laptop, gimbal at the chest, a readable
+  boot, no seams or lettering at 1:1. Local fix: the cone-shaped finger cut back to a short thumb. Title zone extended
+  to v 0.22, with a soft dark top scrim (~0.35, gone by v 0.30) to reach 25%.
+- **Directors desktop: `final_d` (new, passes)**, shipped as `final_d2`. Now unmistakably The Ambassadors: two-tier
+  table and carpet, celestial globe, polyhedral sundial, cylinder dial and torquetum above; Africa globe, lute, hymn
+  book and flutes below; two empty black director's chairs; Cosmati floor; an anamorphic smear. The kit stays below
+  v 0.30, leaving plain velvet for the title. Local blanks: chair latch, brace stair-step, hymn-book headings. Its
+  depth map is hand-layered (MiDaS flattened the set into the curtain). `d8` stays as the warmer fallback.
+- **Directors phone: `final_p` (new, passes)**: the monitor shows its own abstract light again; the crest plaque and
+  sundial marks are gone.
+- **Apply desktop: `final_d` (new; d8 plus the fist clean-up)**, shipped as `final_d2` with the leftover 1-px cut
+  and flecks feathered.
+- **Apply phone: `final_p` (new, passes)**, shipped as `final_p2`: the first true vertical Birth of Venus (one
+  continuous painting, the wind pair in frame with a boom mic, Venus large, the attendant with the cloak). Local fix:
+  the gimbal phone's glowing white screen glazed down to a painted sky reflection. phoneFocus 0.52/0.62.
+
+**Encodes** (`scripts/art.py --config <scratchpad>/masters/art-masters.json --out <scratchpad>/masters/encoded
+--sheet-path qa/shots/v3-masters-sheet.jpg --depth /home/user/models/midas_small.onnx storytellers directors apply`).
+Sizes in KB (quality):
+
+| Chapter | desktop AVIF 2048 / 2880 | desktop WebP 2048 / 2880 | phone AVIF 1170 / 828 | phone WebP 1170 / 828 | depth |
+|---|---|---|---|---|---|
+| storytellers | 211 (q72) / 310 (q72) | 274 (q86) / 434 (q86) | 180 (q65) / 100 (q62) | 257 (q85) / 147 (q84) | 11.5 |
+| directors | 145 (q72) / 231 (q72) | 194 (q86) / 327 (q86) | 172 (q61) / 99 (q59) | 266 (q84) / 148 (q83) | 10.3 (hand-layered) |
+| apply | 245 (q70) / 393 (q72) | 313 (q86) / 507 (q86) | 177 (q62) / 93 (q59) | 258 (q84) / 145 (q83) | 13.1 |
+
+Title zones (worst decile, bare): storytellers desktop light 7.4:1 under the required scrim, phone light 12.1:1
+(0.05 0.03 0.95 0.22); directors desktop light 6.8:1 (0.03 0.04 0.50 0.36), phone light 12.4:1; apply desktop dark
+12.7:1, phone dark 9.5:1. Sheets: `qa/shots/v3-masters-sheet.jpg` and `qa/shots/v3-masters-vs-current.jpg` (all six
+chapters). Swap steps: `<scratchpad>/masters/swap-plan.md`.
+
+**Still short (judge, at 1:1):** Storytellers desktop does not pass: faces soft and airbrushed, two dated camcorders
+in the director group, and the vault is calm only under the scrim. Storytellers phone: the gesturing hand is a short
+thumb on knuckle nubs, not a modelled hand, and the bald man's robe is orange rather than brick. Directors: the smear
+ends in a readable lens, only the left curtain panel shows damask, the finish is smoother than panel oil. Apply phone:
+the gimbal phone is drawn flatter than the paint, the attendant's camera is muddled, the repainted silk is smooth.
