@@ -1,15 +1,18 @@
 {
- "//": "Camera keys for plate:apply (gl/timeline.js; t in viewports of the section's pass, focus is the zoom anchor in uv, y up). The Birth of Venus, live (Botticelli, masters 2026-10-20), the site's one light painting. Entry (t 0-1, with data-rise): zoom 1.26 anchored top-left, so the dark title and dek sit on the pale sky and end left of Venus's hair (u 0.545); the wind pair flies below them, clear (the join block sits on the ink field at the opener's foot). Then a slow push toward Venus on the shell as the footer arrives.",
+ "//": "Camera keys for plate:apply (gl/timeline.js; t in viewports of the section's pass, focus is the zoom anchor in uv, y up). The Birth of Venus, live (Botticelli, masters 2026-10-20), the site's one light painting. Entry (t 0-1, with data-rise): zoom 1.26 anchored top-left, so the dark title and dek sit on the pale sky and end left of Venus's hair (u 0.545); the wind pair flies below them, clear (the join block waits below the first screen on the ink field).",
+ "//1": "As the title leaves (t 1.0-1.42): a truck right and in (zoom 1.5 about the painting's right edge, near its top), so the wind pair slides out at the left before the join block's torn edge reaches their heads (it crossed them where you stop to read: two heads above the teeth), and Venus with her attendant fill the frame above the ink field, her face in the upper third. Then a slow push as the footer arrives.",
  "camera": {
   "zoom": [
     {"t": 0, "v": 1.26, "ease": "out"},
     {"t": 1.0, "v": 1.26, "ease": "inOut"},
-    {"t": 2.4, "v": 1.32}
+    {"t": 1.42, "v": 1.5, "ease": "inOut"},
+    {"t": 2.4, "v": 1.56}
    ],
   "focus": [
     {"t": 0, "v": [0.0, 1.0], "ease": "out"},
     {"t": 1.0, "v": [0.0, 1.0], "ease": "inOut"},
-    {"t": 2.4, "v": [0.62, 0.56]}
+    {"t": 1.42, "v": [1.0, 0.9], "ease": "inOut"},
+    {"t": 2.4, "v": [1.0, 0.88]}
    ],
   "push": [
     {"t": 0, "v": 0.0, "ease": "out"},

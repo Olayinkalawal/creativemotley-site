@@ -66,6 +66,11 @@ html.gl-ready #stage { opacity: 1; }
   .plates .plate[data-plate='directors'] { --z: 1.08; --fx: 0.4; --fy: 0; }
   .plates .plate[data-plate='apply'] { --z: 1.26; --fx: 0; --fy: 0; }
 }
+/* Results on wide screens: the stage fits its rest framing so the title and dek sit inside the oculus (gl/keys/
+   results.json "fit"; the title's column sits a fixed distance from the left, so it reaches further over the ring) */
+@media (min-width: 1536px) and (orientation: landscape) { .plates .plate[data-plate='results'] { --z: 1.4; --fx: 0.56; } }
+@media (min-width: 1880px) and (orientation: landscape) { .plates .plate[data-plate='results'] { --z: 1.5; --fx: 0.64; } }
+@media (min-width: 2200px) and (orientation: landscape) { .plates .plate[data-plate='results'] { --z: 1.7; --fx: 0.66; } }
 /* upright screens without the stage (html.css-stage: ?tier=0, reduced motion): a data-rise chapter's painting enters
    with its section, as the stage's does (a 100vh layer at the holder's top, framed as the fixed plate it hands over
    to: main.js switches that plate once the holder's top reaches the top of the screen), so the title rides one calm

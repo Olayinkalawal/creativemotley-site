@@ -1,7 +1,7 @@
 /* Final pass: two scene layers dissolved through ink-bleed noise, or split at a wiping sheet's edge (wipe: the edge's
    line, 0 top … 1 bottom of the screen; the sheet above it, feathered into the scene below, with a faint warm edge
    light; bleed: instead, the scene below eats up into the one above through the dissolve's ink-bleed noise, in a band
-   under the edge and never above it), then the film finish (grain, vignette, a touch of chromatic fringe that follows
+   under the edge and never above it, while the scene above dims to bleedDim), then the film finish (grain, vignette, a touch of chromatic fringe that follows
    scroll speed). */
 import * as THREE from 'three';
 
@@ -9,7 +9,7 @@ const vert = /* glsl */`varying vec2 vUv; void main(){ vUv = uv; gl_Position = v
 const frag = /* glsl */`
 precision highp float;
 uniform sampler2D tA; uniform sampler2D tB;
-uniform float mixAB; uniform float time; uniform vec2 res; uniform float wipe; uniform float bleed;
+uniform float mixAB; uniform float time; uniform vec2 res; uniform float wipe; uniform float bleed; uniform float bleedDim;
 uniform float grain; uniform float vignette; uniform float fringe; uniform vec3 fadeColor; uniform float fade;
 varying vec2 vUv;
 float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
@@ -34,6 +34,9 @@ void main(){
   } else if (wipe >= 0.0 && bleed > 0.5) {
     // the dissolve's noise and rim, its threshold a ramp from the edge (all A) to a band below it (all B); the band
     // narrows as the edge nears the top, so A is gone exactly when the edge leaves the screen (no pop)
+    // the scene above goes down to bleedDim as the edge climbs (from 0.95 to 0.5 of the screen), so what it shows
+    // beside the rising title (the film's line art, Results' ring of watchers) recedes instead of competing with it
+    a *= mix(bleedDim, 1.0, smoothstep(0.5, 0.95, wipe));
     vec3 b = texture2D(tB, vUv).rgb;
     float m = clamp((1.0 - vUv.y - wipe) / max(0.001, 0.3 * min(1.0, wipe / 0.3)), 0.0, 1.0);
     float n = fbm(vUv * vec2(res.x / res.y, 1.0) * 2.4 + 3.1);
@@ -64,7 +67,7 @@ export function createPost() {
     uniforms: {
       tA: { value: null }, tB: { value: null }, mixAB: { value: 0 }, time: { value: 0 },
       res: { value: new THREE.Vector2(1, 1) }, grain: { value: 0.045 }, vignette: { value: 0.32 },
-      fringe: { value: 0 }, fadeColor: { value: new THREE.Color(0x0b0805) }, fade: { value: 0 }, wipe: { value: -1 }, bleed: { value: 0 },
+      fringe: { value: 0 }, fadeColor: { value: new THREE.Color(0x0b0805) }, fade: { value: 0 }, wipe: { value: -1 }, bleed: { value: 0 }, bleedDim: { value: 1 },
     },
   });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);

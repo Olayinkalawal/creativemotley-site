@@ -16,6 +16,13 @@
     "h": 1620,
     "bytes": 402680,
     "q": 72
+   },
+   {
+    "src": "/assets/scenes/apply/desktop-3840.avif",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 555578,
+    "q": 72
    }
   ],
   "webp": [
@@ -31,6 +38,13 @@
     "w": 2880,
     "h": 1620,
     "bytes": 519094,
+    "q": 86
+   },
+   {
+    "src": "/assets/scenes/apply/desktop-3840.webp",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 744552,
     "q": 86
    }
   ]

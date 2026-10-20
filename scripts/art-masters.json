@@ -218,7 +218,63 @@
     "softenSigma": 2.0,
     "crack": 0.14,
     "cell": 190,
-    "seed": 21
+    "seed": 21,
+    "shadows": [
+     {
+      "poly": [
+       [
+        0.7812,
+        0.7304
+       ],
+       [
+        0.8438,
+        0.7485
+       ],
+       [
+        0.8203,
+        0.7885
+       ],
+       [
+        0.6836,
+        0.8612
+       ],
+       [
+        0.5599,
+        0.9448
+       ],
+       [
+        0.5312,
+        1.0
+       ],
+       [
+        0.0,
+        1.0
+       ],
+       [
+        0.0,
+        0.9339
+       ],
+       [
+        0.1628,
+        0.883
+       ],
+       [
+        0.3411,
+        0.8103
+       ],
+       [
+        0.4297,
+        0.7522
+       ],
+       [
+        0.5924,
+        0.7231
+       ]
+      ],
+      "amount": 0.55,
+      "feather": 0.03
+     }
+    ]
    }
   },
   "focus": [
@@ -256,7 +312,12 @@
   "desktop": {
    "src": "repo:.art/masters-2026-10-20/apply-desktop.png",
    "note": "Nano Banana Pro 4K 5f652579 > edit e47abfe4, then local retouch (second camera out, roses, drapery end, fourth foot, hair; final round: the raised fist cleaned of the old camera rim, seam and flecks feathered): masters/apply/final_d2.png",
-   "pick": "apply/final_d2.png"
+   "pick": "apply/final_d2.png",
+   "widths": [
+    2048,
+    2880,
+    3840
+   ]
   },
   "phone": {
    "src": "repo:.art/masters-2026-10-20/apply-phone.png",
@@ -292,6 +353,6 @@
   "key": "#DFAFA0",
   "note": "The site's one light painting: dark ink on the pale sky, desktop and phone. Phone: the wind drapery starts at v ~0.32 and the tree at v ~0.35; the attendant's face sits at u 0.93-1.0 and crops away on screens taller than 9:16, so phoneFocus u 0.52 keeps both wind-pair faces (u 0.14-0.28) in."
  },
- "//phoneFocus": "2026-10-20 review: brands phoneFocus y 0.55 -> 0.47 and apply 0.62 -> 0.50. Phones (narrower than 9:16) are fitted by height, so y moves only tablets (fitted by width): there it drops the Brands chandelier below the dek and the Apply wind pair below the dek. brands and results add a 3840 desktop encode (their keys zoom to 1.48 / 1.42, so a 2x screen would upscale the 2880).",
- "//finish": "2026-10-20 review: the Brands and Directors portraits read photographic beside Storytellers, Creators and Apply on a phone, so art.py lays an oil finish over those two masters before encoding (phone.finish: a warm umber lift in the deep shadows, greens 12% less saturated, a slight soften, a craquelure network at ~70 px cells on the 1170 encode)."
+ "//phoneFocus": "2026-10-20 review: brands phoneFocus y 0.55 -> 0.47 and apply 0.62 -> 0.50. Phones (narrower than 9:16) are fitted by height, so y moves only tablets (fitted by width): there it drops the Brands chandelier below the dek and the Apply wind pair below the dek. brands, results and apply add a 3840 desktop encode (their keys zoom to 1.48 / 1.7 / 1.56, so a 2x screen would upscale the 2880).",
+ "//finish": "2026-10-20 review: the Brands and Directors portraits read photographic beside Storytellers, Creators and Apply on a phone, so art.py lays an oil finish over those two masters before encoding (phone.finish: a warm umber lift in the deep shadows, greens 12% less saturated, a slight soften, a craquelure network at ~70 px cells on the 1170 encode); phone.finish.shadows: the Directors portrait's anamorphic film reel (a pale blurred smear at the screen's foot on phones, read as a rendering fault) sinks into the table's shadow: a feathered polygon around the reel and its smear, darkened by 0.55, warmer and flatter (2026-10-20 review)."
 }

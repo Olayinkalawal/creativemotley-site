@@ -4,8 +4,11 @@ import './apply.css';
 import { onFrame, clamp } from '../core/scroll.js';
 import { geo } from '../core/layout.js';
 import { REDUCED } from '../core/env.js';
+import { landPlate } from './_paper.js';
 
 export function init() {
+  // WebGL off: the CSS plate cuts to the keys' landing frame once the title has left (apply.css, html.is-landed-apply)
+  landPlate(document.querySelector('#apply .opener'), 'apply', 1.3);
   const foot = document.querySelector('.contact');
   if (!foot) return;
   const track = foot.querySelector('[data-ct-track]');
