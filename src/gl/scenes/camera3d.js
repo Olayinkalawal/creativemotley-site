@@ -22,12 +22,11 @@
    ambient() (≤ 12 frames desktop, 4–6 phones), then the stage stops drawing.
    Phones (the still path): the phone GLB; only where core/env.js CAM3D allows it, and if the frame-rate governor
    has to step all the way down to "min" while the camera draws, the scene gives up for the session (the section keeps
-   its 3D stills, as at tier 0; ?cam3d=1 / ?q=… turn that off for QA).
+   its 3D stills, as at tier 0; ?q=… turns that off for QA, ?cam3d=1 forces the camera onto a phone below CAM3D).
    Reduced motion never reaches this scene: main.js does not boot the stage then, and the section shows the static
    layout with the 3D stills (see INTEGRATION.md). */
 import { create, KEYS } from '../lib/camera3d.js';
 import { tdLive, tdFlags, tdTimeline, tdState, tdRun, tdLerpRect, tdPinTop } from '../lib/tdcore.js';
-import { CAM3D_FORCED } from '../../core/env.js';
 
 /* the site's art direction over the module's own keys (options and the exported KEYS only: the module and its API stay
    as the lab ships them, so its final drop-in keeps these):
@@ -41,6 +40,7 @@ KEYS.wide.column.fill = 0.88;
 const PORTRAIT = { lens: 0.76, lens_el_0: 0.76, lens_el_1: 0.76, lens_el_2: 0.76, lens_el_5: 0.76, lens_el_3: 0.7, lens_el_4: 0.7, aperture: 0.7,
   lcd: 0.74, main_pcb: 0.74, ibis_frame: 0.74, sensor: 0.74, shutter: 0.74, top_cover: 0.62, evf_module: 0.62, battery: 0.66 };
 const INTRO_MS = 900;
+const QA_Q = /[?&]q=/.test(location.search);   // ?q=… (a forced quality, QA): no runtime give-up
 const smooth = (x) => x * x * (3 - 2 * x);
 const seg = (x, a, b) => Math.min(1, Math.max(0, (x - a) / (b - a)));
 const qp = (v) => Math.round(v * 50) / 50;   // pointer steps of 0.02 (< 0.07° of parallax): a resting mouse stops restarting the samples
@@ -101,7 +101,7 @@ export default function register(stage) {
       if (Math.abs(r.L - TL) > 1e-3) { timeline = tdTimeline(1, r.L); TL = r.L; }
       const st = tdState(r.s, timeline, r.L, fl, ST);
       // phones: the governor stepped all the way down while the camera draws: give up to the stills for this visit
-      if (ctx.still && CAM3D_FORCED === null && !/[?&]q=/.test(location.search) && stage.quality === 'min' && !gaveUp) {
+      if (ctx.still && !QA_Q && stage.quality === 'min' && !gaveUp) {
         gaveUp = true;
         setTimeout(() => { stage.dispose(sc); sc.failed = true; section.dataset.cam3d = 'stills'; }, 0);
       }
