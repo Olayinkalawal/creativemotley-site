@@ -21,16 +21,20 @@ afterFirstPaint(() => {
   initReveal();
 
   // still plates under the canvas: first paint, and the whole stage when WebGL is off (a plate marked data-bg="url"
-  // loads only when it is first shown, so the hidden ones cost nothing on the first load)
+  // loads only when it is first shown, so the hidden ones cost nothing on the first load).
+  // Upright screens without the stage (?tier=0, reduced motion): a data-rise chapter's painting rises with its section
+  // as on the stage (base.css: the holder's own ::after, html.css-stage), and the fixed plate takes over only once the
+  // holder's top reaches the top of the screen, so a title never scrolls across the whole painting.
   const plates = [...document.querySelectorAll('.plates [data-plate]')];
   const portrait = window.matchMedia('(orientation: portrait) and (max-width: 1023px)');
   const holders = [...document.querySelectorAll('main [data-plate]')];
+  const cssStage = () => document.documentElement.classList.contains('css-stage');
   let lastPlate = 'hero';
   onFrame((v) => {
     if (document.documentElement.classList.contains('gl-ready')) return;
-    const c = v.y + v.vh * 0.5;
+    const c = v.y + v.vh * 0.5, rise = portrait.matches && cssStage();
     let cur = 'hero';
-    for (const el of holders) if (geo(el).top <= c) cur = el.dataset.plate;
+    for (const el of holders) if (geo(el).top <= (rise && el.hasAttribute('data-rise') ? v.y + 1 : c)) cur = el.dataset.plate;
     if (cur === lastPlate) return;
     lastPlate = cur;
     for (const p of plates) {
@@ -48,9 +52,10 @@ afterFirstPaint(() => {
     document.querySelectorAll('[data-chapter]').forEach((el) => io.observe(el));
   } else document.querySelectorAll('[data-chapter]').forEach((el) => el.classList.add('is-near'));
 
-  // the WebGL stage loads after first paint (tier 0 or reduced motion keep the stills)
+  // the WebGL stage loads after first paint (tier 0 or reduced motion keep the stills: html.css-stage)
+  if (!(TIER > 0 && !REDUCED)) document.documentElement.classList.add('css-stage');
   if (TIER > 0 && !REDUCED) {
-    const go = () => import('./gl/boot.js').then((m) => m.bootStage()).catch((e) => console.warn('[stage] off', e));
+    const go = () => import('./gl/boot.js').then((m) => m.bootStage()).catch((e) => { document.documentElement.classList.add('css-stage'); console.warn('[stage] off', e); });
     const idle = () => (window.requestIdleCallback ? window.requestIdleCallback(go, { timeout: 1200 }) : setTimeout(go, 200));
     if (document.readyState === 'complete') idle();
     else window.addEventListener('load', idle, { once: true });

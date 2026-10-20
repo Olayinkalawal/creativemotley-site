@@ -6,7 +6,7 @@
 import Lenis from 'lenis';
 import { REDUCED } from './env.js';
 
-export const view = { y: window.scrollY, vw: window.innerWidth, vh: window.innerHeight, velocity: 0, time: 0, dt: 1 / 60, frame: 0 };
+export const view = { y: window.scrollY, vw: window.innerWidth, vh: window.innerHeight, velocity: 0, time: 0, dt: 1 / 60, frame: 0, jump: false };
 
 const expoOut = (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t));
 const MOUSE = 0.85, PAD = 0.15;
@@ -28,7 +28,9 @@ if (lenis) {
       else if (rate < 30) input.trackpad = false;
     }
     lenis.options.duration = input.trackpad ? PAD : MOUSE;
+    view.jump = false;   // the reader took over from a programmatic scroll
   }, { capture: true, passive: true });
+  window.addEventListener('touchstart', () => { view.jump = false; }, { capture: true, passive: true });
   window.__lenis = lenis;   // for QA scripts (duration, scroll)
 } else {
   window.addEventListener('scroll', () => { view.y = window.scrollY; }, { passive: true });
@@ -45,6 +47,9 @@ function tick(now) {
     // die away, so a scene's velocity effects (the stage's chromatic fringe) settle before the stage goes idle
     if (view.y === lastY) view.velocity = Math.abs(view.velocity) < 0.5 ? 0 : view.velocity * Math.pow(0.7, view.dt * 60);
   } else { view.y = window.scrollY; view.velocity *= 0.9; }
+  // a jump is not a scroll: a programmatic scrollTo (chapter links: view.jump) or more than half a screen in one frame
+  // (a native jump, find-in-page) carries no velocity, so the stage's chromatic fringe never lands on a painting with it
+  if (view.jump || Math.abs(view.y - lastY) > view.vh * 0.5) view.velocity = 0;
   lastY = view.y;
   for (const fn of frameFns) fn(view);
   requestAnimationFrame(tick);
@@ -64,11 +69,16 @@ window.addEventListener('resize', () => {
 });
 export function onResize(fn) { resizeFns.add(fn); return () => resizeFns.delete(fn); }
 
+let jumpT = 0;
 export function scrollTo(target, opts = {}) {
   const el = typeof target === 'string' ? document.querySelector(target) : target;
   if (!el) return;
-  if (lenis) lenis.scrollTo(el, { offset: 0, duration: 1.6, easing: (t) => 1 - Math.pow(1 - t, 4), ...opts });
-  else el.scrollIntoView({ behavior: 'auto' });
+  if (lenis) {
+    const duration = opts.duration ?? 1.6;
+    view.jump = true;
+    clearTimeout(jumpT); jumpT = setTimeout(() => { view.jump = false; }, duration * 1000 + 400);   // in case it is cut short
+    lenis.scrollTo(el, { offset: 0, duration, easing: (t) => 1 - Math.pow(1 - t, 4), ...opts, onComplete: (l) => { view.jump = false; view.velocity = 0; opts.onComplete?.(l); } });
+  } else el.scrollIntoView({ behavior: 'auto' });
 }
 export function lockScroll(on) { if (lenis) on ? lenis.stop() : lenis.start(); document.documentElement.style.overflow = on ? 'hidden' : ''; }
 

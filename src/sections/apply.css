@@ -4,9 +4,11 @@
    Wide screens: the title and dek sit in the left of the column, on the sky, ending left of Venus's hair; the wind
    pair flies below them, so nothing is set over it. The join block (who we work with, how applying works, the pill)
    waits below the first screen on an ink field that meets the painting on the brand's torn edge and runs on into the
-   footer (cream type), so the painting is whole at the opener's rest.
+   footer (cream type), so the painting is whole at the opener's rest; it is set low enough that, where it is read, the
+   torn edge has passed below the wind pair's heads, and in two columns (the copy, the pill) across the field.
    Upright screens: title and dek in the sky band at the top; the join block sits at the opener's foot on an ink field
-   that rises from the footer (cream type), so the shell and the wind pair stay clean at the opener's rest. */
+   that rises from the footer (cream type): on phones low enough that the shell is in at the opener's rest, the field
+   rising over it as you read on; on tablets the dek runs on one line. */
 .opener.apply-open {
   min-height: 66svh; justify-content: flex-start;
   padding-top: calc(var(--nav-h) + 4svh); padding-bottom: clamp(20px, 3svh, 36px);
@@ -24,16 +26,29 @@
   /* full bleed (the column sits right of the rail): the field spans the screen, the type keeps the column's line */
   .apply-join {
     --jl: calc(var(--rail-w) + clamp(24px, 4.4vw, 72px)); --jr: clamp(24px, 4vw, 64px);
-    max-width: none; margin: 62svh calc(-1 * var(--jr)) 0 calc(-1 * var(--jl));
+    max-width: none; margin: 70svh calc(-1 * var(--jr)) 0 calc(-1 * var(--jl));
     padding: clamp(36px, 6svh, 64px) var(--jr) clamp(28px, 4svh, 44px) var(--jl);
     background: var(--ink); color: var(--cream); text-shadow: none;
+    display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(32px, 5vw, 96px); align-items: end;
   }
+  .apply-join > :not(.apply-cta) { grid-column: 1; }
+  .apply-join .apply-cta { grid-column: 2; grid-row: 1 / span 2; align-self: end; margin-top: 0; }
   /* the brand's torn edge: ink teeth rising into the painting */
   .apply-join::before {
     content: ''; position: absolute; left: 0; right: 0; top: -23px; height: 24px; pointer-events: none;
     background: var(--ink); -webkit-mask: var(--tear) bottom / 1200px 24px repeat-x; mask: var(--tear) bottom / 1200px 24px repeat-x;
   }
   .apply-how { color: rgba(244, 237, 223, 0.84); }
+}
+@media (min-width: 640px) and (max-width: 1023px) { .opener.apply-open .dek { max-width: none; } }
+@media (max-width: 639px) {
+  /* phones: the shell shows at the opener's rest; the ink field rises over it as you read on */
+  .opener.apply-open .apply-join {
+    margin-top: 50svh;
+    background: linear-gradient(180deg, rgba(11, 8, 5, 0), rgba(11, 8, 5, 0.72) 9svh, rgba(11, 8, 5, 0.96) 16svh, var(--ink) 18svh);
+    padding-top: 18svh;
+  }
+  #apply .contact { padding-top: clamp(20px, 3svh, 36px); }
 }
 @media (max-width: 1023px) {
   .opener.apply-open { min-height: 0; padding-top: calc(var(--nav-h) + 3.5svh); padding-bottom: 0; }

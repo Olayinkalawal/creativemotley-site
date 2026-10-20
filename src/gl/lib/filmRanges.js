@@ -1,5 +1,5 @@
 /* Scroll → film frame, from [data-film="name"][data-frames="a-b"] ranges in the markup. No three.js here (the phone
-   still path uses it too). Frames are always the film's *source* frames (0 … 569, the painted render), whatever is
+   still path uses it too). Frames are always the film's *source* frames (0 … 569 rendered; the site plays 0 … 440), whatever is
    delivered: the scene maps them onto its encode (FILM_CUT below), the phone path dissolves its two stills on them.
    - plain range: the element's pin progress maps linearly onto frames a..b (holds between ranges);
    - keyed range (v3): data-film-map="s f s f …" maps screens of scroll since the element's top met the viewport top
@@ -11,9 +11,12 @@ import { clamp } from '../../core/scroll.js';
 /* the v3 cut of the hero film: the source frames the encode keeps (scripts/encode-film.sh reads this line), as
    "a-b:step" spans. Frames 0–200 are the hero painting, unchanged (a short ramp), 202–344 the hand-off and the push
    into the lens (every other frame: the render has a near-duplicate every other frame there), 346–420 the lens going
-   dark, the glint and the vortex (crossed in 18 frames; the near-black 387–399 is gone), 422–530 the machine drawing
-   the Storytellers painting, 534–569 its settle (569 = the Storytellers plate). */
-export const FILM_CUT = '0-200:40,202-344:2,346-382:4,388,394,400-420:4,422-530:2,534-566:4,569';
+   dark, the glint and the vortex (crossed in 18 frames; the near-black 387–399 is gone), 422–440 the machine drawing
+   in line: the crowd and the seated figure as glowing line art, the last frame before any colour is painted.
+   2026-10-20 (masters): the render's tail (444–569) paints the old Storytellers painting, which the site no longer
+   shows, so the cut ends on the line art (440) and the School of Athens bleeds up under it (I Storytellers,
+   data-bleed); 570 → 106 frames. */
+export const FILM_CUT = '0-200:40,202-344:2,346-382:4,388,394,400-420:4,422-440:2';
 export function cutFrames(spec = FILM_CUT) {
   const out = [];
   for (const part of spec.split(',')) {

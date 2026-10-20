@@ -16,6 +16,13 @@
     "h": 1620,
     "bytes": 449235,
     "q": 65
+   },
+   {
+    "src": "/assets/scenes/results/desktop-3840.avif",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 761047,
+    "q": 69
    }
   ],
   "webp": [
@@ -32,6 +39,13 @@
     "h": 1620,
     "bytes": 683926,
     "q": 85
+   },
+   {
+    "src": "/assets/scenes/results/desktop-3840.webp",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 1117940,
+    "q": 86
    }
   ]
  },
@@ -52,6 +66,13 @@
  "phone": {
   "avif": [
    {
+    "src": "/assets/scenes/results/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 289487,
+    "q": 59
+   },
+   {
     "src": "/assets/scenes/results/phone-1170.avif",
     "w": 1170,
     "h": 2080,
@@ -67,6 +88,13 @@
    }
   ],
   "webp": [
+   {
+    "src": "/assets/scenes/results/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 411292,
+    "q": 79
+   },
    {
     "src": "/assets/scenes/results/phone-1170.webp",
     "w": 1170,

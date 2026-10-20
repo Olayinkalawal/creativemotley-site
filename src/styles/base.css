@@ -66,6 +66,24 @@ html.gl-ready #stage { opacity: 1; }
   .plates .plate[data-plate='directors'] { --z: 1.08; --fx: 0.4; --fy: 0; }
   .plates .plate[data-plate='apply'] { --z: 1.26; --fx: 0; --fy: 0; }
 }
+/* upright screens without the stage (html.css-stage: ?tier=0, reduced motion): a data-rise chapter's painting enters
+   with its section, as the stage's does (a 100vh layer at the holder's top, framed as the fixed plate it hands over
+   to: main.js switches that plate once the holder's top reaches the top of the screen), so the title rides one calm
+   part of the painting all the way in instead of scrolling across it. Only near chapters (.is-near) fetch it; the
+   file is the one the fixed plate uses, so nothing downloads twice. z -2: under the openers' scrims and halos. */
+@media (orientation: portrait) and (max-width: 1023px) {
+  html.css-stage [data-rise][data-plate] { position: relative; }
+  html.css-stage:not(.gl-ready) :is(.is-near[data-rise][data-plate], .is-near [data-rise][data-plate])::after {
+    content: ''; position: absolute; z-index: -2; top: 0; left: 0; right: 0; height: 100vh; pointer-events: none;
+    background: var(--ink) var(--paint, none) center / cover no-repeat;
+  }
+  [data-rise][data-plate='storytellers'] { --paint: url(/assets/scenes/storytellers/phone-828.webp); }
+  [data-rise][data-plate='creators'] { --paint: url(/assets/scenes/creators/phone-828.webp); }
+  [data-rise][data-plate='brands'] { --paint: url(/assets/scenes/brands/phone-828.webp); }
+  [data-rise][data-plate='results'] { --paint: url(/assets/scenes/results/phone-828.webp); }
+  [data-rise][data-plate='directors'] { --paint: url(/assets/scenes/directors/phone-828.webp); }
+  [data-rise][data-plate='apply'] { --paint: url(/assets/scenes/apply/phone-828.webp); }
+}
 /* hidden once the canvas has faded in over them (#stage's 0.9 s opacity), not as it starts: no dip toward black at boot */
 html.gl-ready .plates { visibility: hidden; transition: visibility 0s linear 0.9s; }
 

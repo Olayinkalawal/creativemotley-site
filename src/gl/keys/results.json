@@ -1,20 +1,24 @@
 {
- "//": "Camera keys for plate:results (gl/timeline.js; t in viewports of the section's pass, focus is the zoom anchor in uv, y up). The Oculus (Mantegna, masters 2026-10-20). Entry (t 0-1.05, with data-rise): zoom 1.3 anchored at the top centre, so the title and the (indented) dek sit in the open sky above the turbaned men and left of the flowerpot, the ring of watchers around them. (The art direction's zoom 1.2 about u 0.52, v 0.40 from the top put the dek's swash cap on the first turbaned man.) Then, as the counters arrive, a push up into the oculus: the bottom group leaves the frame and the ring opens outward, so the ledger runs on the sky, the left group under its ink veil.",
+ "//": "Camera keys for plate:results (gl/timeline.js; t in viewports of the section's pass, focus is the zoom anchor in uv, y up). The Oculus (Mantegna, masters 2026-10-20). Entry (t 0-1.05, with data-rise): zoom 1.3 anchored at the top centre, so the title and the (indented) dek sit in the open sky above the turbaned men and left of the flowerpot, the ring of watchers around them. (The art direction's zoom 1.2 about u 0.52, v 0.40 from the top put the dek's swash cap on the first turbaned man.) Then, as the counters arrive, a slow push up into the oculus: the bottom group leaves the frame and the ring opens outward, so the ledger runs on the sky, the left group under its ink veil.",
+ "//1": "The hand-off to IX (t 1.84-2.84 at 1440x900: the section's bottom edge rising from the screen's foot to its top, IX bleeding up under it): the push goes on into the middle of the sky (zoom 1.7 about u 0.5, v 0.62 up), so above that edge, beside IX's rising title, there is open sky and cloud; the two groups of watchers sit at the screen's sides, clear of the title.",
  "camera": {
   "zoom": [
     {"t": 0, "v": 1.3},
     {"t": 1.05, "v": 1.3, "ease": [0.45, 0, 0.25, 1]},
-    {"t": 2.7, "v": 1.42}
+    {"t": 1.8, "v": 1.38, "ease": [0.45, 0, 0.35, 1]},
+    {"t": 2.85, "v": 1.7}
    ],
   "focus": [
     {"t": 0, "v": [0.5, 1.0]},
     {"t": 1.05, "v": [0.5, 1.0], "ease": [0.45, 0, 0.25, 1]},
-    {"t": 2.7, "v": [0.5, 0.88]}
+    {"t": 1.8, "v": [0.5, 0.9], "ease": [0.45, 0, 0.35, 1]},
+    {"t": 2.85, "v": [0.5, 0.62]}
    ],
   "push": [
     {"t": 0, "v": 0},
     {"t": 1.05, "v": 0.01, "ease": [0.45, 0, 0.25, 1]},
-    {"t": 2.7, "v": 0.1}
+    {"t": 1.8, "v": 0.06, "ease": [0.45, 0, 0.35, 1]},
+    {"t": 2.85, "v": 0.1}
    ]
  }
 }

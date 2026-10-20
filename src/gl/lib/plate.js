@@ -3,6 +3,10 @@
    - pointer parallax: near pixels shift more than far ones (iterated lookup, so silhouettes hold)
    - push: a depth-weighted dolly toward a focus point (near things grow faster than far)
    - zoom / focus: a plain crop move, used for the "camera keys" of each chapter
+   - shift: a plain translation of the view (uv), after the zoom: the painting rising with its section (data-rise,
+     gl/scenes/plates.js). It is kept apart from focus so the push and the parallax stay centred on the screen (a
+     rise folded into the zoom anchor moved the focus by up to ~8 uv, and (uv − focus)·push then tore the painting at
+     every depth edge while it rose).
    Uniforms are set by the scene each frame. */
 import * as THREE from 'three';
 
@@ -21,6 +25,7 @@ uniform vec2 pointer;    // eased, -1..1
 uniform float strength;  // parallax amount (uv units)
 uniform float zoom;      // >= 1
 uniform vec2 focus;      // uv of the zoom/push centre
+uniform vec2 shift;      // uv translation after the zoom (the rise)
 uniform float push;      // depth-weighted dolly
 uniform float exposure;
 uniform vec3 tint;
@@ -37,11 +42,11 @@ float D(vec2 p) { return texture2D(depth, vec2(p.x, 1.0 - p.y)).r; }
 void main() {
   vec2 uv = cover(vUv);
   uv = focus + (uv - focus) / zoom;
-  vec2 p = uv;
+  vec2 p = uv + shift;
   if (hasDepth > 0.5) {
     for (int i = 0; i < 5; i++) {
       float d = D(p);
-      p = uv + pointer * strength * (d - 0.42) - (uv - focus) * push * (d - 0.3);
+      p = uv + shift + pointer * strength * (d - 0.42) - (uv - focus) * push * (d - 0.3);
     }
   }
   p = clamp(p, vec2(0.001), vec2(0.999));
@@ -58,7 +63,7 @@ export function plateMaterial() {
       map: { value: null }, depth: { value: null }, hasDepth: { value: 0 },
       res: { value: new THREE.Vector2(1, 1) }, imgSize: { value: new THREE.Vector2(1920, 1080) },
       pointer: { value: new THREE.Vector2() }, strength: { value: 0.018 },
-      zoom: { value: 1.06 }, focus: { value: new THREE.Vector2(0.5, 0.5) }, push: { value: 0 },
+      zoom: { value: 1.06 }, focus: { value: new THREE.Vector2(0.5, 0.5) }, shift: { value: new THREE.Vector2() }, push: { value: 0 },
       exposure: { value: 1 }, tint: { value: new THREE.Color(1, 1, 1) }, tintAmt: { value: 0 }, alpha: { value: 1 },
     },
   });

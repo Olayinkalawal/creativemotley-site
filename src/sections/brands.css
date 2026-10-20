@@ -50,6 +50,15 @@
   }
 }
 
+/* wide screens: the title stops growing at about 1460 px, so the plate can open up as the stage's fitted rest zoom
+   does (gl/keys/brands.json "fit"): the title's right edge still lands at u 0.432 */
+@media (min-width: 1760px) and (orientation: landscape) {
+  .plates .plate[data-plate='brands'] { background-size: calc(var(--cw) * 1.25) auto; background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.05 * (1 - 1.25)); }
+}
+@media (min-width: 1900px) and (orientation: landscape) {
+  .plates .plate[data-plate='brands'] { background-size: calc(var(--cw) * 1.17) auto; background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.05 * (1 - 1.17)); }
+}
+
 /* …and, once the title has left, the keys' landing frame: the couple and the contract (zoom 1.32 about x .7, .38 down) (landPlate in _paper.js: a cut, not a move) */
 @media (min-width: 1024px) and (orientation: landscape) {
   html.is-landed-brands .plates .plate[data-plate='brands'] {
@@ -85,6 +94,11 @@
 }
 @media (max-width: 1023px) {
   .br-open::before { display: none; }
-  /* the title and dek sit higher than the shell's opener (art direction: stop above the chandelier, v 0.19) */
-  .opener.opener--top.br-open { padding-top: calc(var(--nav-h) - 2svh); }
+}
+/* phones: the title and dek sit a little higher than the shell's opener (art direction: stop above the chandelier,
+   v 0.19), the title's top still clear of the top bar at rest, its dek a line closer under it. Tablets (fitted by
+   width) keep the shell's line: the painting sits lower there instead (the manifest's phoneFocus y 0.47). */
+@media (max-width: 639px) {
+  .opener.opener--top.br-open { padding-top: calc(var(--nav-h) + 1.5svh); }
+  #brands .br-open .giant { margin-bottom: 0.15em; }
 }

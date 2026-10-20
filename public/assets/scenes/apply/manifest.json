@@ -52,6 +52,13 @@
  "phone": {
   "avif": [
    {
+    "src": "/assets/scenes/apply/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 303307,
+    "q": 64
+   },
+   {
     "src": "/assets/scenes/apply/phone-1170.avif",
     "w": 1170,
     "h": 2080,
@@ -67,6 +74,13 @@
    }
   ],
   "webp": [
+   {
+    "src": "/assets/scenes/apply/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 420606,
+    "q": 83
+   },
    {
     "src": "/assets/scenes/apply/phone-1170.webp",
     "w": 1170,
@@ -89,7 +103,7 @@
  ],
  "phoneFocus": [
   0.52,
-  0.62
+  0.5
  ],
  "titleSide": "left",
  "phoneTitle": "top",

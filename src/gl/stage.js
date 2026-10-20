@@ -51,6 +51,9 @@ import { geo, onLayout } from '../core/layout.js';
 import { TIER, FINE, REDUCED, STILL, QUALITY } from '../core/env.js';
 
 const LEVELS = ['min', 'low', 'medium', 'high'];
+/* stands in for a scene that is not ready yet (its painting still loading): it draws ink, so a slow load never shows
+   the neighbouring chapter's painting under this chapter's title */
+const INK = { id: 'ink', post: null };
 const BUDGET = STILL ? { min: 960, low: 1280, medium: 1920, high: 2560 } : { min: 960, low: 1280, medium: 1920, high: 2880 };
 const MAX_DPR = STILL ? 3 : 2;
 const IDLE_MS = 300;
@@ -298,16 +301,18 @@ export class Stage {
     }
     const sa = this.scenes.get(A.id), sb = B ? this.scenes.get(B.id) : null;
     const okA = sa && sa.loaded, okB = sb && sb.loaded;
-    if (!okA && !okB) {
+    const showB = !!B && (wipe >= 0 || mix > 0.001);
+    if (!okA && !(okB && showB)) {
       // nothing here is ready (a jump far down the page, before its scene has loaded): ink, not a stale painting
       this.setDrawn([]);
       if (this.primary !== 'blank') { this.primary = 'blank'; this.renderer.setRenderTarget(null); this.renderer.clear(); }
       return;
     }
-    let first = okA ? sa : sb, second = okA && okB && mix > 0.001 ? sb : null;
-    if (!okA) { mix = 0; wipe = -1; }
-    if (okA && !okB && mix > 0.5) { mix = 0; wipe = -1; }   // hold A until B is ready
-    const list = second ? [first, second] : [first];
+    // a side that is not ready yet draws ink in its place (dissolving, wiping or bleeding into ink), never the other
+    // side's painting: a held painting under the next chapter's title read as the wrong painting under a slow load
+    const first = okA ? sa : INK, second = showB ? (okB ? sb : INK) : null;
+    const list = (second ? [first, second] : [first]).filter((x) => x !== INK);
+    if (!list.length) list.push(INK);
     if (this.setDrawn(list)) { this.applyLevel(); this.lastActive = now; }   // a scene change: a quality step may land here
 
     // dirty check: draw while something changes, then stop; ambient scenes keep drawing at ≤ 30 fps
@@ -330,7 +335,7 @@ export class Stage {
     if (this.applyNow) { this.applyNow = false; this.applyLevel(); }
     ctx.time = this.clock; ctx.dt = Math.min(dt, 0.1);
 
-    const segA = okA ? this.segInfo(A, y, vh) : this.segInfo(B, y, vh);
+    const segA = this.segInfo(A, y, vh);
     const segB = second ? this.segInfo(B, y, vh) : null;
     this.draw(first, segA, this.rtA);
     if (second) this.draw(second, segB, this.rtB);
@@ -341,7 +346,9 @@ export class Stage {
     u.bleed.value = second && bleed ? 1 : 0;
     u.time.value = this.clock;
     u.grain.value = pf.grain ?? 0.045; u.vignette.value = pf.vignette ?? 0.32;
-    u.fringe.value = REDUCED || !active ? 0 : Math.min(0.006, Math.abs(v.velocity) * 0.00012) * (pf.fringe ?? 1);
+    // the fringe follows scroll speed (none on a jump: core/scroll.js zeroes the velocity); the paintings take half or
+    // less of it (their post), and the phone still path a lower cap
+    u.fringe.value = REDUCED || !active ? 0 : Math.min(STILL ? 0.003 : 0.006, Math.abs(v.velocity) * 0.00012) * (pf.fringe ?? 1);
     this.lastFringe = u.fringe.value;
     u.fade.value = pf.fade ?? 0;
     this.renderer.setRenderTarget(null);
@@ -350,6 +357,7 @@ export class Stage {
     if (!document.documentElement.classList.contains('gl-ready')) document.documentElement.classList.add('gl-ready');
   }
   draw(s, seg, rt) {
+    if (s === INK) { this.renderer.setRenderTarget(rt); this.renderer.clear(); return; }
     s.update?.(this.ctx, seg);
     this.renderer.setRenderTarget(rt);
     this.renderer.clear();

@@ -153,6 +153,7 @@ function stillScene(id, stage) {
   };
   stage.add({
     id, scene, camera,
+    post: { fringe: 0.35 },   // a calm finish on the paintings: a flick on a touch screen would otherwise hit the cap
     async load(ctx) {
       const els = [...document.querySelectorAll(`[data-scene="${id}"]`)];
       if (film) {
