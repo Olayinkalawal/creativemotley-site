@@ -52,7 +52,7 @@ export default function register(stage) {
   const live = tdLive(id);
   live.ready = false;
   let cam = null, run = null, pinH = 0, heroR = null, colR = null, fl = null, timeline = null, TL = -1, vw = 0, vh = 0, idV = -1, idPending = false;
-  let first = false, intro = 0, introT0 = 0, introX = 0, lastIdE = -1, gaveUp = false;
+  let first = false, intro = 0, introX = 0, lastIdE = -1, lastIdS = -1, gaveUp = false;
   const ST = { ph: {}, phN: {} }, S = {}, PH = {};
   const measure = (ctx) => {
     run = section.querySelector('[data-td-run]') || section;
@@ -62,15 +62,15 @@ export default function register(stage) {
     colR = target ? { x: target.offsetLeft, y: target.offsetTop, w: target.offsetWidth, h: target.offsetHeight } : heroR;
     fl = tdFlags(section); TL = -1; vw = ctx.vw; vh = ctx.vh;
   };
-  // the stand-in: both stills fetched now (parked in data-src or loading="lazy" until the run is near), and the hero
-  // still decoded and painted (two frames) before the GLB's parse, the studio bakes and the compile take the main
+  // the stand-in: both stills fetched now (parked in data-src or loading="lazy" until the run is near), and decoded
+  // and painted (two frames) before the GLB's parse, the studio bakes and the compile take the main
   // thread and the GPU (at most 2.5 s: a slow still never holds the camera back)
   const standIn = async () => {
     const ims = [...section.querySelectorAll('img.td__still')];
     for (const im of ims) { if (!im.getAttribute('src') && im.dataset.src) im.src = im.dataset.src; im.loading = 'eager'; }
-    const h = section.querySelector('.td__still--hero');
-    if (!h || !h.getAttribute('src')) return;
-    await Promise.race([h.decode().catch(() => {}), new Promise((r) => setTimeout(r, 2500))]);
+    const dec = ims.filter((im) => im.getAttribute('src')).map((im) => im.decode().catch(() => {}));
+    if (!dec.length) return;
+    await Promise.race([Promise.all(dec), new Promise((r) => setTimeout(r, 2500))]);
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
   };
   const sc = {
@@ -91,7 +91,7 @@ export default function register(stage) {
     },
     dispose() {
       cam?.dispose(); cam = null; live.anchors3d = null; live.ready = false;
-      idPending = false; idV = -1; lastIdE = -1; intro = 0; first = false;
+      idPending = false; idV = -1; lastIdE = -1; lastIdS = -1; intro = 0; first = false;
     },
     resize(w, h, dpr) { cam?.resize(w, h, dpr); },
     update(ctx) {
@@ -110,12 +110,14 @@ export default function register(stage) {
       if (first) {
         first = false;
         intro = r.s > -1.0 && r.s < r.L + 0.6 && st.fade > 0.02 ? 1 : 0;
-        introT0 = performance.now(); introX = st.ph.explodeLin >= 0.25 ? 1 : 0;
+        introX = st.ph.explodeLin >= 0.25 ? 1 : 0;
       }
       let ph = st.ph;
       if (intro > 0) {
-        intro = Math.max(0, 1 - (performance.now() - introT0) / (window.__cam3dIntroMs || INTRO_MS));   // (QA: a slow renderer can stretch it to see it)
+        // on the stage's clock (dt ≤ 0.1 s a frame): 0.9 s at a real frame rate; a renderer under 10 fps still shows the
+        // turn in steps instead of skipping it
         const k = smooth(intro);
+        intro = Math.max(0, intro - (ctx.dt || 1 / 60) / ((window.__cam3dIntroMs || INTRO_MS) / 1000));
         Object.assign(PH, st.ph);
         if (introX) PH.explode += (1 - PH.explode) * k;
         else { PH.orbit += (1 - PH.orbit) * k; PH.explode *= 1 - k; }
@@ -130,9 +132,14 @@ export default function register(stage) {
       cam.setLayout({ x, y, w, h }, ctx.vw, ctx.vh);
       cam.setPointer(qp(ctx.pointer.x), qp(ctx.pointer.y), 1);
       cam.setFade(st.fade);
-      // the markers draw in as the parts arrive, while scrolling (see the header)
-      if (st.ph.explode < 0.93 || intro > 0) lastIdE = -1;
-      else if (lastIdE < 0 || Math.abs(st.ph.explode - lastIdE) >= 0.025) { cam.occlusion(); lastIdE = st.ph.explode; }
+      // the markers draw in as the parts arrive, while scrolling (see the header): a pass every 0.025 of explode from 0.93,
+      // one as it reaches 1 (parts still moving at 0.975 cover anchors they leave), and every third of the settle (its
+      // push and drift)
+      const e = st.ph.explode, sl = st.ph.settle;
+      if (e < 0.93 || intro > 0) { lastIdE = -1; lastIdS = -1; }
+      else if (lastIdE < 0 || Math.abs(e - lastIdE) >= 0.025 || (e > 0.999 && lastIdE <= 0.999) || Math.abs(sl - lastIdS) >= 0.34) {
+        cam.occlusion(); lastIdE = e; lastIdS = sl;
+      }
       // posed for this frame; published relative to the pin (the section adds nothing)
       live.anchors3d = cam.anchors(pinTop); live.anchorsF = ctx.frame; live.pinTop = pinTop;
       live.place3d?.(live.anchors3d);
