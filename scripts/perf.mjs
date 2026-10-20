@@ -3,7 +3,7 @@
 //                                                          immutable /assets/, as vercel.json) and measure it
 //   node scripts/perf.mjs --url http://127.0.0.1:4173/     measure a server that is already up (a production build:
 //                                                          a dev server's bytes and timings mean nothing)
-// options: --out <dir> (default qa/perf/<date-time>)  --only <parts>  --skip <parts>  --runs <n> (LCP runs, default 3)
+// options: --qm <query> (phone runs; default none)  --out <dir> (default qa/perf/<date-time>)  --only <parts>  --skip <parts>  --runs <n> (LCP runs, default 3)
 //          --windows "top,#creators,#method+0.4,…"  (smoothness windows: selector[+fraction of its height]; default: the
 //          top, then every [data-chapter] at its start, plus its middle when it is longer than 4 screens)
 //          --dur <ms> (wheel time per window, default 10000; the top window gets 1.4×)  --q "tier=2&q=high" (desktop query)
@@ -42,6 +42,7 @@ const want = (p) => only.includes(p) && !skip.includes(p);
 const RUNS = +(A.runs || 3);
 const DUR = +(A.dur || 10000);
 const DQ = A.q || 'tier=2&q=high';
+const PQ = A.qm && A.qm !== true ? A.qm : '';   // --qm: the phone runs' query (default none: what a phone gets; e.g. cam3d=1 forces Method's 3D camera on the 4-core test machine)
 const stamp = new Date().toISOString().replace(/[:T]/g, '-').slice(0, 16);
 const OUT = path.resolve(A.out || `qa/perf/${stamp}`);
 fs.mkdirSync(OUT, { recursive: true });
@@ -101,7 +102,7 @@ async function lengths(mode, still) {
   const b = await launch(still ? NOGL : GL);
   const c = await b.newContext(mode === 'phone' ? PHONE(2) : DESK(1));
   const p = await c.newPage();
-  await p.goto(withQ(still ? 'tier=0' : mode === 'phone' ? '' : DQ), { waitUntil: 'load', timeout: 120000 });
+  await p.goto(withQ(still ? 'tier=0' : mode === 'phone' ? PQ : DQ), { waitUntil: 'load', timeout: 120000 });
   await p.waitForTimeout(still ? 2500 : 5000);
   const r = await p.evaluate(() => {
     const vh = innerHeight, H = document.documentElement.scrollHeight;
@@ -152,7 +153,7 @@ async function bytes(mode, dpr, full) {
   p.on('console', (m) => { if (m.type() === 'error') errors.push(m.text().slice(0, 160)); });
   p.on('pageerror', (e) => errors.push(String(e).slice(0, 160)));
   const t0 = Date.now();
-  await p.goto(withQ(phone ? '' : DQ), { waitUntil: 'load', timeout: 120000 });
+  await p.goto(withQ(phone ? PQ : DQ), { waitUntil: 'load', timeout: 120000 });
   await p.waitForTimeout(10000);
   const size = (r) => Math.max(r.fin || 0, r.rx || 0, /\.(mp4|webm)(\?|$)/.test(r.url) ? r.raw || 0 : 0);
   const total = (f = () => true) => [...reqs.values()].filter(f).reduce((a, r) => a + size(r), 0);
@@ -208,8 +209,8 @@ async function lcp(mode, throttled) {
     await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
   }
   const start = Date.now();
-  if (throttled) { p.goto(withQ(''), { waitUntil: 'load', timeout: 120000 }).catch(() => {}); await p.waitForTimeout(20000); }
-  else { await p.goto(withQ(phone ? '' : DQ), { waitUntil: 'load', timeout: 120000 }); await p.waitForTimeout(5000); }
+  if (throttled) { p.goto(withQ(PQ), { waitUntil: 'load', timeout: 120000 }).catch(() => {}); await p.waitForTimeout(20000); }
+  else { await p.goto(withQ(phone ? PQ : DQ), { waitUntil: 'load', timeout: 120000 }); await p.waitForTimeout(5000); }
   const r = await p.evaluate(() => { const n = performance.getEntriesByType('navigation')[0]; return { lcp: window.__lcp, fcp: window.__fcp, load: n ? Math.round(n.loadEventEnd) : null }; });
   await b.close();
   const last = r.lcp[r.lcp.length - 1] || {};

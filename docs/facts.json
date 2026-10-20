@@ -1540,7 +1540,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.86 0.51 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.86 0.51 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.815 0.727 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor front_element); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC42",
@@ -1549,7 +1549,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.62 0.52 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.62 0.52 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.547 0.565 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor lens_elements); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC43",
@@ -1558,7 +1558,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.55 0.48 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.55 0.48 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.508 0.51 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor aperture); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC44",
@@ -1567,7 +1567,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.485 0.48 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.485 0.48 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.458 0.493 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor lens_mount); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC45",
@@ -1576,7 +1576,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.33 0.52 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.33 0.52 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.421 0.703 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor body_grip); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC46",
@@ -1585,7 +1585,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.405 0.18 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.405 0.18 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.427 0.103 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor evf); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC47",
@@ -1594,7 +1594,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.405 0.815 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.405 0.815 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.444 0.865 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor battery); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC48",
@@ -1603,7 +1603,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.235 0.52 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.235 0.52 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.311 0.418 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor shutter); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC49",
@@ -1612,7 +1612,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.225 0.50 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.225 0.50 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.287 0.35 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor image_sensor); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC50",
@@ -1621,7 +1621,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.21 0.55 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.21 0.55 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.247 0.433 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor ibis); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC51",
@@ -1630,7 +1630,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.155 0.50 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.155 0.50 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.21 0.272 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor main_board); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC52",
@@ -1639,7 +1639,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Camera part (name — line); anchor ≈ uv 0.068 0.52 (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (approx. uv 0.068 0.52 on teardown/camera/poster.webp); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: S6. Descriptive camera anatomy naming what the exploded render shows (uv 0.154 0.339 on teardown/camera3d/still_exploded.webp; the real-time camera places its marker on 3D anchor rear_lcd); not a claim about any model or spec. Same status as the Kit part names in ui-strings.json."
  },
  {
   "id": "DC60",
