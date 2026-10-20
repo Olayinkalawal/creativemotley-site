@@ -8,9 +8,10 @@
   #method .td__specs { margin-top: clamp(0.9rem, 2.4vh, 1.6rem); }
   #method .td__spec { padding: 8px 0 9px; }
 }
-/* short desktop screens and phones: the nine rows with their lines would not fit, so the list shows the names and the
-   lit part's line (or the hovered one's) sits under it as a caption, all lines stacked in one place (opacity only) */
-@media (min-width: 1024px) and (max-height: 820px), (max-width: 1023px) {
+/* desktop screens under ~1180 px tall and phones: the twelve rows with their lines would not fit (about 1,160 px at
+   1440), so the list shows the names and the lit part's line (or the hovered one's) sits under it as a caption, all
+   lines stacked in one place (opacity only). The same query is _teardown.js's capMode. */
+@media (min-width: 1024px) and (max-height: 1180px), (max-width: 1023px) {
   html.js #method[data-td-ready]:not(.td-static) .td__specs--lines { position: relative; padding-bottom: calc(2.9em + 14px); }
   /* no transform on the rows here (a transformed row would contain its line): they fade in without the slide */
   html.js #method[data-td-ready]:not(.td-static) .td__specs--lines .td__spec { transform: none; will-change: opacity; }
@@ -31,3 +32,16 @@
 }
 #method .td__spec .td__l { color: var(--th-mute); }
 #method .td__hero.scrim::before { inset: -26% -22% -34% -14%; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.45) 58%, rgba(0, 0, 0, 0)); }
+/* static (reduced motion, no JS), desktop: the hero still sits under the title, not behind it. It is sized so the
+   camera (rows 0.15–0.85 of the still) runs from just under the title's letters (its baseline: 0.78 of the title size
+   under the title's top) to 12 px above the screen's bottom edge, and no wider than the live orbit's camera (about
+   70% of the screen: 60vw of still); the still's black margins may run under the title and into the list's row
+   (pure black, under both) */
+@media (min-width: 1024px) {
+  :is(#method.td-static, html:not(.js) #method) .td__still--hero {
+    --t: calc(var(--nav-h) + 6vh + 0.78 * var(--t-title) + 12px);
+    --hi: min(calc((100svh - var(--t) - 12px) / 0.7), 60vw);
+    align-self: start; justify-self: center; height: var(--hi); width: calc(var(--hi) * 16 / 9); max-width: 100%;
+    margin-top: calc(var(--t) - 0.15 * var(--hi));
+  }
+}

@@ -12,7 +12,7 @@
      In use: plate:storytellers (I, its opener: the film's last frame dissolves into it), plate:creators (II),
      plate:brands (III), plate:results (VIII), plate:directors (IX, its opener), plate:apply (X).
    Every plate is a still now: the Results TV (a video texture over the old painting) went with that painting.
-   (Method is the camera teardown now, td:camera in teardowns.js: no painted plate.) */
+   (Method is the real-time 3D camera now, td:camera3d in camera3d.js: no painted plate.) */
 import { Scene, OrthographicCamera } from 'three';
 import { plateMaterial, fullscreenQuad } from '../lib/plate.js';
 import { loadTexture, avifOK } from '../lib/loaders.js';
