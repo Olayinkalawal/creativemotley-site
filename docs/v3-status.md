@@ -578,22 +578,22 @@ are exact; frame rates are relative only.
 | First load, desktop @1× / @2× · phone @2× | 0.68 / 0.78 · 0.51 MB | **0.68 / 0.78 · 0.51 MB**, no Kit request in any mode | ≤ 1.5 · ≤ 1.0 MB |
 | Full read, desktop @1× (perf.mjs pace) | 16.05 MB / 296 req | **10.85 MB / 116 req** | ≤ 18 MB |
 | The Kit's own share of it | 8.13 MB / 189 req (frame streams) | **2.93 MB / 9 req** (3 GLBs, 4 stills, kit3d.js) | |
-| The Kit, each shot held until its device drew (lab `bytes.mjs`) | {{HELD_BEFORE}} | **{{HELD_AFTER}}** | |
+| The Kit, each shot held until its device drew (lab `bytes.mjs`) | 8.12 MB (frame streams and stills) | **3.82 MB**: the four GLBs 3.56, the console's stills 0.16, two stand-in hero stills 0.07 (software GL was still loading those devices at their cuts), kit3d.js 0.03; phone path 2.56 MB (phone GLBs 2.30) | |
 | Full read, phone @2× (gated: 3D stills) | 3.92 MB (Kit 0.65) | **3.81 MB** (Kit 0.54: 8 stills) | ≤ 6 MB |
-| Full read, phone @2× with the 3D (`cam3d=1&q=high`) | 5.44 MB (camera 3D, Kit stills) | **6.34 MB** (3 of 4 phone GLBs at this pace; ~6.9 with the fourth) | ≤ 6 MB: **over** when forced |
+| Full read, phone @2× with the 3D (`cam3d=1&q=high`) | 5.44 MB (camera 3D, Kit stills) | **6.34 MB** (3 of 4 phone GLBs at this pace; ~6.75 with the fourth) | ≤ 6 MB: **over** when forced |
 | Lazy JS if every desktop scene loads (gzip -9) | 185.1 KB | **210.4 KB** (kit3d +30.5, teardowns −5.0 no longer loaded, camera3d −0.2) | 185 KB accepted for the camera |
 | Entry JS (gzip -9, index) | 26.2 KB | **25.7 KB** (the Kit's photoreal extent tables gone) | ≤ 60 KB |
 | LCP unthrottled, desktop / phone (median of 5) | 0.42 / 0.35 s | **0.39 / 0.31 s** | ≤ 1.0 s |
 | CLS while scrolling the Kit (4 windows) and Method, WebGL off and on | 0 | **0** | 0 |
 | Steady wheel in the Kit, WebGL off | 59.6–60 fps | **59.6–59.9 fps** | ≥ 50 |
 | Steady wheel in the Kit, SwiftShader (perf.mjs windows, loads included) | 7.0–9.2 fps (a textured quad) | **0.6–1.2 fps** (Method's camera in the same run: 0.6) | relative |
-| Continuous scroll through the run, every device warmed (lab `fps.mjs`, `q=low`) | {{FPS_BEFORE}} | **{{FPS_AFTER}}** (Method's camera: {{FPS_CAM}}) | relative |
+| Continuous scroll through the run, every device warmed (lab `fps.mjs`, `q=low`) | 13.7 fps | **0.31–0.32 fps** (Method's camera: 0.59 fps) | relative |
 | `dist` | 226 MB | **151 MB** | |
 
 The perf.mjs full read moves half a screen every 1.2 s; on software GL one device loads in ~8–10 s, so the headphones'
 shot passes before its GLB gets its turn (the scene loads one device at a time, the shot on screen first). On a GPU,
-where each device loads inside its prefetch window, a desktop read is about 11.8 MB and a forced-3D phone read about
-6.9 MB.
+where each device loads inside its prefetch window, a desktop read is about 11.7 MB (10.85 − 2.93 + 3.82) and a
+forced-3D phone read about 6.75 MB.
 
 ## K.2 What changed
 - **The package, as shipped.** GLBs in `public/assets/models/{mixer,mic,headphones,phone}/` (desktop and `_mobile`),
@@ -657,15 +657,17 @@ where each device loads inside its prefetch window, a desktop read is about 11.8
 
 ## K.4 Open, ranked
 1. **Real-GPU frame rate is unmeasured** (as for the camera). The lab's bench puts each Kit device at 0.5–0.7× the
-   camera's frame cost; on SwiftShader the Kit draws on par with Method. Check on an integrated-GPU laptop and a
-   mid-range phone before launch.
+   camera's frame cost; on SwiftShader the perf.mjs windows draw the Kit on par with Method (0.6–1.2 against 0.6 fps),
+   but a continuous scroll through the whole run, cuts included (two devices and two contact-shadow passes during a
+   cut), runs at about half the camera's rate (0.31 against 0.59 fps). Check on an integrated-GPU laptop and a
+   mid-range phone before launch; the levers are the camera's (stage quality, MSAA, shadow map size).
 2. **Lazy JS 210.4 KB** against the 185 KB accepted for the camera (+25.2 KB, the `kit3d` chunk). The Kit already
    shares three.js, `glb.js`, the meshopt decoder and now the scenes' rules with the camera, and loads no bloom. Sharing
    the runtime itself needs the lab: the site ships the camera's v7 module as a drop-in, the Kit's runtime is a
    config-driven fork of the camera's v5. Running the camera on `kit3d.js` with a camera config (lab port + parity check)
    would drop `camera3d.js`'s 14.7 KB (→ ~196 KB). Stripping comments and whitespace from the runtimes' GLSL at build
    would save about 2 KB more.
-3. **A phone that passes the gate reads ~6.9 MB** with the camera and all four Kit devices (the gated phone: 3.81 MB).
+3. **A phone that passes the gate reads ~6.75 MB** with the camera and all four Kit devices (the gated phone: 3.81 MB).
    If that matters, give the Kit its own, stricter phone gate, or load only the shot on screen on phones.
 4. Lab items carried over from `.lab/kit3d/INTEGRATION.md` (not touched here): the console's side wall and family tone,
    the mic's exploded brightness, the headphones' explode and diaphragm, the phone's `load()` time and hero fill; the
