@@ -49,8 +49,8 @@ export const TIER_STILL = 'still';
 /* Method's real-time camera (gl/scenes/camera3d.js). On the phone path only where the device is likely to carry it:
    at least 4 GB (navigator.deviceMemory; browsers that do not report it count as 4) and at least 6 cores. A weaker
    phone keeps the 3D stills, as at tier 0; the scene also gives up at runtime if the frame-rate governor has to step
-   all the way down to "min" while it draws. On the phone path ?cam3d=1 / ?cam3d=0 force it on or off, and turn the
-   runtime check off (QA: the test machine has 4 cores and software GL). Desktop always has it. */
+   all the way down to "min" while it draws (?q=… turns that check off). On the phone path ?cam3d=1 / ?cam3d=0 force
+   it on or off (QA: the test machine has 4 cores and software GL). Desktop always has it. */
 export const CAM3D_FORCED = Q.has('cam3d') ? Q.get('cam3d') !== '0' : null;
 export const CAM3D = !STILL || (CAM3D_FORCED ?? ((navigator.deviceMemory || 4) >= 4 && (navigator.hardwareConcurrency || 4) >= 6));
 
