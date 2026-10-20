@@ -423,3 +423,141 @@ Three of M.5's issues are fixed and live (items 1 and 2 there are closed; art lo
 Sheet: `qa/shots/v3m_best.jpg` (the six openers at rest, desktop and phone) and `qa/shots/v3-masters-sheet.jpg`
 (the encodes). The replaced masters stay beside the new ones as `*-v1.png` (SHA256SUMS updated); the paper cards'
 crops are cut from those full-resolution files at the same uv (`scripts/crops.py` SOURCE; the crops are unchanged).
+
+# 3D camera live (2026-10-20)
+Method's camera is the real-time 3D camera (`src/gl/scenes/camera3d.js` on the module `src/gl/lib/camera3d.js`, the v7
+snapshot of `.lab/cam3d`; the photoreal frame sets are out of the build). Two rounds: the integration (snapshot
+`d2dad37`), then a fix round on two critics' reviews (desktop 1440/1280/1024/1920; phone 390/360, tablet 820; tier 0 and
+reduced motion everywhere). The module and its API are unchanged: the site's art direction goes through `create()`
+options and the exported `KEYS`, so the lab's final GLB and module drop in at the same paths.
+
+## C.1 Numbers: photoreal frames → 3D (integration) → after the fix round
+`scripts/perf.mjs` on production builds; SwiftShader WebGL. Load average 27–30 for the first two columns, 4–6 for the
+last, so LCP is mostly the quieter machine; bytes are exact. "Phone" is 390×844 @2 on the 4-core test machine, which is
+below the new CAM3D gate (below), so it keeps the stills; `--qm cam3d=1` forces the 3D camera onto it.
+
+| | Photoreal frames | 3D, integration | **3D, now** | Target |
+|---|---|---|---|---|
+| First load, desktop @1× / @2× · phone @2× | 0.67 / 0.77 · 0.51 MB | 0.68 / 0.78 · 0.51 MB | **0.68 / 0.78 · 0.51 MB**, no camera asset in any mode | ≤ 1.5 · ≤ 1.0 MB |
+| Full read, desktop @1× | 16.91 MB | 16.05 MB | **16.02 MB** | ≤ 18 MB |
+| Method's own share of it | 3.96 MB / 97 req | 2.42 MB / 3 req | **2.44 MB / 4 req** (GLB 2.30, stills 0.12, camera3d.js 0.015) | |
+| Full read, phone @2× (gated: 3D stills) | 4.01 MB | — | **3.92 MB** | ≤ 6 MB |
+| Full read, phone @2× with the 3D (`cam3d=1`) | — | 5.43 MB | **5.44 MB** (phone GLB 1.49 MB) | ≤ 6 MB |
+| Lazy JS if every desktop scene loads (gzip -9) | 158.2 KB | 187.1 KB | **185.0 KB** (bloom chunk no longer loaded) | ≤ 160 KB: **over** |
+| LCP unthrottled, desktop / phone | 1.17 / 1.00 s | 1.66 / 1.28 s (load 27–30) | **0.65 / 0.51 s** (median of 5, load ~5) | ≤ 1.0 s |
+| CLS while scrolling Method | 0 | 0 | **0** | 0 |
+
+Real-GPU frame rates are still unmeasured (SwiftShader: 0.4–0.7 fps through Method on both builds, relative only).
+
+## C.2 What changed in the fix round (critics' items; D = desktop review, P = phone review)
+- **Still → 3D, no flip (D1, P2).** The stand-in still dissolves into the camera (0.5 s, `_teardown.css`), and the
+  first 3D frame drawn while a still is on screen starts at that still's own pose (the hero key, or the exploded key
+  past a quarter of the explode), then turns into the scroll's pose over 0.9 s on the stage clock (`camera3d.js`
+  intro; a renderer under 10 fps shows the turn in steps). Checked on a jump to the run's start at 1440 and 390: the
+  first 3D frame matches the still's angle and size; the following frames turn to the rear three-quarter.
+- **Coming back after an unload (D2, P1).** The scene reports `live.ready` (true once drawn, false when disposed) and
+  the section's `is-drawn` follows it both ways, also while parked far away. Method → Results → Method at 1440 and 390:
+  the exploded still (with its uv markers) shows at once and the 3D dissolves in when it has reloaded; no black
+  chapter. Kit keeps its one-way latch (untouched).
+- **No broken-image box, no empty circle (D3, P3).** Parked stills never paint (`.td__still:not([src])`), their src
+  is set 1.6 screens ahead (was 0.3), the scene's `load()` makes both stills eager and waits until they are decoded and
+  painted (≤ 2.5 s) before the GLB parse and studio bakes, and the lines and ticker wait for the still or the 3D
+  (eased in over 0.3 s). On a jump the first frame is the title alone, then the still with its lines.
+- **Markers draw in while scrolling (D4).** An id pass every 0.025 of explode from 0.93, one as it reaches 1, and every
+  third of the settle; markers fade (0.25 s) instead of popping. Stepping through s 1.70 → 2.22 at 1440 without waiting
+  for idle: 0, …, 1, 3, 3, 6, 6, 6, 10, 12, 12 (was 0 until the reader stopped, then 12 at once).
+- **Rows and markers read together (D5).** Where every marker shows (desktop, tablets) the rows carry the markers'
+  numbers (CSS counters, gold, no copy change), and the lit row's marker turns gold.
+- **Bigger in the column (D6).** `KEYS.wide.column.fill` 0.76 → 0.88 from the scene (the module untouched);
+  `data-td-frame0` 1.128 → 1.306 so the stand-in still matches. 1440: the camera lands 631 px wide (was 550).
+- **Lazy JS (D7, partly).** `bloom: false` (strength 0.05 over threshold 4 was invisible; one full-screen pass per
+  sample less): 187.1 → 185.0 KB gzip -9 for every desktop scene. Still 25 KB over the 160 KB budget: see C.5.
+- **1024–1199 (D8).** The list column is 228 px (was 290) with a 14 px gap and a slightly smaller head (4 lines at
+  1024); the camera's column gains about 75 px; 12 markers at the hold.
+- **Reduced motion, desktop (D9).** The static hero still is sized so the camera starts 16 px right of the chapter
+  index and ends ≥ 12 px from the right edge (centred where there is room); its black margin runs off under `main`'s clip.
+- **Frame lines (D11).** `data-td-box` is the union of the 3D silhouette over the orbit (s −0.45 → 0.7) at 1024 and
+  1440, plus 0.012: 0.121 0.059 0.879 0.941 (was the hero still's box).
+- **Dead weight (D12, mostly).** The build drops `public/assets/teardown/camera` (29 MB, 585 files: `dist` 251 → 226
+  MB; `vite.config.js` RETIRED) and `teardowns.js` no longer globs its set.json; `TD_EXT.camera`, `data-td-bleed` /
+  `-bleed-tall` are gone; the DC41–DC52 notes in `docs/facts.json` and `docs/copy-drafts.md` point at
+  `still_exploded.webp` and the 3D anchor ids. The folder itself stays in the repo because the camera lab still reads
+  it (`.lab/cam3d/build_cam.py` line 864, `compare.py`, `client_sheets.py`). `dist-pages/.git` is the Pages publish
+  clone (Vite keeps `.git` when it empties an outDir): left alone.
+- **A resting mouse (D13, partly).** The pointer reaches the camera in 0.02 steps, so a still mouse no longer restarts
+  the 12 samples on every eased sub-pixel move.
+- **Phone orbit fills the screen (P4).** `data-td-orbit-tall="1.34"`: on portrait screens the orbit's slot runs from
+  16 px under the title to 24 px above the bottom, 1.34 screens wide, so the camera crosses the screen with a bleed of
+  about 6 % each side (390: −27 → 417 px) instead of 85 % of the width in a band of black. The stand-in stills follow.
+- **No lines over the camera on portrait (P5).** No arch on portrait screens; the mask cuts a deep hole (0.9) round
+  the device; the great circle and the ticker stay.
+- **A bigger phone hold (P6).** Portrait explode scales from the scene (`portraitScale`: lens 0.76, free glass and iris
+  0.7, rear cards 0.74, covers 0.62, battery 0.66; every anchor still on its own part), and a tighter head and rows on
+  phones: the body 110 → about 133 px wide at 390, the column slot 338 → 373 px tall.
+- **A gate for phones (P7).** `core/env.js` CAM3D: the phone path gets the 3D only with ≥ 4 GB (or no report) and ≥ 6
+  cores; below that, the 3D stills (no GLB, no camera3d.js). At runtime, if the governor steps down to "min" while the
+  camera draws, the scene gives up (`stage.dispose`, `failed`; `data-cam3d="stills"`): checked by forcing the floor at
+  390, the hero still came back at once, no errors. `?cam3d=1|0` forces it (QA), `?q=…` turns the give-up off.
+- **Markers off desktop (P8, partly).** Tablets (portrait ≥ 768) get all twelve, numbered (820: 12 at the hold); phones
+  get the lit row's marker only, named, its label leaning to the screen's middle.
+- **360 hand-off (P9).** On portrait screens the head starts at 55 % of the hand-off (was 36 %): at 360×780 the camera
+  has risen 31 px clear of the heading by the time its first line shows (half-way in).
+- **Reduced motion, phones (P10).** The static hero still is scaled 1.36 for Method (the camera at 92 % of the width).
+- **Tier 0, phones (P11).** The two 3D stills dip through black (hero out by 25 % of the explode, exploded in from 25 %)
+  instead of a double exposure.
+- **Phone look (P12, partly).** On the phone path at the high level: paint grain on, 6 samples, exposure 1.07. Body
+  luminance at the column key, p50 / p90 / p99: 39 / 81 / 163 (tier-0 still 34 / 92 / 187; was 36 / 85 / 166); exposure
+  1.15 gives p99 168, internal scale 1.0 gives 173: the missing highlights are the phone path's lighting (no shadows,
+  scale 0.8), a lab call.
+- Not changed here (routed to the lab, `.lab/cam3d`, which the site must not edit): the front ring's grooved face
+  catching the warm side light mid-orbit (D10: raise its roughness to ≥ 0.6 or keep it out of the kicker, then re-check
+  `desk_0.20` / `desk_0.24`); rows lighting when each part actually moves (P13: add `revealed` to each `anchors()` entry,
+  an additive field; the section would then light row i at `revealed > 0.5`); and `load()` yielding between the PMREM
+  bakes, the compile and the warm-up frame (P14: one long main-thread task today, a scroll hitch in Brands on a phone).
+
+## C.3 Checks (this round)
+- Every mode: no camera asset on the first load (desktop @1×/@2×, phone; the first camera request comes as Brands
+  becomes active, or on a chapter link's hover/tap); no console errors (the blocked YouTube thumbnails aside); no
+  horizontal overflow at 1440, 1280, 1024, 1920, 390, 360, 820 (WebGL), 1440/1024/390 tier 0, 1440/1280/1024/390
+  reduced motion.
+- Markers: 12 at the hold at 1440, 1280, 1024 (and 1920), each placed by the scene on its 3D anchor; 12 at 820; the
+  lit row's one on phones.
+- Fact check passes desktop and mobile (509 strings, 47 drafts listed) and with `--drafts 0` (416 strings).
+- `npx vite build` and the Pages build pass; a full read of the Pages build under `/creativemotley-site/` gets no 404
+  on desktop or phone (gated: the 3D stills; and `?cam3d=1`: `camera_mobile.glb` loads under the base).
+- Sheets: `qa/shots/v3c_method_desk.jpg` (1440, 1280, 1024, 1920 WebGL; 1440 and 1024 tier 0; reduced motion at three
+  sizes), `qa/shots/v3c_method_mob.jpg` (390 and 360 3D, 820 tablet, a gated phone, tier 0, reduced motion) and
+  `qa/shots/v3c_best.jpg` (orbit, hand-off and take-apart with markers, desktop and phone).
+
+## C.4 Remaining issues, ranked
+1. **Real-GPU frame rate is unmeasured.** Before launch: scroll Method on an Intel Iris Xe or M1 laptop at 1440@2× and
+   on a mid-range Android and an iPhone. Under 45 fps, apply the levers in order: `paintGrain`, the shadow map size,
+   MSAA, `scale` (bloom is already off). The phone gate (≥ 6 cores, ≥ 4 GB) and the runtime give-up are guesses until
+   then.
+2. **Lazy JS is 185.0 KB against 160 KB** (gzip -9, every desktop scene): camera3d 14.9, meshopt decoder 7.1, the GLB
+   reader 2.5, three's core split. Nothing more comes out without losing the camera. Needs the director's sign-off to
+   re-baseline the lazy budget to 185 KB (the swap took 1.54 MB of images off Method for +27 KB of JS), or a
+   per-scene budget for camera3d.
+3. **Lab items** D10 (front-ring groove flare), P13 (`revealed` per anchor), P14 (yield inside `load()`), and the phone
+   look (P12: p99 163 against the still's 187).
+4. **`public/assets/teardown/camera`** (29 MB) can be deleted once the lab no longer reads it; then drop it from
+   RETIRED in `vite.config.js`.
+5. On phones only the lit row's part is marked, and at the hold that is always the last row (Rear screen); with P13
+   the lit row (and its marker) would follow the parts during the explode.
+6. Software GL (this machine): the camera takes ~30 s to appear after the run nears; the still holds the chapter
+   meanwhile, and the jump test shows it, not a blank stage.
+
+## C.5 When the final (v7+) camera lands from the lab
+```bash
+cd /home/user/creativemotley-site
+cp .lab/cam3d/camera.glb .lab/cam3d/camera_mobile.glb public/assets/models/camera/
+cp .lab/cam3d/stills/still_hero.webp .lab/cam3d/stills/still_exploded.webp public/assets/teardown/camera3d/
+cp .lab/cam3d/camera3d.js .lab/cam3d/glb.js src/gl/lib/
+# not scene_camera3d.js: src/gl/scenes/camera3d.js is the site's scene now (stand-in, intro, markers, phone options);
+# if the lab changed its template, merge by hand: diff .lab/cam3d/scene_camera3d.js src/gl/scenes/camera3d.js
+```
+Then, only if the lab moved the camera's keys or re-rendered the stills: re-measure `data-td-frame0` (the stand-in at
+the column key: 0.88 of the column, set in the scene), `data-td-box` (the 3D camera's silhouette over the orbit,
+`cam.partBoxes()` at s −0.45 → 0.7, as uv of the hero framing in `live.orb`) and the twelve `data-anchor` uvs on `still_exploded.webp`; check that `KEYS.wide.column` and the part names in
+the scene's `PORTRAIT` still exist. Verify with the fact check (desktop, mobile, `--drafts 0`), `npx vite build`, the
+Pages build and a pass through Method at 1440 and 390 (`?cam3d=1&q=high`).
