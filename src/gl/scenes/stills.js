@@ -15,6 +15,7 @@ import { fullscreenQuad } from '../lib/plate.js';
 import { texture } from '../lib/loaders.js';
 import { filmRanges, frameAt } from '../lib/filmRanges.js';
 import { smooth, clamp } from '../../core/scroll.js';
+import { CAM3D } from '../../core/env.js';
 
 /* the art track's manifests (scripts/art.py → public/assets/scenes/<chapter>/manifest.json), bundled at build time;
    only the phone fields are imported: phone { avif: [{ src, w, h }], webp: [...] }, phoneFocus [x, y] (the view
@@ -201,5 +202,5 @@ function stillScene(id, stage) {
 
 export default function register(stage) {
   const ids = new Set([...document.querySelectorAll('[data-scene]')].map((el) => el.dataset.scene));
-  for (const id of ids) if (id !== 'td:camera3d') stillScene(id, stage);   // the 3D camera draws itself (phones too: gl/boot.js)
+  for (const id of ids) if (id !== 'td:camera3d' || !CAM3D) stillScene(id, stage);   // the 3D camera draws itself where the phone can carry it (gl/boot.js)
 }

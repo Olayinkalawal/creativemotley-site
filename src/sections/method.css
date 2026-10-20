@@ -8,6 +8,21 @@
   #method .td__specs { margin-top: clamp(0.9rem, 2.4vh, 1.6rem); }
   #method .td__spec { padding: 8px 0 9px; }
 }
+/* narrow desktops (1024-1199): the list shows the names only (the lit part's line as a caption), so the column can be
+   narrower and the camera's column wider (about +75 px at 1024) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  #method { --td-col-w: 228px; --td-gap: 14px; }
+  #method .td__head { font-size: clamp(1.25rem, 1.95vw, 1.45rem); }
+}
+/* the rows are numbered where the camera's part markers carry those numbers (desktop, tablets: .td--mk with every
+   marker; sections/_teardown.js), so 08 on the camera reads as Shutter without counting rows (CSS counters: the copy
+   is unchanged) */
+html.js #method.td--mk[data-td-ready]:not(.td-static) .td__specs { counter-reset: part; }
+html.js #method.td--mk[data-td-ready]:not(.td-static) .td__spec { counter-increment: part; }
+html.js #method.td--mk:not(:has(.td__mk--name))[data-td-ready]:not(.td-static) .td__spec b::before {
+  content: counter(part, decimal-leading-zero); display: inline-block; min-width: 2.1em;
+  font: var(--f-small); letter-spacing: var(--ls-caps); color: var(--gold); font-variant-numeric: tabular-nums;
+}
 /* desktop screens under ~1180 px tall and phones: the twelve rows with their lines would not fit (about 1,160 px at
    1440), so the list shows the names and the lit part's line (or the hovered one's) sits under it as a caption, all
    lines stacked in one place (opacity only). The same query is _teardown.js's capMode. */
@@ -27,6 +42,12 @@
 }
 @media (max-width: 1023px) {
   html.js #method[data-td-ready]:not(.td-static) .td__specs--lines .td__l { left: 28px; }
+  /* phones: a tighter head and rows buy the camera's hold 60-80 px (the column slot follows the copy's top) */
+  html.js #method[data-td-ready]:not(.td-static) .td__head { font-size: clamp(1.3rem, 6.2vw, 1.6rem); }
+  html.js #method[data-td-ready]:not(.td-static) .td__spec { padding: 5px 0 6px; }
+  /* static (reduced motion, no JS): the 3D hero still's camera spans 0.674 of its frame: 1.36 puts it at ~92 % of the
+     width (the photoreal still's 1.5 ran it off both edges) */
+  :is(#method.td-static, html:not(.js) #method) .td__still--hero { transform: scale(1.36); }
   /* static (reduced motion, no JS): every part with its line, one column */
   :is(#method.td-static, html:not(.js) #method) .td__specs--lines { grid-template-columns: minmax(0, 1fr); }
 }
@@ -41,7 +62,10 @@
   :is(#method.td-static, html:not(.js) #method) .td__still--hero {
     --t: calc(var(--nav-h) + 6vh + 0.78 * var(--t-title) + 12px);
     --hi: min(calc((100svh - var(--t) - 12px) / 0.7), 60vw);
-    align-self: start; justify-self: center; height: var(--hi); width: calc(var(--hi) * 16 / 9); max-width: 100%;
+    /* centred where there is room; otherwise the camera itself (0.163 into the still) starts 16 px right of the
+       chapter index, as the live orbit's slot does */
+    align-self: start; justify-self: start; height: var(--hi); width: calc(var(--hi) * 16 / 9); max-width: 100%;
+    margin-left: max(calc((100% - var(--hi) * 16 / 9) / 2), calc(var(--rail-w) + 16px - 0.163 * var(--hi) * 16 / 9));
     margin-top: calc(var(--t) - 0.15 * var(--hi));
   }
 }

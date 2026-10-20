@@ -10,16 +10,18 @@
      Stills (tier 0, reduced motion, and the stand-in until the 3D draws): teardown/camera3d/still_*.webp, rendered from
      the 3D at its hero and exploded keys, so every path shows the same camera. Each part's data-anchor3d names its 3D
      anchor (the scene places those markers); data-anchor ("u v depth leader") is the same point on still_exploded.webp
-     (the markers' stand-in until the 3D draws, and tier 0). data-td-bleed / -bleed-tall: how far (fraction of the
-     screen's width) the stills may run past the screen's edge in the column phase. data-td-orbit-fill: the 3D camera's largest fill of its slot while
+     (the markers' stand-in until the 3D draws, and tier 0). data-td-orbit-fill: the 3D camera's largest fill of its slot while
      the title shows (camera3d.js KEYS.wide.start.fill): the orbit's slot is lowered and shortened so the camera never
-     runs under the title's letters (sections/_teardown.js). data-wipe: the black stage is a sheet that scrolls off
+     runs under the title's letters (sections/_teardown.js). data-td-orbit-tall: on portrait screens the orbit's slot
+     runs from under the title to the bottom and is this many screens wide, so the camera crosses the screen with a
+     bleed off both sides. data-td-frame0 matches the scene's column key (0.88 of the column: gl/scenes/camera3d.js).
+     data-wipe: the black stage is a sheet that scrolls off
      Showcase (the stage splits the two at its edge), so the camera leaves with its list.
      Choreography: src/sections/_teardown.js + src/gl/lib/tdcore.js; scene: src/gl/scenes/camera3d.js (module src/gl/lib/camera3d.js). -->
 <section class="chapter td td--open" id="method" data-chapter data-td data-td-open data-wipe data-theme="dark" data-scene="td:camera3d" data-plate="ink"
   aria-labelledby="method-title" style="--td-run:330svh; --td-run-m:280svh" data-td-dev="camera3d"
-  data-td-hero="1 0 0" data-td-hero-tall="1.276 0 0" data-td-frame0="1.128 0 0" data-td-frame0-tall="1.246 0 0" data-td-frame="1.278 0 0" data-td-frame-tall="1.194 0 0"
-  data-td-bleed="0.1" data-td-bleed-tall="0" data-td-orbit-fill="0.75"
+  data-td-hero="1 0 0" data-td-hero-tall="1.276 0 0" data-td-frame0="1.306 0 0" data-td-frame0-tall="1.246 0 0" data-td-frame="1.278 0 0" data-td-frame-tall="1.194 0 0"
+  data-td-orbit-fill="0.75" data-td-orbit-tall="1.34"
   data-td-box="0.163 0.15 0.837 0.85" data-td-pbox="0.14 0.031 0.86 0.969">
   <div class="td__run" data-td-run>
     <div class="td__pin">

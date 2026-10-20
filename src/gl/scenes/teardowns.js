@@ -21,7 +21,8 @@ import { FrameStream } from '../lib/frameStream.js';
 import { loadTexture, avifOK } from '../lib/loaders.js';
 import { TD_ASPECT, tdLive, tdRun, tdFlags, tdShots, tdDev, tdTimeline, tdState, tdOrbitFrame, tdExplodeFrame, tdIndex, tdFraming, tdFit, tdView, tdContain, tdLerpRect, tdPinTop } from '../lib/tdcore.js';
 
-const SETS = import.meta.glob('/public/assets/teardown/*/v3/set.json', { eager: true, import: 'default' });
+// (not the retired camera set: Method's camera is real-time 3D, and the build drops its old frames: vite.config.js)
+const SETS = import.meta.glob(['/public/assets/teardown/*/v3/set.json', '!/public/assets/teardown/camera/**'], { eager: true, import: 'default' });
 const setOf = (dev) => SETS[`/public/assets/teardown/${dev}/v3/set.json`] || null;
 const pad = (i) => String(i).padStart(4, '0');
 const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);

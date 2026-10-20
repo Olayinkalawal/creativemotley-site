@@ -22,8 +22,23 @@ function includes() {
   };
 }
 
+/* public/ folders the page no longer uses but that stay in the repo for now (the build leaves them out of the output):
+   assets/teardown/camera, the photoreal camera's frame sets (29 MB, 585 files), replaced by the real-time camera
+   (assets/models/camera, assets/teardown/camera3d); the camera lab (.lab/cam3d: build_cam.py, compare.py,
+   client_sheets.py) still reads them. Delete the folder (git rm) once the lab is done with it, then this list. */
+const RETIRED = ['assets/teardown/camera'];
+function retired() {
+  let out = 'dist';
+  return {
+    name: 'cm-retired-public',
+    apply: 'build',
+    configResolved(c) { out = path.resolve(c.root, c.build.outDir); },
+    closeBundle() { for (const d of RETIRED) fs.rmSync(path.join(out, d), { recursive: true, force: true }); },
+  };
+}
+
 export default defineConfig({
-  plugins: [includes(), threeSlim()],   // threeSlim: build only (scripts/three-slim.mjs)
+  plugins: [includes(), threeSlim(), retired()],   // threeSlim: build only (scripts/three-slim.mjs)
   build: {
     target: 'es2020',
     assetsInlineLimit: 0,
