@@ -561,3 +561,114 @@ the column key: 0.88 of the column, set in the scene), `data-td-box` (the 3D cam
 `cam.partBoxes()` at s −0.45 → 0.7, as uv of the hero framing in `live.orb`) and the twelve `data-anchor` uvs on `still_exploded.webp`; check that `KEYS.wide.column` and the part names in
 the scene's `PORTRAIT` still exist. Verify with the fact check (desktop, mobile, `--drafts 0`), `npx vite build`, the
 Pages build and a pass through Method at 1440 and 390 (`?cam3d=1&q=high`).
+
+# The Kit in real time (2026-10-20)
+The Kit's four devices (console, microphone, headphones, phone) are real-time 3D: one stage scene, `td:kit`
+(`src/gl/scenes/kit3d.js`), on the Kit runtime (`src/gl/lib/kit3d.js` + `kit3d_devices.js`, byte-identical to
+`.lab/kit3d`'s package: the camera's v5 runtime made config-driven, with the console's dialect folded in).
+`python3 -I .lab/kit3d/kit_apply.py --check` passed on today's `src/`, so the wiring went in by the script; then the
+Kit got the camera's behaviours, sharing the camera's code rather than copying it (K.2). Method is unchanged.
+
+## K.1 Numbers: photoreal Kit (HEAD 154e73b's build) → real-time Kit
+`scripts/perf.mjs` on production builds, SwiftShader WebGL, the same machine back to back (load average 2–3). Bytes
+are exact; frame rates are relative only.
+
+| | Photoreal Kit | **Real-time Kit** | Target |
+|---|---|---|---|
+| First load, desktop @1× / @2× · phone @2× | 0.68 / 0.78 · 0.51 MB | **0.68 / 0.78 · 0.51 MB**, no Kit request in any mode | ≤ 1.5 · ≤ 1.0 MB |
+| Full read, desktop @1× (perf.mjs pace) | 16.05 MB / 296 req | **10.85 MB / 116 req** | ≤ 18 MB |
+| The Kit's own share of it | 8.13 MB / 189 req (frame streams) | **2.93 MB / 9 req** (3 GLBs, 4 stills, kit3d.js) | |
+| The Kit, each shot held until its device drew (lab `bytes.mjs`) | {{HELD_BEFORE}} | **{{HELD_AFTER}}** | |
+| Full read, phone @2× (gated: 3D stills) | 3.92 MB (Kit 0.65) | **3.81 MB** (Kit 0.54: 8 stills) | ≤ 6 MB |
+| Full read, phone @2× with the 3D (`cam3d=1&q=high`) | 5.44 MB (camera 3D, Kit stills) | **6.34 MB** (3 of 4 phone GLBs at this pace; ~6.9 with the fourth) | ≤ 6 MB: **over** when forced |
+| Lazy JS if every desktop scene loads (gzip -9) | 185.1 KB | **210.4 KB** (kit3d +30.5, teardowns −5.0 no longer loaded, camera3d −0.2) | 185 KB accepted for the camera |
+| Entry JS (gzip -9, index) | 26.2 KB | **25.7 KB** (the Kit's photoreal extent tables gone) | ≤ 60 KB |
+| LCP unthrottled, desktop / phone (median of 5) | 0.42 / 0.35 s | **0.39 / 0.31 s** | ≤ 1.0 s |
+| CLS while scrolling the Kit (4 windows) and Method, WebGL off and on | 0 | **0** | 0 |
+| Steady wheel in the Kit, WebGL off | 59.6–60 fps | **59.6–59.9 fps** | ≥ 50 |
+| Steady wheel in the Kit, SwiftShader (perf.mjs windows, loads included) | 7.0–9.2 fps (a textured quad) | **0.6–1.2 fps** (Method's camera in the same run: 0.6) | relative |
+| Continuous scroll through the run, every device warmed (lab `fps.mjs`, `q=low`) | {{FPS_BEFORE}} | **{{FPS_AFTER}}** (Method's camera: {{FPS_CAM}}) | relative |
+| `dist` | 226 MB | **151 MB** | |
+
+The perf.mjs full read moves half a screen every 1.2 s; on software GL one device loads in ~8–10 s, so the headphones'
+shot passes before its GLB gets its turn (the scene loads one device at a time, the shot on screen first). On a GPU,
+where each device loads inside its prefetch window, a desktop read is about 11.8 MB and a forced-3D phone read about
+6.9 MB.
+
+## K.2 What changed
+- **The package, as shipped.** GLBs in `public/assets/models/{mixer,mic,headphones,phone}/` (desktop and `_mobile`),
+  3D stills in `public/assets/teardown/{mixer,mic,headphones,phone}3d/`, runtime and configs in `src/gl/lib/`, the
+  scene in `src/gl/scenes/kit3d.js`. `kit_apply.py`: `boot.js` (registry line; on phones under the camera's CAM3D gate),
+  `teardowns.js` / `stills.js` (skip `td:kit`), `_teardown.js` (a shot's anchors place that shot's markers; the 3D
+  stills' dip for every `*3d` device; stills per shot), `_teardown.css` (the stand-in dissolves for `td:kit` too) and
+  `kit.html` (dev ids `mixer3d` …, framing keys on the 3D stills, 24 rows with `data-anchor3d` and a uv on
+  `still_exploded.webp`, `data-td-orbit-fill="0.8"`).
+- **Shared with the camera** (`gl/lib/tdcore.js`, already imported by both scenes): `tdIdDue` (the id-pass schedule:
+  every 0.025 of explode from 0.93, one as it reaches 1, every third of the settle; the package's Kit scene had only the
+  first rule), `tdIntroPose` + `TD_INTRO_MS` (the turn from the still's pose), `tdStandIn` (stills eager, decoded and
+  painted, ≤ 2.5 s), `tdGiveUp` (phones: the governor at "min" gives up unless `?q=`; the package's Kit also skipped the
+  give-up under `?cam3d=`, it now follows the camera's rule) and `tdPointerStep`. `gl/scenes/camera3d.js` calls them
+  with unchanged behaviour: Method's marker draw-in at 1440 is the same sequence as HEAD's (0, 0, 0, 1, 3, 5, 7, 9, 11,
+  12, 12, 12), 12 at the hold; the frames match HEAD's.
+- **Still → 3D on the stage clock.** The package timed the Kit's intro turn and stand-in cross-fade by wall clock, so a
+  slow renderer skipped the turn (the first 3D frame already at the scroll's pose, the still ghosting behind it). Both
+  run on `ctx.dt` (≤ 0.1 s a frame) like the camera's intro: on a jump the first 3D frame matches the still and turns
+  into the scroll's pose over the next frames.
+- **Still fallback.** The scene's `live.ready` drives the section's two-way `is-drawn` (the Kit's one-way latch is
+  gone): after an unload (Kit → Apply → back to the mic) the shot's still and its uv markers show at once, then the 3D
+  dissolves in; the phone give-up (`data-kit3d="stills"`) brings the stills back the same way.
+- **Numbered rows, gold lit marker.** Method's counter rules moved from `method.css` to `_teardown.css` (any `.td--mk`
+  run whose markers all show: desktop, tablets), so the Kit's rows read 01–06 like its markers; the lit row and its
+  marker turn gold (shared). Phones: the lit row's marker only, named, as for the camera.
+- **Stills per shot, both ways.** A shot's pair loads from 1.6 screens before it to 0.6 after the next cut (the package
+  had no upper bound: a return from below fetched all eight). On phones the stills are parked as on desktop where CAM3D
+  lets a scene draw (a 3D phone no longer fetches the eight Kit stills it never shows); a gated phone keeps the markup's
+  `loading="lazy"`.
+- **Retired from the build.** `vite.config.js` RETIRED adds `assets/teardown/{mixer,mic,headphones,phone}` (83 MB, 2,140
+  files). Nothing live needs them: `kit.html` points at the 3D stills, `teardowns.js` no longer globs their `set.json`
+  (no run uses `teardowns.js` now; it stays as the frame-stream renderer), and `tdcore.js`'s `TD_EXT` tables for them
+  are gone. The folders stay in the repo for the device labs (`.lab/kit3d/<device>/compare.py`).
+- **Reduced motion.** The console's static hero gets Method's D9 rule on desktop (under the title, clear of the chapter
+  index; HEAD's photoreal still was `cover` under the title, over the index) and 1.15 on phones (~92 % of the width,
+  as Method's 1.36); `kit.css`.
+- Copy unchanged; `docs/ui-strings.json`'s note names the 3D devices, their stills and anchors.
+
+## K.3 Checks
+- **The run** (production build, `?tier=2&q=high`) at 1440×900, 1280×800, 1024×768, 1920×1080: the console's orbit under
+  "Kit" with the lines and ticker, the hand-off, the take-apart beside its list, a cut on each colour key, each device
+  apart with **6 markers on its parts** at every hold, none during the cuts, the ride-out into Results. Devices loaded
+  ±1 (the rest disposed). No horizontal overflow, no console errors (the blocked YouTube thumbnails aside).
+- **Phones and tablets** (`?cam3d=1&q=high`: this machine is below the gate): 390×844 and 360×780 run end to end on the
+  phone GLBs, the lit row's marker named on its part while each device comes apart; 820×1180 shows all six numbered.
+  The gated phone (default here) gets the 3D stills only: no `kit3d` chunk, no GLB.
+- **The camera's behaviours on the Kit** (1440): a jump into the orbit shows the hero still at once, then the first 3D
+  frame at the still's pose, turning; a jump into the mic loads the mic first, with its exploded still and uv markers
+  meanwhile; markers draw in while scrolling (0, 2, 4, 5, 6, 6 … over s 1.200 → 1.475 without waiting for idle); unload
+  and return as above; forcing the governor to "min" on a 3D phone gives up to the stills at once, no errors.
+- **Tier 0** (1440, 1024, 390) and **reduced motion** (1440, 1280, 1024, 1920, 390, 360): complete, no Kit 3D requested
+  (reduced: no stage at all), no overflow, no errors. Method intact in both.
+- **Fact check** desktop and mobile (509 strings, 47 drafts) and `--drafts 0` (416): pass, unchanged.
+- **Builds**: `npx vite build` passes; the Pages build under `/creativemotley-site/` serves 0 404s on a full desktop read
+  and a full 3D phone read, the GLBs loading under the base. (Its desktop read is 13.2 MB against the root build's
+  10.85 MB: it fetches the 1200-px poster AVIFs in addition; not the Kit's, which match.)
+- Sheets: `qa/shots/v3k_kit_desk.jpg` (the run at 1440, 1280, 1024, 1920; the jump, unload and draw-in; tier 0;
+  reduced motion; Method now vs HEAD) and `qa/shots/v3k_kit_mob.jpg` (390 and 360 3D, the phone markers, 820 tablet,
+  the gated phone and the give-up, tier 0, reduced motion, Method on the phone).
+
+## K.4 Open, ranked
+1. **Real-GPU frame rate is unmeasured** (as for the camera). The lab's bench puts each Kit device at 0.5–0.7× the
+   camera's frame cost; on SwiftShader the Kit draws on par with Method. Check on an integrated-GPU laptop and a
+   mid-range phone before launch.
+2. **Lazy JS 210.4 KB** against the 185 KB accepted for the camera (+25.2 KB, the `kit3d` chunk). The Kit already
+   shares three.js, `glb.js`, the meshopt decoder and now the scenes' rules with the camera, and loads no bloom. Sharing
+   the runtime itself needs the lab: the site ships the camera's v7 module as a drop-in, the Kit's runtime is a
+   config-driven fork of the camera's v5. Running the camera on `kit3d.js` with a camera config (lab port + parity check)
+   would drop `camera3d.js`'s 14.7 KB (→ ~196 KB). Stripping comments and whitespace from the runtimes' GLSL at build
+   would save about 2 KB more.
+3. **A phone that passes the gate reads ~6.9 MB** with the camera and all four Kit devices (the gated phone: 3.81 MB).
+   If that matters, give the Kit its own, stricter phone gate, or load only the shot on screen on phones.
+4. Lab items carried over from `.lab/kit3d/INTEGRATION.md` (not touched here): the console's side wall and family tone,
+   the mic's exploded brightness, the headphones' explode and diaphragm, the phone's `load()` time and hero fill; the
+   console fills its orbit slot nearly edge to edge mid-orbit.
+5. Not given to the Kit (not in this brief): Method's P4 portrait orbit slot (`data-td-orbit-tall`), so on phones the
+   console orbits at about 60 % of the width inside the great circle.
