@@ -1,5 +1,5 @@
 {
- "//": "Masters, modernised (2026-10-20): the six chapter paintings for scripts/art.py --config. The masters are local retouches, not on the CDN: they live in .art/masters-2026-10-20/ (git-ignored, ~263 MB; SHA256SUMS beside them). Rebuild: python3 scripts/art.py --config scripts/art-masters.json --depth /home/user/models/midas_small.onnx (writes public/assets/scenes/<chapter>/ and merges index.json), then python3 scripts/depth-directors.py (Directors' depth is hand-layered). focus/phoneFocus: x, y from the top-left of each frame.",
+ "//": "Masters, modernised (2026-10-20): the six chapter paintings for scripts/art.py --config. The masters are local retouches, not on the CDN: they live in .art/masters-2026-10-20/ (git-ignored, ~320 MB; SHA256SUMS beside them; the *-v1.png files are the masters these replaced in the 2026-10-20 painting fixes, kept for the record and for scripts/crops.py). Rebuild: python3 scripts/art.py --config scripts/art-masters.json --depth /home/user/models/midas_small.onnx (writes public/assets/scenes/<chapter>/ and merges index.json), then python3 scripts/depth-directors.py (Directors' depth is hand-layered). focus/phoneFocus: x, y from the top-left of each frame.",
  "storytellers": {
   "name": "I Storytellers: The School of Athens, now",
   "masterpiece": "after Raphael, The School of Athens (1509-11)",
@@ -51,8 +51,8 @@
   "masterpiece": "after Leonardo da Vinci, Mona Lisa (c. 1503-19)",
   "desktop": {
    "src": "repo:.art/masters-2026-10-20/creators-desktop.png",
-   "note": "Nano Banana Pro 4K edit chain 88f177c9 > f931edb0 > 506535aa, then local retouch (neckline, camera badge, lavalier, sky seam): masters/creators/d7_r3.png",
-   "pick": "creators/d7_r3.png"
+   "note": "Wider for 4:3 (painting fixes 2026-10-20): the live master (Nano Banana Pro 4K edit chain 88f177c9 > f931edb0 > 506535aa + local retouch, d7_r3) at 0.88 in the lower right, 12% new valley on the left and sky on top from 2K job fda32678 (2.2x upscale, craquelure and grain); seams repaired locally (column, the sky over her head, the lower-left lake, the parapet, the left join's crackle): masters/creators/wide_d_r2.png",
+   "pick": "creators/wide_d_r2.png"
   },
   "phone": {
    "src": "repo:.art/masters-2026-10-20/creators-phone.png",
@@ -60,8 +60,8 @@
    "pick": "creators/p1_r3.png"
   },
   "focus": [
-   0.69,
-   0.3
+   0.72,
+   0.36
   ],
   "phoneFocus": [
    0.56,
@@ -71,8 +71,8 @@
   "titleBox": [
    0.04,
    0.04,
-   0.46,
-   0.28
+   0.62,
+   0.3
   ],
   "phoneTitle": "top",
   "phoneTitleBox": [
@@ -86,9 +86,9 @@
    "phone": "dark"
   },
   "key": "#9A6A2A",
-  "note": "Title zone moved up from the judge's mid-height box (0.06 0.22 0.46 0.56) to the pale sky band (0.04 0.04 0.46 0.28), because the Creators opener sets its title near the top: the sky band is calmer (luma sd 14 vs 34) and reads better with dark ink (worst decile 8.9:1 vs 3.9:1). The mid-height valley still works if the title is set lower. Dark ink. Optional light ivory scrim (about 0.3, from the left edge to u 0.56) also softens what is left of the sky seam near u 0.50. Phone: dark ink in the sky, dek above v 0.21.",
+  "note": "Desktop (wider canvas, 2026-10-20 fixes): dark ink on the pale sky and haze; her hair starts at u 0.661 (the fitted title stops at u 0.645), her face at (0.72, 0.36), the column at the right edge. No scrim. Phone: dark ink in the sky, dek above v 0.21.",
   "scrim": {
-   "desktop": "none needed; optional ivory ~0.3 from the left edge to u 0.56 hides the faint sky seam at u 0.50"
+   "desktop": "none needed"
   }
  },
  "brands": {
@@ -96,8 +96,8 @@
   "masterpiece": "after Jan van Eyck, The Arnolfini Portrait (1434)",
   "desktop": {
    "src": "repo:.art/masters-2026-10-20/brands-desktop.png",
-   "note": "Nano Banana Pro 4K edit 2c6c6c5e > 322047e0, then local retouch (seal, chair, mirror, painted skin, window-wall glaze, craquelure): masters/brands/d5_r3.png",
-   "pick": "brands/d5_r3.png",
+   "note": "Wider room (painting fixes 2026-10-20): the live master (Nano Banana Pro 4K edit 2c6c6c5e > 322047e0 + local retouch, d5_r3) registered at 0.67 into 4K job fbcc3a18 (a zoom-out of the room), the outer room from 2K job 1afbee35, a shadow glaze over the window wall; seams repaired locally (middle window, bed curtain, far-left sill): masters/brands/wide_d_r2.png",
+   "pick": "brands/wide_d_r2.png",
    "widths": [
     2048,
     2880,
@@ -119,8 +119,8 @@
    }
   },
   "focus": [
-   0.69,
-   0.36
+   0.64,
+   0.58
   ],
   "phoneFocus": [
    0.52,
@@ -128,9 +128,9 @@
   ],
   "titleSide": "left",
   "titleBox": [
-   0.07,
-   0.08,
-   0.36,
+   0.04,
+   0.05,
+   0.47,
    0.4
   ],
   "phoneTitle": "top",
@@ -145,9 +145,9 @@
    "phone": "light"
   },
   "key": "#6E1418",
-  "note": "Desktop: light ink over a dark gradient scrim on the window wall (u 0-0.52, v 0-0.45); the far-left window and the middle window stay the brightest parts of the zone. Phone: the title box ends at v 0.19, above the chandelier.",
+  "note": "Desktop (wider room, 2026-10-20 fixes): cream title and dek on the glazed window wall and the shadowed ceiling (u 0-0.47); the couple stands right of it (u 0.485-0.827, his hat top at v 0.43), the convex mirror at (0.62, 0.55), the chandelier candle at (0.637, 0.365). The site's title box at rest (about u 0.20-0.64, v 0.06-0.40) measures 8.8:1 worst decile bare. Phone: the title box ends at v 0.19, above the chandelier.",
   "scrim": {
-   "desktop": "dark gradient ~0.3-0.45 over u 0-0.52, v 0-0.45 (window glow at far left and middle)"
+   "desktop": "optional: the glaze in the master carries the title; at most a ~0.2 dark gradient over u 0-0.47, v 0-0.40"
   }
  },
  "results": {
@@ -209,8 +209,8 @@
   },
   "phone": {
    "src": "repo:.art/masters-2026-10-20/directors-phone.png",
-   "note": "9:16 recomposition from da8b8160, job add24dd7, local retouch (displays, sundial, hymn book; craquelure, varnish, grain), then the monitor given its own abstract light back and the crest plaque and sundial marks removed: masters/directors/final_p.png",
-   "pick": "directors/final_p.png",
+   "note": "9:16 recomposition from da8b8160, job add24dd7, local retouch (displays, sundial, hymn book; craquelure, varnish, grain; monitor light, crest plaque and sundial marks removed: final_p), then (painting fixes 2026-10-20) the second empty black director's chair with a folded navy velvet jacket over its arm, right of the stand, composited from 4K job 2be55d4f: masters/directors/two_chairs_p.png",
+   "pick": "directors/two_chairs_p.png",
    "finish": {
     "shadowLift": 4,
     "greenSat": 0.88,
@@ -282,7 +282,7 @@
    0.48
   ],
   "phoneFocus": [
-   0.58,
+   0.5,
    0.58
   ],
   "titleSide": "left",
@@ -304,7 +304,7 @@
    "phone": "light"
   },
   "key": "#3F4D1F",
-  "note": "Cream ink on the plain green velvet and damask, no scrim. Desktop: the kit tops out at v 0.29-0.30 (from u 0.53) and the left chair top is at v 0.43 (it starts at u ~0.38), below the box; frame with the focus left (about u 0.40) at the opener so a left-set title clears the kit. Phone: dark velvet damask down to the monitor top at v ~0.35. The phone is a different set from the desktop (p3-based); each viewport shows only one."
+  "note": "Cream ink on the plain green velvet and damask, no scrim. Desktop: the kit tops out at v 0.29-0.30 (from u 0.53) and the left chair top is at v 0.43 (it starts at u ~0.38), below the box; frame with the focus left (about u 0.40) at the opener so a left-set title clears the kit. Phone: dark velvet damask down to the monitor top at v ~0.35. The phone is a different set from the desktop (p3-based); each viewport shows only one. Phone (2026-10-20 fixes): both empty chairs flank the two-tier stand (right one with a folded jacket); phoneFocus x 0.50 keeps both in at 390 and 360."
  },
  "apply": {
   "name": "X Apply: The Birth of Venus, live",
@@ -354,5 +354,6 @@
   "note": "The site's one light painting: dark ink on the pale sky, desktop and phone. Phone: the wind drapery starts at v ~0.32 and the tree at v ~0.35; the attendant's face sits at u 0.93-1.0 and crops away on screens taller than 9:16, so phoneFocus u 0.52 keeps both wind-pair faces (u 0.14-0.28) in."
  },
  "//phoneFocus": "2026-10-20 review: brands phoneFocus y 0.55 -> 0.47 and apply 0.62 -> 0.50. Phones (narrower than 9:16) are fitted by height, so y moves only tablets (fitted by width): there it drops the Brands chandelier below the dek and the Apply wind pair below the dek. brands, results and apply add a 3840 desktop encode (their keys zoom to 1.48 / 1.7 / 1.56, so a 2x screen would upscale the 2880).",
- "//finish": "2026-10-20 review: the Brands and Directors portraits read photographic beside Storytellers, Creators and Apply on a phone, so art.py lays an oil finish over those two masters before encoding (phone.finish: a warm umber lift in the deep shadows, greens 12% less saturated, a slight soften, a craquelure network at ~70 px cells on the 1170 encode); phone.finish.shadows: the Directors portrait's anamorphic film reel (a pale blurred smear at the screen's foot on phones, read as a rendering fault) sinks into the table's shadow: a feathered polygon around the reel and its smear, darkened by 0.55, warmer and flatter (2026-10-20 review)."
+ "//finish": "2026-10-20 review: the Brands and Directors portraits read photographic beside Storytellers, Creators and Apply on a phone, so art.py lays an oil finish over those two masters before encoding (phone.finish: a warm umber lift in the deep shadows, greens 12% less saturated, a slight soften, a craquelure network at ~70 px cells on the 1170 encode); phone.finish.shadows: the Directors portrait's anamorphic film reel (a pale blurred smear at the screen's foot on phones, read as a rendering fault) sinks into the table's shadow: a feathered polygon around the reel and its smear, darkened by 0.55, warmer and flatter (2026-10-20 review).",
+ "//fix": "2026-10-20 painting fixes (client-approved): brands desktop is a wider 16:9 room (the live master registered into Nano Banana Pro 4K job fbcc3a18 at 0.67, the outer room from 2K job 1afbee35, window wall glazed; local seam repairs at the middle window, the bed curtain and the far-left sill), so the couple sits right of the title at rest; creators desktop is the live master at 0.88 with 12% more valley on the left and sky on top (2K job fda32678; seam repairs at the column, the sky over her head, the lower-left lake and the parapet), so 4:3 screens keep her face in; directors phone adds the second empty director's chair with a folded navy jacket (4K job 2be55d4f, composited into the live portrait). Old masters: brands-desktop-v1.png, creators-desktop-v1.png, directors-phone-v1.png."
 }

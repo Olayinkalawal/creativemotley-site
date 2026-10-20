@@ -4,6 +4,9 @@
   - Creators' notes fan: four 4:3 thumbnails, 240 and 480 px wide;
   - Brands' notes fan: two 4:3 thumbnails; the two photo cards' painted mats: 3:2 velvet, 640 and 1200 px wide.
 The file names stay those the partials use (creators.html, brands.html); what each now shows is in CROPS.
+Since the 2026-10-20 painting fixes the Creators and Brands desktop masters are wider canvases that hold the old
+masters' pixels at 0.88 and 0.67 scale; the cards' details are the same pixels, so they are cut from the full-resolution
+pre-fix masters (*-desktop-v1.png beside them, SOURCE below) at the original uv.
   python3 scripts/crops.py [--preview FILE]       (--preview: also a contact sheet of the crops)
 """
 import io
@@ -28,6 +31,8 @@ CROPS = {
     'brands-velvet-b': ('brands', 0.95, 0.42, 0.09, 3 / 2, (640, 1200)),    # the red bed (a mat)
 }
 Q = {'avif': 58, 'webp': 80}
+# the master each chapter's crops are cut from (CROPS' uv are in these files)
+SOURCE = {'creators': 'creators-desktop-v1.png', 'brands': 'brands-desktop-v1.png'}
 
 
 def cut(im, cu, cv, w, ar):
@@ -52,7 +57,7 @@ def main():
     cache, tiles = {}, []
     for name, (ch, cu, cv, w, ar, widths) in CROPS.items():
         if ch not in cache:
-            cache[ch] = Image.open(MASTERS / f'{ch}-desktop.png').convert('RGB')
+            cache[ch] = Image.open(MASTERS / SOURCE.get(ch, f'{ch}-desktop.png')).convert('RGB')
         c = cut(cache[ch], cu, cv, w, ar)
         for px in widths:
             im = c.resize((px, round(px / ar)), Image.LANCZOS)

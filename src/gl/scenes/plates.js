@@ -42,9 +42,10 @@ const sheetFor = (chapter, ctx) => (ctx.vw / ctx.vh < NARROW_AR && NARROW[chapte
 /* "fit" in a sheet: the rest framing (its first n keys) is fitted to the screen against the giant title, whose size
    stops growing at 12rem (about 1460 px wide) and whose column sits a fixed distance from the screen's left, so it
    covers a different share of the painting on each screen. Refitted on resize.
-   - { "title": "#id", "u": U, "keys": n, "min": a } (III Brands, anchored at the painting's left edge): the zoom is
-     lowered, as far as min, until the title's right edge lands at u = U and no further in (the man's hat starts at
-     u 0.52: about 1.34 at 1440x900, 1.15 at 1920x1080); never above the sheet's own value.
+   - { "title": "#id", "u": U, "keys": n, "min": a } (II Creators, anchored at the painting's left edge): the zoom is
+     lowered, as far as min, until the title's right edge lands at u = U and no further in (her hair starts at
+     u 0.661 of the wider master: about 1.10 at 1440x900, 1.08 at 1024x768, 1.0 at 1920x1080); never above the sheet's
+     own value. (III Brands used it until its wider master of 2026-10-20 made the whole room its rest frame.)
    - { "title": "#id", "mode": "ellipse", "c": [u, v], "r": [ru, rv], "limit": L, "zooms": [...], "keys": n } (VIII
      Results): the title and its dek must sit inside the oculus, an ellipse in the painting's uv (v up); "limit" is
      the worst corner's normalised distance allowed (1.25: what the 1440x900 framing gives, which reads clear of the

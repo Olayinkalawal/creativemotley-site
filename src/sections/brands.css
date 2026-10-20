@@ -40,24 +40,23 @@
 }
 @media (max-width: 639px) { .br__pc { --pc-ar: 0.86; --pc-inset: 0.86; } }
 
-/* the CSS plate (no WebGL: ?tier=0, reduced motion) holds the keys' first frame on wide screens: the title's right edge
-   just left of the hat's brim (zoom about the painting's left edge, .05 down; the stage fits it to the title, gl/keys/
-   brands.json "fit": about 1.34 to 1535 px wide, then less as the title stops growing at 12rem) */
+/* the CSS plate (no WebGL: ?tier=0, reduced motion) holds the keys' first frame on wide screens: the whole room of the
+   wider master (painting fixes 2026-10-20), zoom 1.04 about u .62, .40 down (gl/keys/brands.json): the title and dek
+   on the glazed window wall and the ceiling, the couple below and right of the dek */
 @media (min-width: 1024px) and (orientation: landscape) {
   .plates .plate[data-plate='brands'] {
-    --cw: max(100vw, 177.78vh); --ch: max(56.25vw, 100vh); --bz: 1.34;
+    --cw: max(100vw, 177.78vh); --ch: max(56.25vw, 100vh); --bz: 1.04;
     background-size: calc(var(--cw) * var(--bz)) auto;
-    background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.05 * (1 - var(--bz)));
+    background-position: calc((100vw - var(--cw)) / 2 + var(--cw) * 0.62 * (1 - var(--bz))) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.4 * (1 - var(--bz)));
   }
 }
-@media (min-width: 1536px) and (orientation: landscape) { .plates .plate[data-plate='brands'] { --bz: 1.29; } }
-@media (min-width: 1680px) and (orientation: landscape) { .plates .plate[data-plate='brands'] { --bz: 1.17; } }
 
-/* …and, once the title has left, the keys' landing frame: the couple and the contract (zoom 1.32 about x .7, .38 down) (landPlate in _paper.js: a cut, not a move) */
+/* …and, once the title has left, the keys' landing frame: both figures full-length, the mirror and the joined hands
+   (zoom 1.68 about x .9, .98 down) (landPlate in _paper.js: a cut, not a move) */
 @media (min-width: 1024px) and (orientation: landscape) {
   html.is-landed-brands .plates .plate[data-plate='brands'] {
-    background-size: calc(var(--cw) * 1.32) auto;
-    background-position: calc((100vw - var(--cw)) / 2 + var(--cw) * 0.7 * (1 - 1.32)) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.38 * (1 - 1.32));
+    background-size: calc(var(--cw) * 1.68) auto;
+    background-position: calc((100vw - var(--cw)) / 2 + var(--cw) * 0.9 * (1 - 1.68)) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.98 * (1 - 1.68));
   }
 }
 
@@ -76,15 +75,15 @@
   -webkit-mask-position: 71% 0; mask-position: 71% 0;
 }
 
-/* the opener: cream title and dek on the window wall, under a dark gradient from the screen's left edge that tames the
-   far-left and middle windows (the art direction: about 0.3-0.45 over the wall, u 0-0.52, v 0-0.45). It belongs to the
-   opener, so it rises with the painting (data-rise) and leaves with the title. Phones: the dark ceiling beams hold the
-   title, no gradient. */
+/* the opener: cream title and dek on the window wall. The wider master (2026-10-20) glazes the wall and the ceiling
+   into shadow itself (title zone 8.7:1 worst decile bare), so the dark gradient from the screen's left edge is only a
+   light one now (about 0.2, the art direction's ceiling), gone before the couple. It belongs to the opener, so it rises
+   with the painting (data-rise) and leaves with the title. Phones: the dark ceiling beams hold the title, no gradient. */
 .br-open::before {
   content: ''; position: absolute; z-index: -1; pointer-events: none; top: 0; left: calc(-1 * var(--rail-w)); right: 0; height: 104svh;
-  background: linear-gradient(180deg, rgba(11, 8, 5, 0.3), rgba(11, 8, 5, 0.42) 6svh, rgba(11, 8, 5, 0.36) 52%, rgba(11, 8, 5, 0));
-  -webkit-mask-image: linear-gradient(90deg, #000 18%, rgba(0, 0, 0, 0.8) 42%, rgba(0, 0, 0, 0) 74%);
-  mask-image: linear-gradient(90deg, #000 18%, rgba(0, 0, 0, 0.8) 42%, rgba(0, 0, 0, 0) 74%);
+  background: linear-gradient(180deg, rgba(11, 8, 5, 0.16), rgba(11, 8, 5, 0.22) 6svh, rgba(11, 8, 5, 0.18) 46%, rgba(11, 8, 5, 0));
+  -webkit-mask-image: linear-gradient(90deg, #000 18%, rgba(0, 0, 0, 0.7) 36%, rgba(0, 0, 0, 0) 56%);
+  mask-image: linear-gradient(90deg, #000 18%, rgba(0, 0, 0, 0.7) 36%, rgba(0, 0, 0, 0) 56%);
 }
 @media (max-width: 1023px) {
   .br-open::before { display: none; }

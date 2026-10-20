@@ -50,7 +50,7 @@
   "name": "II Creators: The Mona Lisa, on camera",
   "key": "#9A6A2A",
   "placeholder": {
-   "desktop": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAADQBACdASogABIAPu1orlCppaQiqAqpMB2JQBadBp6SjtIZ7dt3DYtn67nCa3Q4AAD+1I/d5Xls/ERBRNbm7JKGHQ40tO24jPT/XrS0mmh214pucLYyrbnLo8tiwgaYlcg4TFm8BAs4Z3/Olw8K+rvsyRwAMKQjW5fR3EiRARY271tu/fYbvfrbkH1Jue4+IdxJt8W6bAokhz5EgAA=",
+   "desktop": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACwBACdASogABIAPu1ep06ppKMmMBgMATAdiUAXYAaLktXLpq35jlxfFuFgGQEcAP7fuEwD88555y2rB1dLjmyvdhm5D/t828jOzyUtWJSXcZKcXyNSYzgNetD2e/MqqqaaSPBEfli4ENkh6tU7znOGKMugrR4gISYyJGBjBQQgHw1AAAA=",
    "phone": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAwBACdASoMABoAPu1krU6ppaSiMAgBMB2JZAC7ACFqzsPLWdoQLagp8gAA/lHswCk9Ciw9Ws9lmEQvo+xKtN/lRjmNXVdOni/MpBisTsaR6GOmK3qRYCMPTP6B7zHgy/RGWlqAJfOYNSyMRBA1dafU3Vvf9CMJFHHbmTuwXIkAAA=="
   },
   "thumb": [
@@ -58,13 +58,13 @@
     "src": "/assets/scenes/creators/thumb-320.avif",
     "w": 320,
     "h": 180,
-    "bytes": 5354
+    "bytes": 4752
    },
    {
     "src": "/assets/scenes/creators/thumb-320.webp",
     "w": 320,
     "h": 180,
-    "bytes": 6110
+    "bytes": 5362
    }
   ]
  },
@@ -73,7 +73,7 @@
   "name": "III Brands: The Arnolfini, signed",
   "key": "#6E1418",
   "placeholder": {
-   "desktop": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADQBACdASogABIAPu1qrFEppaQiqAqpMB2JQBUj6UAmzbdkLOK/0v+U9yHMDpXcgAD+8r4jN14s9qGI/OxwTpXf5uUtUwYNqf1dgtDqjPIAyPDib6PUnmd5sPNiRIg2HRHrKhEbGCQ91tZ4VyBjZypBMIYuYmhJRE9TLDX/17PPaUPaDb+bDljDiOKomJdsSsb/7STY9Y8OAAAA",
+   "desktop": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAQBQCdASogABIAPuFUpU2opCOiN/qoARAcCUAToAQ4kN7hIylOzEKEMZeJd9K9z/KAAP7sQUPUVgbkZSy/b5g0xwMmVmx37LGeRk5rnXBaz7ubMRGq0GhpvqHGOrxGhNkJmpFCfpIy4ClYBWc4CsIrbMxpUbJ8x0RJe6WmDA6btLcaQ52VgrImQRLl8CEqLEr0wAAA",
    "phone": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQBACdASoMABoAPu1iqU2ppaOiMAgBMB2JZACdMoADTr6R73l94TK3AAD+7n8/FDva+jO4ckuglro4Tp9Y2mNLvYgpyXfyGc3NBr6+PkiFZcmuZ+O9vOdgijQ1JkpmnUv8M+ba7fT6PxcqQBQdQzQbpzAAAA=="
   },
   "thumb": [
@@ -81,13 +81,13 @@
     "src": "/assets/scenes/brands/thumb-320.avif",
     "w": 320,
     "h": 180,
-    "bytes": 6446
+    "bytes": 5311
    },
    {
     "src": "/assets/scenes/brands/thumb-320.webp",
     "w": 320,
     "h": 180,
-    "bytes": 6940
+    "bytes": 5824
    }
   ]
  },
@@ -120,7 +120,7 @@
   "key": "#3F4D1F",
   "placeholder": {
    "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sqlEppaOiqAqpMB2JZQC06DTkBzqvVS/elO9DQtgJKH0n8TCgAP7s3MHSZHZonCyr5VPUU75nJFkHRYJwFy41tp/PP8s9uz75zQUCcxbbDRNWTFhXpDY5sqwesGYMyVr1IiVgXa5zJWqcVpV4IRsias7Oooo/vNhnva5F2AKOHDSf2AAAAA==",
-   "phone": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQBACdASoMABoAPu1qrU8ppiQiMAgBMB2JQAAj3iC6gXS9Y6iFIZhyAAD+/QOeBCz5p3HhC3n+jt8b4yu7/5cbiwoWSehkp4Yy/0H0ocDAzH13tz1o81YUC/xy9oa9FWWG6heALrl1E18Qx0+gSqQW3gAAAA=="
+   "phone": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JQBbZDSv4JqaCEKtO/ewAAP79sAiZgSHtvIN0cEX/0AiTeCE6//c0D5JMhnnk7yTVZbDEYyi57WA2CJBlT1I3LeFQRegV8YAy95+gXkX5xR3TyT1wAA=="
   },
   "thumb": [
    {

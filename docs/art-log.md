@@ -393,3 +393,31 @@ in the director group, and the vault is calm only under the scrim. Storytellers 
 thumb on knuckle nubs, not a modelled hand, and the bald man's robe is orange rather than brick. Directors: the smear
 ends in a readable lens, only the left curtain panel shows damask, the finish is smoother than panel oil. Apply phone:
 the gimbal phone is drawn flatter than the paint, the attendant's camera is muddled, the repainted silk is smooth.
+
+### Painting fixes (2026-10-20, client-approved)
+**Spend: 30 credits for the round, all by the painter step; 0 in integration.** Balance **265.03 before, 235.03 after**
+(`balance` 235.03 again at the end of integration; floor 235 kept). Jobs (Nano Banana Pro): Brands `c9319e88` (4K,
+rejected: no zoom-out), `b2e4123e` (4K, unused), `f753f257` (4K, failed, refunded +4), `fbcc3a18` (4K, **the room**),
+`1afbee35` (2K, the outer ceiling bay and far-left wall); Directors `2be55d4f` (4K, **the second chair and jacket**),
+`9983544f` (4K, rejected: wooden chair); Creators outpaint `43e24c43` (2, rejected), `70e5875d` (2K, no zoom-out),
+`fda32678` (2K, **the new valley and sky**), `dfcab49f` (2K, no zoom-out). Net: Brands 14, Directors 8, Creators 8.
+
+| Chapter | Before | Now (live) | How |
+|---|---|---|---|
+| III Brands desktop | `brands-desktop-v1.png` | `brands-desktop.png` = `masters/brands/wide_d_r2.png` | the live master registered at 0.67 into `fbcc3a18`, the outer room from `1afbee35`, a shadow glaze over the window wall; seams repaired locally (middle window, bed curtain, far-left sill) |
+| II Creators desktop | `creators-desktop-v1.png` | `creators-desktop.png` = `masters/creators/wide_d_r2.png` | the live master at 0.88, 12% new valley left and sky on top from `fda32678`; seams repaired locally (column, sky over her head, lower-left lake, parapet, left join's crackle) |
+| IX Directors phone | `directors-phone-v1.png` | `directors-phone.png` = `masters/directors/two_chairs_p.png` | the live portrait plus the right chair, jacket and the lower-shelf objects behind them from `2be55d4f` |
+
+The judge passed Directors as delivered and asked for the seam repairs on Brands and Creators; the integrator made
+them (free, local; scripts in the session scratchpad `int2/scripts/`, details in each chapter's `log.md`), with the
+live master registered back into each composite so the repairs use its own pixels. Encodes (KB): Brands desktop AVIF
+2048 / 2880 / 3840 88.6 / 136.0 / 192.0, WebP 123.5 / 200.7 / 297.9, MiDaS depth 11.2; Creators AVIF 92.3 / 146.3,
+WebP 133.4 / 223.8, depth 11.9; Directors phone AVIF 1640 / 1170 / 828 249.3 / 166.3 / 98.5, WebP 340.3 / 215.9 / 132.6
+(desktop and its hand-layered depth unchanged). Title zones, worst decile bare: Brands 8.69:1 (light), Creators
+8.45:1 (dark), Directors phone 12.4:1. art-masters.json: Brands focus [0.64, 0.58], titleBox [0.04, 0.05, 0.47, 0.40],
+scrim optional (~0.2 at most); Creators focus [0.72, 0.36], titleBox [0.04, 0.04, 0.62, 0.30]; Directors phoneFocus
+[0.50, 0.58].
+**Still short:** the Brands ceiling bay and far-left wall and the new Creators valley are 2-3x upscales (soft at 1:1,
+under the glaze and the haze); the Brands reveal above the old seam is the master's plank continued (its scratch marks
+softened, not repeated); the Creators lower-left water is plainer than the master's; the Directors phone's right chair
+stands in front of the stand's right half, with a brass bar across the lute.

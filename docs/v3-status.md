@@ -393,3 +393,33 @@ only by 2× screens), and the film is 1.5 MB lighter.
    fetch a CSS plate's phone-828 as well (pre-existing).
 8. The LCP ≤ 1.0 s and ≥ 50 fps targets are met on this machine at load 3–10; confirm on real hardware. Unused
    `public/assets/video/film/hero-1920-{av1,h264}.mp4` (11.1 MB) is still in the repo (P2.6).
+
+## M.6 Painting fixes (2026-10-20, client-approved)
+Three of M.5's issues are fixed and live (items 1 and 2 there are closed; art log: "Painting fixes").
+- **III Brands, desktop: a wider room.** The master is now a 16:9 room with the window wall on the left (glazed into
+  shadow) and the couple, the contract, the mirror, the chandelier and the dog in the right ~55%. The rest frame is the
+  whole room (zoom 1.04 about u .62; the title `fit` is gone), so the whole couple shows below and right of the title
+  and dek at 1024×768, 1280×800, 1280×1024, 1366×768, 1440×900 and 1920×1080; as the title leaves, the camera pushes
+  into the couple (1.6 about the lower right, both figures full-length). The opener's dark gradient is down to ~0.2
+  and stops before the couple. Tier 0 / reduced motion: the CSS plate holds the same frames.
+- **II Creators, desktop: room for 4:3.** The master is the old painting at 0.88 with more valley on the left and sky
+  on top, so her hair starts at u .661. The rest zoom is fitted to the title (its right edge at u .645; 1.09 at
+  1024×768, 1.05 at 1280×1024, 1.11 at 1440×900, 1.0 from ~1660 px), one sheet for every aspect (the narrow sheet is
+  gone): her face is in at 1024×768 with the title clear of her hair (the outer braid touches the edge at 1280×1024).
+  The tier-0 CSS plate uses steps at or above the fitted zoom.
+- **IX Directors, phone: both empty chairs** flank the two-tier stand (the right one with a folded navy jacket);
+  phoneFocus x 0.50, so both show at 390 and 360 (the jacket's outer edge is cut at 390; all in at 820).
+
+| Check | Result |
+|---|---|
+| Titles / decks at rest, worst 10% of glyph pixels (WebGL; tier 0 within 0.2 except Creators' dek 8.4 at 1440) | Brands 13.5–13.8 / 10.8–12.9; Creators 10.4–10.8 / 6.7 (1024), 7.1 (1280), 7.5 (1440), 11.8 (1920); Directors phone 390 / 360 / 820: 16.8 / 15.8, 16.7 / 15.3, 15.6 / 15.3 |
+| Titles over a face or figure at rest | none (1024, 1280, 1280×1024, 1366, 1440, 1920; 390, 360, 820), nor during the rise |
+| Full read, desktop @1× | **16.57 MB** (≤ 18; was 16.89); painting bytes 1.14 MB; first load 0.67 / 0.77 / 0.51 MB; phone full read 4.01 MB |
+| LCP unthrottled (load ~15) | 0.99 / 0.66 s |
+| Fact check desktop + mobile | pass (500 strings, 44 drafts listed) |
+| `vite build`, Pages build, full read under `/creativemotley-site/` (desktop + phone) | pass, no 404 |
+| Horizontal overflow, console errors (1440, 1024, 1920, 390, 360, 820; tier 0 at 1440 and 390) | none |
+
+Sheet: `qa/shots/v3m_best.jpg` (the six openers at rest, desktop and phone) and `qa/shots/v3-masters-sheet.jpg`
+(the encodes). The replaced masters stay beside the new ones as `*-v1.png` (SHA256SUMS updated); the paper cards'
+crops are cut from those full-resolution files at the same uv (`scripts/crops.py` SOURCE; the crops are unchanged).

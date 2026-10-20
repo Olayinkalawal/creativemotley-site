@@ -7,14 +7,14 @@
     "src": "/assets/scenes/creators/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 110874,
+    "bytes": 94529,
     "q": 72
    },
    {
     "src": "/assets/scenes/creators/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 176018,
+    "bytes": 149822,
     "q": 72
    }
   ],
@@ -23,14 +23,14 @@
     "src": "/assets/scenes/creators/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 156658,
+    "bytes": 136652,
     "q": 86
    },
    {
     "src": "/assets/scenes/creators/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 274230,
+    "bytes": 229130,
     "q": 86
    }
   ]
@@ -40,13 +40,13 @@
    "src": "/assets/scenes/creators/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 5354
+   "bytes": 4752
   },
   {
    "src": "/assets/scenes/creators/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 6110
+   "bytes": 5362
   }
  ],
  "phone": {
@@ -98,8 +98,8 @@
   ]
  },
  "focus": [
-  0.69,
-  0.3
+  0.72,
+  0.36
  ],
  "phoneFocus": [
   0.56,
@@ -111,8 +111,8 @@
   "desktop": [
    0.04,
    0.04,
-   0.46,
-   0.28
+   0.62,
+   0.3
   ],
   "phone": [
    0.05,
@@ -123,7 +123,7 @@
  },
  "key": "#9A6A2A",
  "titleBg": {
-  "desktop": "#D3B57D",
+  "desktop": "#CFB27B",
   "phone": "#A9AD9D"
  },
  "titleInk": {
@@ -132,8 +132,8 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 10.16,
-   "worst10": 8.88
+   "mean": 9.81,
+   "worst10": 8.45
   },
   "phone": {
    "mean": 8.71,
@@ -141,21 +141,21 @@
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAADQBACdASogABIAPu1orlCppaQiqAqpMB2JQBadBp6SjtIZ7dt3DYtn67nCa3Q4AAD+1I/d5Xls/ERBRNbm7JKGHQ40tO24jPT/XrS0mmh214pucLYyrbnLo8tiwgaYlcg4TFm8BAs4Z3/Olw8K+rvsyRwAMKQjW5fR3EiRARY271tu/fYbvfrbkH1Jue4+IdxJt8W6bAokhz5EgAA=",
+  "desktop": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACwBACdASogABIAPu1ep06ppKMmMBgMATAdiUAXYAaLktXLpq35jlxfFuFgGQEcAP7fuEwD88555y2rB1dLjmyvdhm5D/t828jOzyUtWJSXcZKcXyNSYzgNetD2e/MqqqaaSPBEfli4ENkh6tU7znOGKMugrR4gISYyJGBjBQQgHw1AAAA=",
   "phone": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAwBACdASoMABoAPu1krU6ppaSiMAgBMB2JZAC7ACFqzsPLWdoQLagp8gAA/lHswCk9Ciw9Ws9lmEQvo+xKtN/lRjmNXVdOni/MpBisTsaR6GOmK3qRYCMPTP6B7zHgy/RGWlqAJfOYNSyMRBA1dafU3Vvf9CMJFHHbmTuwXIkAAA=="
  },
  "credit": {
-  "desktop": "Nano Banana Pro 4K edit chain 88f177c9 > f931edb0 > 506535aa, then local retouch (neckline, camera badge, lavalier, sky seam): masters/creators/d7_r3.png",
+  "desktop": "Wider for 4:3 (painting fixes 2026-10-20): the live master (Nano Banana Pro 4K edit chain 88f177c9 > f931edb0 > 506535aa + local retouch, d7_r3) at 0.88 in the lower right, 12% new valley on the left and sky on top from 2K job fda32678 (2.2x upscale, craquelure and grain); seams repaired locally (column, the sky over her head, the lower-left lake, the parapet, the left join's crackle): masters/creators/wide_d_r2.png",
   "phone": "9:16 recomposition from 506535aa, job 5f92e37c, then local retouch (neckline, specks, path, sleeves, camera badge): masters/creators/p1_r3.png"
  },
  "titleScrim": {
   "desktop": {
    "colour": "paper",
-   "worst10Bare": 8.89,
+   "worst10Bare": 8.45,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 12.1,
-   "advice": "none needed; optional ivory ~0.3 from the left edge to u 0.56 hides the faint sky seam at u 0.50"
+   "zoneLumaSd": 10.7,
+   "advice": "none needed"
   },
   "phone": {
    "colour": "paper",
@@ -166,11 +166,11 @@
   }
  },
  "masterpiece": "after Leonardo da Vinci, Mona Lisa (c. 1503-19)",
- "artNote": "Title zone moved up from the judge's mid-height box (0.06 0.22 0.46 0.56) to the pale sky band (0.04 0.04 0.46 0.28), because the Creators opener sets its title near the top: the sky band is calmer (luma sd 14 vs 34) and reads better with dark ink (worst decile 8.9:1 vs 3.9:1). The mid-height valley still works if the title is set lower. Dark ink. Optional light ivory scrim (about 0.3, from the left edge to u 0.56) also softens what is left of the sky seam near u 0.50. Phone: dark ink in the sky, dek above v 0.21.",
+ "artNote": "Desktop (wider canvas, 2026-10-20 fixes): dark ink on the pale sky and haze; her hair starts at u 0.661 (the fitted title stops at u 0.645), her face at (0.72, 0.36), the column at the right edge. No scrim. Phone: dark ink in the sky, dek above v 0.21.",
  "depth": {
   "src": "/assets/scenes/creators/depth.webp",
   "w": 1920,
   "h": 1080,
-  "bytes": 11610
+  "bytes": 12198
  }
 }
