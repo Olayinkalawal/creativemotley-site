@@ -1,14 +1,21 @@
 {
  "chapter": "results",
- "name": "VIII Results: The Audience",
+ "name": "VIII Results: The Oculus",
  "desktop": {
   "avif": [
    {
     "src": "/assets/scenes/results/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 188895,
-    "q": 72
+    "bytes": 244987,
+    "q": 62
+   },
+   {
+    "src": "/assets/scenes/results/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 449235,
+    "q": 65
    }
   ],
   "webp": [
@@ -16,8 +23,15 @@
     "src": "/assets/scenes/results/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 221552,
-    "q": 86
+    "bytes": 376430,
+    "q": 84
+   },
+   {
+    "src": "/assets/scenes/results/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 683926,
+    "q": 85
    }
   ]
  },
@@ -26,13 +40,13 @@
    "src": "/assets/scenes/results/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 9066
+   "bytes": 13989
   },
   {
    "src": "/assets/scenes/results/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 8984
+   "bytes": 14050
   }
  ],
  "phone": {
@@ -41,15 +55,15 @@
     "src": "/assets/scenes/results/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 166219,
-    "q": 72
+    "bytes": 176295,
+    "q": 57
    },
    {
     "src": "/assets/scenes/results/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 101584,
-    "q": 69
+    "bytes": 99973,
+    "q": 54
    }
   ],
   "webp": [
@@ -57,46 +71,46 @@
     "src": "/assets/scenes/results/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 217316,
-    "q": 86
+    "bytes": 264198,
+    "q": 80
    },
    {
     "src": "/assets/scenes/results/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 139630,
-    "q": 86
+    "bytes": 151400,
+    "q": 79
    }
   ]
  },
  "focus": [
-  0.4,
-  0.6
+  0.5,
+  0.52
  ],
  "phoneFocus": [
   0.5,
-  0.76
+  0.5
  ],
  "titleSide": "top",
  "phoneTitle": "top",
  "titleBox": {
   "desktop": [
-   0.02,
-   0.03,
-   0.62,
+   0.31,
+   0.05,
+   0.6,
    0.3
   ],
   "phone": [
-   0.06,
-   0.04,
-   0.94,
+   0.12,
+   0.165,
+   0.86,
    0.3
   ]
  },
- "key": "#7FA3AE",
+ "key": "#7298A6",
  "titleBg": {
-  "desktop": "#6A6C66",
-  "phone": "#8C9081"
+  "desktop": "#819798",
+  "phone": "#889091"
  },
  "titleInk": {
   "desktop": "light",
@@ -104,20 +118,45 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 5.32,
-   "worst10": 3.64
+   "mean": 3.08,
+   "worst10": 2.73
   },
   "phone": {
-   "mean": 6.11,
-   "worst10": 4.49
+   "mean": 6.13,
+   "worst10": 5.0
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAACwBACdASogABIAPu1iqE2ppaOiMAgBMB2JYwAASkZdiiM4SaqE7mzJ3BBod10AAP7Ac8NVB2mk7PgaGRAg+tu658/WjZU42EZGEMmy4R19dsf3Y0VuK4o52xGdjyGCzw8u9+Q411PaNQRQfRnOXc9gDRSLub3USv+2ADo4EMiOr2bzzvegfUg0qh1glkoYa2flI4WBJo11sEPNQ2q7JUfdua3lVXYxx4LwgAAA",
-  "phone": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAAAwBACdASoMABoAPu1kqU2ppaQiMAgBMB2JQBOmUABfTBjBK0pkXdQyBMAA8Zc4R3s8nEGLlgbweh6Zi2u04rHGZUTO02qxltYEj7vu6wKrMqmZeaSvDxfwmDe7WZTQFvmJ48ekXd7k/rMARWp66Bw1T/hwoGqEABDxi/Ig9Qyyt7tHg7QkF3P0nr5S1laUPNjTJOZtYQoAAA=="
+  "desktop": "data:image/webp;base64,UklGRtQAAABXRUJQVlA4IMgAAADQBQCdASogABIAPu1kqU2ppaOiMAgBMB2JaACdMtUwBtkp3gronSyTMaTBTqU1q8+F06+xI/BgANvH8sRqognGA3MElGZp4KB2pmPk1Ouis/aDamW/tOvnAccSxQ0mllMzguT7w5dEUbbhOmBlh/I9Y8bmQFhHHGeFOScWEmXva34DAjC16dx/QmoOpiTi7SsPInZrM5bDQBxje/3GFB1CS5B8+2ioAAZ+2osmW27ksTBL38+LaAulmJYlB2nzcP6qIUNsEt4gAA==",
+  "phone": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAAAQBACdASoMABoAPu1krU6ppaSiMAgBMB2JagCdMoRwACfJYXP4EnQaoAD6SFSSdds1mcfv6oQtoCo7IEiVaSIbzH9rQt0tMhw57xDIx+Ds5XRb4ZrMl6D3a9+7WovzwWYEwRYx2w2p0VpVtjqvhnx6+wuv8IpJiDe52yvdmuBmVnBkoBQZ2SEPfeh5oIo6AAA="
  },
  "credit": {
-  "desktop": "the existing 1920 px Results plate; no larger master exists (the live site serves this painting only inside a video), so desktop stops at 2048",
-  "phone": "portrait painted from the same brief (the desktop painting cannot be imported), job 141b5c72"
+  "desktop": "Nano Banana Pro 4K e04207f9 > edit 922b10cb, then local retouch and grade (tub, orange branch, oculus sky to mid cerulean, varnish, canvas grain): masters/results/d9.png",
+  "phone": "9:16 recomposition from 922b10cb, job 9bc59196, graded to match d9 (sky, varnish, grain): masters/results/p3.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "ink",
+   "worst10Bare": 2.73,
+   "alphaForTitle3": 0.1,
+   "alphaForDek4_5": 0.3,
+   "zoneLumaSd": 12.4,
+   "advice": "dark halo ~0.3 behind the cream title and dek (the oculus sky is mid cerulean)"
+  },
+  "phone": {
+   "colour": "paper",
+   "worst10Bare": 4.98,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 17.9
+  }
+ },
+ "masterpiece": "after Mantegna, Camera degli Sposi oculus (1465-74)",
+ "artNote": "Desktop: title left-aligned at about 24% of the viewport over the oculus sky; frame at zoom about 1.2, focus u 0.52, v 0.40 from the top. Phone: the ring's top arc ends at v 0.15, so the title cap line sits at v >= 0.165; the terracotta tub and its pole intrude at the lower right of the box (u > 0.77, v > 0.24), so keep the dek left of u 0.76.",
+ "depth": {
+  "src": "/assets/scenes/results/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 12992
  }
 }

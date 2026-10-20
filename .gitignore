@@ -6,3 +6,4 @@ qa/shots
 .lab
 __pycache__/
 qa/perf
+.art/

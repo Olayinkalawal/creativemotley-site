@@ -1,20 +1,20 @@
 {
  "chapter": "creators",
- "name": "II Creators: The Atelier",
+ "name": "II Creators: The Mona Lisa, on camera",
  "desktop": {
   "avif": [
    {
     "src": "/assets/scenes/creators/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 110045,
+    "bytes": 110874,
     "q": 72
    },
    {
     "src": "/assets/scenes/creators/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 165366,
+    "bytes": 176018,
     "q": 72
    }
   ],
@@ -23,14 +23,14 @@
     "src": "/assets/scenes/creators/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 152706,
+    "bytes": 156658,
     "q": 86
    },
    {
     "src": "/assets/scenes/creators/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 245964,
+    "bytes": 274230,
     "q": 86
    }
   ]
@@ -40,13 +40,13 @@
    "src": "/assets/scenes/creators/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 6760
+   "bytes": 5354
   },
   {
    "src": "/assets/scenes/creators/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 7158
+   "bytes": 6110
   }
  ],
  "phone": {
@@ -55,14 +55,14 @@
     "src": "/assets/scenes/creators/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 113180,
+    "bytes": 166381,
     "q": 72
    },
    {
     "src": "/assets/scenes/creators/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 73243,
+    "bytes": 95598,
     "q": 72
    }
   ],
@@ -71,67 +71,92 @@
     "src": "/assets/scenes/creators/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 155724,
+    "bytes": 226164,
     "q": 86
    },
    {
     "src": "/assets/scenes/creators/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 95246,
+    "bytes": 128926,
     "q": 86
    }
   ]
  },
  "focus": [
-  0.66,
-  0.55
+  0.69,
+  0.3
  ],
  "phoneFocus": [
-  0.58,
-  0.74
+  0.56,
+  0.5
  ],
  "titleSide": "left",
  "phoneTitle": "top",
  "titleBox": {
   "desktop": [
-   0.0,
-   0.18,
-   0.33,
-   0.82
+   0.04,
+   0.04,
+   0.46,
+   0.28
   ],
   "phone": [
-   0.06,
-   0.04,
-   0.94,
-   0.3
+   0.05,
+   0.03,
+   0.95,
+   0.2
   ]
  },
- "key": "#5C8A78",
+ "key": "#9A6A2A",
  "titleBg": {
-  "desktop": "#0E0F0C",
-  "phone": "#2F322D"
+  "desktop": "#D3B57D",
+  "phone": "#A9AD9D"
  },
  "titleInk": {
-  "desktop": "light",
-  "phone": "light"
+  "desktop": "dark",
+  "phone": "dark"
  },
  "titleContrast": {
   "desktop": {
-   "mean": 19.23,
-   "worst10": 18.06
+   "mean": 10.16,
+   "worst10": 8.88
   },
   "phone": {
-   "mean": 13.0,
-   "worst10": 10.96
+   "mean": 8.71,
+   "worst10": 7.67
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAADwBACdASogABIAPu1oqVAppaOmqA1RMB2JZQDH5EXf1eUNflJZwR2Obkc95FGi/QAA/vkVohsX6SKKjgkyk3YY7hlacD7VQA8WiLhjgfoXZk8Ktk3lkagvyqOSKtr7DREi7eeUULAUoHWFRVhc9Qpk+bx4slaNsibJGFgHuk3vWGa6rgAAAA==",
-  "phone": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAAAQBACdASoMABoAPu1iqU2ppaOiMAgBMB2JZQABJPPJFRfnz1fXt45q4AD+/Mlw1czV5eDSJqd9qp+OyXSLXBgyg5zckz73/AhHY76c/JYOHGffmHpdkMro8IUtHKoqX3Jv0g5TSazGAAAA"
+  "desktop": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAADQBACdASogABIAPu1orlCppaQiqAqpMB2JQBadBp6SjtIZ7dt3DYtn67nCa3Q4AAD+1I/d5Xls/ERBRNbm7JKGHQ40tO24jPT/XrS0mmh214pucLYyrbnLo8tiwgaYlcg4TFm8BAs4Z3/Olw8K+rvsyRwAMKQjW5fR3EiRARY271tu/fYbvfrbkH1Jue4+IdxJt8W6bAokhz5EgAA=",
+  "phone": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAwBACdASoMABoAPu1krU6ppaSiMAgBMB2JZAC7ACFqzsPLWdoQLagp8gAA/lHswCk9Ciw9Ws9lmEQvo+xKtN/lRjmNXVdOni/MpBisTsaR6GOmK3qRYCMPTP6B7zHgy/RGWlqAJfOYNSyMRBA1dafU3Vvf9CMJFHHbmTuwXIkAAA=="
  },
  "credit": {
-  "desktop": "new painting, job 8bc87c5a",
-  "phone": "portrait recomposition, job 9191240c"
+  "desktop": "Nano Banana Pro 4K edit chain 88f177c9 > f931edb0 > 506535aa, then local retouch (neckline, camera badge, lavalier, sky seam): masters/creators/d7_r3.png",
+  "phone": "9:16 recomposition from 506535aa, job 5f92e37c, then local retouch (neckline, specks, path, sleeves, camera badge): masters/creators/p1_r3.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "paper",
+   "worst10Bare": 8.89,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 12.1,
+   "advice": "none needed; optional ivory ~0.3 from the left edge to u 0.56 hides the faint sky seam at u 0.50"
+  },
+  "phone": {
+   "colour": "paper",
+   "worst10Bare": 7.67,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 9.5
+  }
+ },
+ "masterpiece": "after Leonardo da Vinci, Mona Lisa (c. 1503-19)",
+ "artNote": "Title zone moved up from the judge's mid-height box (0.06 0.22 0.46 0.56) to the pale sky band (0.04 0.04 0.46 0.28), because the Creators opener sets its title near the top: the sky band is calmer (luma sd 14 vs 34) and reads better with dark ink (worst decile 8.9:1 vs 3.9:1). The mid-height valley still works if the title is set lower. Dark ink. Optional light ivory scrim (about 0.3, from the left edge to u 0.56) also softens what is left of the sky seam near u 0.50. Phone: dark ink in the sky, dek above v 0.21.",
+ "depth": {
+  "src": "/assets/scenes/creators/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 11610
  }
 }

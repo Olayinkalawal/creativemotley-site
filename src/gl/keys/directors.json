@@ -1,20 +1,20 @@
 {
- "//": "Camera keys for plate:directors (gl/timeline.js; t in viewports of the section's pass, focus is the zoom anchor in uv, y up). Entry (t 0-1, with data-rise): an ease-out push that lands at the opener's rest (t 1), the chairs and the camera low in the frame, the beam and the proscenium above them for the title and dek. Then a slow push toward the chairs until the set dissolves into the umber room.",
+ "//": "Camera keys for plate:directors (gl/timeline.js; t in viewports of the section's pass, focus is the zoom anchor in uv, y up). The Ambassadors' chairs (Holbein, masters 2026-10-20). Entry (t 0-1, with data-rise): an ease-out settle that lands at the opener's rest (t 1) with the focus left (u 0.40), so the left-set title stays on the green damask and the kit (from u 0.53, its top at v 0.30) stays clear. Then a push to the stand between the two empty chairs until the set dissolves into the umber room.",
  "camera": {
   "zoom": [
-   { "t": 0, "v": 1.07, "ease": "out" },
-   { "t": 1.0, "v": 1.1, "ease": "inOut" },
-   { "t": 1.9, "v": 1.17 }
-  ],
+    {"t": 0, "v": 1.06, "ease": "out"},
+    {"t": 1.0, "v": 1.08, "ease": "inOut"},
+    {"t": 1.9, "v": 1.25}
+   ],
   "focus": [
-   { "t": 0, "v": [0.62, 0.63], "ease": "out" },
-   { "t": 1.0, "v": [0.63, 0.645], "ease": "inOut" },
-   { "t": 1.9, "v": [0.64, 0.7] }
-  ],
+    {"t": 0, "v": [0.4, 1.0], "ease": "out"},
+    {"t": 1.0, "v": [0.4, 1.0], "ease": "inOut"},
+    {"t": 1.9, "v": [0.67, 0.52]}
+   ],
   "push": [
-   { "t": 0, "v": 0.02, "ease": "out" },
-   { "t": 1.0, "v": 0.035, "ease": "inOut" },
-   { "t": 1.9, "v": 0.08 }
-  ]
+    {"t": 0, "v": 0.02, "ease": "out"},
+    {"t": 1.0, "v": 0.035, "ease": "inOut"},
+    {"t": 1.9, "v": 0.08}
+   ]
  }
 }

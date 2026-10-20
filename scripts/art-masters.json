@@ -1,0 +1,267 @@
+{
+ "//": "Masters, modernised (2026-10-20): the six chapter paintings for scripts/art.py --config. The masters are local retouches, not on the CDN: they live in .art/masters-2026-10-20/ (git-ignored, ~263 MB; SHA256SUMS beside them). Rebuild: python3 scripts/art.py --config scripts/art-masters.json --depth /home/user/models/midas_small.onnx (writes public/assets/scenes/<chapter>/ and merges index.json), then python3 scripts/depth-directors.py (Directors' depth is hand-layered). focus/phoneFocus: x, y from the top-left of each frame.",
+ "storytellers": {
+  "name": "I Storytellers: The School of Athens, now",
+  "masterpiece": "after Raphael, The School of Athens (1509-11)",
+  "desktop": {
+   "src": "repo:.art/masters-2026-10-20/storytellers-desktop.png",
+   "note": "Nano Banana Pro 4K edit chain e5dca105 > ecb56a24 > 69bf0b47 > cbee6a1a, then local retouch (sunglasses, two faces, craquelure finish; final round: the laptop hand repainted in skin with modelled fingers, sunglasses rim neutralised): masters/storytellers/d7_r4.png",
+   "pick": "storytellers/d7_r4.png"
+  },
+  "phone": {
+   "src": "repo:.art/masters-2026-10-20/storytellers-phone.png",
+   "note": "9:16 recomposition from cbee6a1a, job d32e86f3, plus edits f6d5f9bd (palm-down hand, plain laptop, ochre boot) and 767948c8 (gimbal held at the chest) composited locally, round-3 finish, the cone finger cut back to a short thumb: masters/storytellers/final_p2.png",
+   "pick": "storytellers/final_p2.png"
+  },
+  "focus": [
+   0.51,
+   0.48
+  ],
+  "phoneFocus": [
+   0.55,
+   0.55
+  ],
+  "titleSide": "left",
+  "titleBox": [
+   0.06,
+   0.04,
+   0.5,
+   0.32
+  ],
+  "phoneTitle": "top",
+  "phoneTitleBox": [
+   0.05,
+   0.03,
+   0.95,
+   0.22
+  ],
+  "titleInk": {
+   "desktop": "light",
+   "phone": "light"
+  },
+  "key": "#A62A16",
+  "note": "Desktop: light ink over the REQUIRED dark gradient scrim (about 0.6 over u 0-0.5, v 0-0.40, gone by v 0.5): the lit Apollo niche statue is in the box. With the scrim the zone measures luma sd ~10, cream worst-10% ~13.6:1. Phone: light ink in the dark vault; title cap above v 0.19 (the bright arch sky starts at v ~0.18 at centre); a soft dark top scrim (~0.35, gone by v 0.30) brings the dark field to 25%. phoneFocus u 0.55 keeps the gimbal in.",
+  "scrim": {
+   "desktop": "REQUIRED: dark gradient ~0.6 over u 0-0.5, v 0-0.40, gone by v 0.5 (Apollo statue)",
+   "phone": "soft dark top scrim ~0.35, gone by v 0.30; title cap above v 0.19"
+  }
+ },
+ "creators": {
+  "name": "II Creators: The Mona Lisa, on camera",
+  "masterpiece": "after Leonardo da Vinci, Mona Lisa (c. 1503-19)",
+  "desktop": {
+   "src": "repo:.art/masters-2026-10-20/creators-desktop.png",
+   "note": "Nano Banana Pro 4K edit chain 88f177c9 > f931edb0 > 506535aa, then local retouch (neckline, camera badge, lavalier, sky seam): masters/creators/d7_r3.png",
+   "pick": "creators/d7_r3.png"
+  },
+  "phone": {
+   "src": "repo:.art/masters-2026-10-20/creators-phone.png",
+   "note": "9:16 recomposition from 506535aa, job 5f92e37c, then local retouch (neckline, specks, path, sleeves, camera badge): masters/creators/p1_r3.png",
+   "pick": "creators/p1_r3.png"
+  },
+  "focus": [
+   0.69,
+   0.3
+  ],
+  "phoneFocus": [
+   0.56,
+   0.5
+  ],
+  "titleSide": "left",
+  "titleBox": [
+   0.04,
+   0.04,
+   0.46,
+   0.28
+  ],
+  "phoneTitle": "top",
+  "phoneTitleBox": [
+   0.05,
+   0.03,
+   0.95,
+   0.2
+  ],
+  "titleInk": {
+   "desktop": "dark",
+   "phone": "dark"
+  },
+  "key": "#9A6A2A",
+  "note": "Title zone moved up from the judge's mid-height box (0.06 0.22 0.46 0.56) to the pale sky band (0.04 0.04 0.46 0.28), because the Creators opener sets its title near the top: the sky band is calmer (luma sd 14 vs 34) and reads better with dark ink (worst decile 8.9:1 vs 3.9:1). The mid-height valley still works if the title is set lower. Dark ink. Optional light ivory scrim (about 0.3, from the left edge to u 0.56) also softens what is left of the sky seam near u 0.50. Phone: dark ink in the sky, dek above v 0.21.",
+  "scrim": {
+   "desktop": "none needed; optional ivory ~0.3 from the left edge to u 0.56 hides the faint sky seam at u 0.50"
+  }
+ },
+ "brands": {
+  "name": "III Brands: The Arnolfini, signed",
+  "masterpiece": "after Jan van Eyck, The Arnolfini Portrait (1434)",
+  "desktop": {
+   "src": "repo:.art/masters-2026-10-20/brands-desktop.png",
+   "note": "Nano Banana Pro 4K edit 2c6c6c5e > 322047e0, then local retouch (seal, chair, mirror, painted skin, window-wall glaze, craquelure): masters/brands/d5_r3.png",
+   "pick": "brands/d5_r3.png"
+  },
+  "phone": {
+   "src": "repo:.art/masters-2026-10-20/brands-phone.png",
+   "note": "9:16 recomposition from 322047e0, job b5fd8ac6, then local retouch (inscription, painted skin, calmer ceiling, mirror): masters/brands/p1_r3.png",
+   "pick": "brands/p1_r3.png"
+  },
+  "focus": [
+   0.69,
+   0.36
+  ],
+  "phoneFocus": [
+   0.52,
+   0.55
+  ],
+  "titleSide": "left",
+  "titleBox": [
+   0.07,
+   0.08,
+   0.36,
+   0.4
+  ],
+  "phoneTitle": "top",
+  "phoneTitleBox": [
+   0.05,
+   0.02,
+   0.95,
+   0.19
+  ],
+  "titleInk": {
+   "desktop": "light",
+   "phone": "light"
+  },
+  "key": "#6E1418",
+  "note": "Desktop: light ink over a dark gradient scrim on the window wall (u 0-0.52, v 0-0.45); the far-left window and the middle window stay the brightest parts of the zone. Phone: the title box ends at v 0.19, above the chandelier.",
+  "scrim": {
+   "desktop": "dark gradient ~0.3-0.45 over u 0-0.52, v 0-0.45 (window glow at far left and middle)"
+  }
+ },
+ "results": {
+  "name": "VIII Results: The Oculus",
+  "masterpiece": "after Mantegna, Camera degli Sposi oculus (1465-74)",
+  "desktop": {
+   "src": "repo:.art/masters-2026-10-20/results-desktop.png",
+   "note": "Nano Banana Pro 4K e04207f9 > edit 922b10cb, then local retouch and grade (tub, orange branch, oculus sky to mid cerulean, varnish, canvas grain): masters/results/d9.png",
+   "pick": "results/d9.png"
+  },
+  "phone": {
+   "src": "repo:.art/masters-2026-10-20/results-phone.png",
+   "note": "9:16 recomposition from 922b10cb, job 9bc59196, graded to match d9 (sky, varnish, grain): masters/results/p3.png",
+   "pick": "results/p3.png"
+  },
+  "focus": [
+   0.5,
+   0.52
+  ],
+  "phoneFocus": [
+   0.5,
+   0.5
+  ],
+  "titleSide": "top",
+  "titleBox": [
+   0.31,
+   0.05,
+   0.6,
+   0.3
+  ],
+  "phoneTitle": "top",
+  "phoneTitleBox": [
+   0.12,
+   0.165,
+   0.86,
+   0.3
+  ],
+  "titleInk": {
+   "desktop": "light"
+  },
+  "key": "#7298A6",
+  "note": "Desktop: title left-aligned at about 24% of the viewport over the oculus sky; frame at zoom about 1.2, focus u 0.52, v 0.40 from the top. Phone: the ring's top arc ends at v 0.15, so the title cap line sits at v >= 0.165; the terracotta tub and its pole intrude at the lower right of the box (u > 0.77, v > 0.24), so keep the dek left of u 0.76.",
+  "scrim": {
+   "desktop": "dark halo ~0.3 behind the cream title and dek (the oculus sky is mid cerulean)"
+  }
+ },
+ "directors": {
+  "name": "IX Directors: The Ambassadors' chairs",
+  "masterpiece": "after Hans Holbein the Younger, The Ambassadors (1533)",
+  "desktop": {
+   "src": "repo:.art/masters-2026-10-20/directors-desktop.png",
+   "note": "Nano Banana Pro 4K text-only job 4e6bedc5 (hero 70d440b1 as a technique reference), local retouch (torquetum band to ticks, black lacquer chairs, hymn-book lines, camera badge; craquelure, varnish, grain; final round: chair latch, brace step and book headings blanked): masters/directors/final_d2.png",
+   "pick": "directors/final_d2.png"
+  },
+  "phone": {
+   "src": "repo:.art/masters-2026-10-20/directors-phone.png",
+   "note": "9:16 recomposition from da8b8160, job add24dd7, local retouch (displays, sundial, hymn book; craquelure, varnish, grain), then the monitor given its own abstract light back and the crest plaque and sundial marks removed: masters/directors/final_p.png",
+   "pick": "directors/final_p.png"
+  },
+  "focus": [
+   0.67,
+   0.48
+  ],
+  "phoneFocus": [
+   0.58,
+   0.58
+  ],
+  "titleSide": "left",
+  "titleBox": [
+   0.03,
+   0.04,
+   0.5,
+   0.36
+  ],
+  "phoneTitle": "top",
+  "phoneTitleBox": [
+   0.08,
+   0.04,
+   0.92,
+   0.34
+  ],
+  "titleInk": {
+   "desktop": "light",
+   "phone": "light"
+  },
+  "key": "#3F4D1F",
+  "note": "Cream ink on the plain green velvet and damask, no scrim. Desktop: the kit tops out at v 0.29-0.30 (from u 0.53) and the left chair top is at v 0.43 (it starts at u ~0.38), below the box; frame with the focus left (about u 0.40) at the opener so a left-set title clears the kit. Phone: dark velvet damask down to the monitor top at v ~0.35. The phone is a different set from the desktop (p3-based); each viewport shows only one."
+ },
+ "apply": {
+  "name": "X Apply: The Birth of Venus, live",
+  "masterpiece": "after Sandro Botticelli, The Birth of Venus (c. 1484-86)",
+  "desktop": {
+   "src": "repo:.art/masters-2026-10-20/apply-desktop.png",
+   "note": "Nano Banana Pro 4K 5f652579 > edit e47abfe4, then local retouch (second camera out, roses, drapery end, fourth foot, hair; final round: the raised fist cleaned of the old camera rim, seam and flecks feathered): masters/apply/final_d2.png",
+   "pick": "apply/final_d2.png"
+  },
+  "phone": {
+   "src": "repo:.art/masters-2026-10-20/apply-phone.png",
+   "note": "Nano Banana Pro 4K text-only job efface4c (a true vertical Birth of Venus), local retouch (back wind figure clothed in silk, hair coil, gold hoop, attendant camera, cloud contrast; the gimbal screen glazed down): masters/apply/final_p2.png",
+   "pick": "apply/final_p2.png"
+  },
+  "focus": [
+   0.62,
+   0.42
+  ],
+  "phoneFocus": [
+   0.52,
+   0.62
+  ],
+  "titleSide": "left",
+  "titleBox": [
+   0.05,
+   0.06,
+   0.45,
+   0.33
+  ],
+  "phoneTitle": "top",
+  "phoneTitleBox": [
+   0.08,
+   0.04,
+   0.92,
+   0.3
+  ],
+  "titleInk": {
+   "desktop": "dark",
+   "phone": "dark"
+  },
+  "key": "#DFAFA0",
+  "note": "The site's one light painting: dark ink on the pale sky, desktop and phone. Phone: the wind drapery starts at v ~0.32 and the tree at v ~0.35; the attendant's face sits at u 0.93-1.0 and crops away on screens taller than 9:16, so phoneFocus u 0.52 keeps both wind-pair faces (u 0.14-0.28) in."
+ }
+}

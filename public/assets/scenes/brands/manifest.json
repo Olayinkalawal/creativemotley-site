@@ -1,20 +1,20 @@
 {
  "chapter": "brands",
- "name": "III Brands: The Commission",
+ "name": "III Brands: The Arnolfini, signed",
  "desktop": {
   "avif": [
    {
     "src": "/assets/scenes/brands/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 132177,
+    "bytes": 102143,
     "q": 72
    },
    {
     "src": "/assets/scenes/brands/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 196158,
+    "bytes": 154935,
     "q": 72
    }
   ],
@@ -23,14 +23,14 @@
     "src": "/assets/scenes/brands/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 183262,
+    "bytes": 146874,
     "q": 86
    },
    {
     "src": "/assets/scenes/brands/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 278260,
+    "bytes": 227812,
     "q": 86
    }
   ]
@@ -40,13 +40,13 @@
    "src": "/assets/scenes/brands/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 7163
+   "bytes": 6446
   },
   {
    "src": "/assets/scenes/brands/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 7804
+   "bytes": 6940
   }
  ],
  "phone": {
@@ -55,14 +55,14 @@
     "src": "/assets/scenes/brands/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 135737,
+    "bytes": 146797,
     "q": 72
    },
    {
     "src": "/assets/scenes/brands/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 88819,
+    "bytes": 92491,
     "q": 72
    }
   ],
@@ -71,46 +71,46 @@
     "src": "/assets/scenes/brands/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 186690,
+    "bytes": 206144,
     "q": 86
    },
    {
     "src": "/assets/scenes/brands/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 116180,
+    "bytes": 123714,
     "q": 86
    }
   ]
  },
  "focus": [
-  0.66,
-  0.5
+  0.69,
+  0.36
  ],
  "phoneFocus": [
-  0.53,
-  0.68
+  0.52,
+  0.55
  ],
  "titleSide": "left",
  "phoneTitle": "top",
  "titleBox": {
   "desktop": [
-   0.0,
-   0.18,
-   0.33,
-   0.82
+   0.07,
+   0.08,
+   0.36,
+   0.4
   ],
   "phone": [
-   0.06,
-   0.04,
-   0.94,
-   0.3
+   0.05,
+   0.02,
+   0.95,
+   0.19
   ]
  },
  "key": "#6E1418",
  "titleBg": {
-  "desktop": "#190405",
-  "phone": "#20090E"
+  "desktop": "#4B3326",
+  "phone": "#2A130E"
  },
  "titleInk": {
   "desktop": "light",
@@ -118,20 +118,45 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 19.79,
-   "worst10": 18.4
+   "mean": 11.66,
+   "worst10": 8.31
   },
   "phone": {
-   "mean": 18.97,
-   "worst10": 17.28
+   "mean": 17.53,
+   "worst10": 14.99
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAwBQCdASogABIAPu1sq1EppaOjqAqpMB2JYwC1Gw6FJ1cjdVbmTo12DVU1romiHCbM4AD++cF13Muc3d7P5t/f6pE4A3zOh33X1Zx7BGBoFQrewSP2VLmgOr2tQfJqCQ6qLpr7h1PEBX3VGl2Y7lkpVLqb+k5K4SPwsRuFGzp0xTQZgSRQAAAA",
-  "phone": "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAAAwBACdASoMABoAPu1Ct1apoqakGAEwHYlkALsygCWYSbqF4AwkqckDHAAA/vxHIWOfhrXdliLA/4q95o7geErmVf9puWIpZQPy5ujiOzITlJg3qInsMhg7BP6w3lkQnPLTmXufrTAQ2NnIkicpBTmdxZk47ULnrAA="
+  "desktop": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADQBACdASogABIAPu1qrFEppaQiqAqpMB2JQBUj6UAmzbdkLOK/0v+U9yHMDpXcgAD+8r4jN14s9qGI/OxwTpXf5uUtUwYNqf1dgtDqjPIAyPDib6PUnmd5sPNiRIg2HRHrKhEbGCQ91tZ4VyBjZypBMIYuYmhJRE9TLDX/17PPaUPaDb+bDljDiOKomJdsSsb/7STY9Y8OAAAA",
+  "phone": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAAAQBACdASoMABoAPu1iqU2ppaOiMAgBMB2JZACdMoADTZGrMXWkr48YAAD+8MVzIbZLHWUPA0y0IbNvajXv0mvpfVEnGUtQQjS438U3n0bYjUxlflM/HDGCduPwb2Jyunbv1dOu1YeYxVyk3fWBqAAA"
  },
  "credit": {
-  "desktop": "new painting, job 4ce5fe76",
-  "phone": "portrait recomposition, job 1f54ecf8"
+  "desktop": "Nano Banana Pro 4K edit 2c6c6c5e > 322047e0, then local retouch (seal, chair, mirror, painted skin, window-wall glaze, craquelure): masters/brands/d5_r3.png",
+  "phone": "9:16 recomposition from 322047e0, job b5fd8ac6, then local retouch (inscription, painted skin, calmer ceiling, mirror): masters/brands/p1_r3.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "ink",
+   "worst10Bare": 8.3,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 19.1,
+   "advice": "dark gradient ~0.3-0.45 over u 0-0.52, v 0-0.45 (window glow at far left and middle)"
+  },
+  "phone": {
+   "colour": "ink",
+   "worst10Bare": 14.98,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 11.3
+  }
+ },
+ "masterpiece": "after Jan van Eyck, The Arnolfini Portrait (1434)",
+ "artNote": "Desktop: light ink over a dark gradient scrim on the window wall (u 0-0.52, v 0-0.45); the far-left window and the middle window stay the brightest parts of the zone. Phone: the title box ends at v 0.19, above the chandelier.",
+ "depth": {
+  "src": "/assets/scenes/brands/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 12592
  }
 }

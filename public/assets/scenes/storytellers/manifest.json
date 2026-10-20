@@ -1,20 +1,20 @@
 {
  "chapter": "storytellers",
- "name": "I Storytellers: the three, out of the night",
+ "name": "I Storytellers: The School of Athens, now",
  "desktop": {
   "avif": [
    {
     "src": "/assets/scenes/storytellers/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 183684,
+    "bytes": 216034,
     "q": 72
    },
    {
     "src": "/assets/scenes/storytellers/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 277842,
+    "bytes": 317397,
     "q": 72
    }
   ],
@@ -23,14 +23,14 @@
     "src": "/assets/scenes/storytellers/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 211430,
+    "bytes": 281052,
     "q": 86
    },
    {
     "src": "/assets/scenes/storytellers/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 314856,
+    "bytes": 444206,
     "q": 86
    }
   ]
@@ -40,13 +40,13 @@
    "src": "/assets/scenes/storytellers/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 6668
+   "bytes": 13370
   },
   {
    "src": "/assets/scenes/storytellers/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 6174
+   "bytes": 13366
   }
  ],
  "phone": {
@@ -55,15 +55,15 @@
     "src": "/assets/scenes/storytellers/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 173403,
-    "q": 72
+    "bytes": 183822,
+    "q": 65
    },
    {
     "src": "/assets/scenes/storytellers/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 99092,
-    "q": 65
+    "bytes": 102197,
+    "q": 62
    }
   ],
   "webp": [
@@ -71,46 +71,46 @@
     "src": "/assets/scenes/storytellers/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 195974,
-    "q": 86
+    "bytes": 263478,
+    "q": 85
    },
    {
     "src": "/assets/scenes/storytellers/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 125444,
-    "q": 86
+    "bytes": 150756,
+    "q": 84
    }
   ]
  },
  "focus": [
-  0.7,
-  0.5
+  0.51,
+  0.48
  ],
  "phoneFocus": [
-  0.5,
-  0.7
+  0.55,
+  0.55
  ],
  "titleSide": "left",
  "phoneTitle": "top",
  "titleBox": {
   "desktop": [
-   0.0,
-   0.18,
-   0.33,
-   0.82
-  ],
-  "phone": [
    0.06,
    0.04,
-   0.94,
-   0.3
+   0.5,
+   0.32
+  ],
+  "phone": [
+   0.05,
+   0.03,
+   0.95,
+   0.22
   ]
  },
- "key": "#D81B7E",
+ "key": "#A62A16",
  "titleBg": {
-  "desktop": "#020505",
-  "phone": "#05070C"
+  "desktop": "#44281A",
+  "phone": "#2A180E"
  },
  "titleInk": {
   "desktop": "light",
@@ -118,20 +118,46 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 20.46,
-   "worst10": 20.06
+   "mean": 13.43,
+   "worst10": 7.44
   },
   "phone": {
-   "mean": 20.15,
-   "worst10": 19.71
+   "mean": 17.0,
+   "worst10": 12.13
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRnwAAABXRUJQVlA4IHAAAADQBACdASogABIAPu1srlIppaQiqAgBMB2JZQDM0FbPHXGNf6KDDLiI5/RvegecAAD+/EYxAjsynH90ADJMBSVahY2lqPmaMsTj9Q8d3fpkRiQIUh+/+PgZPl/irKEqbARbL4KgXoiU8O+W/lALDQAA",
-  "phone": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAAAQBACdASoMABoAPu1iqk4ppaQiMAgBMB2JZQDE2Glho2zrIdNokrzYAAD+/lfNpkhUSyeVbjOWfeTQW7oUtlGsQ8GuWoxFAZSRZhgCCV0cLGROJC/QFUXJ1rl46IAA"
+  "desktop": "data:image/webp;base64,UklGRsIAAABXRUJQVlA4ILYAAABQBQCdASogABIAPu1mqk2ppaQiMAgBMB2JQA7gAH4UmTXw35p/aUr+GhaekFE9GEgPuAAA/vK0jNG/cCZRID3mZja2fwe4DcrV1E4/NYBuP2/EXmKCE0xnTYOb2MJmlt/RRFzOR5pmZ7QFLbkVyqXmY4UpRZzjyZciXva+cmNFLNlbUhqeqyIZTe89A9zbAvsmZbzFft9hWlyMo6trTLTSOBB5NOa68dmRygN9bHFaYBSsK6sAAA==",
+  "phone": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JaACdAB6JNu5/8FILMTVAAP7xf40GF/UR2EY5LFk1oaQ06k3C2fFNeDW72W3zoG+ZJYocsRKD9Huu7WIf7F+z/91N57m6V8rarpjQEm6nI2J8Haw5Lx5S7SVl9j5B1h1sz232m79EwV1ka/nYI/JE2pAymP+ZpUkXnNREHoO/S8AA"
  },
  "credit": {
-  "desktop": "live film frame f_0570 (creativemotley.com/frames/f_0570.webp), 4K upscale, job 0f6104cd",
-  "phone": "portrait recomposition of the Storytellers painting, job 89884a5e"
+  "desktop": "Nano Banana Pro 4K edit chain e5dca105 > ecb56a24 > 69bf0b47 > cbee6a1a, then local retouch (sunglasses, two faces, craquelure finish; final round: the laptop hand repainted in skin with modelled fingers, sunglasses rim neutralised): masters/storytellers/d7_r4.png",
+  "phone": "9:16 recomposition from cbee6a1a, job d32e86f3, plus edits f6d5f9bd (palm-down hand, plain laptop, ochre boot) and 767948c8 (gimbal held at the chest) composited locally, round-3 finish, the cone finger cut back to a short thumb: masters/storytellers/final_p2.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "ink",
+   "worst10Bare": 7.43,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 27.5,
+   "advice": "REQUIRED: dark gradient ~0.6 over u 0-0.5, v 0-0.40, gone by v 0.5 (Apollo statue)"
+  },
+  "phone": {
+   "colour": "ink",
+   "worst10Bare": 12.13,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 18.6,
+   "advice": "soft dark top scrim ~0.35, gone by v 0.30; title cap above v 0.19"
+  }
+ },
+ "masterpiece": "after Raphael, The School of Athens (1509-11)",
+ "artNote": "Desktop: light ink over the REQUIRED dark gradient scrim (about 0.6 over u 0-0.5, v 0-0.40, gone by v 0.5): the lit Apollo niche statue is in the box. With the scrim the zone measures luma sd ~10, cream worst-10% ~13.6:1. Phone: light ink in the dark vault; title cap above v 0.19 (the bright arch sky starts at v ~0.18 at centre); a soft dark top scrim (~0.35, gone by v 0.30) brings the dark field to 25%. phoneFocus u 0.55 keeps the gimbal in.",
+ "depth": {
+  "src": "/assets/scenes/storytellers/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 11808
  }
 }

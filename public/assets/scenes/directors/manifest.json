@@ -1,20 +1,20 @@
 {
  "chapter": "directors",
- "name": "IX Directors: The Empty Set",
+ "name": "IX Directors: The Ambassadors' chairs",
  "desktop": {
   "avif": [
    {
     "src": "/assets/scenes/directors/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 115461,
+    "bytes": 148715,
     "q": 72
    },
    {
     "src": "/assets/scenes/directors/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 184336,
+    "bytes": 237044,
     "q": 72
    }
   ],
@@ -23,14 +23,14 @@
     "src": "/assets/scenes/directors/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 159910,
+    "bytes": 198892,
     "q": 86
    },
    {
     "src": "/assets/scenes/directors/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 250814,
+    "bytes": 334810,
     "q": 86
    }
   ]
@@ -40,13 +40,13 @@
    "src": "/assets/scenes/directors/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 5299
+   "bytes": 7309
   },
   {
    "src": "/assets/scenes/directors/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 5994
+   "bytes": 8080
   }
  ],
  "phone": {
@@ -55,15 +55,15 @@
     "src": "/assets/scenes/directors/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 124199,
-    "q": 72
+    "bytes": 176065,
+    "q": 61
    },
    {
     "src": "/assets/scenes/directors/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 80174,
-    "q": 72
+    "bytes": 101353,
+    "q": 59
    }
   ],
   "webp": [
@@ -71,46 +71,46 @@
     "src": "/assets/scenes/directors/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 177298,
-    "q": 86
+    "bytes": 272488,
+    "q": 84
    },
    {
     "src": "/assets/scenes/directors/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 109272,
-    "q": 86
+    "bytes": 151712,
+    "q": 83
    }
   ]
  },
  "focus": [
-  0.64,
-  0.7
+  0.67,
+  0.48
  ],
  "phoneFocus": [
-  0.55,
-  0.76
+  0.58,
+  0.58
  ],
  "titleSide": "left",
  "phoneTitle": "top",
  "titleBox": {
   "desktop": [
-   0.0,
-   0.18,
-   0.33,
-   0.82
+   0.03,
+   0.04,
+   0.5,
+   0.36
   ],
   "phone": [
-   0.06,
+   0.08,
    0.04,
-   0.94,
-   0.3
+   0.92,
+   0.34
   ]
  },
- "key": "#20264F",
+ "key": "#3F4D1F",
  "titleBg": {
-  "desktop": "#040210",
-  "phone": "#473333"
+  "desktop": "#32412A",
+  "phone": "#1B1D0B"
  },
  "titleInk": {
   "desktop": "light",
@@ -118,20 +118,45 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 20.56,
-   "worst10": 20.31
+   "mean": 10.91,
+   "worst10": 6.79
   },
   "phone": {
-   "mean": 11.74,
-   "worst10": 2.87
+   "mean": 17.11,
+   "worst10": 12.42
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAAAwBQCdASogABIAPu1wsVKppiSiqAgBMB2JYwDCgFbQskdilNRnXhWmONQOUgjqr5VeAAD++9yToyZxC0JVuqOiVoqJ3BM0P2+6TabT9nM0fsgYWZoPj3smVqqWofiLZ9vL40fKpmc0phi62ZTGxkciJY7OYiq4RpJO15/CxI/IumGkPDJBLDAAAAA=",
-  "phone": "data:image/webp;base64,UklGRn4AAABXRUJQVlA4IHIAAADwAwCdASoMABoAPu1iqU2ppaOiMAgBMB2JQBOgDVha05sdLhQ7c4kAAP79bApKZf/IED86uNGlMkxHkDnjBtE/LhUJhuJN+8xJXPaKTwHfabmWUgD+mf/g+irvB91trjs58hrj66nfSscgVd7TqT6AAAA="
+  "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sqlEppaOiqAqpMB2JZQC06DTkBzqvVS/elO9DQtgJKH0n8TCgAP7s3MHSZHZonCyr5VPUU75nJFkHRYJwFy41tp/PP8s9uz75zQUCcxbbDRNWTFhXpDY5sqwesGYMyVr1IiVgXa5zJWqcVpV4IRsias7Oooo/vNhnva5F2AKOHDSf2AAAAA==",
+  "phone": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JQBYdjSw6mnzKABnn+mu4AP797Ef3nQR4njsxA1Hf75as9eROv/3L+1/zAsQQtoMkPT8i7lJxA7NAeENRYC0t1LsAeveAEg8/pa9TfuorVS0c/aTKY6CSCijHasRHr8YAAA=="
  },
  "credit": {
-  "desktop": "new painting, job 0c9f02b1",
-  "phone": "portrait recomposition, job 87ef8956"
+  "desktop": "Nano Banana Pro 4K text-only job 4e6bedc5 (hero 70d440b1 as a technique reference), local retouch (torquetum band to ticks, black lacquer chairs, hymn-book lines, camera badge; craquelure, varnish, grain; final round: chair latch, brace step and book headings blanked): masters/directors/final_d2.png",
+  "phone": "9:16 recomposition from da8b8160, job add24dd7, local retouch (displays, sundial, hymn book; craquelure, varnish, grain), then the monitor given its own abstract light back and the crest plaque and sundial marks removed: masters/directors/final_p.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "ink",
+   "worst10Bare": 6.78,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 22.8
+  },
+  "phone": {
+   "colour": "ink",
+   "worst10Bare": 12.44,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 15.7
+  }
+ },
+ "masterpiece": "after Hans Holbein the Younger, The Ambassadors (1533)",
+ "artNote": "Cream ink on the plain green velvet and damask, no scrim. Desktop: the kit tops out at v 0.29-0.30 (from u 0.53) and the left chair top is at v 0.43 (it starts at u ~0.38), below the box; frame with the focus left (about u 0.40) at the opener so a left-set title clears the kit. Phone: dark velvet damask down to the monitor top at v ~0.35. The phone is a different set from the desktop (p3-based); each viewport shows only one.",
+ "depth": {
+  "src": "/assets/scenes/directors/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 10546,
+  "note": "hand-layered: curtain far, stand + kit + chairs one mid plane, MiDaS floor (scripts/depth-directors.py)"
  }
 }

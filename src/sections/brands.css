@@ -1,6 +1,6 @@
 /* III · Brands paper (track O1). The Brands block (+ DC31) beside two notes · "How a brief runs": five numbered
    steps, a row of columns from 1280 px, a hairline list below · the room and the set side by side in velvet mats
-   (crops of the Commission painting). */
+   (crops of the Arnolfini painting's red bed curtains, scripts/crops.py). */
 #brands > .paper { padding-block: clamp(64px, 9vh, 104px) clamp(72px, 10vh, 112px); }
 .br { display: flex; flex-direction: column; gap: clamp(40px, 6vh, 72px); }
 .br__intro { display: grid; gap: clamp(28px, 4vh, 40px); }
@@ -40,21 +40,21 @@
 }
 @media (max-width: 639px) { .br__pc { --pc-ar: 0.86; --pc-inset: 0.86; } }
 
-/* the CSS plate (no WebGL: ?tier=0, reduced motion) holds the keys' first frame on wide screens: close on the
-   velvet and the globe (zoom 1.9 about the painting's left edge, .7 down), so the title sits on the calm third */
+/* the CSS plate (no WebGL: ?tier=0, reduced motion) holds the keys' first frame on wide screens: the window wall under
+   the title (zoom 1.48 about the painting's left edge, .05 down) */
 @media (min-width: 1024px) and (orientation: landscape) {
   .plates .plate[data-plate='brands'] {
     --cw: max(100vw, 177.78vh); --ch: max(56.25vw, 100vh);
-    background-size: calc(var(--cw) * 1.9) auto;
-    background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.7 * (1 - 1.9));
+    background-size: calc(var(--cw) * 1.48) auto;
+    background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.05 * (1 - 1.48));
   }
 }
 
-/* …and, once the title has left, the keys' landing frame: the commission (zoom 1.6 about the right edge, .24 down) (landPlate in _paper.js: a cut, not a move) */
+/* …and, once the title has left, the keys' landing frame: the couple and the contract (zoom 1.32 about x .7, .38 down) (landPlate in _paper.js: a cut, not a move) */
 @media (min-width: 1024px) and (orientation: landscape) {
   html.is-landed-brands .plates .plate[data-plate='brands'] {
-    background-size: calc(var(--cw) * 1.6) auto;
-    background-position: calc((100vw - var(--cw)) / 2 + var(--cw) * 1.0 * (1 - 1.6)) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.24 * (1 - 1.6));
+    background-size: calc(var(--cw) * 1.32) auto;
+    background-position: calc((100vw - var(--cw)) / 2 + var(--cw) * 0.7 * (1 - 1.32)) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.38 * (1 - 1.32));
   }
 }
 
@@ -71,4 +71,20 @@
   background-blend-mode: multiply, normal; transform: scaleY(-1);
   -webkit-mask: var(--tear) top / 1200px 24px repeat-x; mask: var(--tear) top / 1200px 24px repeat-x;
   -webkit-mask-position: 71% 0; mask-position: 71% 0;
+}
+
+/* the opener: cream title and dek on the window wall, under a dark gradient from the screen's left edge that tames the
+   far-left and middle windows (the art direction: about 0.3-0.45 over the wall, u 0-0.52, v 0-0.45). It belongs to the
+   opener, so it rises with the painting (data-rise) and leaves with the title. Phones: the dark ceiling beams hold the
+   title, no gradient. */
+.br-open::before {
+  content: ''; position: absolute; z-index: -1; pointer-events: none; top: 0; left: calc(-1 * var(--rail-w)); right: 0; height: 104svh;
+  background: linear-gradient(180deg, rgba(11, 8, 5, 0.3), rgba(11, 8, 5, 0.42) 6svh, rgba(11, 8, 5, 0.36) 52%, rgba(11, 8, 5, 0));
+  -webkit-mask-image: linear-gradient(90deg, #000 18%, rgba(0, 0, 0, 0.8) 42%, rgba(0, 0, 0, 0) 74%);
+  mask-image: linear-gradient(90deg, #000 18%, rgba(0, 0, 0, 0.8) 42%, rgba(0, 0, 0, 0) 74%);
+}
+@media (max-width: 1023px) {
+  .br-open::before { display: none; }
+  /* the title and dek sit higher than the shell's opener (art direction: stop above the chandelier, v 0.19) */
+  .opener.opener--top.br-open { padding-top: calc(var(--nav-h) - 2svh); }
 }

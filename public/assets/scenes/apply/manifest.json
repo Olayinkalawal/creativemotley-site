@@ -1,20 +1,20 @@
 {
  "chapter": "apply",
- "name": "X Apply: The Open Gate",
+ "name": "X Apply: The Birth of Venus, live",
  "desktop": {
   "avif": [
    {
     "src": "/assets/scenes/apply/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 164698,
-    "q": 72
+    "bytes": 251272,
+    "q": 70
    },
    {
     "src": "/assets/scenes/apply/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 280801,
+    "bytes": 402680,
     "q": 72
    }
   ],
@@ -23,14 +23,14 @@
     "src": "/assets/scenes/apply/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 217772,
+    "bytes": 320588,
     "q": 86
    },
    {
     "src": "/assets/scenes/apply/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 384698,
+    "bytes": 519094,
     "q": 86
    }
   ]
@@ -40,13 +40,13 @@
    "src": "/assets/scenes/apply/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 6401
+   "bytes": 13405
   },
   {
    "src": "/assets/scenes/apply/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 6802
+   "bytes": 13232
   }
  ],
  "phone": {
@@ -55,15 +55,15 @@
     "src": "/assets/scenes/apply/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 141920,
-    "q": 72
+    "bytes": 181711,
+    "q": 62
    },
    {
     "src": "/assets/scenes/apply/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 87337,
-    "q": 72
+    "bytes": 95730,
+    "q": 59
    }
   ],
   "webp": [
@@ -71,46 +71,46 @@
     "src": "/assets/scenes/apply/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 196836,
-    "q": 86
+    "bytes": 264208,
+    "q": 84
    },
    {
     "src": "/assets/scenes/apply/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 116882,
-    "q": 86
+    "bytes": 148760,
+    "q": 83
    }
   ]
  },
  "focus": [
-  0.74,
-  0.55
+  0.62,
+  0.42
  ],
  "phoneFocus": [
-  0.56,
-  0.72
+  0.52,
+  0.62
  ],
  "titleSide": "left",
  "phoneTitle": "top",
  "titleBox": {
   "desktop": [
-   0.0,
-   0.08,
-   0.4,
-   0.46
+   0.05,
+   0.06,
+   0.45,
+   0.33
   ],
   "phone": [
-   0.06,
+   0.08,
    0.04,
-   0.94,
+   0.92,
    0.3
   ]
  },
  "key": "#DFAFA0",
  "titleBg": {
-  "desktop": "#DFAF9F",
-  "phone": "#E4B0A0"
+  "desktop": "#DFD4C7",
+  "phone": "#C5C1A5"
  },
  "titleInk": {
   "desktop": "dark",
@@ -118,20 +118,44 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 10.25,
-   "worst10": 9.49
+   "mean": 13.68,
+   "worst10": 12.68
   },
   "phone": {
-   "mean": 10.48,
-   "worst10": 9.6
+   "mean": 10.98,
+   "worst10": 9.49
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRqIAAABXRUJQVlA4IJYAAACwBACdASogABIAPu1mqk8ppaOiKA1RMB2JQBdmY5BTCqjUFORxP4pGl/Nqw97AAP7eh+wlDOO/6ExISd7twso3n9z4wdj+j2tPfVFesMOvfo9ysVTjyM7SZPzAqWJHXewby5NJjgYJPxC3BNpvusi3BQQEjlr7csDHjWlC8lFWlVJhoFGVOSBiG0ed23ZLM/uSV8+AAAA=",
-  "phone": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAABwAgCdASoMABoAA4BaJQBOgCHfrrbKEON/afbAAP7TTPgL9nLcn4PbJ5JwqVbAIKBlBqJAHolXultE5+umE/kc70pggVA3yhJaK8Jz3u7wXCWkv1pSjRJivDcZwOkmPDQAAA=="
+  "desktop": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAAAwBQCdASogABIAPu1qrVCppaQiqAqpMB2JQBdgZctUQILfsXWRUupYMiZGWnWy/UL9oAD+78KplY4VSiWUz8opsRbTzqBsf9141aPtMld3ycKHncClPT9tyAsfqKJ48HsZFMCQw7gRlkNTt80hXJRNLx10eHYmMHizkltjKtuaSmeBPOiyoiTXbRaUKK8+lGEzk3YYCfEbysff6356Wro3XKxwvwtwvLl2Mu1YgxAx4GnidXjGcC8m+i1x6D6oKB4AAA==",
+  "phone": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAABQBACdASoMABoAPu1iqk2ppaQiMAgBMB2JYgCdAYt+tW9rUn42WoTPV1MAAP7wF2Wd5F2zv5qmTV6JU9X5zb/Wdd+4RxR8n7oocuzf1hhP2bja4ch9dujtGM6E8uI7de4DLqFW/wTsjX4XnQmJ/PlXRFxBvBxYCeEvpX/80YuvICi/sQ4VKjyrhP+hhZLKmAA="
  },
  "credit": {
-  "desktop": "new painting, job 4b22d074",
-  "phone": "portrait recomposition, job 397c34ba"
+  "desktop": "Nano Banana Pro 4K 5f652579 > edit e47abfe4, then local retouch (second camera out, roses, drapery end, fourth foot, hair; final round: the raised fist cleaned of the old camera rim, seam and flecks feathered): masters/apply/final_d2.png",
+  "phone": "Nano Banana Pro 4K text-only job efface4c (a true vertical Birth of Venus), local retouch (back wind figure clothed in silk, hair coil, gold hoop, attendant camera, cloud contrast; the gimbal screen glazed down): masters/apply/final_p2.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "paper",
+   "worst10Bare": 12.7,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 5.5
+  },
+  "phone": {
+   "colour": "paper",
+   "worst10Bare": 9.49,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 9.9
+  }
+ },
+ "masterpiece": "after Sandro Botticelli, The Birth of Venus (c. 1484-86)",
+ "artNote": "The site's one light painting: dark ink on the pale sky, desktop and phone. Phone: the wind drapery starts at v ~0.32 and the tree at v ~0.35; the attendant's face sits at u 0.93-1.0 and crops away on screens taller than 9:16, so phoneFocus u 0.52 keeps both wind-pair faces (u 0.14-0.28) in.",
+ "depth": {
+  "src": "/assets/scenes/apply/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 13452
  }
 }

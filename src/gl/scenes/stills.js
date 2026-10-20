@@ -6,14 +6,15 @@
    - otherwise the section's own tier-0 plate (data-plate): the hero, Storytellers and Results paintings as a cover
      crop (centred on the section's data-cam-from-tall focus, kept inside the painting); ink (black: the teardowns,
      whose sections show their device stills over it), paper, or the umber room (the CSS plate's gradient);
-   - the film (hero → Storytellers): the hero still, dissolving through the stage's ink-bleed noise into the
-     Storytellers still across the vortex frames (no film frames on phones).
+   - the film: the hero still, with a slow push over the film's frames (no film frames on phones). Storytellers'
+     portrait then comes in under it as on desktop: the stage's ink-bleed edge rising with the section (data-bleed,
+     data-rise), so the hero still holds above that edge.
    A slow push over each section's pass keeps a still alive while it scrolls. No depth maps, no video, no streams. */
 import { Scene, OrthographicCamera, ShaderMaterial, Vector2, Vector3, DataTexture } from 'three';
 import { fullscreenQuad } from '../lib/plate.js';
 import { texture } from '../lib/loaders.js';
 import { filmRanges, frameAt } from '../lib/filmRanges.js';
-import { smooth, seg, clamp } from '../../core/scroll.js';
+import { smooth, clamp } from '../../core/scroll.js';
 
 /* the art track's manifests (scripts/art.py → public/assets/scenes/<chapter>/manifest.json), bundled at build time;
    only the phone fields are imported: phone { avif: [{ src, w, h }], webp: [...] }, phoneFocus [x, y] (the view
@@ -23,7 +24,7 @@ const PHONE = import.meta.glob('/public/assets/scenes/*/manifest.json', { eager:
 const FOCUS = import.meta.glob('/public/assets/scenes/*/manifest.json', { eager: true, import: 'phoneFocus' });
 const HOLD = import.meta.glob('/public/assets/scenes/*/manifest.json', { eager: true, import: 'placeholder' });
 const key = (chapter) => `/public/assets/scenes/${chapter}/manifest.json`;
-const PLATES = { hero: '/assets/plates/hero.webp', storytellers: '/assets/plates/storytellers.webp', results: '/assets/plates/results.webp', method: '/assets/plates/method.webp' };
+const PLATES = { hero: '/assets/plates/hero.webp', storytellers: '/assets/scenes/storytellers/desktop-2048.webp', results: '/assets/scenes/results/desktop-2048.webp', method: '/assets/plates/method.webp' };
 const COLORS = { ink: [0, 0, 0], paper: [0.91, 0.89, 0.831], dark: [0.043, 0.031, 0.02] };
 
 /* the portrait encodes to try, best first: AVIF, then WebP, each the smallest width that covers the canvas */
@@ -132,7 +133,7 @@ function stillScene(id, stage) {
   scene.add(fullscreenQuad(new ShaderMaterial({ vertexShader: vert, fragmentShader: frag, depthTest: false, depthWrite: false, uniforms: U })));
   const film = id === 'film';
   let views = new Map();   // element → { src, handle }
-  let held = [], ranges = [], filmA = null, filmB = null, token = null;
+  let held = [], ranges = [], filmA = null, token = null;
   const setLayer = (k, v, pe, rise = 0) => {
     const u = (n) => U[n + k];
     if (!v || v.src.kind !== 'img' || !v.handle) {
@@ -156,9 +157,7 @@ function stillScene(id, stage) {
       const els = [...document.querySelectorAll(`[data-scene="${id}"]`)];
       if (film) {
         ranges = filmRanges('hero');
-        const hero = document.querySelector('.hero') || els[0];
-        const st = document.getElementById('storytellers') || els[els.length - 1];
-        els.splice(0, els.length, hero, st);
+        els.splice(0, els.length, document.querySelector('.hero') || els[0]);
       }
       const W = ctx.w, tok = (token = {});
       const next = new Map();
@@ -174,23 +173,21 @@ function stillScene(id, stage) {
         else await full;
       }));
       views = next;
-      if (film) { filmA = views.get(els[0]); filmB = views.get(els[1]); }
+      if (film) filmA = views.get(els[0]);
     },
     dispose() {
       token = null;
       held.forEach(release); held = [];
-      views = new Map(); filmA = filmB = null;
+      views = new Map(); filmA = null;
       U.mapA.value = U.mapB.value = blank;
     },
     resize(w, h) { U.res.value.set(w, h); },
     update(ctx, s) {
       if (film) {
         if (!ranges.length || !document.body.contains(ranges[0].el)) ranges = filmRanges('hero');
-        const f = frameAt(ranges, ctx.scrollY, ctx.vh);
-        const k = smooth(seg(f, 405, 485));
-        // the push follows the film, not the section (the film runs across two sections)
-        setLayer('A', filmA, clamp(f / 400)); setLayer('B', filmB, seg(f, 400, 569));
-        U.mixT.value = k;
+        // the push follows the film's frames, not the section's pass
+        setLayer('A', filmA, clamp(frameAt(ranges, ctx.scrollY, ctx.vh) / 400));
+        U.mixT.value = 0;
         return;
       }
       let v = views.get(s.el);

@@ -1,23 +1,33 @@
-/* VIII · Results: the opener over the watchers' sky, then four counters over the same painting under an ink veil.
-   Opener: title and dek set near the top (the painting's calm band, its manifest's titleBox), a short region, so the
-   first figure arrives at the foot of the first screen.
+/* VIII · Results: the opener in the oculus sky (The Oculus, after Mantegna), then four counters over the same painting
+   under an ink veil.
+   Opener: title and dek set near the top (the painting's open sky, its manifest's titleBox), a short region, so the
+   first figure arrives at the foot of the first screen. Wide screens: cream type under a dark halo (the sky is mid
+   cerulean: the title needs about 0.1 of ink for 3:1, the dek about 0.3 for 4.5:1); the dek is indented under the
+   title, so its swash cap clears the first turbaned man at the ring's top left. Phones: dark ink on the sky (5:1 bare),
+   the title's cap line below the ring's top arc.
    The ledger: each figure sits on a hairline with its label right under it, rows set close (≈ 0.29 screen each on
-   desktop). On wide screens the ledger is only as wide as its widest row, so the right of the screen stays clear for
-   the TV. The figure is set in tabular lining figures (the numeral role: never above the title) and laid out at its
-   final width from the start; while it counts, places not reached yet show as faint zeros and the + waits. */
+   desktop). On wide screens the ledger is only as wide as its widest row and runs on the sky; the left of the ring
+   is under the ink veil, the right group of watchers stays clear. The figure is set in tabular lining figures (the
+   numeral role: never above the title) and laid out at its final width from the start; while it counts, places not
+   reached yet show as faint zeros and the + waits. */
 .opener.rx-open {
   min-height: 56svh; justify-content: flex-start;
   padding-top: calc(var(--nav-h) + 4.5svh); padding-bottom: 0;
 }
 .rx-open .giant { margin-bottom: clamp(0.9rem, 2.6vh, 2rem); }
 .rx-open .dek { max-width: 13em; }
+@media (min-width: 1024px) { .rx-open .dek { margin-left: 2.4em; } }
 /* a soft ink veil travels with the type, so cream holds over the bright clouds (local: the sky beyond stays clean) */
 .rx-open .scrim::before {
   inset: -30% -22% -40% -16%;
   background: radial-gradient(closest-side, rgba(11, 8, 5, 0.62), rgba(11, 8, 5, 0.38) 58%, rgba(11, 8, 5, 0));
 }
 @media (max-width: 1023px) {
-  .opener.rx-open { min-height: 54svh; padding-top: calc(var(--nav-h) + 3.5svh); }
+  /* the portrait: dark ink on the sky (5:1 bare), the title's cap line below the ring's top arc (v 0.165), the dek
+     left of the flowerpot (u 0.76) */
+  .opener.rx-open { min-height: 54svh; padding-top: calc(var(--nav-h) + 9.5svh); color: var(--ink); --halo: 244, 237, 223; }
+  .rx-open .scrim::before { inset: -12% -20% -18% -14%; background: radial-gradient(closest-side, rgba(var(--halo), 0.34), rgba(var(--halo), 0.16) 62%, rgba(var(--halo), 0)); }
+  .rx-open .scrim { text-shadow: none; }
   .rx-open .dek { max-width: 11em; }
 }
 

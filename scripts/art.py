@@ -19,6 +19,15 @@ Staging (none of these change the default run above)
                      stored as a 1920x1080 greyscale WebP q85, as the live set's depth maps were made by hand.
   e.g. python3 scripts/art.py --config masters.json --out /tmp/encoded --sheet-path qa/shots/x.jpg --depth m.onnx
 
+Live masters (2026-10-20, "Masters, modernised")
+  Storytellers, Creators, Brands, Results, Directors and Apply are the local retouches listed in
+  scripts/art-masters.json (src "repo:.art/masters-2026-10-20/<chapter>-<desktop|phone>.png"; .art/ is git-ignored,
+  check the files against .art/masters-2026-10-20/SHA256SUMS). Rebuild them with
+    python3 scripts/art.py --config scripts/art-masters.json --depth /home/user/models/midas_small.onnx
+    python3 scripts/depth-directors.py      (Directors' depth map is hand-layered; MiDaS flattens the set)
+  A run without --config and without --out applies that file too, so it never restores the phase-1 paintings below.
+  A src of the form "repo:<path>" is read relative to the repo root.
+
 Inputs
   The 4K masters are Higgsfield results on d8j0ntlcm91z4.cloudfront.net (job ids in docs/art-log.md);
   Results' desktop master is the existing 1920 px plate in the repo. Downloads are cached in $ART_CACHE
@@ -55,6 +64,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'public' / 'assets' / 'scenes'
 SHEET = ROOT / 'qa' / 'shots' / 'v3-art-sheet.jpg'
+MASTERS = ROOT / 'scripts' / 'art-masters.json'   # the live masters of six chapters (see main)
 CACHE = Path(os.environ.get('ART_CACHE', Path.home() / '.cache' / 'cm-art'))
 CDN = 'https://d8j0ntlcm91z4.cloudfront.net/user_3E2nAh6VQJhvRG2v3D2ZPRAoWM4/'
 URL_ROOT = '/assets/scenes'
@@ -99,6 +109,9 @@ TITLE_BOX = {
 #   phoneTitle  phone title zone: the top of the frame (hero: the cloud bank at the left, mid-height)
 #   key         the chapter's colour key (its identity hue, for chrome accents and the loading fill)
 J = lambda name: CDN + name
+# The v3 phase-1 paintings. Since 2026-10-20 only the hero entry is live: the other six chapters are the masters in
+# scripts/art-masters.json (applied over these entries, see main); their entries stay here as the record of the
+# phase-1 set (Results' 1920 px plate, public/assets/plates/results.webp, is gone with its film).
 CHAPTERS = {
     'hero': dict(
         name='Hero: the Creation, with kit',
@@ -443,7 +456,8 @@ def sheet() -> None:
     rows = [ch for ch in CHAPTERS if (OUT / ch / 'manifest.json').exists()]
     title = 'Creative Motley v3: chapter paintings (decoded from the shipped AVIFs; magenta = title zone)'
     if STAGED:
-        title = 'Masters, modernised (staged): decoded from the AVIFs; magenta = title zone'
+        title = ('Creative Motley v3: chapter paintings, the 2026-10-20 masters (decoded from the shipped AVIFs; magenta = title zone)'
+                 if OUT == ROOT / 'public' / 'assets' / 'scenes' else 'Masters, modernised (staged): decoded from the AVIFs; magenta = title zone')
     DW, DH, PW = 1024, 576, 324           # desktop thumb, row height, phone thumb width (9:16)
     TW, M = (600 if STAGED else 470), 24
     W = M + DW + M + PW + M + TW + M
@@ -512,8 +526,11 @@ def sheet() -> None:
 
 
 def index() -> None:
-    """public/assets/scenes/index.json: every chapter's manifest path, key and placeholder, for preloading."""
-    rows = {}
+    """public/assets/scenes/index.json: every chapter's manifest path, key and placeholder, for preloading.
+    Merged into the index already there: a run that encodes some chapters (or a --config with only the masters)
+    keeps the other chapters' rows (the hero's, for the dropdown thumbnails)."""
+    f0 = OUT / 'index.json'
+    rows = json.loads(f0.read_text()) if f0.exists() else {}
     for ch in CHAPTERS:
         f = OUT / ch / 'manifest.json'
         if f.exists():
@@ -539,14 +556,23 @@ def main() -> None:
         SHEET = OUT / 'art-sheet.jpg'
     if a.sheet_path:
         SHEET = Path(a.sheet_path).resolve()
+    cfgs = {}
     if a.config:
         cfgs = load_config(a.config)
         STAGED = True
-        # the config's chapters, in its order (the sheet and index follow CHAPTERS)
-        CHAPTERS = cfgs if not a.chapters else {**CHAPTERS, **cfgs}
+        # staged (--out): the config's chapters only, in its order (the sheet and index follow CHAPTERS); live (no
+        # --out): they replace the built-in entries and the rest (the hero) stay on the sheet and in index.json
+        CHAPTERS = cfgs if (a.out and not a.chapters) else {**CHAPTERS, **cfgs}
+    elif not a.out and MASTERS.exists():
+        # the live paintings of six chapters are the 2026-10-20 masters (scripts/art-masters.json), not the v3
+        # phase-1 entries above: a plain run must never put the old paintings back
+        cfgs = load_config(str(MASTERS))
+        STAGED = True
+        CHAPTERS = {**CHAPTERS, **cfgs}
+        print(f'using {MASTERS.relative_to(ROOT)} for: {", ".join(cfgs)}')
     DEPTH_MODEL = a.depth
     if not a.sheet:
-        names = a.chapters or list(CHAPTERS)
+        names = a.chapters or (list(cfgs) if a.config else list(CHAPTERS))
         bad = [n for n in names if n not in CHAPTERS]
         if bad:
             sys.exit(f'unknown chapter(s): {bad}; known: {list(CHAPTERS)}')

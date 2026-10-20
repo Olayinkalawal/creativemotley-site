@@ -40,7 +40,10 @@
    Boundaries: where the scene changes, the two dissolve through ink-bleed noise around the reading line. A section
    marked data-wipe is a sheet instead (the black teardown stage): while its bottom edge is in the viewport both scenes
    draw, split at that edge (feathered, with a faint warm edge light), so the sheet and its device scroll off the
-   next scene the way the DOM above it does. */
+   next scene the way the DOM above it does. A section marked data-bleed comes in the other way round: while its top
+   edge is in the viewport the scene above holds above that edge, and the section's own scene bleeds up into it through
+   the dissolve's ink-bleed noise in a band under the edge (I Storytellers: with data-rise its painting rises with the
+   edge, so the title, set at the section's top, rides the same calm part of the painting all the way in). */
 import { WebGLRenderer, WebGLRenderTarget, Vector2, LinearSRGBColorSpace, UnsignedByteType } from 'three';
 import { createPost } from './lib/post.js';
 import { onFrame, onResize, clamp } from '../core/scroll.js';
@@ -105,7 +108,7 @@ export class Stage {
     // only regions whose scene is known and that have height: an empty or unbuilt slot must not turn a dissolve into hold-then-cut
     this.segs = [...document.querySelectorAll('[data-scene]')]
       .filter((el) => this.known(el.dataset.scene) && el.getBoundingClientRect().height > 0)
-      .map((el) => ({ el, id: el.dataset.scene, dissolve: parseFloat(el.dataset.dissolve) || 0, wipe: el.hasAttribute('data-wipe'), run: 0 }));
+      .map((el) => ({ el, id: el.dataset.scene, dissolve: parseFloat(el.dataset.dissolve) || 0, wipe: el.hasAttribute('data-wipe'), bleed: el.hasAttribute('data-bleed'), run: 0 }));
     this.runs = [];
     for (const s of this.segs) {
       const r = this.runs[this.runs.length - 1];
@@ -275,13 +278,14 @@ export class Stage {
     }
     let i = 0;
     for (let j = 0; j < this.segs.length; j++) if (geo(this.segs[j].el).top <= c) i = j;
-    let A = this.segs[i], B = null, mix = 0, best = Infinity, wipe = -1;
-    // a wiping sheet's bottom edge in the viewport: the sheet above it, the next scene below it
+    let A = this.segs[i], B = null, mix = 0, best = Infinity, wipe = -1, bleed = false;
+    // a wiping sheet's bottom edge in the viewport: the sheet above it, the next scene below it (data-bleed on the
+    // next one: the same split, its scene bleeding up into the one above through ink-bleed noise under the edge)
     for (let j = 1; j < this.segs.length && !cut; j++) {
-      const a = this.segs[j - 1];
-      if (!a.wipe || a.id === this.segs[j].id) continue;
-      const t = geo(this.segs[j].el).top - y;
-      if (t > 0 && t < vh) { A = a; B = this.segs[j]; wipe = t / vh; mix = 1; break; }
+      const a = this.segs[j - 1], b = this.segs[j];
+      if (!(a.wipe || b.bleed) || a.id === b.id) continue;
+      const t = geo(b.el).top - y;
+      if (t > 0 && t < vh) { A = a; B = b; wipe = t / vh; mix = 1; bleed = b.bleed; break; }
     }
     for (let j = 1; j < this.segs.length && !cut && wipe < 0; j++) {
       if (this.segs[j].id === this.segs[j - 1].id) continue;
@@ -309,7 +313,10 @@ export class Stage {
     // dirty check: draw while something changes, then stop; ambient scenes keep drawing at ≤ 30 fps
     const active = now - this.lastActive < IDLE_MS;
     const ambient = list.some((s) => s.ambient?.(ctx));
-    if (!active && !ambient) { if (this.drawing) { this.drawing = false; this.applyLevel(); } return; }
+    // the last frame drawn while scrolling carried the velocity fringe: draw once more without it before stopping (on a
+    // slow renderer the idle cut-off can come before the scroll velocity has died away)
+    const settle = this.lastFringe > 0.0005;
+    if (!active && !ambient && !settle) { if (this.drawing) { this.drawing = false; this.applyLevel(); } return; }
     const capped = this.level <= 1;
     const cap = capped || !active ? 30 : 0;
     if (cap && now - this.lastRender < 1000 / cap - 4) return;
@@ -331,9 +338,11 @@ export class Stage {
     u.tA.value = this.rtA.texture; u.tB.value = this.rtB.texture;
     u.mixAB.value = second && wipe < 0 ? mix : 0;
     u.wipe.value = second ? wipe : -1;
+    u.bleed.value = second && bleed ? 1 : 0;
     u.time.value = this.clock;
     u.grain.value = pf.grain ?? 0.045; u.vignette.value = pf.vignette ?? 0.32;
-    u.fringe.value = REDUCED ? 0 : Math.min(0.006, Math.abs(v.velocity) * 0.00012) * (pf.fringe ?? 1);
+    u.fringe.value = REDUCED || !active ? 0 : Math.min(0.006, Math.abs(v.velocity) * 0.00012) * (pf.fringe ?? 1);
+    this.lastFringe = u.fringe.value;
     u.fade.value = pf.fade ?? 0;
     this.renderer.setRenderTarget(null);
     this.renderer.render(this.post.scene, this.post.camera);
