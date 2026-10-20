@@ -61,10 +61,12 @@ html.js #method.td--mk:not(:has(.td__mk--name))[data-td-ready]:not(.td-static) .
 @media (min-width: 1024px) {
   :is(#method.td-static, html:not(.js) #method) .td__still--hero {
     --t: calc(var(--nav-h) + 6vh + 0.78 * var(--t-title) + 12px);
-    --hi: min(calc((100svh - var(--t) - 12px) / 0.7), 60vw);
+    --hi: min(calc((100svh - var(--t) - 12px) / 0.7), 60vw, calc((100vw - var(--rail-w) - 28px) * 0.8346));
     /* centred where there is room; otherwise the camera itself (0.163 into the still) starts 16 px right of the
-       chapter index, as the live orbit's slot does */
-    align-self: start; justify-self: start; height: var(--hi); width: calc(var(--hi) * 16 / 9); max-width: 100%;
+       chapter index, as the live orbit's slot does, and ends at least 12 px from the right edge (the third term of
+       --hi: the camera spans 0.674 of the still's width); the still's black margin may run off the right edge
+       (main clips it) */
+    align-self: start; justify-self: start; height: var(--hi); width: calc(var(--hi) * 16 / 9); max-width: none;
     margin-left: max(calc((100% - var(--hi) * 16 / 9) / 2), calc(var(--rail-w) + 16px - 0.163 * var(--hi) * 16 / 9));
     margin-top: calc(var(--t) - 0.15 * var(--hi));
   }

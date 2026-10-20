@@ -377,19 +377,24 @@ function block(el, idx) {
   const frame = (v) => {
     if (!heroR) return;
     const r = tdRun(run, v.y, v.vh), s = r.s;
-    // far away: write the clamped state once, then rest (every value is a pure function of s)
-    if (s < -2.0 || s > r.L + 1.8) { if (parked) return; parked = true; } else parked = false;
+    let flip = false;
+    if ('ready' in live) {
+      // a scene that says whether it has drawn (td:camera3d): two-way, so the stills come back the moment it is disposed
+      // (the reader left the mount window) and stand in again until it has reloaded, instead of a black chapter
+      if (!!live.ready !== drawn) {
+        drawn = !!live.ready; el.classList.toggle('is-drawn', drawn); flip = true;
+        // back on: decode them now (usually while the reader is away), so they paint the moment the chapter returns
+        if (!drawn) for (const x of shots) for (const im of [x.stillH, x.stillP]) if (im?.getAttribute('src')) im.decode().catch(() => {});
+      }
+    } else if (!drawn && window.__stage?.drawn) {
+      for (const sc of window.__stage.drawn) if (sc.id === id && sc.device) { drawn = true; el.classList.add('is-drawn'); }
+    }
+    // far away: write the clamped state once (again after a flip), then rest (every value is a pure function of s)
+    if (s < -2.0 || s > r.L + 1.8) { if (parked && !flip) return; parked = true; } else parked = false;
     if (Math.abs(r.L - TL) > 1e-3) { timeline = tdTimeline(shots.length, r.L); TL = r.L; }
     const st = tdState(s, timeline, r.L, fl, ST);
     const k = st.k, ph = st.ph, sh = shots[k], T0 = timeline[0];
     const cut = easeIO(st.cut);
-    if ('ready' in live) {
-      // a scene that says whether it has drawn (td:camera3d): two-way, so the stills come back the moment it is disposed
-      // (the reader left the mount window) and stand in again until it has reloaded, instead of a black chapter
-      if (!!live.ready !== drawn) { drawn = !!live.ready; el.classList.toggle('is-drawn', drawn); }
-    } else if (!drawn && window.__stage?.drawn) {
-      for (const sc of window.__stage.drawn) if (sc.id === id && sc.device) { drawn = true; el.classList.add('is-drawn'); }
-    }
     const hand = k === 0 ? ph.hand : 1;
 
     // the slot: the orbit's rect (the viewport, clear of the title) → the column rect (computed, never laid out); the
