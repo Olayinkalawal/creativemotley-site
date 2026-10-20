@@ -80,6 +80,12 @@ export function scrollTo(target, opts = {}) {
     lenis.scrollTo(el, { offset: 0, duration, easing: (t) => 1 - Math.pow(1 - t, 4), ...opts, onComplete: (l) => { view.jump = false; view.velocity = 0; opts.onComplete?.(l); } });
   } else el.scrollIntoView({ behavior: 'auto' });
 }
+/* straight to an element, no glide (a deep link landing again after the page below the fold has grown) */
+export function jumpTo(el) {
+  const y = Math.round(el.getBoundingClientRect().top + window.scrollY);   // where a chapter link's glide lands (Lenis measures so)
+  if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+  view.y = y;
+}
 export function lockScroll(on) { if (lenis) on ? lenis.stop() : lenis.start(); document.documentElement.style.overflow = on ? 'hidden' : ''; }
 
 /* document-space top of an element (stable under transforms of ancestors we don't use) */

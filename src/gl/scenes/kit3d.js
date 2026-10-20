@@ -17,10 +17,14 @@
    its own key behind the wipe. The devices draw through one pool of targets (kit3d.js createPool): HDR MSAA, the 8-bit
    tone-mapped target and the bloom chain are shared; each drawn device keeps only its running mean.
    Lazy per device: the shot on screen loads first (load() waits for it, so the stage keeps the section's stills until
-   it draws); the next device loads when its cut is near (one load at a time); a device two or more shots away is
-   disposed (every GPU resource freed); a loaded neighbour that is not drawn frees its running mean. A device that is
-   not ready when its shot shows (a fast scroll, a slow machine) stands in with its 3D stills through the frame path
-   (framed by the shot's data-td-frame0 / data-td-frame keys, measured on those stills), then cross-fades to live.
+   it draws); the next device loads when its cut is near (one load at a time: manage()), and on the way back up the
+   previous one; a device two or more shots away is disposed (every GPU resource freed); a loaded neighbour that is not
+   drawn frees its running mean. Phones load the next device only once the shot on screen holds (when idle), and keep
+   at most the shot on screen, the next and, round its cut, the previous. A device that is not ready when its shot shows
+   (a fast scroll, a slow machine) stands in with its 3D stills through the frame path (both fetched at once, each
+   framed at its own pose by the shot's data-td-frame0 / data-td-frame keys, measured on those stills), then cross-fades
+   to live; the next shot's hero still is fetched ahead in case its device is late, and a cut whose device and still are
+   both late wipes in the bare key. GLBs come gzipped (gl/lib/glbfetch.js).
    Markers: after posing (dev.anchors() poses first), the scene publishes shot k's anchors relative to the pin
    (live.anchors3d, tagged with the shot) and calls the section's live.place3d(), which writes the marker transforms in
    the same frame, after the section's own pass: no lag behind the parts. The id pass (occlusion) lands inside render()
@@ -28,10 +32,12 @@
    more frame (the camera's rule). While a shot stands in with its stills, its markers fall back to the uv on the still.
    live.ready (the section's two-way "drawn"): true once the scene shows shot k (its device, or its stills), false again
    when disposed, so the section brings its own stills and DOM keys back over the stage's ink until the scene reloads.
-   Stand-in on arrival (the camera's): load() makes the first shot's two DOM stills eager and waits until they have
-   painted, then loads its device; the first frame drawn while a stand-in is on screen starts at the still's own pose
-   (the hero still before a quarter of the explode, the exploded still after it) and turns into the scroll's pose over
-   0.9 s while the still dissolves (_teardown.css). The markers draw in with the scroll: an id pass every 0.025 of
+   Stand-in on arrival (the camera's): load() makes the first shot's DOM still (the one its phase shows) eager and waits
+   until it has painted, then loads its device; the first frame drawn while a stand-in is on screen starts at the still's
+   own pose (the hero still before a quarter of the explode, the exploded still after it) and turns into the scroll's
+   pose over 0.9 s while the still dissolves (_teardown.css), except in the orbit's first three quarters (tdcore
+   tdIntroTurn: the dissolve hands over at the scroll's pose there, the still sized like the view). While it turns,
+   live.turning keeps the section's markers on the still's uv. The markers draw in with the scroll: an id pass every 0.025 of
    explode from 0.93 (the runtime trusts a pass within 0.03 of its pose), one as it reaches 1, every third of the settle,
    and one whenever the view settles. These rules are tdcore's, shared with Method's camera (gl/scenes/camera3d.js).
    Phones (the still path, where core/env.js CAM3D allows it): the phone GLBs; if the frame-rate governor has to step all
@@ -46,15 +52,32 @@ import { create, createPool } from '../lib/kit3d.js';
 import { DEVICES } from '../lib/kit3d_devices.js';
 import { loadTexture } from '../lib/loaders.js';
 import { TD_ASPECT, tdLive, tdRun, tdFlags, tdShots, tdDev, tdTimeline, tdState, tdFraming, tdFit, tdView, tdLerpRect, tdPinTop,
-  tdIdDue, tdIntroPose, tdStandIn, tdGiveUp, tdPointerStep, TD_INTRO_MS } from '../lib/tdcore.js';
+  tdIdDue, tdIntroPose, tdIntroTurn, tdStandIn, tdGiveUp, tdPointerStep, TD_INTRO_MS } from '../lib/tdcore.js';
+import { fetchGLB } from '../lib/glbfetch.js';
+
+/* the site's art direction over the package's view keys (data only, set before any create(), so kit3d_devices.js stays
+   the package's file, as camera3d.js does with the camera's KEYS); kit.html's still framings match these:
+   - the console orbits at 0.70 of its slot at the hero key (0.80 ran it to 10-15 px from the right edge at 1024, 1280
+     and 1440, the slot shifted right of the chapter index), and lands at 0.80 of the column (0.84) so the hand-off keeps
+     its pace; portrait: the exploded hold at 0.83 (0.89 x the 1.035 push ran the knobs to the edge at 360 and 390)
+   - the headphones arrive at 0.74 of the column (0.88: twice the mic's size, the band under the bar, then a visible pull
+     back as they came apart) and hold at 0.90, clamped at the family's 0.92 (0.96 ran a cup to 21 px of the edge) */
+{
+  const MX = DEVICES.mixer3d.config.keys, HP = DEVICES.headphones3d.config;
+  MX.wide.hero.fill = 0.70; MX.wide.column.fill = 0.80; MX.tall.exploded.fill = 0.83;
+  HP.keys.wide.column.fill = 0.74; HP.keys.wide.exploded.fill = 0.90; HP.fillMax = 0.92;
+}
 
 const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 const smooth = (x) => x * x * (3 - 2 * x);
 const seg = (x, a, b) => clamp01((x - a) / (b - a));
-const PREFETCH = 1.1;          // screens before its cut: the next device starts loading
-const STILL_AHEAD = 0.12;      // screens before its cut: a device that is not ready yet fetches its hero still (the exploded
-                               // one only once its explode starts without it): the stand-in fetches only what it shows
+const PREFETCH = 1.1;          // screens before its cut: the next device starts loading (desktop)
+const STILL_AHEAD = 0.6;       // … and its hero still, if the device is not in this far before its cut (30-90 KB: a late
+                               // GLB stands in with its still, never a bare key)
+const PREFETCH_PHONE = 0.35;   // phones: the next device no earlier than this before its cut, and not before the shot on
+                               // screen holds (its decode, bakes and compile take the main thread: not while parts move)
+const STILL_AHEAD_PHONE = 0.5; // phones: the next shot's hero still, this far before its cut while its device is not in
 const FADE_MS = 350;           // the stand-in still → the live device (a cross-fade, on the stage's clock), while the device
                                // turns from the still's pose into the scroll's (TD_INTRO_MS). The intro turn, the id passes' schedule, the
                                // stand-in's wait, the phone give-up and the pointer steps are tdcore's, shared with Method's
@@ -127,16 +150,23 @@ void main(){
     float w = (1.0 - sc.x) * 0.84 + sc.y * 0.16 + (n - 0.5) * 0.42;
     float front = cutT * 1.56 - 0.28;
     float k = xfade > 0.5 ? cutT : smoothstep(front + 0.012, front - 0.012, w);   // 1: the next shot
+    vec4 dN = vec4(0.0);
     if (k > 0.0) {
       vec3 bgN = keyBg(keyN0, keyN1);
       if (liveN > 0.0) bgN *= 1.0 - shK * liveN * shadowAt(shN, sc + shOff);
-      vec4 dN = liveN > 0.001 ? texture2D(mapN, sc) * liveN : vec4(0.0);
+      dN = liveN > 0.001 ? texture2D(mapN, sc) * liveN : vec4(0.0);
       if (liveN < 0.999) dN += stillAt(stN0, stN0, vec2(1.0, 0.0), zoomN, shiftN) * (1.0 - liveN);
       c = mix(c, dN.rgb + bgN * (1.0 - dN.a), k);
     }
     if (xfade < 0.5) {
-      float rim = 1.0 - smoothstep(0.0, 0.045, abs(w - front));
-      c += (keyN0 * 2.4 + 0.02) * rim * 0.5 * (1.0 - abs(cutT - 0.5) * 1.2);
+      // the front's ink-lit rim, on the keys only (over a device it read as a smudge of fog)
+      float rim = 1.0 - smoothstep(0.0, 0.025, abs(w - front));
+      if (rim > 0.0) {
+        vec4 dR = k > 0.0 ? dN : (liveN > 0.001 ? texture2D(mapN, sc) * liveN : vec4(0.0));
+        if (k <= 0.0 && liveN < 0.999) dR += stillAt(stN0, stN0, vec2(1.0, 0.0), zoomN, shiftN) * (1.0 - liveN);
+        float cov = max(d.a, dR.a);
+        c += (keyN0 * 2.4 + 0.02) * rim * 0.5 * (1.0 - cov) * (1.0 - abs(cutT - 0.5) * 1.2);
+      }
     }
   }
   gl_FragColor = vec4(c * fade, 1.0);
@@ -155,7 +185,7 @@ export default function register(stage) {
   const section = document.querySelector(`[data-scene="${id}"]`);
   if (!section) return;
   const live = tdLive(id);
-  live.ready = false;
+  live.ready = false; live.turning = false;
   const scene = new Scene(), camera = new OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const V3 = () => new Vector3();
   const mat = new ShaderMaterial({
@@ -180,10 +210,11 @@ export default function register(stage) {
   const live3 = (window.__kit3d ||= {});   // for QA scripts (like the stage's window.__stage): dev id → device
   window.__liveKit = live;
 
-  let ctxRef = null, pool = null, shots = [], loading = null, disposed = true, gaveUp = false;
+  let ctxRef = null, pool = null, shots = [], loading = null, queued = null, disposed = true, gaveUp = false, showsK = false;
+  let lastS = NaN, up = false;     // the reader's last direction (s falling: on the way back up)
   let run = null, pinH = 0, heroR = null, colR = null, fl = null, timeline = null, TL = -1, vw = 0, vh = 0, tall = false;
   let A = null, N = null, lastA = null, idV = -1, idPending = false, moving = false;
-  const ST = { ph: {}, phN: {} }, S = {}, VS = {}, VN = {}, PA = {}, PN = {};
+  const ST = { ph: {}, phN: {} }, S = {}, VS = {}, VN = {}, PA = {}, PN = {}, PV = {};
   const RPH = { orbit: 1, hand: 1, explode: 1, settle: 1, handLin: 1, mix: 1, explodeLin: 1 };   // reduced: the exploded hold
 
   const build = () => {
@@ -218,7 +249,7 @@ export default function register(stage) {
     if (x.d || x.tok || x.failed || disposed) return Promise.resolve();
     const c = ctxRef, tok = (x.tok = {});
     loading = x;
-    const d = create(c, { config: x.D.config, base: x.D.base, tier: c.tier, reduced: c.reduced, mobile: !!c.still, pool, bloom: false });
+    const d = create(c, { config: x.D.config, base: x.D.base, tier: c.tier, reduced: c.reduced, mobile: !!c.still, pool, bloom: false, loadBuffer: fetchGLB });
     d.resize(c.w, c.h, c.dpr);
     return d.load().then(() => {
       if (x.tok !== tok || disposed) { d.dispose(); return; }
@@ -247,22 +278,47 @@ export default function register(stage) {
       x[key] = t; x.stLoading &= ~which; stage.invalidate();
     }).catch(() => { x.stLoading &= ~which; });
   };
-  /* per frame: what to keep, load and drop around shot k */
+  /* a phone's next (or previous) device: when the main thread is free (requestIdleCallback, ≤ 300 ms), so its decode,
+     bakes and compile start after the frame that brought the reader to the hold, not inside it */
+  const loadIdle = (x) => {
+    queued = x;
+    const go = () => {
+      if (queued !== x) return;
+      queued = null;
+      if (!disposed && !loading && shots.includes(x)) loadDevice(x).catch((e) => console.warn('[kit3d] device failed', x.dev, e));
+    };
+    if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 300 }); else setTimeout(go, 60);
+  };
+  /* per frame: what to keep, load and drop around shot k. Desktop: shots k − 1 … k + 1 stay loaded, the next device loads
+     PREFETCH before its cut. Phones (ctx.still): shot k, the next one (from PREFETCH_PHONE before its cut, and not before
+     shot k holds), and the previous one only round its cut (a reader turning back up), so a read never holds three phone
+     GLBs; a device two shots away goes everywhere. Both ways: scrolling up (the last move), the previous device and its
+     exploded still (the outgoing side of a reverse cut shows it exploded) load as the reader nears its cut. */
   const manage = (s, k, ph) => {
+    if (Math.abs(s - lastS) > 0.002 || !(lastS === lastS)) { up = s < lastS; lastS = s; }
+    const phone = !!ctxRef?.still, PF = phone ? PREFETCH_PHONE : PREFETCH, SA = phone ? STILL_AHEAD_PHONE : STILL_AHEAD;
+    const sh = shots[k], nx = shots[k + 1], pv = shots[k - 1], Tk = timeline[k], T1 = timeline[k + 1];
     shots.forEach((x, j) => {
-      if (Math.abs(j - k) >= 2) { if (x.d || x.tok) dropDevice(x); if (x.stH || x.stX || x.stLoading) dropStills(x); }
+      const far = Math.abs(j - k) >= 2;
+      const drop = far || (phone && j === k - 1 && Tk.cut && s > Tk.cut[1] + 0.3);
+      if (drop && queued === x) queued = null;
+      if (drop && (x.d || x.tok)) dropDevice(x);
+      if (far && (x.stH || x.stX || x.stLoading)) dropStills(x);
     });
-    const nx = shots[k + 1], T1 = timeline[k + 1];
-    if (!loading && !disposed) {
-      // the shot on screen first, then the next once its cut is near
-      const order = [shots[k]];
-      if (nx && s > T1.cut[0] - PREFETCH) order.push(nx);
+    if (!loading && !queued && !disposed) {
+      // the shot on screen first, then the next once its cut is near, then the previous one on the way back up
+      const order = [sh];
+      if (nx && s > Math.max(T1.cut[0] - PF, phone ? Tk.settle[0] : -Infinity)) order.push(nx);
+      if (up && pv && Tk.cut && s < Tk.cut[1] + PF * 0.6) order.push(pv);
       const x = order.find((q) => !q.d && !q.tok && !q.failed);
-      if (x) loadDevice(x).catch((e) => console.warn('[kit3d] device failed', x.dev, e));
+      if (x && phone && x !== sh) loadIdle(x);
+      else if (x) loadDevice(x).catch((e) => console.warn('[kit3d] device failed', x.dev, e));
     }
-    // a device that is not ready when its shot shows stands in with its stills (the one it shows: the section's dip)
-    if (!shots[k].d) needStill(shots[k], ph.explodeLin < 0.25 ? 1 : 2);
-    if (nx && !nx.d && s > T1.cut[0] - STILL_AHEAD) needStill(nx, 1);
+    // a device that is not ready when its shot shows stands in with its stills: both at once (the dip to the exploded
+    // one must not land on a bare key)
+    if (!sh.d) { needStill(sh, 1); needStill(sh, 2); }
+    if (nx && !nx.d && s > T1.cut[0] - SA) needStill(nx, 1);
+    if (up && pv && !pv.d && Tk.cut && s < Tk.cut[1] + 0.5) needStill(pv, 2);
   };
   /* a device as it goes live: if a stand-in was on screen (the DOM's stills on arrival, or this scene's), it starts at
      that still's pose and turns into the scroll's; over this scene's stills it also cross-fades. Both run on the stage's
@@ -270,7 +326,8 @@ export default function register(stage) {
      instead of skipping it) */
   const goLive = (x, ph) => {
     x.liveAt = 1;
-    x.intro = x.pend ? 1 : 0; x.introX = ph.explodeLin >= 0.25 ? 1 : 0; x.fadeK = x.pend === 'gl' ? 0 : 1;
+    // (not in the orbit's first three quarters: tdcore tdIntroTurn; the stills' dissolve hands over at the scroll's pose)
+    x.intro = x.pend && tdIntroTurn(ph) ? 1 : 0; x.introX = ph.explodeLin >= 0.25 ? 1 : 0; x.fadeK = x.pend === 'gl' ? 0 : 1;
     x.pend = null;
   };
   /* this frame's pose (the still's, turning into the scroll's), then the clock moves on */
@@ -294,25 +351,32 @@ export default function register(stage) {
     id, scene, camera, device: true,
     post: { vignette: 0.16, grain: 0.03, fringe: 0.5 },
     async load(ctx) {
+      // phones: the governor is already at its floor (Method's camera pushed it there): the stills, without fetching a GLB
+      // or running the bakes on a phone that is struggling (the stage keeps the section's stills; a warning only)
+      if (tdGiveUp(ctx, stage)) { gaveUp = true; section.dataset.kit3d = 'stills'; throw new Error('kit3d: the stage is at its floor'); }
       ctxRef = ctx; disposed = false;
       pool = createPool();
       build(); measure(ctx);
       // the shot the reader will meet first (from above: the console; from below: the phone): its stills stand in (the
       // section's), then its device; load() waits for it, so the stage keeps the section's stills until it draws (and
       // fails, keeping them, without half-float targets)
-      const { r, st } = shotNow(ctx);
+      const { st } = shotNow(ctx);
       const x = shots[st.k];
       if (x.failed) throw new Error(`kit3d: no device for ${x.dev}`);
-      await tdStandIn(x.imgs);                               // its two stills, decoded and painted (≤ 2.5 s; the camera's)
+      // the still the section shows at this point (the hero one before a quarter of the explode, else the exploded one),
+      // decoded and painted (≤ 2.5 s; the camera's rule); the section fetches the other one in its own window
+      await tdStandIn(x.imgs.slice(st.ph.explodeLin < 0.25 ? 0 : 1, st.ph.explodeLin < 0.25 ? 1 : 2));
       ctx.renderer.compile(shScene, camera);                 // the contact shadow's pass (the stage compiles the host quad)
       await loadDevice(x);
-      if (r.s > -1.0 && r.s < r.L + 0.6) x.pend = 'dom';     // the section's still is on screen: turn from its pose
+      // the section's still is on screen (the reader is still on this shot): the device takes over from it
+      const now = shotNow(ctx);
+      if (now.st.k === x.j && now.r.s > -1.0 && now.r.s < now.r.L + 0.6) x.pend = 'dom';
     },
     dispose() {
       disposed = true;
       for (const x of shots) { dropDevice(x); dropStills(x); }
-      shots = []; loading = null; A = N = lastA = null; idPending = false; idV = -1; moving = false;
-      live.anchors3d = null; live.ready = false;
+      shots = []; loading = null; queued = null; A = N = lastA = null; idPending = false; idV = -1; moving = false; showsK = false;
+      live.anchors3d = null; live.ready = false; live.turning = false;
       pool?.dispose(); pool = null;
       shRT.forEach((t, i) => { t?.dispose(); shRT[i] = null; });
       const u = mat.uniforms;
@@ -356,16 +420,22 @@ export default function register(stage) {
         // the markers draw in with the scroll (tdcore tdIdDue, the camera's schedule): an id pass every 0.025 of explode
         // from 0.93, one as it reaches 1, every third of the settle (and one whenever the view settles, inside render())
         if (tdIdDue(sh.ID, ph.explode, ph.settle, P !== ph)) A.occlusion();
+        // while it turns from the still's pose (no id pass yet), the section keeps the markers on the still's uv: they hand
+        // over to the 3D anchors after the turn, with the first id pass, instead of blinking off at the dissolve
+        live.turning = P !== ph;
         const a3 = A.anchors(pinTop); a3.shot = k;   // posed for this frame, pin-relative (the section adds nothing)
         live.anchors3d = a3; live.anchorsF = ctx.frame; live.pinTop = pinTop;
         live.place3d?.(a3);
         if (A !== lastA) { lastA = A; idV = A.idVersion; }
         idPending = false;              // this frame's anchors carry the last id pass
-      } else { live.anchors3d = null; if (st.fade > 0.02) sh.pend = 'gl'; }
+      } else { live.anchors3d = null; live.turning = false; if (st.fade > 0.02) sh.pend = 'gl'; }
       if (la < 1) {
-        // the stand-in: its stills through the frame path (tdView: the shot's framing keys, measured on the stills); the
-        // two stills are two angles of one device, so the hero dips to black before the exploded one (the section's)
-        tdView(F, ph, VS);
+        // the stand-in: its stills through the frame path (tdView: the shot's framing keys, measured on the stills), each
+        // framed at its own pose as the section frames it (the hero still whole, the exploded one apart with the settle's
+        // push); the two stills are two angles of one device, so the hero dips to black before the exploded one
+        const exS = !reduced && ph.explodeLin >= 0.25;
+        Object.assign(PV, ph); PV.explode = reduced || exS ? 1 : 0; PV.settle = reduced || exS ? ph.settle : 0;
+        tdView(F, PV, VS);
         u.zoom.value = VS.zoom; u.shift.value.set(VS.sx, VS.sy);
         u.stA0.value = sh.stH || sh.stX; u.stA1.value = sh.stX || sh.stH;
         const e = reduced ? 1 : ph.explodeLin;
@@ -374,9 +444,12 @@ export default function register(stage) {
       const key = F.key;
       u.keyed.value = key ? (k === 0 && !reduced ? ph.hand : 1) : 0;
       if (key) { u.keyA0.value.set(key[0], key[1], key[2]); u.keyA1.value.set(key[3], key[4], key[5]); }
-      // the cut: the incoming shot, whole on its key in the column (the same rect: the slot is the column by now)
+      // this frame shows shot k: its device, or the still its phase calls for (else the section's stills stand in)
+      showsK = !!A || !!(reduced || ph.explodeLin >= 0.25 ? sh.stX : sh.stH);
+      // the cut: the incoming shot, whole on its key in the column (the same rect: the slot is the column by now); a device
+      // and still that are both late wipe in the bare key (the still lands on it), rather than holding the cut back
       N = null;
-      const cut = nx && st.cut > 0 && (nx.d?.loaded || nx.stH) ? (reduced ? smooth(st.cut) : easeIO(st.cut)) : 0;
+      const cut = nx && st.cut > 0 ? (reduced ? smooth(st.cut) : easeIO(st.cut)) : 0;
       u.cutT.value = cut; u.xfade.value = reduced ? 1 : 0;
       let ln = 0;
       if (cut > 0) {
@@ -416,7 +489,7 @@ export default function register(stage) {
       renderer.setRenderTarget(target);
       renderer.render(scene, camera);
       // the section's stills go once this scene shows shot k (its device, or its own stand-in)
-      live.ready = !!A || !!(u.stA0.value && u.stW.value.x + u.stW.value.y > 0);
+      live.ready = showsK;
       // the occlusion test landed (the view settled): one more frame (ambient) so the markers take it
       if (A) { const v = A.idVersion; if (v !== idV) { idV = v; idPending = true; stage.invalidate(); } }
     },

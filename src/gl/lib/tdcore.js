@@ -107,6 +107,16 @@ export function tdState(s, T, L, fl, out = { ph: {}, phN: {} }) {
   return out;
 }
 
+/* how far along from the orbit's start key to its hero key the real-time views are at orbit o (the runtimes' pace over
+   the orbit with this file's re-timing inverted: gl/lib/camera3d.js, kit3d.js) */
+const pace = (u) => (0.5 * u + 0.5 * (1 - Math.cos(Math.PI * u)) / Math.PI) / (0.5 + 1 / Math.PI);
+export function tdOrbitPace(y) {
+  if (y <= 0 || y >= 1) return clamp(y);
+  let o = y;
+  for (let i = 0; i < 3; i++) { const f = 0.72 * o + 0.28 * easeSine(o) - y, df = 0.72 + 0.14 * Math.PI * Math.sin(Math.PI * o); o = clamp(o - f / df); }
+  return pace(o);
+}
+
 /* playheads, in source frames (0-based floats): the scene maps them onto whatever it streams (a frame map, a video) */
 export const tdOrbitFrame = (ph) => ph.orbit * (TD_ORBIT - 1);
 /* explode playhead; xmap (data-td-xmap="e f e f …", explode progress → frame fraction, piecewise linear) re-times a
@@ -153,10 +163,13 @@ export function tdFraming(el, tall, dev = '') {
   const frame = parse((tall && d.tdFrameTall) || d.tdFrame, { z: tall ? 1.3 : 1.1, x: 0, y: 0 });
   const frame0 = parse((tall && d.tdFrame0Tall) || d.tdFrame0, frame);
   const hero = parse((tall && d.tdHeroTall) || d.tdHero, { z: tall ? 1.6 : 1.3, x: 0, y: 0 });
+  // startK: the 3D view's fill at the orbit's start key over its fill at the hero key (data-td-hero-start, -tall), so the
+  // hero still shrinks with the 3D over the orbit and a stand-in on a jump into it is the size the device draws at
+  const startK = parseFloat((tall && d.tdHeroStartTall) || d.tdHeroStart) || 0;
   // bleed: how far (fraction of the pin's width) the device may run past the viewport's side edges in the column phase
   const bleed = parseFloat((tall && d.tdBleedTall) || d.tdBleed) || 0;
   const xmap = nums(d.tdXmap);
-  return { hero, frame0, frame, tall, bleed, xmap: xmap && xmap.length >= 4 ? xmap : null, hbox: nums(d.tdBox), pbox: nums(d.tdPbox), ext: TD_EXT[dev] || null, key: tdKey(d.tdKey), col: null };
+  return { hero, frame0, frame, tall, bleed, startK, xmap: xmap && xmap.length >= 4 ? xmap : null, hbox: nums(d.tdBox), pbox: nums(d.tdPbox), ext: TD_EXT[dev] || null, key: tdKey(d.tdKey), col: null };
 }
 
 /* the device's extent in the explode frames (u0 v0 u1 v1, every 4th frame, measured from the renders): for a run drawn
@@ -197,7 +210,7 @@ function fitZoom(F, f, sx, sy) {
 }
 /* the frame transform at a phase: zoom + shift, exactly what the shader and the CSS stills use */
 export function tdView(F, ph, out = {}) {
-  const zh = F.hero.z * (1 + 0.04 * ph.orbit);
+  const zh = F.hero.z * (F.startK ? lerp(F.startK, 1, tdOrbitPace(ph.orbit)) : 1) * (1 + 0.04 * ph.orbit);
   const k = ph.explode;
   const fx = lerp(F.frame0.x, F.frame.x, k), fy = lerp(F.frame0.y, F.frame.y, k);
   // the column zoom: eased from frame0 to frame (plus the settle's slow push), but never more than the fit
@@ -247,7 +260,11 @@ export function tdIdDue(M, e, sl, hold) {
   return false;
 }
 /* the intro: the first frame a device draws while its stand-in still is on screen starts at that still's pose (the hero
-   key, or the exploded key: toEx) and turns into the scroll's pose as k (1 → 0, eased) runs down */
+   key, or the exploded key: toEx) and turns into the scroll's pose as k (1 → 0, eased) runs down. Not in the first three
+   quarters of an orbit (tdIntroTurn false): the hero still shows the orbit's end, so a turn from there would spin the
+   device half round on a jump into the orbit (the chapter index lands at s = 0); the stills' dissolve hands over at the
+   scroll's pose instead, the still sized like the view (tdView's startK) */
+export const tdIntroTurn = (ph) => !(ph.orbit < 0.75);
 export function tdIntroPose(ph, k, toEx, out) {
   Object.assign(out, ph);
   if (toEx) out.explode += (1 - out.explode) * k;

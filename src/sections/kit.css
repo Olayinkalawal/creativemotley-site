@@ -4,6 +4,9 @@
   .kit { --td-col-w: clamp(240px, 21vw, 310px); }
 }
 .kit .td__label { color: var(--gold); }
+/* the numbered markers' labels a little further out than Method's (42 px): the Kit's parts sit closer together (the
+   mic's grille, diaphragm and voice coil inside 150 px), so a label lands beside its part, not on the next one */
+.kit { --td-lead: 56px; }
 /* static (reduced motion, no JS), desktop: the console's hero still sits under the title, clear of the chapter index
    (Method's rule, method.css, on the console's box in its 3D still: u 0.1–0.9, v 0.138–0.862): from just under the
    title's letters to 12 px above the screen's bottom edge, no wider than about 70 % of the screen (49vw of still height),
@@ -22,4 +25,14 @@
    width (the shared 1.5 ran it off both edges), as Method's 1.36 does for the camera */
 @media (max-width: 1023px) {
   :is(.kit.td.td-static, html:not(.js) .kit.td) .td__still--hero { transform: scale(1.15); }
+}
+/* static: the console spans only 0.43 of its exploded still's width (data-td-pbox 0.287-0.713; the other three 0.54-0.69),
+   so it reads small beside them: scaled 1.3 (transform only; the still's margins are transparent), with the room its
+   taller box needs above and below (it spans 0.91 of the still's height: 1.3 x runs ~0.1 of the still past each edge) */
+:is(.kit.td.td-static, html:not(.js) .kit.td) .td__still--poster[data-td-still="0"] { transform: scale(1.3); }
+@media (min-width: 1024px) {
+  :is(.kit.td.td-static, html:not(.js) .kit.td) .td__still--poster[data-td-still="0"] { margin-block: calc(8vh + 3vw); }
+}
+@media (max-width: 1023px) {
+  :is(.kit.td.td-static, html:not(.js) .kit.td) .td__still--poster[data-td-still="0"] { margin: calc(2svh + 6vw) 0 calc(8svh + 6vw); }
 }

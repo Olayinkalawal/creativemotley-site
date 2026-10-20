@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import fs from 'node:fs';
 import path from 'node:path';
+import zlib from 'node:zlib';
 import threeSlim from './scripts/three-slim.mjs';
 
 /* <!-- @include partials/name.html --> in index.html is replaced by src/partials/name.html,
@@ -41,8 +42,32 @@ function retired() {
   };
 }
 
+/* a gzipped copy beside every .glb in the build (x.glb → x.glb.gz, level 9): the models are meshopt-compressed, which is
+   made to be followed by a general-purpose compressor (the Kit's phone GLBs 2.30 → 1.32 MB, the camera's phone GLB
+   1.49 → 0.97 MB), but most static hosts serve model/gltf-binary as it is. The scenes fetch the .gz and inflate it
+   (src/gl/lib/glbfetch.js); the plain .glb stays for dev and for browsers without DecompressionStream. */
+function glbGzip() {
+  let out = 'dist';
+  return {
+    name: 'cm-glb-gzip',
+    apply: 'build',
+    configResolved(c) { out = path.resolve(c.root, c.build.outDir); },
+    closeBundle() {
+      const walk = (d) => {
+        if (!fs.existsSync(d)) return;
+        for (const f of fs.readdirSync(d, { withFileTypes: true })) {
+          const p = path.join(d, f.name);
+          if (f.isDirectory()) walk(p);
+          else if (f.name.endsWith('.glb')) fs.writeFileSync(p + '.gz', zlib.gzipSync(fs.readFileSync(p), { level: 9 }));
+        }
+      };
+      walk(path.join(out, 'assets/models'));
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [includes(), threeSlim(), retired()],   // threeSlim: build only (scripts/three-slim.mjs)
+  plugins: [includes(), threeSlim(), retired(), glbGzip()],   // threeSlim: build only (scripts/three-slim.mjs)
   build: {
     target: 'es2020',
     assetsInlineLimit: 0,
