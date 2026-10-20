@@ -26,33 +26,86 @@ const parseCam = (s, d) => (s ? s.trim().split(/\s+/).map(Number) : d);
    width, so the title would reach further into it; the narrow camera keeps it on the same calm zone. */
 const KEYS = import.meta.glob('../keys/*.json', { eager: true, import: 'default' });
 const NARROW_AR = 1.45;
-const notes = (o) => Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('//') && k !== 'narrow' && k !== 'fit'));
-const SHEETS = {}, NARROW = {}, FIT = {};
+const notes = (o) => Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('//') && k !== 'narrow' && k !== 'fit' && k !== 'sharpKeys'));
+const SHEETS = {}, NARROW = {}, FIT = {}, SHARP = {};
 for (const [p, v] of Object.entries(KEYS)) {
   const ch = p.match(/([\w-]+)\.json$/)[1];
   SHEETS[ch] = sheet(notes(v));
+  if (v.sharpKeys) SHARP[ch] = v.sharpKeys;
   if (v.narrow) NARROW[ch] = sheet(notes(v.narrow));
-  if (v.fit) FIT[ch] = { ...v.fit, base: SHEETS[ch].channels['camera.zoom'].slice(0, v.fit.keys).map((k) => k.v), vw: 0, vh: 0 };
+  if (v.fit) {
+    const c = SHEETS[ch].channels;
+    FIT[ch] = { ...v.fit, base: c['camera.zoom'].slice(0, v.fit.keys).map((k) => k.v), baseFocus: (c['camera.focus'] || []).slice(0, v.fit.keys).map((k) => [...k.v]), vw: 0, vh: 0 };
+  }
 }
 const sheetFor = (chapter, ctx) => (ctx.vw / ctx.vh < NARROW_AR && NARROW[chapter]) || SHEETS[chapter];
-/* "fit": { "title": "#id", "u": U, "keys": n, "min": a } in a sheet: the rest zoom (its first n zoom keys, anchored at the
-   painting's left edge) is fitted to the screen, as low as min, so that the title's right edge lands at u = U of the
-   painting and no further in. The giant title stops growing at 12rem (about 1460 px wide), so on wider screens it
-   spans less of the screen and the painting can be shown wider (III Brands: the man's hat starts at u 0.46; 1.48 at
-   1440x900, about 1.16 at 1920x1080). Refitted on resize; never above the sheet's own value. */
+/* "fit" in a sheet: the rest framing (its first n keys) is fitted to the screen against the giant title, whose size
+   stops growing at 12rem (about 1460 px wide) and whose column sits a fixed distance from the screen's left, so it
+   covers a different share of the painting on each screen. Refitted on resize.
+   - { "title": "#id", "u": U, "keys": n, "min": a } (III Brands, anchored at the painting's left edge): the zoom is
+     lowered, as far as min, until the title's right edge lands at u = U and no further in (the man's hat starts at
+     u 0.52: about 1.34 at 1440x900, 1.15 at 1920x1080); never above the sheet's own value.
+   - { "title": "#id", "mode": "ellipse", "c": [u, v], "r": [ru, rv], "limit": L, "zooms": [...], "keys": n } (VIII
+     Results): the title and its dek must sit inside the oculus, an ellipse in the painting's uv (v up); "limit" is
+     the worst corner's normalised distance allowed (1.25: what the 1440x900 framing gives, which reads clear of the
+     balusters). Tries each zoom (at or above the sheet's) with the focus moved right as needed, and takes the least
+     move (a zoom step costs half a focus step); on screens where the title reaches further out over the ring (1920
+     wide: zoom 1.5 about u 0.64). */
+const toUV = (x, y, ctx, z, fx, fy) => {
+  const ra = ctx.vw / ctx.vh, ia = 16 / 9, sx = ra > ia ? 1 : ra / ia, sy = ra > ia ? ia / ra : 1;
+  const cu = (x / ctx.vw - 0.5) * sx + 0.5, cv = 1 - ((y / ctx.vh - 0.5) * sy + 0.5);
+  return [fx + (cu - fx) / z, fy + (cv - fy) / z];
+};
+const textBox = (el) => { const rg = document.createRange(); rg.selectNodeContents(el); return rg.getBoundingClientRect(); };
 function fitSheet(chapter, ctx) {
   const f = FIT[chapter];
   if (!f || (f.vw === ctx.vw && f.vh === ctx.vh)) return;
   const el = document.querySelector(f.title);
   if (!el) return;
-  const rg = document.createRange(); rg.selectNodeContents(el);
-  const r = rg.getBoundingClientRect();
+  const r = textBox(el);
   if (!r.width) return;
   f.vw = ctx.vw; f.vh = ctx.vh;
-  const ra = ctx.vw / ctx.vh, ia = 16 / 9, sx = ra > ia ? 1 : ra / ia;
-  const ux = (r.right / ctx.vw - 0.5) * sx + 0.5;
-  const keys = SHEETS[chapter].channels['camera.zoom'];
-  f.base.forEach((z, i) => { keys[i].v = Math.min(z, Math.max(f.min ?? 1, ux / f.u)); });
+  const ch = SHEETS[chapter].channels, keys = ch['camera.zoom'];
+  if (f.mode === 'ellipse') {
+    // the glyphs' corners (the line box less its leading), the title's and the dek's, where they sit at the opener's
+    // rest (its top at the screen's top): measured from the layout (offsets), so neither the scroll position nor the
+    // reveal's rise (a transform) moves them
+    const op = el.closest('.opener'), dek = op?.querySelector('.dek');
+    const restTop = (n, b) => {
+      let y = 0;
+      for (let p = n; p && p !== op; p = p.offsetParent) y += p.offsetTop;
+      return y + (b.top - n.getBoundingClientRect().top);
+    };
+    const pts = [];
+    for (const [n, k] of [[el, 0.18], [dek, 0.1]]) {
+      const b = n && textBox(n);
+      if (!b || !b.width) continue;
+      const t0 = restTop(n, b), t = t0 + b.height * k, bo = t0 + b.height * 0.9;
+      pts.push([b.left, t], [b.left, bo], [b.right, t], [b.right, bo]);
+    }
+    const [fx0, fy0] = f.baseFocus[0];
+    const worst = (z, fx) => Math.max(...pts.map(([x, y]) => {
+      const [u, v] = toUV(x, y, ctx, z, fx, fy0);
+      return ((u - f.c[0]) / f.r[0]) ** 2 + ((v - f.c[1]) / f.r[1]) ** 2;
+    }));
+    let pick = null;
+    for (const z of [f.base[0], ...f.zooms.filter((z) => z > f.base[0])]) {
+      for (let fx = fx0; fx <= 0.76; fx += 0.01) {
+        if (worst(z, fx) > f.limit) continue;
+        const cost = (z - f.base[0]) + 2 * (fx - fx0);
+        if (!pick || cost < pick.cost) pick = { z, fx, cost };
+        break;
+      }
+    }
+    pick = pick || { z: f.zooms[f.zooms.length - 1], fx: fx0 };
+    (window.__fit ||= {})[chapter] = { z: +pick.z.toFixed(3), fx: +pick.fx.toFixed(3) };   // for QA scripts
+    f.base.forEach((b, i) => { keys[i].v = Math.max(b, pick.z); });
+    f.baseFocus.forEach((b, i) => { ch['camera.focus'][i].v = [Math.max(b[0], pick.fx), b[1]]; });
+  } else {
+    const ra = ctx.vw / ctx.vh, ia = 16 / 9, sx = ra > ia ? 1 : ra / ia;
+    const z = ((r.right / ctx.vw - 0.5) * sx + 0.5) / f.u;
+    f.base.forEach((b, i) => { keys[i].v = Math.min(b, Math.max(f.min ?? 1, z)); });
+  }
 }
 const chapterOf = (el) => el.closest('[data-chapter]')?.id || el.id;
 
@@ -64,9 +117,12 @@ const DEPTH = {
   results: '/assets/scenes/results/depth.webp', directors: '/assets/scenes/directors/depth.webp',
   apply: '/assets/scenes/apply/depth.webp',
 };
-/* the deepest zoom a chapter's keys reach (the painting must stay sharp there) */
-const maxZoom = (chapter) => {
-  const k = [SHEETS[chapter], NARROW[chapter]].flatMap((sh) => sh?.channels['camera.zoom'] || []);
+/* the deepest zoom this screen's keys reach where the painting is seen in full (it must stay sharp there): the sheet
+   for this aspect, fitted to this screen; "sharpKeys": n in a sheet counts only its first n zoom keys (VIII Results:
+   its last key is the push into the sky during the hand-off to IX, under the bleed's dimming) */
+const maxZoom = (chapter, ctx) => {
+  fitSheet(chapter, ctx);
+  const k = (sheetFor(chapter, ctx)?.channels['camera.zoom'] || []).slice(0, SHARP[chapter] || undefined);
   return k.length ? Math.max(1.15, ...k.map((x) => x.v)) : 1.15;
 };
 /* the sources to try, best first: the smallest encode that covers the canvas (cover fit, plus headroom for the
@@ -76,7 +132,7 @@ async function paintingFor(chapter, ctx) {
   const best = (l) => {
     l = [...(l || [])].filter((v) => v && v.src && v.w && v.h).sort((a, b) => a.w - b.w);
     if (!l.length) return null;
-    const need = Math.max(ctx.w, ctx.h * (l[0].w / l[0].h)) * maxZoom(chapter) * 0.9;
+    const need = Math.max(ctx.w, ctx.h * (l[0].w / l[0].h)) * maxZoom(chapter, ctx) * 0.9;
     return l.find((v) => v.w >= need) || l[l.length - 1];
   };
   const a = (await avifOK()) ? best(d.avif) : null;

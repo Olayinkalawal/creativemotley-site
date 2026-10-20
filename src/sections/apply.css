@@ -4,8 +4,10 @@
    Wide screens: the title and dek sit in the left of the column, on the sky, ending left of Venus's hair; the wind
    pair flies below them, so nothing is set over it. The join block (who we work with, how applying works, the pill)
    waits below the first screen on an ink field that meets the painting on the brand's torn edge and runs on into the
-   footer (cream type), so the painting is whole at the opener's rest; it is set low enough that, where it is read, the
-   torn edge has passed below the wind pair's heads, and in two columns (the copy, the pill) across the field.
+   footer (cream type), so the painting is whole at the opener's rest; in two columns (the copy, and the pill beside
+   its first line) across the field. As the title leaves, the camera trucks right onto Venus and her attendant (the keys;
+   with WebGL off, the CSS plate cuts to that frame, html.is-landed-apply), so the wind pair has left the frame before
+   the torn edge rises to their heads.
    Upright screens: title and dek in the sky band at the top; the join block sits at the opener's foot on an ink field
    that rises from the footer (cream type): on phones low enough that the shell is in at the opener's rest, the field
    rising over it as you read on; on tablets the dek runs on one line. */
@@ -32,13 +34,18 @@
     display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: clamp(32px, 5vw, 96px); align-items: end;
   }
   .apply-join > :not(.apply-cta) { grid-column: 1; }
-  .apply-join .apply-cta { grid-column: 2; grid-row: 1 / span 2; align-self: end; margin-top: 0; }
+  .apply-join .apply-cta { grid-column: 2; grid-row: 1 / span 2; align-self: start; margin-top: 0.35em; }
   /* the brand's torn edge: ink teeth rising into the painting */
   .apply-join::before {
     content: ''; position: absolute; left: 0; right: 0; top: -23px; height: 24px; pointer-events: none;
     background: var(--ink); -webkit-mask: var(--tear) bottom / 1200px 24px repeat-x; mask: var(--tear) bottom / 1200px 24px repeat-x;
   }
   .apply-how { color: rgba(244, 237, 223, 0.84); }
+}
+/* WebGL off (the CSS plate): once the title has left, the keys' landing frame (zoom 1.5 about the painting's right
+   edge, 0.1 down): Venus and her attendant, the wind pair out of frame (landPlate in _paper.js: a cut, not a move) */
+@media (min-width: 1024px) and (orientation: landscape) {
+  html.is-landed-apply .plates .plate[data-plate='apply'] { --z: 1.5; --fx: 1; --fy: 0.1; }
 }
 @media (min-width: 640px) and (max-width: 1023px) { .opener.apply-open .dek { max-width: none; } }
 @media (max-width: 639px) {

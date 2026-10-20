@@ -40,24 +40,18 @@
 }
 @media (max-width: 639px) { .br__pc { --pc-ar: 0.86; --pc-inset: 0.86; } }
 
-/* the CSS plate (no WebGL: ?tier=0, reduced motion) holds the keys' first frame on wide screens: the window wall under
-   the title (zoom 1.48 about the painting's left edge, .05 down) */
+/* the CSS plate (no WebGL: ?tier=0, reduced motion) holds the keys' first frame on wide screens: the title's right edge
+   just left of the hat's brim (zoom about the painting's left edge, .05 down; the stage fits it to the title, gl/keys/
+   brands.json "fit": about 1.34 to 1535 px wide, then less as the title stops growing at 12rem) */
 @media (min-width: 1024px) and (orientation: landscape) {
   .plates .plate[data-plate='brands'] {
-    --cw: max(100vw, 177.78vh); --ch: max(56.25vw, 100vh);
-    background-size: calc(var(--cw) * 1.48) auto;
-    background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.05 * (1 - 1.48));
+    --cw: max(100vw, 177.78vh); --ch: max(56.25vw, 100vh); --bz: 1.34;
+    background-size: calc(var(--cw) * var(--bz)) auto;
+    background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.05 * (1 - var(--bz)));
   }
 }
-
-/* wide screens: the title stops growing at about 1460 px, so the plate can open up as the stage's fitted rest zoom
-   does (gl/keys/brands.json "fit"): the title's right edge still lands at u 0.432 */
-@media (min-width: 1760px) and (orientation: landscape) {
-  .plates .plate[data-plate='brands'] { background-size: calc(var(--cw) * 1.25) auto; background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.05 * (1 - 1.25)); }
-}
-@media (min-width: 1900px) and (orientation: landscape) {
-  .plates .plate[data-plate='brands'] { background-size: calc(var(--cw) * 1.17) auto; background-position: calc((100vw - var(--cw)) / 2) calc((100vh - var(--ch)) / 2 + var(--ch) * 0.05 * (1 - 1.17)); }
-}
+@media (min-width: 1536px) and (orientation: landscape) { .plates .plate[data-plate='brands'] { --bz: 1.29; } }
+@media (min-width: 1680px) and (orientation: landscape) { .plates .plate[data-plate='brands'] { --bz: 1.17; } }
 
 /* …and, once the title has left, the keys' landing frame: the couple and the contract (zoom 1.32 about x .7, .38 down) (landPlate in _paper.js: a cut, not a move) */
 @media (min-width: 1024px) and (orientation: landscape) {

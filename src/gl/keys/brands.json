@@ -3,8 +3,8 @@
  "//1": "1 · t 0-1.04, the title's frame: zoom 1.48 about the painting's left edge, near its top, so the title and dek sit on the window wall (under the opener's dark gradient) and the man's hat starts just right of the title's last letter; the couple comes in with the truck. At the whole room (the art direction's zoom 1.06) the title ran across his hat and face.",
  "//2": "2 · t 1.04-1.55, as the title leaves: a truck right that eases back to the couple, the mirror and the joined hands with the contract.",
  "//3": "3 · t 1.55-2.3, a gentle push as the paper rises; it eases out and lands still.",
- "//fit": "fit (gl/scenes/plates.js): the rest zoom (the first two zoom keys, 1.48) is refitted to the screen so the title's right edge lands at u 0.432 of the painting, as at 1440x900. The giant title stops growing at about 1460 px, so wider screens see more of the room at rest: about 1.16 at 1920x1080 (the whole man, the mirror and the joined hands under the title's right), never below 1.15.",
- "fit": {"title": "#brands-title", "u": 0.432, "keys": 2, "min": 1.15},
+ "//fit": "fit (gl/scenes/plates.js): the rest zoom (the first two zoom keys, 1.48 at most) is refitted to the screen so the title's right edge lands at u 0.48 of the painting, just left of the hat's brim (u 0.52) and the fur shoulder (0.50): about 1.34 at 1440x900, which takes in the whole man, the contract and the joined hands (2026-10-20 review: at 1.48, u 0.432, the frame was a dim wall and half the man). The giant title stops growing at about 1460 px, so wider screens see more of the room at rest, never below 1.15.",
+ "fit": {"title": "#brands-title", "u": 0.48, "keys": 2, "min": 1.15},
  "camera": {
   "zoom": [
     {"t": 0, "v": 1.48},

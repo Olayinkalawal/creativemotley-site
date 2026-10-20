@@ -289,3 +289,107 @@ Still open (ranked):
 4. **Safari Directors film** (`directors.mp4`, HEVC with alpha, 15.1 MB) is unchanged: it needs macOS to encode (steps in `scripts/encode-directors.sh`).
 5. **Phase 4 (critique) should start with** the Showcase length and its empty opener, the phone lengths of Creators and Brands, Process's missing title, and the Kit cut feel; then a real-device check of LCP (desktop sits at the 1.0 s line under load) and of WebGL smoothness, which this machine cannot measure.
 6. **Housekeeping:** unused files that can be deleted (not deleted here): `public/assets/video/film/hero-1920-{av1,h264}.mp4` (11.1 MB), `public/assets/video/results.mp4` (10.6 MB master), `public/assets/teardown/{mic,headphones,phone}/orbit/` (18.9 MB, never requested: only the console orbits), `public/assets/teardown/{mixer,mic,headphones,phone}/{hero,poster}.webp` (0.6 MB; the Kit uses `v3/`), `public/assets/teardown/*/depth.png` (1.2 MB; only `depth.webp` loads). Fallback-only, keep for now: `public/assets/frames/hero/` (79 MB, the film without a playable video), the Kit devices' old `lg`/`sm` explode frames, `camera/orbit`, `mixer/orbit`. The stray `/dist-5405` (248 MB, filesystem root) is still there.
+
+# Masters live (2026-10-20)
+The six chapter paintings are now the modernised Renaissance masterpieces (art log: `docs/art-log.md`, masters in
+`.art/masters-2026-10-20/`, rebuilt by `python3 scripts/art.py --config scripts/art-masters.json --depth
+/home/user/models/midas_small.onnx`, then `python3 scripts/depth-directors.py`). Two rounds: the swap, then a fix round
+on two critics' reviews (desktop 1440/1280/1024/1920; phone 390/360 and tablet 820).
+
+## M.1 Numbers: phase 2 → masters swap → after the fix round
+`scripts/perf.mjs` on production builds. Load average 11–17 for the first two columns, 3–10 for the last, so the LCP
+and fps gains are mostly the quieter machine; the byte columns are exact.
+
+| | Phase 2 | Swap | Now |
+|---|---|---|---|
+| Full read, desktop @1× | 19.12 MB | 17.51 MB | **16.89 MB** (≤ 18) |
+| Film bytes in that read | 3.14 MB (film + Results video) | 1.26 MB | **0.70 MB** (cut 161 → 106 frames) |
+| Painting bytes in that read | 0.67 MB | 1.17 MB | 1.12 MB |
+| First load, desktop @1× / @2× · phone @2× | 0.62 / 0.62 · 0.57 MB | 0.67 / 0.77 · 0.50 MB | 0.67 / 0.77 · 0.51 MB |
+| Full read, phone @2× | 3.96 MB | 4.02 MB | 4.01 MB |
+| LCP unthrottled, desktop / phone | 1.30 / 0.79 s | 1.48 / 0.68 s | 0.45 / 0.36 s |
+| LCP throttled phone | — | — | 2.14 s (≤ 2.5) |
+| Fps, WebGL off: top · I · II · III · VIII · IX · X | 54 · 52 · 49 · 50 · 47 · 54 · 60 | 52 · 47 · 49 · 40 · 46 · 47 · 53 | 60 · 60 · 57 · 58 · 59 · 60 · 60 |
+| Results renders while idle (5 s) | 12 (the TV) | 0 | 0 |
+| CLS while scrolling | 0 | 0 | 0 |
+
+Repo: the Results videos and plates and the old Storytellers plate and depth map are gone; the fix round adds 1640-px
+portraits for tablets (3.9 MB, six chapters) and 3840-px desktop encodes for Brands, Results and Apply (3.7 MB, fetched
+only by 2× screens), and the film is 1.5 MB lighter.
+
+## M.2 What changed
+- **I Storytellers.** The film ends on frame 440, the machine's line art before any colour (`FILM_CUT`, `data-film-map`,
+  re-encoded; the old Storytellers plate and its depth map are deleted), and the School of Athens bleeds up under it
+  along the section's top edge (`data-bleed`, `data-rise`). The film above the edge dims to 0.2 as the edge climbs
+  (`data-bleed="0.2"`; post.js `bleedDim`), so the line-art face recedes before the rising title reaches it (title
+  worst-10% at the 0.35 screen point: 5.1 → 12.0:1). Phones: the opener's shadow is soft (0.34, masked to the right)
+  and fades out with the bleed (a scroll-driven animation).
+- **The rise no longer tears.** The painting rises by a plain translation (`shift` in `gl/lib/plate.js`), kept apart
+  from the push and parallax centre; Directors' hand-layered depth map is feathered over ~40 px. Clean during every
+  opener's rise.
+- **II Creators.** A light region from the opener's top to the parapet line (74svh, full width): rail items over the
+  sky and lake turn ink; over the dark parapet they stay cream.
+- **III Brands.** The rest zoom is fitted to the title (`fit` in `gl/keys/brands.json`, u 0.432 → 0.48): 1.48 → 1.34 at
+  1440×900, so the whole man, the contract, the joined hands and the mirror are in at rest, the title's last letter just
+  left of the hat. 2× screens get a 3840 encode. Phones: the title sits clear of the top bar (nav + 1.5svh); tablets keep
+  the shell's line and the painting sits lower (phoneFocus y 0.47).
+- **VIII Results.** Ink type on the sky at every width with a faint pale halo (no dark halo); the ledger's veil is an
+  ellipse centred on the ledger (tablets too). Wide screens: the rest framing is fitted so the title and dek sit inside
+  the oculus (`fit` mode ellipse: 1920×1080 → zoom 1.5 about u 0.64; it was 3.5:1 with the R on the balusters).
+  Phones: title and dek moved in from the ring and a touch lower. The hand-off pushes on into the sky and Results dims
+  to 0.3 as IX bleeds up (`data-bleed="0.3"`); the phone veil runs on 30svh.
+- **IX Directors.** Phone portrait: the anamorphic reel is sunk into the table's shadow (`finish.shadows` in
+  art-masters.json; art.py). Brands and Directors portraits carry the edition's oil finish (umber lift in the shadows,
+  greens −12%, a slight soften, craquelure).
+- **X Apply.** As the title leaves, the camera trucks right onto Venus and her attendant (zoom 1.5 about the right edge),
+  so the wind pair has left the frame before the join block's torn edge reaches their heads; the join block is two
+  columns, the pill beside its first line. WebGL off cuts to the same frame (`landPlate`). Tablets: phoneFocus y 0.50,
+  the dek on one line (11.6:1). Phones: the shell is in at rest, the ink field rising over it.
+- **Stage.** A chapter whose painting is not loaded yet draws ink, never the previous painting under its title. The
+  chromatic fringe is off on jumps (chapter links, scrollTo, a half-screen jump) and when idle; paintings take half of
+  it, phone stills 0.35 with a lower cap. The encode is chosen for the fitted framing and the zooms seen in full
+  (`sharpKeys`).
+- **Upright screens without the stage** (`?tier=0`, reduced motion): a `data-rise` chapter's painting enters with its
+  section, so the title never scrolls across the whole painting (Creators and Apply hold the same contrast at 0.4, 0.7
+  and 1.0 of the pass).
+- **Reveal.** An element a fast jump carries past is revealed too, so it is never left hidden for the way back.
+
+## M.3 Departures from the art direction (framing)
+- Storytellers comes in under the film along the section's top edge, not through the full-screen dissolve.
+- Tighter rest framings, because the giant title spans about half the screen from the column: Storytellers 1.15,
+  Creators 1.22 (1.17 at 4:3), Brands 1.34 (fitted; 1.15 from about 1700 px wide), Results 1.3 from the top of the
+  oculus (fitted up to 1.5 on wide screens), Apply 1.26. Creators and Brands do not show the whole painting at rest.
+- Apply's join copy waits below the first screen on desktop, on an ink field with the torn edge.
+
+## M.4 Checks (this round)
+- Titles and decks at rest, worst 10% of glyph pixels: desktop 1440 titles 6.9–14.6, decks 6.2–14.3; the lowest
+  are Results' title (7.0 at 1280 and 1024, 6.6 at 1920) and Creators' dek (5.9 at 1280, 5.4 at 1024). Phones 390 and
+  360: 6.6–16 (Results 6.6 / 6.7). Tablet 820: Results 6.3, Creators' title 6.0, Storytellers' dek 5.0, the rest 7–14.
+  Results' gold labels 5.6–10.4.
+- No title over a face, figure or statue at rest at 1024, 1280, 1440, 1920, 390, 360, 820.
+- Fact check passes, desktop and mobile (500 strings, 44 drafts listed); `--drafts 0` passes (410 strings).
+- `npx vite build` and the Pages build succeed; a full read of the Pages build under `/creativemotley-site/` (desktop
+  and phone) gets no 404.
+- No horizontal overflow at 1440, 1280, 1024, 390, 360, 820 (WebGL), 1440/390/360 `?tier=0`, 1440/390 reduced motion;
+  no console errors apart from the blocked YouTube thumbnails; tier 0 and reduced motion leave nothing unrevealed.
+- Sheets: `qa/shots/v3m_best.jpg` (the six openers at rest, desktop and phone), `qa/shots/v3m_desk_sheet_00…02.jpg`,
+  `qa/shots/v3m_mob_sheet_00…02.jpg` (one frame every 0.75 screen), `qa/shots/v3-masters-sheet.jpg` (the encodes).
+
+## M.5 Remaining issues, ranked
+1. **III Brands needs the outpaint** for the plan's composition: the master widened about 25% to the left (more window
+   wall), then a rest zoom near 1.12 with the couple and the mirror under the title. A few Higgsfield credits; not
+   spent in this round (no credit cap was set). Creators would gain 10–15% the same way (at 4:3 her face meets the
+   right edge).
+2. **IX Directors on phones has one director's chair**; the second needs a generative edit of the portrait master
+   (about 4 credits). The reel is now in shadow, not repainted.
+3. **The film's tail** (frames 448–569) still paints the old Storytellers painting; the cut stops before it. A regen
+   that resolves the line art into the School of Athens would restore the film's payoff.
+4. **Results → Directors**: the ring's watchers still sit at the screen's sides beside IX's rising title, dimmed to 0.3.
+5. **Brand and Directors desktop masters** keep their own finish (only the portraits got the oil finish).
+6. 1366×768 and other 16:9 laptops between 1280 and 1536 px were not checked by eye; Results' fit and Brands' fit
+   compute their framing there.
+7. Phone: Brands' title sits 12 px above the other openers' line (to clear the chandelier); the paper sheets end on a
+   straight bottom edge; Creators' tripod camera is cut at the right edge; before the stage boots a fast scroll can
+   fetch a CSS plate's phone-828 as well (pre-existing).
+8. The LCP ≤ 1.0 s and ≥ 50 fps targets are met on this machine at load 3–10; confirm on real hardware. Unused
+   `public/assets/video/film/hero-1920-{av1,h264}.mp4` (11.1 MB) is still in the repo (P2.6).

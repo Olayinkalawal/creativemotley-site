@@ -58,3 +58,8 @@
 #creators .opener--light .scrim::before {
   background: radial-gradient(closest-side, rgba(var(--halo), 0.6), rgba(var(--halo), 0.32) 62%, rgba(var(--halo), 0));
 }
+
+/* the opener's light region (creators.html): full width from the screen's left (the opener's column sits right of the
+   rail), from the opener's top down to the parapet's top at its rest (about 0.75 of the screen at 16:10 and 4:3, by the
+   keys' rest framing), so rail items over the sky and the lake turn ink and those over the dark parapet stay cream */
+.cr-light { position: absolute; top: 0; left: calc(100% - 100vw); right: 0; height: 74svh; pointer-events: none; }

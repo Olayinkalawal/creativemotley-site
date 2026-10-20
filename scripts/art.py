@@ -283,7 +283,8 @@ def finish(im: Image.Image, f: dict) -> Image.Image:
     photographic sits in the edition's one hand: a warm umber lift in the deep shadows (shadowLift, 8-bit steps at
     black, gone by mid-dark), less saturated greens (greenSat, a factor), a small high-frequency soften (soften: 0.3 =
     30% of the way to a blur of `softenSigma` px), and a craquelure network darkening the paint along its cracks
-    (crack: strength, cell: mean cell size in px of this master, seed)."""
+    (crack: strength, cell: mean cell size in px of this master, seed); shadows: [{poly, amount, feather}], a passage
+    sunk into a cast shadow."""
     import cv2
     a = np.asarray(im, np.float32)
     h, w = a.shape[:2]
@@ -303,6 +304,17 @@ def finish(im: Image.Image, f: dict) -> Image.Image:
         wgt = np.exp(-(y / 34.0) ** 2)
         a += float(f['shadowLift']) * wgt[..., None] * np.array([1.0, 0.72, 0.42], np.float32)
         del wgt
+    for sh in f.get('shadows', []):
+        # a cast shadow over one passage: a polygon (u, v fractions of the master, from the top-left), feathered, the
+        # paint inside darker, a touch warmer and flatter, as if seen in the shade
+        from PIL import ImageDraw, ImageFilter
+        m = Image.new('L', (w, h), 0)
+        ImageDraw.Draw(m).polygon([(x * w, y * h) for x, y in sh['poly']], fill=255)
+        m = np.asarray(m.filter(ImageFilter.GaussianBlur(float(sh.get('feather', 0.03)) * w)), np.float32)[..., None] / 255
+        y = a @ np.array([0.299, 0.587, 0.114], np.float32)
+        flat = a * 0.65 + y[..., None] * 0.35 * np.array([1.05, 0.95, 0.8], np.float32)
+        a = a * (1 - m) + flat * (1 - float(sh['amount'])) * m
+        del m, flat
     if f.get('crack'):
         cr = crackle(h, w, float(f.get('cell', 150)), int(f.get('seed', 7)))
         y = np.clip(a @ np.array([0.299, 0.587, 0.114], np.float32), 0, 255) / 255

@@ -55,22 +55,22 @@
     "src": "/assets/scenes/directors/phone-1640.avif",
     "w": 1640,
     "h": 2916,
-    "bytes": 294308,
-    "q": 70
+    "bytes": 274961,
+    "q": 72
    },
    {
     "src": "/assets/scenes/directors/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 178232,
-    "q": 67
+    "bytes": 181482,
+    "q": 72
    },
    {
     "src": "/assets/scenes/directors/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 100831,
-    "q": 62
+    "bytes": 97967,
+    "q": 65
    }
   ],
   "webp": [
@@ -78,22 +78,22 @@
     "src": "/assets/scenes/directors/phone-1640.webp",
     "w": 1640,
     "h": 2916,
-    "bytes": 413902,
+    "bytes": 369404,
     "q": 86
    },
    {
     "src": "/assets/scenes/directors/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 258324,
+    "bytes": 234180,
     "q": 86
    },
    {
     "src": "/assets/scenes/directors/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 150404,
-    "q": 85
+    "bytes": 146012,
+    "q": 86
    }
   ]
  },
@@ -142,7 +142,7 @@
  },
  "placeholder": {
   "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sqlEppaOiqAqpMB2JZQC06DTkBzqvVS/elO9DQtgJKH0n8TCgAP7s3MHSZHZonCyr5VPUU75nJFkHRYJwFy41tp/PP8s9uz75zQUCcxbbDRNWTFhXpDY5sqwesGYMyVr1IiVgXa5zJWqcVpV4IRsias7Oooo/vNhnva5F2AKOHDSf2AAAAA==",
-  "phone": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADwAwCdASoMABoAPu1kqU2ppaQiMAgBMB2JQBYdjSv4JnshpLDaJ7+gAP79sAiZgSHtvIN0cEX/0AiTeCE6//c0D5I8KvOuvx3zKajkPCZLmdbBBgbPXe3PZTm/csa9gE8MwulvWta27PS20aKNYFpkQYDZ39MI1ligAAAA"
+  "phone": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQBACdASoMABoAPu1qrU8ppiQiMAgBMB2JQAAj3iC6gXS9Y6iFIZhyAAD+/QOeBCz5p3HhC3n+jt8b4yu7/5cbiwoWSehkp4Yy/0H0ocDAzH13tz1o81YUC/xy9oa9FWWG6heALrl1E18Qx0+gSqQW3gAAAA=="
  },
  "credit": {
   "desktop": "Nano Banana Pro 4K text-only job 4e6bedc5 (hero 70d440b1 as a technique reference), local retouch (torquetum band to ticks, black lacquer chairs, hymn-book lines, camera badge; craquelure, varnish, grain; final round: chair latch, brace step and book headings blanked): masters/directors/final_d2.png",

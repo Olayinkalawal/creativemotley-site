@@ -5,7 +5,8 @@
      - Opener: title and dek near the top, in cream on the green damask, left of and above the set (the painting's calm
        band); the keys land still at the opener's rest, the focus left, then push to the stand between the chairs.
        data-bleed + data-rise: the painting comes in under Results along this section's top edge (the stage's ink-bleed
-       edge) and rises with it, then holds, so the title never crosses Results' ring of faces.
+       edge) and rises with it, then holds, so the title never crosses Results' ring of faces; Results dims to 0.3 as
+       the edge climbs (data-bleed="0.3"), so the watchers beside the rising title recede.
      - The stage (.dr-stage, pinned briefly): the set dissolves into the umber room as the directors' alpha film (two
        painted portraits on transparency, their foot torn like paper) rises from the foot of the screen; the names
        glide behind their heads on a serif line that runs with scroll (decorative, aria-hidden: the names are read
@@ -21,7 +22,7 @@
      Film sources (scripts/encode-directors.sh): VP9-with-alpha WebM, 1920 px (desktop) and 1280 px (narrow screens,
      data-dr-sm, dropped elsewhere by directors.js); WebKit gets the HEVC-with-alpha mp4 (moved first by directors.js). -->
 <section class="chapter" id="directors" data-chapter data-theme="dark" data-scene="plate:directors" data-plate="directors"
-  data-bleed data-rise data-umber="-0.12 0.3 0.42 0.5 0.55" aria-labelledby="directors-title">
+  data-bleed="0.3" data-rise data-umber="-0.12 0.3 0.42 0.5 0.55" aria-labelledby="directors-title">
   <div class="opener col dr-open">
     <div class="scrim">
       <h2 class="giant" id="directors-title" data-reveal>Directors</h2>

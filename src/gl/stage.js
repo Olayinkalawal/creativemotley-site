@@ -43,7 +43,8 @@
    next scene the way the DOM above it does. A section marked data-bleed comes in the other way round: while its top
    edge is in the viewport the scene above holds above that edge, and the section's own scene bleeds up into it through
    the dissolve's ink-bleed noise in a band under the edge (I Storytellers: with data-rise its painting rises with the
-   edge, so the title, set at the section's top, rides the same calm part of the painting all the way in). */
+   edge, so the title, set at the section's top, rides the same calm part of the painting all the way in), and the
+   scene above dims as the edge climbs, to data-bleed's value (default 0.3), so it recedes beside the rising title. */
 import { WebGLRenderer, WebGLRenderTarget, Vector2, LinearSRGBColorSpace, UnsignedByteType } from 'three';
 import { createPost } from './lib/post.js';
 import { onFrame, onResize, clamp } from '../core/scroll.js';
@@ -111,7 +112,7 @@ export class Stage {
     // only regions whose scene is known and that have height: an empty or unbuilt slot must not turn a dissolve into hold-then-cut
     this.segs = [...document.querySelectorAll('[data-scene]')]
       .filter((el) => this.known(el.dataset.scene) && el.getBoundingClientRect().height > 0)
-      .map((el) => ({ el, id: el.dataset.scene, dissolve: parseFloat(el.dataset.dissolve) || 0, wipe: el.hasAttribute('data-wipe'), bleed: el.hasAttribute('data-bleed'), run: 0 }));
+      .map((el) => ({ el, id: el.dataset.scene, dissolve: parseFloat(el.dataset.dissolve) || 0, wipe: el.hasAttribute('data-wipe'), bleed: el.hasAttribute('data-bleed'), dim: el.hasAttribute('data-bleed') ? parseFloat(el.dataset.bleed) || 0.3 : 1, run: 0 }));
     this.runs = [];
     for (const s of this.segs) {
       const r = this.runs[this.runs.length - 1];
@@ -344,6 +345,7 @@ export class Stage {
     u.mixAB.value = second && wipe < 0 ? mix : 0;
     u.wipe.value = second ? wipe : -1;
     u.bleed.value = second && bleed ? 1 : 0;
+    u.bleedDim.value = second && bleed ? B.dim : 1;
     u.time.value = this.clock;
     u.grain.value = pf.grain ?? 0.045; u.vignette.value = pf.vignette ?? 0.32;
     // the fringe follows scroll speed (none on a jump: core/scroll.js zeroes the velocity); the paintings take half or

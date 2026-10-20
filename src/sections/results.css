@@ -29,9 +29,11 @@
   /* the portrait: the title's cap line below the ring's top arc (v 0.165), title and dek moved in from the ring's
      inner curve (the R and the ascenders off its stone), the dek left of the flowerpot (u 0.76) */
   .opener.rx-open { min-height: 54svh; padding-top: calc(var(--nav-h) + 9.5svh); }
-  .rx-open .scrim { margin-left: clamp(14px, 4vw, 40px); }
+  .rx-open .scrim { margin-left: clamp(28px, 7.5vw, 72px); }
   .rx-open .dek { max-width: 11em; }
 }
+/* phones: a touch lower too, so the ascenders clear the ring's top arc (the first turbaned man is ~60 px below the dek) */
+@media (max-width: 639px) { .opener.rx-open { padding-top: calc(var(--nav-h) + 11svh); } }
 
 /* the counters start under the opener's tail */
 .rx { position: relative; color: var(--cream); padding-block: 2svh 6svh; }
