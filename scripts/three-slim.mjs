@@ -12,7 +12,8 @@
       a pure IIFE, so they (and the interpolants only they use) drop out unless something imports them.
    3. WebXR: the renderer always constructs a WebXRManager (and with it the controllers and depth sensing). This site
       never enters an XR session, so the renderer gets an inert stand-in with the same surface it calls. Set
-      CM_THREE_XR=1 to keep the real one. */
+      CM_THREE_XR=1 to keep the real one.
+   4. The site's own GLSL template literals (src/gl/**), minified as in 1 (below, glslTemplates). */
 
 const GLSL = /\b(gl_FragColor|gl_Position|#include|#ifdef|#ifndef|#endif|uniform|varying|void main|vec[234]|float)\b/;
 
@@ -106,6 +107,65 @@ function dropToJSON(src, name) {
   return src.slice(0, a) + `\n\ttoJSON() { throw new Error( 'three-slim: ${name}.toJSON is not built into this site' ); }\n` + src.slice(b + 4);
 }
 
+/* 4. The site's own shaders (src/gl/**: the real-time runtimes kit3d.js and camera3d.js, the scenes, the stage): their
+   GLSL template literals (whole shaders, and the chunks the runtimes splice into three's materials after an #include
+   line) get the same minification. Only literals with no ${…}, no backslash, that read as GLSL and are not a search
+   string (the first argument of .replace() and the like, which must match three's text as it is); a literal that
+   started or ended on a new line keeps that new line (a chunk appended after a directive must not join its line). */
+const SEARCH = /\.(replace|replaceAll|includes|indexOf|split|startsWith|endsWith|search|match)\(\s*$/;
+const REGEX_BEFORE = /(^|[(,=:[!&|?{};+\-*%<>~^]|\breturn|\btypeof|\bcase|\bdo|\belse|\bin|\bof|\bvoid|\bdelete|\bnew|\bthrow|\byield|\bawait)\s*$/;
+export function glslTemplates(src) {
+  const out = [];
+  let n = 0, last = 0, i = 0;
+  const N = src.length;
+  // skips a template literal starting at i (the backtick); returns { end, interp } (end: index after the closing backtick)
+  const tpl = (i) => {
+    let j = i + 1, interp = false;
+    while (j < N) {
+      const c = src[j];
+      if (c === '\\') { j += 2; continue; }
+      if (c === '`') return { end: j + 1, interp };
+      if (c === '$' && src[j + 1] === '{') { interp = true; j = code(j + 2, true); continue; }
+      j++;
+    }
+    return { end: N, interp };
+  };
+  // scans code from i; with brace, stops after the } that closes a ${
+  const code = (i, brace) => {
+    let depth = 0, j = i;
+    while (j < N) {
+      const c = src[j];
+      if (c === '/' && src[j + 1] === '/') { const e = src.indexOf('\n', j); j = e < 0 ? N : e; continue; }
+      if (c === '/' && src[j + 1] === '*') { const e = src.indexOf('*/', j + 2); j = e < 0 ? N : e + 2; continue; }
+      if (c === '"' || c === "'") { j++; while (j < N && src[j] !== c) { if (src[j] === '\\') j++; j++; } j++; continue; }
+      if (c === '`') {
+        const t = tpl(j);
+        if (!brace) {
+          const raw = src.slice(j + 1, t.end - 1);
+          if (!t.interp && raw.length >= 120 && !raw.includes('\\') && GLSL.test(raw) && !SEARCH.test(src.slice(Math.max(0, j - 40), j))) {
+            const lead = /^[ \t]*\n/.test(raw) ? '\n' : /^\s/.test(raw) ? ' ' : '';
+            const trail = /\n[ \t]*$/.test(raw) ? '\n' : /\s$/.test(raw) ? ' ' : '';
+            const min = lead + minifyGlsl(raw) + trail;
+            if (min.length < raw.length) { out.push(src.slice(last, j + 1), min); last = t.end - 1; n++; }
+          }
+        }
+        j = t.end; continue;
+      }
+      if (c === '/' && REGEX_BEFORE.test(src.slice(Math.max(0, j - 12), j))) {   // a regex literal
+        j++; let cls = false;
+        while (j < N && (src[j] !== '/' || cls)) { if (src[j] === '\\') j++; else if (src[j] === '[') cls = true; else if (src[j] === ']') cls = false; else if (src[j] === '\n') break; j++; }
+        j++; continue;
+      }
+      if (brace) { if (c === '{') depth++; else if (c === '}') { if (depth === 0) return j + 1; depth--; } }
+      j++;
+    }
+    return N;
+  };
+  code(0, false);
+  out.push(src.slice(last));
+  return { out: out.join(''), n };
+}
+
 const XR_NEW = 'const xr = new WebXRManager( _this, _gl );';
 const XR_STUB = `const xr = { enabled: false, isPresenting: false, cameraAutoUpdate: true,
   addEventListener() {}, removeEventListener() {}, dispatchEvent() {}, dispose() {}, setAnimationLoop() {},
@@ -117,6 +177,10 @@ export default function threeSlim({ xr = process.env.CM_THREE_XR !== '1' } = {})
     name: 'cm-three-slim',
     apply: 'build',
     transform(code, id) {
+      if (/[\\/]src[\\/]gl[\\/].*\.js$/.test(id)) {
+        const t = glslTemplates(code);
+        return t.n ? { code: t.out, map: null } : null;
+      }
       const m = /node_modules[\\/]three[\\/]build[\\/]three\.(module|core)\.js$/.exec(id);
       if (!m) return null;
       const notes = [];

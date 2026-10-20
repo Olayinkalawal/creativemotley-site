@@ -219,6 +219,7 @@ function block(el, idx) {
   const lazy = TIER > 0 && (!STILL || CAM3D) ? [...slot.querySelectorAll('img.td__still[src]')] : [];
   for (const im of lazy) { im.dataset.src = im.getAttribute('src'); im.removeAttribute('src'); }
   let heroR, orbR, colR, desk = false, tall = false, drawn = false, parked = false, copyTop = 0, mk = false, mkAll = false, gate = 0;
+  let leadPx = 42, navB = 64;   // a numbered marker's label distance (--td-lead: the Kit's 56, clear of the parts), the bar's bottom
   // rows placed by a real-time scene (data-anchor3d: Method, the Kit) also get markers on tablets (all of them,
   // numbered) and phones (the lit row's only, named); a frame-stream run keeps its markers desktop-only
   const has3d = shots.some((x) => x.rows.some((r) => r.dataset.anchor3d));
@@ -234,6 +235,8 @@ function block(el, idx) {
     tall = innerHeight > innerWidth;
     mkAll = desk || (has3d && tall && innerWidth >= 768);
     mk = mkAll || has3d;
+    leadPx = parseFloat(getComputedStyle(el).getPropertyValue('--td-lead')) || 42;
+    navB = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 56) + 8;
     el.classList.toggle('td--mk', mk);
     heroR = { x: 0, y: 0, w: pin.clientWidth, h: pin.clientHeight };
     giantLines = giant ? splitLines(giant) : [];
@@ -284,7 +287,9 @@ function block(el, idx) {
     for (const x of shots) x.F = tdFit(tdFraming(x.el, tall, x.dev), colR, heroR.w, heroR.h);
     // a list whose lines show as a caption (Method on short screens and phones: method.css) keeps its last lit row
     const capMode = window.matchMedia('(min-width: 1024px) and (max-height: 1180px), (max-width: 1023px)').matches;
-    for (const x of shots) x.keepHot = capMode && !!x.copy?.querySelector('.td__specs--lines');
+    // and phones on a run whose markers a real-time scene places (one marker there: the lit row's, named) keep it too, so
+    // each hold names a part as Method's does (the Kit's lit row went dark 30 % into its settle: no marker at a hold)
+    for (const x of shots) x.keepHot = (capMode && !!x.copy?.querySelector('.td__specs--lines')) || (has3d && !mkAll);
     live.Fs = shots.map((x) => x.F);
     TL = -1;
     // the DOM keys (the still path): a radial field round the column (a cut slides it in from the right, its
@@ -332,7 +337,7 @@ function block(el, idx) {
         const m = document.createElement('div');
         m.className = 'td__mk';
         const t = (A.lead * Math.PI) / 180;
-        m.style.cssText = `--ang:${A.lead}deg;--lx:${px(Math.cos(t) * 42)};--ly:${px(Math.sin(t) * 42)}`;
+        m.style.cssText = `--ang:${A.lead}deg;--lx:${px(Math.cos(t) * leadPx)};--ly:${px(Math.sin(t) * leadPx)}`;
         // the row's number where every marker shows (desktop, tablets: the rows are numbered too, method.css); its name
         // on phones, where only the lit row's marker shows
         const lab = mkAll ? String(j + 1).padStart(2, '0') : (x.rows[j].querySelector('b')?.textContent || '');
@@ -356,10 +361,13 @@ function block(el, idx) {
     });
   }
 
-  /* a named marker (phones): its label up and towards the middle of the screen, so a long name never runs off an edge */
-  const side = (m, x) => {
+  /* a named marker (phones): its label up and towards the middle of the screen, so a long name never runs off an edge;
+     below its dot when up would put it under the bar (the headphones' band at 360 and 390) */
+  const side = (m, x, y) => {
     if (mkAll) return;
-    const r = x > heroR.w / 2, ang = r ? -142 : -38;
+    // the label's top sits about 27 px above the dot when it leans up; 6 px of hysteresis so a moving part does not flip it
+    const up = y - 27 >= navB + (m._ang > 0 ? 6 : 0);
+    const r = x > heroR.w / 2, ang = up ? (r ? -142 : -38) : (r ? 142 : 38);
     if (m._ang === ang) return;
     m._ang = ang;
     const t = (ang * Math.PI) / 180;
@@ -406,12 +414,16 @@ function block(el, idx) {
 
     // stills and keys (WebGL off, the phone still path, or until the scene draws)
     if (!drawn) {
-      // the src a screen and a half ahead of the pin (a parked img never paints, _teardown.css: no broken-image box)
-      // (per shot: a shot's pair from a screen and a half before it shows to 0.6 after the next cut, so the Kit's four
-      // pairs are not all fetched at once, also when the reader comes back from below after the scene was disposed)
+      // the src only near where it shows (a parked img never paints, _teardown.css: no broken-image box), per still:
+      // shot 0's hero a screen and a half ahead of the pin (the orbit's stand-in), its exploded one from 0.6 before its
+      // explode; a later shot's hero from 0.3 before its cut, its exploded one from its cut; each until just after the next
+      // cut. So a jump into the run (the chapter index, a deep link, a return from below after the scene was disposed)
+      // fetches the shot on screen and, near a cut, the next hero, not every pair whose window was open
       if (lazy.length && s > -1.6) for (let i = lazy.length - 1; i >= 0; i--) {
         const im = lazy[i], j = +(im.dataset.tdStill || 0), t = timeline[j] || timeline[0], nx = timeline[j + 1];
-        if (s > (t.cut ? t.cut[0] : 0) - 1.6 && (!nx || s < nx.cut[1] + 0.6)) { im.src = im.dataset.src; lazy.splice(i, 1); }
+        const hero = im.classList.contains('td__still--hero');
+        const from = t.cut ? (hero ? t.cut[0] - 0.3 : t.cut[0]) : (hero ? -1.6 : t.explode[0] - 0.6);
+        if (s > from && (!nx || s < nx.cut[1] + 0.1)) { im.src = im.dataset.src; lazy.splice(i, 1); }
       }
       shots.forEach((x, j) => {
         let oh = 0, op = 0, ko = 0, kx = 0;
@@ -505,14 +517,16 @@ function block(el, idx) {
     if (mk) {
       const fout = fl.wout ? 1 : 1 - smooth(seg(s, r.L + 0.25, r.L + 0.48));
       const lv = drawn ? live : null;
-      const A3 = drawn && live.anchors3d ? live.anchors3d : null;
+      // the scene's anchors once it draws, but not while it turns from the still's pose (no id pass yet): the markers stay
+      // on the still's uv until then, so they hand over without blinking off
+      const A3 = drawn && live.anchors3d && !live.turning ? live.anchors3d : null;
       shots.forEach((x, j) => {
         const ex = timeline[j].explode, es = ex[1] - ex[0];
         const step = Math.min(0.032, 0.26 / Math.max(1, x.marks.length - 1));   // a long list (Method's twelve) staggers tighter: all in by the hold
         x.marks.forEach((m, i) => {
           if (!m) return;
           let kk = j === k ? smooth(seg(s, ex[0] + (0.85 + step * i) * es, ex[0] + (0.95 + step * i) * es)) * fout * (1 - smooth(seg(cut, 0, 0.3))) : 0;
-          if (!mkAll) kk = i === x.lastHot && j === k ? smooth(seg(s, ex[0] + 0.85 * es, ex[0] + 0.95 * es)) * fout : 0;   // phones: one, no stagger
+          if (!mkAll) kk = i === x.lastHot && j === k ? smooth(seg(s, ex[0] + 0.85 * es, ex[0] + 0.95 * es)) * fout * (1 - smooth(seg(cut, 0, 0.3))) : 0;   // phones: one, no stagger
           const id3 = A3 ? x.rows[i]?.dataset.anchor3d : null;
           if (id3) { m._kk = kk; m._id3 = id3; return; }
           m._id3 = null;
@@ -522,7 +536,7 @@ function block(el, idx) {
           if (kk <= 0) return;
           const A = x.anchors[i];
           tdProject(A.u, A.v, S, V, lv, A.d, Q);
-          side(m, Q.x);
+          side(m, Q.x, Q.y);
           put(m, 'transform', `translate3d(${px(Q.x)}, ${px(Q.y)}, 0)`);
         });
       });
@@ -542,10 +556,10 @@ function block(el, idx) {
       put(m, 'visibility', kk > 0 ? 'visible' : 'hidden');
       put(m, '--k', f3(kk));
       if (kk <= 0) return;
-      if (!mkAll) side(m, a.x);
+      if (!mkAll) side(m, a.x, a.y);
       else if (a.lead && m._ang !== a.lead.angle) {      // the 3D anchor's own leader direction (labels spread round the parts)
         m._ang = a.lead.angle;
-        m.style.setProperty('--ang', `${a.lead.angle}deg`); m.style.setProperty('--lx', px(a.lead.dx * 42)); m.style.setProperty('--ly', px(a.lead.dy * 42));
+        m.style.setProperty('--ang', `${a.lead.angle}deg`); m.style.setProperty('--lx', px(a.lead.dx * leadPx)); m.style.setProperty('--ly', px(a.lead.dy * leadPx));
       }
       put(m, 'transform', `translate3d(${px(a.x)}, ${px(a.y)}, 0)`);
     }));

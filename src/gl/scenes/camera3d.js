@@ -26,7 +26,8 @@
    Reduced motion never reaches this scene: main.js does not boot the stage then, and the section shows the static
    layout with the 3D stills (see INTEGRATION.md). */
 import { create, KEYS } from '../lib/camera3d.js';
-import { tdLive, tdFlags, tdTimeline, tdState, tdRun, tdLerpRect, tdPinTop, tdIdDue, tdIntroPose, tdStandIn, tdGiveUp, tdPointerStep, TD_INTRO_MS } from '../lib/tdcore.js';
+import { tdLive, tdFlags, tdTimeline, tdState, tdRun, tdLerpRect, tdPinTop, tdIdDue, tdIntroPose, tdIntroTurn, tdStandIn, tdGiveUp, tdPointerStep, TD_INTRO_MS } from '../lib/tdcore.js';
+import { fetchGLB } from '../lib/glbfetch.js';
 
 /* the site's art direction over the module's own keys (options and the exported KEYS only: the module and its API stay
    as the lab ships them, so its final drop-in keeps these):
@@ -48,7 +49,7 @@ export default function register(stage) {
   const section = document.querySelector(`[data-scene="${id}"]`);
   if (!section) return;
   const live = tdLive(id);
-  live.ready = false;
+  live.ready = false; live.turning = false;
   let cam = null, run = null, pinH = 0, heroR = null, colR = null, fl = null, timeline = null, TL = -1, vw = 0, vh = 0, idV = -1, idPending = false;
   let first = false, intro = 0, introX = 0, gaveUp = false;
   const ST = { ph: {}, phN: {} }, S = {}, PH = {}, ID = { e: -1, s: -1 };
@@ -64,13 +65,16 @@ export default function register(stage) {
     id, device: true,
     post: { vignette: 0.16, grain: 0.03, fringe: 0.5 },
     async load(ctx) {
+      // phones: the governor is already at its floor (an earlier chapter pushed it there): the stills, without fetching
+      // the GLB or running the bakes on a phone that is struggling (the stage keeps the section's stills; a warning only)
+      if (tdGiveUp(ctx, stage)) { gaveUp = true; section.dataset.cam3d = 'stills'; throw new Error('camera3d: the stage is at its floor'); }
       // the stand-in: both stills fetched, decoded and painted (≤ 2.5 s) before the GLB's parse and the bakes (tdcore)
       await tdStandIn([...section.querySelectorAll('img.td__still')]);
       // phones: the phone GLB and its lighter settings, plus (starting on the high level) the paint grain and 6 samples
       // and a little more exposure on the small, dark body (it read flatter than its own tier-0 still); no bloom anywhere
       // (strength 0.05 over threshold 4: invisible, and 2.7 KB of lazy JS and a full-screen pass per sample)
       const phone = !!ctx.still, hi = phone && ctx.quality === 'high';
-      cam = create(ctx, { base: '/assets/models/camera/', tier: ctx.tier, reduced: ctx.reduced, mobile: phone, bloom: false,
+      cam = create(ctx, { base: '/assets/models/camera/', tier: ctx.tier, reduced: ctx.reduced, mobile: phone, bloom: false, loadBuffer: fetchGLB,
         ...(phone ? { portraitScale: PORTRAIT, exposure: 1.07, ...(hi ? { paintGrain: true, acc: 6 } : {}) } : {}) });
       cam.resize(ctx.w, ctx.h, ctx.dpr);
       await cam.load();
@@ -78,7 +82,7 @@ export default function register(stage) {
       window.__cam3d = cam; window.__live3d = live; window.__cam3dPortrait = PORTRAIT;   // for QA scripts (like the stage's window.__stage)
     },
     dispose() {
-      cam?.dispose(); cam = null; live.anchors3d = null; live.ready = false;
+      cam?.dispose(); cam = null; live.anchors3d = null; live.ready = false; live.turning = false;
       idPending = false; idV = -1; ID.e = ID.s = -1; intro = 0; first = false;
     },
     resize(w, h, dpr) { cam?.resize(w, h, dpr); },
@@ -94,10 +98,11 @@ export default function register(stage) {
         setTimeout(() => { stage.dispose(sc); sc.failed = true; section.dataset.cam3d = 'stills'; }, 0);
       }
       // the first frame after a load while the stand-in is on screen: start at the still's pose (the hero still before
-      // a quarter of the explode, the exploded still after it: the section's dip) and turn into the scroll's
+      // a quarter of the explode, the exploded still after it: the section's dip) and turn into the scroll's (not in the
+      // orbit's first three quarters: tdcore tdIntroTurn, the dissolve hands over there)
       if (first) {
         first = false;
-        intro = r.s > -1.0 && r.s < r.L + 0.6 && st.fade > 0.02 ? 1 : 0;
+        intro = r.s > -1.0 && r.s < r.L + 0.6 && st.fade > 0.02 && tdIntroTurn(st.ph) ? 1 : 0;
         introX = st.ph.explodeLin >= 0.25 ? 1 : 0;
       }
       let ph = st.ph;
@@ -120,6 +125,8 @@ export default function register(stage) {
       // the markers draw in as the parts arrive, while scrolling (see the header; tdcore tdIdDue): a pass every 0.025 of
       // explode from 0.93, one as it reaches 1, and every third of the settle
       if (tdIdDue(ID, st.ph.explode, st.ph.settle, intro > 0)) cam.occlusion();
+      // while it turns (no id pass yet) the section keeps the stills' markers on their uv (no blink at the hand-over)
+      live.turning = intro > 0;
       // posed for this frame; published relative to the pin (the section adds nothing)
       live.anchors3d = cam.anchors(pinTop); live.anchorsF = ctx.frame; live.pinTop = pinTop;
       live.place3d?.(live.anchors3d);

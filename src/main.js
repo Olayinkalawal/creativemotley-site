@@ -1,11 +1,28 @@
 import { TIER, REDUCED } from './core/env.js';
-import { onFrame, view } from './core/scroll.js';
-import { geo } from './core/layout.js';
+import { onFrame, view, jumpTo } from './core/scroll.js';
+import { geo, onLayout } from './core/layout.js';
 import { initChapters } from './core/chapters.js';
 import { initReveal } from './core/reveal.js';
 import { initChrome } from './ui/chrome.js';
 import { initHero } from './ui/hero.js';
 import { afterFirstPaint } from './core/firstframe.js';
+
+// a deep link (/#kit): the browser lands on the anchor while the page is parsed, before the sections above it have
+// grown to their scroll lengths (the pinned runs, the showcase: ~4,800 px at 1440, which left #kit in Showcase); it lands
+// again after the sections' init, the fonts, the load and each layout pass, until the reader scrolls (or 6 s)
+const deep = (() => { try { return location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null; } catch { return null; } })();
+if (deep && 'scrollRestoration' in history) history.scrollRestoration = 'manual';
+function landDeep() {
+  let done = false;
+  const stop = () => { done = true; off(); };
+  const off = onLayout(() => { if (!done) jumpTo(deep); });
+  for (const t of ['wheel', 'touchstart', 'keydown', 'pointerdown']) window.addEventListener(t, stop, { once: true, passive: true, capture: true });
+  const land = () => { if (!done) jumpTo(deep); };
+  land();
+  document.fonts?.ready.then(land);
+  if (document.readyState === 'complete') setTimeout(land, 120); else window.addEventListener('load', () => setTimeout(land, 120), { once: true });
+  setTimeout(stop, 6000);
+}
 
 // the init work waits for the first frame (core/firstframe.js): the hero paints first, the rest measures after it
 afterFirstPaint(() => {
@@ -19,6 +36,7 @@ afterFirstPaint(() => {
     try { m.init?.(); } catch (e) { console.warn('[section] init failed', path, e); }
   }
   initReveal();
+  if (deep) landDeep();
 
   // still plates under the canvas: first paint, and the whole stage when WebGL is off (a plate marked data-bg="url"
   // loads only when it is first shown, so the hidden ones cost nothing on the first load).

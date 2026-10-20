@@ -99,7 +99,9 @@ html.js .td--seq[data-td-ready]:not(.td-static) .td__copy { visibility: hidden; 
 
 /* kinetic copy: heads reveal line by line through a mask (JS splits the lines and sets --k per line) */
 .td-ln { display: block; overflow: hidden; padding: 0.06em 0 0.12em; margin: -0.06em 0 -0.12em; }
-.td-ln__in { display: block; transform: translate3d(0, calc((1 - var(--k, 1)) * 112%), 0); will-change: transform; }
+/* a waiting line sits a whole line plus 0.45em below its mask (112 % of its box left the tops of tall letters showing
+   under a tight line height: dots and dashes under a label held mid-cut), and is transparent at --k 0 */
+.td-ln__in { display: block; transform: translate3d(0, calc((1 - var(--k, 1)) * (100% + 0.45em)), 0); opacity: min(1, calc(var(--k, 1) * 8)); will-change: transform; }
 .td__giant .td-ln { padding: 0.12em 0.08em 0.16em; margin: -0.12em -0.08em -0.16em; }
 
 /* spec rows (pinned): stagger in with the hand-off (--in), then light in step with the explode (--on) */
@@ -133,13 +135,13 @@ html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hl { opacity: var(--in, 
   box-shadow: 0 0 0 3px rgba(217, 188, 133, 0.2), 0 0 16px rgba(217, 188, 133, 0.55);
   transform: scale(calc(0.4 + 0.6 * var(--k, 0))); transition: transform 0.3s var(--ease-out), background 0.3s;
 }
-.td__mk-lead {
-  position: absolute; left: 0; top: -0.5px; width: 32px; height: 1px; transform-origin: 0 50%;
+.td__mk-lead {   /* to 10 px short of the label's centre (--td-lead: the label's distance, sections/_teardown.js reads it) */
+  position: absolute; left: 0; top: -0.5px; width: calc(var(--td-lead, 42px) - 10px); height: 1px; transform-origin: 0 50%;
   background: linear-gradient(90deg, rgba(217, 188, 133, 0.95), rgba(217, 188, 133, 0.5));
   transform: rotate(var(--ang)) scaleX(var(--k, 0));
 }
-.td__mk-n {
-  position: absolute; left: 0; top: 0; padding: 3px 5px 2px; border-radius: 3px; background: rgba(0, 0, 0, 0.62);
+.td__mk-n {   /* an ink pill dense enough for gold text over bright metal (0.62 went grey over the mic's grille) */
+  position: absolute; left: 0; top: 0; padding: 3px 5px 2px; border-radius: 3px; background: rgba(0, 0, 0, 0.78);
   font: var(--f-small); line-height: 1; letter-spacing: var(--ls-caps); color: var(--gold); font-variant-numeric: tabular-nums;
   transform: translate(calc(var(--lx) - 50%), calc(var(--ly) - 50%)); opacity: clamp(0, calc(var(--k, 0) * 2 - 1), 1);
   transition: color 0.3s, background 0.3s;
@@ -147,10 +149,10 @@ html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hl { opacity: var(--in, 
 .td.has-hl .td__mk:not(.is-hl) { filter: opacity(0.35); }
 .td__mk.is-hl .td__mk-dot { transform: scale(1.6); background: var(--cream); }
 .td__mk:is(.is-hl, .is-hot) .td__mk-n { background: var(--gold); color: var(--ink); }
-.td.has-hl .td__mk.is-hot:not(.is-hl) .td__mk-n { background: rgba(0, 0, 0, 0.62); color: var(--gold); }
+.td.has-hl .td__mk.is-hot:not(.is-hl) .td__mk-n { background: rgba(0, 0, 0, 0.78); color: var(--gold); }
 /* phones: one marker, named; its label leans towards the middle of the screen (JS: .is-r on the right half) */
 .td__mk--name .td__mk-lead { width: 22px; }
-.td__mk--name.is-hot .td__mk-n { background: rgba(0, 0, 0, 0.72); color: var(--gold); }   /* light over the parts */
+.td__mk--name.is-hot .td__mk-n { background: rgba(0, 0, 0, 0.78); color: var(--gold); }   /* light over the parts */
 .td__mk--name .td__mk-n { white-space: nowrap; transform: translate(calc(var(--lx) + 2px), calc(var(--ly) - 50%)); }
 .td__mk--name.is-r .td__mk-n { transform: translate(calc(var(--lx) - 100% - 2px), calc(var(--ly) - 50%)); }
 /* the rows are numbered where the part markers carry those numbers (desktop, tablets: .td--mk with every marker;

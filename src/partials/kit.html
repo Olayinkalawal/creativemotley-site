@@ -9,13 +9,16 @@
      shows. No step names here: Process (VI) names the seven steps once.
      Each shot's data sits on its .td__copy[data-td-shot]: data-td-dev (the device: mixer3d, mic3d, headphones3d, phone3d,
      its GLBs in public/assets/models/<device>, its config in src/gl/lib/kit3d_devices.js), data-td-key ("centre edge":
-     the colour key the scene draws it on, with its contact shadow). data-td-orbit-fill (the section): the console's
-     largest fill of its slot while the title shows, so the orbit's slot is lowered under the title's letters. Stills
+     the colour key the scene draws it on, with its contact shadow). data-td-orbit-fill (the section): the fill the orbit's
+     slot is shaped for (lowered under the title's letters, shifted right of the chapter index); the console fills 0.70 of
+     it at the hero key (gl/scenes/kit3d.js sets the keys over the package's 0.80), so it keeps 60-100 px of air. Stills
      (tier 0, reduced motion, a gated phone, and the stand-in until a device draws): public/assets/teardown/<dev>/
      still_hero.webp and still_exploded.webp, rendered from the 3D at
      its hero and exploded keys (alpha mattes: they sit on the DOM keys), so every path shows the same devices. Framing
-     ("zoom shiftX shiftY", on those stills): data-td-hero for the console's orbit, data-td-frame0 → data-td-frame in the
-     column, -tall on portrait screens; data-td-box / data-td-pbox: each still's device box (uv). Each part row's
+     ("zoom shiftX shiftY", on those stills): data-td-hero for the console's orbit (data-td-hero-start: the 3D's fill at the
+     orbit's start key over the hero key's, so the still shrinks with the view), data-td-frame0 → data-td-frame in the
+     column, -tall on portrait screens, each box-matched to the 3D (its parts' screen box) at 1440, 1280, 390 and 360;
+     data-td-box / data-td-pbox: each still's device box (uv). Each part row's
      data-anchor3d names its 3D anchor (the scene places those markers on the parts); data-anchor ("u v depth leader") is
      the same point on still_exploded.webp (the markers' stand-in). Shot k's stills and DOM key (WebGL off, or until the
      scene draws) carry data-td-still="k". data-wipe: the run is a sheet that scrolls off Results (the stage splits the
@@ -44,7 +47,7 @@
       </header>
 
       <div class="td__copy" data-td-shot="0" data-td-dev="mixer3d" data-td-key="#3b2a17 #0e0905"
-        data-td-hero="1 0 0" data-td-hero-tall="1.284 0 0" data-td-frame0="1.081 0 0" data-td-frame0-tall="1.128 0 0.032" data-td-frame="1.895 0 0" data-td-frame-tall="1.984 0 0.018"
+        data-td-hero="0.875 0 0" data-td-hero-tall="1.13 0 0" data-td-hero-start="0.857" data-td-hero-start-tall="0.913" data-td-frame0="1.03 0 0" data-td-frame0-tall="1.128 0 0.032" data-td-frame="1.87 0 0" data-td-frame-tall="1.99 0 0.018"
         data-td-box="0.1 0.138 0.9 0.862" data-td-pbox="0.287 0.043 0.713 0.957">
         <div class="td__intro">
           <p class="td__label label">Console</p>
@@ -78,7 +81,7 @@
       </div>
 
       <div class="td__copy" data-td-shot="2" data-td-dev="headphones3d" data-td-key="#143a3a #031011"
-        data-td-frame0="1.89 0 0" data-td-frame0-tall="2.263 0 0.016" data-td-frame="1.358 0 0" data-td-frame-tall="1.201 0 0.03"
+        data-td-frame0="1.589 0 0" data-td-frame0-tall="2.263 0 0.016" data-td-frame="1.241 0 0" data-td-frame-tall="1.151 0 0.03"
         data-td-box="0.31 0.06 0.69 0.94" data-td-pbox="0.157 0.02 0.843 0.98">
         <div class="td__intro">
           <p class="td__label label">Headphones</p>
