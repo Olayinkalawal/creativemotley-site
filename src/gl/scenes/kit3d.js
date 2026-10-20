@@ -61,11 +61,12 @@ import { fetchGLB } from '../lib/glbfetch.js';
      and 1440, the slot shifted right of the chapter index), and lands at 0.80 of the column (0.84) so the hand-off keeps
      its pace; portrait: the exploded hold at 0.83 (0.89 x the 1.035 push ran the knobs to the edge at 360 and 390)
    - the headphones arrive at 0.74 of the column (0.88: twice the mic's size, the band under the bar, then a visible pull
-     back as they came apart) and hold at 0.90, clamped at the family's 0.92 (0.96 ran a cup to 21 px of the edge) */
+     back as they came apart) and hold at 0.88 (0.96 ran a cup to 21 px of the edge at 1024; 0.90 still left 40 px at
+     1280), with the family's 0.92 clamp (portrait: 0.96 → 0.92) */
 {
   const MX = DEVICES.mixer3d.config.keys, HP = DEVICES.headphones3d.config;
   MX.wide.hero.fill = 0.70; MX.wide.column.fill = 0.80; MX.tall.exploded.fill = 0.83;
-  HP.keys.wide.column.fill = 0.74; HP.keys.wide.exploded.fill = 0.90; HP.fillMax = 0.92;
+  HP.keys.wide.column.fill = 0.74; HP.keys.wide.exploded.fill = 0.88; HP.fillMax = 0.92;
 }
 
 const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -291,8 +292,8 @@ export default function register(stage) {
   };
   /* per frame: what to keep, load and drop around shot k. Desktop: shots k − 1 … k + 1 stay loaded, the next device loads
      PREFETCH before its cut. Phones (ctx.still): shot k, the next one (from PREFETCH_PHONE before its cut, and not before
-     shot k holds), and the previous one only round its cut (a reader turning back up), so a read never holds three phone
-     GLBs; a device two shots away goes everywhere. Both ways: scrolling up (the last move), the previous device and its
+     shot k holds), and the previous one only round its cut (a reader turning back up; the next one then goes), so a read
+     holds two phone GLBs; a device two shots away goes everywhere. Both ways: scrolling up (the last move), the previous device and its
      exploded still (the outgoing side of a reverse cut shows it exploded) load as the reader nears its cut. */
   const manage = (s, k, ph) => {
     if (Math.abs(s - lastS) > 0.002 || !(lastS === lastS)) { up = s < lastS; lastS = s; }
@@ -300,7 +301,8 @@ export default function register(stage) {
     const sh = shots[k], nx = shots[k + 1], pv = shots[k - 1], Tk = timeline[k], T1 = timeline[k + 1];
     shots.forEach((x, j) => {
       const far = Math.abs(j - k) >= 2;
-      const drop = far || (phone && j === k - 1 && Tk.cut && s > Tk.cut[1] + 0.3);
+      const drop = far || (phone && j === k - 1 && Tk.cut && s > Tk.cut[1] + 0.3)
+        || (phone && up && j === k + 1 && s < Tk.settle[0] - 0.05);   // back up above this hold: the next one goes
       if (drop && queued === x) queued = null;
       if (drop && (x.d || x.tok)) dropDevice(x);
       if (far && (x.stH || x.stX || x.stLoading)) dropStills(x);
