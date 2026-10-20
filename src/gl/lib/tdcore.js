@@ -1,7 +1,8 @@
-/* Teardown choreography, shared by the scene (gl/scenes/teardowns.js) and the section (sections/_teardown.js),
+/* Teardown choreography, shared by the scenes (gl/scenes/camera3d.js, kit3d.js) and the section (sections/_teardown.js),
    so the WebGL frame, the CSS stills, the colour keys, the construction lines and the part markers all follow one
-   clock. Pure functions of scroll and of the markup's data; nothing here knows how a device is drawn (frame streams
-   today; real-time 3D or video in phase 3 only has to answer "show device d at orbit o / explode e, framed so").
+   clock. Pure functions of scroll and of the markup's data; nothing here knows how a device is drawn (real-time 3D today:
+   gl/scenes/camera3d.js, gl/scenes/kit3d.js, which also share the rules at the end of this file; the photoreal frame
+   streams of gl/scenes/teardowns.js before: each only has to answer "show device d at orbit o / explode e, framed so").
    No three.js in here (the section bundle imports it).
 
    A run is one pinned block ([data-td-run]) showing a list of shots, one device each: the elements marked
@@ -158,16 +159,12 @@ export function tdFraming(el, tall, dev = '') {
   return { hero, frame0, frame, tall, bleed, xmap: xmap && xmap.length >= 4 ? xmap : null, hbox: nums(d.tdBox), pbox: nums(d.tdPbox), ext: TD_EXT[dev] || null, key: tdKey(d.tdKey), col: null };
 }
 
-/* the device's extent in the explode frames (u0 v0 u1 v1, every 4th frame, measured from the renders): the parts
-   spread at the render's own pace (and the mic's and the mixer's renders push in mid-way), so the column zoom
-   follows this, frame by frame, and the device never leaves the column slot (never under the copy). Method's camera
-   is real-time 3D now (gl/scenes/camera3d.js): its stills fit by their own framing keys, so it has no table here. */
-export const TD_EXT = {
-  mixer: [0.108,0.183,0.907,0.85,0.108,0.183,0.907,0.848,0.11,0.181,0.906,0.85,0.113,0.176,0.903,0.854,0.117,0.17,0.9,0.859,0.12,0.161,0.896,0.867,0.124,0.148,0.891,0.878,0.127,0.133,0.884,0.891,0.13,0.117,0.877,0.907,0.133,0.096,0.87,0.924,0.138,0.078,0.861,0.941,0.141,0.057,0.852,0.956,0.145,0.037,0.843,0.969,0.15,0.02,0.834,0.98,0.154,0.006,0.825,0.987,0.161,0,0.817,0.993,0.167,0,0.809,0.996,0.173,0,0.804,0.998,0.18,0,0.799,0.996,0.186,0,0.794,0.993,0.193,0,0.79,0.989,0.199,0.002,0.785,0.985,0.204,0.013,0.782,0.981,0.208,0.022,0.778,0.978,0.214,0.03,0.777,0.972,0.217,0.037,0.774,0.97,0.22,0.041,0.772,0.967,0.223,0.044,0.77,0.965,0.224,0.048,0.769,0.961,0.225,0.05,0.768,0.959,0.226,0.05,0.768,0.959,0.226,0.052,0.767,0.957,0.226,0.052,0.767,0.957,0.226,0.052,0.767,0.957,0.226,0.052,0.767,0.957,0.226,0.052,0.767,0.957,0.226,0.052,0.767,0.957],
-  mic: [0.16,0.139,0.856,0.869,0.161,0.139,0.856,0.869,0.161,0.139,0.856,0.869,0.16,0.139,0.871,0.881,0.155,0.131,0.956,0.937,0.158,0.124,1,1,0.169,0.119,1,1,0.184,0.115,1,1,0.2,0.111,1,1,0.209,0.109,1,1,0.205,0.104,1,1,0.188,0.098,1,1,0.158,0.087,1,1,0.122,0.076,1,1,0.083,0.063,1,1,0.045,0.05,1,1,0.013,0.041,1,1,0,0.031,1,1,0,0.028,1,1,0,0.024,1,1,0,0.022,1,1,0,0.022,1,1,0,0.026,1,1,0,0.03,1,1,0,0.033,1,1,0.014,0.041,1,0.998,0.029,0.044,1,0.978,0.043,0.048,0.983,0.965,0.052,0.052,0.971,0.956,0.058,0.056,0.96,0.952,0.064,0.057,0.954,0.948,0.068,0.059,0.95,0.948,0.07,0.059,0.949,0.943,0.071,0.059,0.948,0.943,0.071,0.059,0.948,0.943,0.071,0.059,0.948,0.943,0.071,0.059,0.948,0.943],
-  headphones: [0.31,0.076,0.703,0.913,0.31,0.076,0.703,0.913,0.31,0.076,0.703,0.913,0.292,0.074,0.727,0.913,0.233,0.065,0.776,0.913,0.195,0.052,0.811,0.913,0.17,0.048,0.834,0.913,0.152,0.046,0.852,0.913,0.138,0.046,0.866,0.913,0.126,0.046,0.877,0.913,0.117,0.046,0.886,0.913,0.109,0.046,0.895,0.913,0.104,0.046,0.902,0.913,0.1,0.046,0.907,0.913,0.096,0.046,0.912,0.913,0.092,0.046,0.917,0.913,0.084,0.046,0.921,0.913,0.074,0.046,0.924,0.913,0.065,0.046,0.926,0.913,0.057,0.046,0.928,0.913,0.051,0.046,0.93,0.913,0.047,0.046,0.932,0.913,0.043,0.046,0.936,0.913,0.04,0.046,0.94,0.913,0.036,0.046,0.942,0.913,0.035,0.046,0.944,0.913,0.033,0.046,0.946,0.913,0.033,0.046,0.946,0.913,0.033,0.046,0.946,0.913,0.033,0.046,0.946,0.913,0.033,0.046,0.946,0.913,0.033,0.046,0.946,0.913,0.033,0.046,0.946,0.913,0.033,0.046,0.946,0.913,0.033,0.046,0.946,0.913,0.033,0.046,0.946,0.913,0.033,0.046,0.946,0.913],
-  phone: [0.259,0.078,0.728,0.93,0.259,0.078,0.728,0.93,0.259,0.078,0.728,0.93,0.259,0.078,0.728,0.93,0.258,0.078,0.728,0.93,0.252,0.078,0.729,0.93,0.241,0.076,0.728,0.93,0.222,0.07,0.728,0.93,0.2,0.069,0.743,0.93,0.174,0.067,0.776,0.93,0.145,0.067,0.816,0.937,0.122,0.067,0.852,0.954,0.098,0.067,0.879,0.965,0.083,0.067,0.902,0.97,0.074,0.067,0.921,0.972,0.071,0.067,0.927,0.972,0.071,0.067,0.927,0.972,0.071,0.067,0.927,0.972,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.974,0.071,0.067,0.928,0.974,0.071,0.067,0.927,0.972,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.972,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.972,0.071,0.067,0.927,0.972,0.071,0.067,0.927,0.972,0.071,0.067,0.927,0.974,0.071,0.067,0.927,0.974],
-};
+/* the device's extent in the explode frames (u0 v0 u1 v1, every 4th frame, measured from the renders): for a run drawn
+   from photoreal frame streams (gl/scenes/teardowns.js), whose parts spread at the render's own pace, so the column
+   zoom follows it frame by frame and the device never leaves the column slot. No run streams frames today: Method's
+   camera and the Kit's four devices are real-time 3D (gl/scenes/camera3d.js, gl/scenes/kit3d.js), and their stills fit
+   by their own framing keys, so the table is empty (the Kit's four photoreal tables went with their frame sets). */
+export const TD_EXT = {};
 function extAt(E, f, out) {
   const n = E.length / 4 - 1, x = Math.max(0, Math.min(n, f / 4)), i = Math.min(n - 1, Math.floor(x)), t = x - i;
   for (let k = 0; k < 4; k++) out[k] = E[i * 4 + k] + (E[(i + 1) * 4 + k] - E[i * 4 + k]) * t;
@@ -237,6 +234,43 @@ export function tdLerpRect(a, b, k, out = {}) {
 
 /* the sticky pin's top in the viewport (it rides in with the run, holds at 0, then rides out) */
 export function tdPinTop(r, y, pinH) { return r.top - y + clamp(y - r.top, 0, Math.max(0, r.height - pinH)); }
+
+/* ── the real-time teardown scenes' shared rules (gl/scenes/camera3d.js: Method's camera; gl/scenes/kit3d.js: the Kit's
+   four devices), so both behave alike ───────────────────────────────────────────────────────────────────────────── */
+/* the markers draw in with the scroll, not all at once after it stops: an id pass (occlusion) every 0.025 of explode from
+   0.93 (the runtimes trust a pass within 0.03 of their pose), one as the explode reaches 1 (parts still moving at 0.975
+   cover anchors they leave), and every third of the settle (its push and drift). M: { e, s } per device; hold (the
+   intro turn): no pass yet. True when a pass is due now. */
+export function tdIdDue(M, e, sl, hold) {
+  if (e < 0.93 || hold) { M.e = -1; M.s = -1; return false; }
+  if (M.e < 0 || Math.abs(e - M.e) >= 0.025 || (e > 0.999 && M.e <= 0.999) || Math.abs(sl - M.s) >= 0.34) { M.e = e; M.s = sl; return true; }
+  return false;
+}
+/* the intro: the first frame a device draws while its stand-in still is on screen starts at that still's pose (the hero
+   key, or the exploded key: toEx) and turns into the scroll's pose as k (1 → 0, eased) runs down */
+export function tdIntroPose(ph, k, toEx, out) {
+  Object.assign(out, ph);
+  if (toEx) out.explode += (1 - out.explode) * k;
+  else { out.orbit += (1 - out.orbit) * k; out.explode *= 1 - k; }
+  return out;
+}
+export const TD_INTRO_MS = 900;
+/* the stand-in: the given stills fetched now (parked in data-src, or loading="lazy", until the run is near), decoded and
+   painted (two frames) before a GLB's parse, the studio bakes and the compile take the main thread and the GPU (at most
+   2.5 s: a slow still never holds the device back) */
+export async function tdStandIn(ims) {
+  for (const im of ims) { if (!im.getAttribute('src') && im.dataset.src) im.src = im.dataset.src; im.loading = 'eager'; }
+  const dec = ims.filter((im) => im.getAttribute('src')).map((im) => im.decode().catch(() => {}));
+  if (!dec.length) return;
+  await Promise.race([Promise.all(dec), new Promise((r) => setTimeout(r, 2500))]);
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+}
+/* phones (the still path): the frame-rate governor stepped all the way down to "min" while a real-time device draws, so
+   the scene gives up to its 3D stills for this visit (?q=… forces a quality for QA: no give-up) */
+const QA_Q = typeof location !== 'undefined' && /[?&]q=/.test(location.search);
+export const tdGiveUp = (ctx, stage) => !!ctx.still && !QA_Q && stage.quality === 'min';
+/* pointer steps of 0.02 (< 0.07° of parallax): a resting mouse stops restarting the idle samples */
+export const tdPointerStep = (v) => Math.round(v * 50) / 50;
 
 /* per scene id, shared between the section and the scene each frame:
    - the section writes the slot's viewport rect (x, y, w, h) and the frame number it was computed at (f: view.frame),

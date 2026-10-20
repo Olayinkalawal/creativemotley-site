@@ -4,3 +4,22 @@
   .kit { --td-col-w: clamp(240px, 21vw, 310px); }
 }
 .kit .td__label { color: var(--gold); }
+/* static (reduced motion, no JS), desktop: the console's hero still sits under the title, clear of the chapter index
+   (Method's rule, method.css, on the console's box in its 3D still: u 0.1–0.9, v 0.138–0.862): from just under the
+   title's letters to 12 px above the screen's bottom edge, no wider than about 70 % of the screen (49vw of still height),
+   starting 16 px right of the chapter index and ending at least 12 px from the right edge (the third term of --hi: the
+   console spans 0.8 of the still's width), centred where there is room; the still's margins are transparent (alpha) */
+@media (min-width: 1024px) {
+  :is(.kit.td.td-static, html:not(.js) .kit.td) .td__still--hero {
+    --t: calc(var(--nav-h) + 6vh + 0.78 * var(--t-title) + 12px);
+    --hi: min(calc((100svh - var(--t) - 12px) / 0.724), 49vw, calc((100vw - var(--rail-w) - 28px) * 0.703));
+    align-self: start; justify-self: start; height: var(--hi); width: calc(var(--hi) * 16 / 9); max-width: none; object-fit: contain;
+    margin-left: max(calc((100% - var(--hi) * 16 / 9) / 2), calc(var(--rail-w) + 16px - 0.1 * var(--hi) * 16 / 9));
+    margin-top: calc(var(--t) - 0.138 * var(--hi));
+  }
+}
+/* static (reduced motion, no JS), phones: the console spans 0.8 of its 3D hero still, so 1.15 puts it at ~92 % of the
+   width (the shared 1.5 ran it off both edges), as Method's 1.36 does for the camera */
+@media (max-width: 1023px) {
+  :is(.kit.td.td-static, html:not(.js) .kit.td) .td__still--hero { transform: scale(1.15); }
+}

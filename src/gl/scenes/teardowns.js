@@ -1,5 +1,5 @@
-/* Photoreal teardowns (the Editions Retail moment). One scene per run (td:kit = the Kit's one run of four devices;
-   Method's td:camera3d is the real-time 3D camera, gl/scenes/camera3d.js, never registered here), one draw per frame. The choreography is gl/lib/tdcore.js (shared with sections/_teardown.js);
+/* Photoreal teardowns (the Editions Retail moment). One scene per run. Method's td:camera3d and the Kit's td:kit are
+   real-time 3D now (gl/scenes/camera3d.js, gl/scenes/kit3d.js) and never registered here, one draw per frame. The choreography is gl/lib/tdcore.js (shared with sections/_teardown.js);
    this file only draws it: "device d at orbit o / explode e, framed so, over its colour key", plus the cut between
    two shots. Phase 3 can swap this renderer (real-time 3D, video) without touching the choreography.
    Frames: v3 sets (public/assets/teardown/<dev>/v3/set.json, scripts/prep_v3sets.py): each device streams a re-timed
@@ -21,8 +21,9 @@ import { FrameStream } from '../lib/frameStream.js';
 import { loadTexture, avifOK } from '../lib/loaders.js';
 import { TD_ASPECT, tdLive, tdRun, tdFlags, tdShots, tdDev, tdTimeline, tdState, tdOrbitFrame, tdExplodeFrame, tdIndex, tdFraming, tdFit, tdView, tdContain, tdLerpRect, tdPinTop } from '../lib/tdcore.js';
 
-// (not the retired camera set: Method's camera is real-time 3D, and the build drops its old frames: vite.config.js)
-const SETS = import.meta.glob(['/public/assets/teardown/*/v3/set.json', '!/public/assets/teardown/camera/**'], { eager: true, import: 'default' });
+// (not the retired sets: Method's camera and the Kit's four devices are real-time 3D, and the build drops their old
+// frames: vite.config.js RETIRED)
+const SETS = import.meta.glob(['/public/assets/teardown/*/v3/set.json', '!/public/assets/teardown/{camera,mixer,mic,headphones,phone}/**'], { eager: true, import: 'default' });
 const setOf = (dev) => SETS[`/public/assets/teardown/${dev}/v3/set.json`] || null;
 const pad = (i) => String(i).padStart(4, '0');
 const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -285,6 +286,6 @@ function teardown(id, stage) {
 }
 
 export default function register(stage) {
-  const ids = new Set([...document.querySelectorAll('[data-scene^="td:"]')].map((el) => el.dataset.scene).filter((id) => id !== 'td:camera3d'));
+  const ids = new Set([...document.querySelectorAll('[data-scene^="td:"]')].map((el) => el.dataset.scene).filter((id) => id !== 'td:camera3d' && id !== 'td:kit'));
   for (const id of ids) teardown(id, stage);
 }

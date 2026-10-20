@@ -3,7 +3,9 @@
    Phones (STILL): one module, the still path, answers every id but td:camera3d (Method's real-time camera, drawn on
    the phone GLB: gl/scenes/camera3d.js) where the phone can carry it (core/env.js CAM3D: >= 4 GB, >= 6 cores, or
    ?cam3d=1). Without CAM3D the still path draws ink there, as for every teardown, and the section shows its 3D stills.
-   To put every phone back on the stills, make CAM3D false on STILL in core/env.js. */
+   To put every phone back on the stills, make CAM3D false on STILL in core/env.js.
+   The Kit's four devices (td:kit) are real-time 3D too (gl/scenes/kit3d.js, the phone GLBs on the still path, under
+   the same CAM3D rule); gl/scenes/teardowns.js no longer draws them. */
 import { Stage } from './stage.js';
 import { STILL, CAM3D } from '../core/env.js';
 
@@ -14,13 +16,14 @@ const KNOWN = [
   ['umber', (id) => id === 'plate:umber'],
   ['plates', (id) => id.startsWith('plate:')],
   ['camera3d', (id) => id === 'td:camera3d' && CAM3D],
-  ['teardowns', (id) => id.startsWith('td:') && id !== 'td:camera3d'],
+  ['kit3d', (id) => id === 'td:kit' && CAM3D],
+  ['teardowns', (id) => id.startsWith('td:') && id !== 'td:camera3d' && id !== 'td:kit'],
   ['posters', (id) => id === 'posters'],
   ['objects', (id) => id === 'objects'],
 ];
 
 function factories() {
-  if (STILL) return [{ match: (id) => id === 'td:camera3d' && CAM3D, load: mod('camera3d') }, { match: () => true, load: mod('stills') }];
+  if (STILL) return [{ match: (id) => id === 'td:camera3d' && CAM3D, load: mod('camera3d') }, { match: (id) => id === 'td:kit' && CAM3D, load: mod('kit3d') }, { match: () => true, load: mod('stills') }];
   const list = KNOWN.filter(([n]) => mod(n)).map(([n, match]) => ({ match, load: mod(n) }));
   // a scene module added later without a registry line: imported (once) when an id nobody claims shows up
   const rest = Object.keys(LAZY).filter((p) => !KNOWN.some(([n]) => p === `./scenes/${n}.js`) && p !== './scenes/stills.js');

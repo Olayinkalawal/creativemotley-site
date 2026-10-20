@@ -202,5 +202,5 @@ function stillScene(id, stage) {
 
 export default function register(stage) {
   const ids = new Set([...document.querySelectorAll('[data-scene]')].map((el) => el.dataset.scene));
-  for (const id of ids) if (id !== 'td:camera3d' || !CAM3D) stillScene(id, stage);   // the 3D camera draws itself where the phone can carry it (gl/boot.js)
+  for (const id of ids) if ((id !== 'td:camera3d' && id !== 'td:kit') || !CAM3D) stillScene(id, stage);   // the 3D camera and the Kit's 3D devices draw themselves where the phone can carry them (gl/boot.js)
 }

@@ -38,7 +38,7 @@ html:not(.gl-ready) .td[data-wipe]::after {
    stand-in dissolves into it (the scene turns from the still's angle into the scroll's meanwhile); when the scene is
    disposed (sections/_teardown.js) the stills are back at once, over the ink the stage draws in its place */
 html.gl-ready .td.is-drawn :is(.td__still, .td__key) { opacity: 0 !important; visibility: hidden !important; }
-html.gl-ready .td.is-drawn[data-scene="td:camera3d"] .td__still { transition: opacity 0.5s var(--ease-out), visibility 0s linear 0.5s; }
+html.gl-ready .td.is-drawn:is([data-scene="td:camera3d"], [data-scene="td:kit"]) .td__still { transition: opacity 0.5s var(--ease-out), visibility 0s linear 0.5s; }
 /* a parked still (its src waits in data-src until the run is near) never paints a broken-image box */
 .td__still:not([src]) { visibility: hidden !important; }
 /* colour keys as DOM (the still path: phones, WebGL off, or until the scene draws; WebGL draws its own): an opaque
@@ -153,6 +153,15 @@ html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hl { opacity: var(--in, 
 .td__mk--name.is-hot .td__mk-n { background: rgba(0, 0, 0, 0.72); color: var(--gold); }   /* light over the parts */
 .td__mk--name .td__mk-n { white-space: nowrap; transform: translate(calc(var(--lx) + 2px), calc(var(--ly) - 50%)); }
 .td__mk--name.is-r .td__mk-n { transform: translate(calc(var(--lx) - 100% - 2px), calc(var(--ly) - 50%)); }
+/* the rows are numbered where the part markers carry those numbers (desktop, tablets: .td--mk with every marker;
+   sections/_teardown.js), so 08 on the camera reads as Shutter, 03 on the console as Pad matrix, without counting rows
+   (CSS counters: the copy is unchanged); the lit row's name and its marker turn gold together (above) */
+html.js .td.td--mk[data-td-ready]:not(.td-static) .td__specs { counter-reset: part; }
+html.js .td.td--mk[data-td-ready]:not(.td-static) .td__spec { counter-increment: part; }
+html.js .td.td--mk:not(:has(.td__mk--name))[data-td-ready]:not(.td-static) .td__spec b::before {
+  content: counter(part, decimal-leading-zero); display: inline-block; min-width: 2.1em;
+  font: var(--f-small); letter-spacing: var(--ls-caps); color: var(--gold); font-variant-numeric: tabular-nums;
+}
 
 /* ── desktop: the column layout (Editions: copy left, device right) ───────────────────────────────── */
 @media (min-width: 1024px) {

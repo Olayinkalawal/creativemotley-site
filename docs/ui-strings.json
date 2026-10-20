@@ -1,5 +1,5 @@
 {
- "note": "Interface labels with no fact in facts.json. Everything else on the page must trace to facts.json. Device labels and part names (Console … Rear glass) name what the teardown renders show; they are descriptive labels, not claims.",
+ "note": "Interface labels with no fact in facts.json. Everything else on the page must trace to facts.json. Device labels and part names (Console … Rear glass) name what the Kit's devices show (the real-time 3D devices and their stills, public/assets/teardown/<device>3d/still_exploded.webp; each part row's marker sits on that part's 3D anchor, data-anchor3d); they are descriptive labels, not claims.",
  "strings": [
   "Skip to content",
   "Chapters",

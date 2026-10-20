@@ -24,7 +24,7 @@
 import './_teardown.css';
 import { onFrame, onResize, smooth, seg } from '../core/scroll.js';
 import { onLayout } from '../core/layout.js';
-import { REDUCED, TIER, STILL, isDesktop } from '../core/env.js';
+import { REDUCED, TIER, STILL, CAM3D, isDesktop } from '../core/env.js';
 import { coverPlates } from './_paper.js';   // shared helper (read-only): hides the fixed plates under an opaque block
 import { tdLive, tdRun, tdFlags, tdShots, tdDev, tdKey, tdTimeline, tdState, tdFraming, tdFit, tdView, tdContain, tdProject, tdLerpRect, tdPinTop } from '../gl/lib/tdcore.js';
 
@@ -213,13 +213,14 @@ function block(el, idx) {
     };
   });
 
-  // with the WebGL stage (desktop), the stills are only a stand-in until the scene draws: they load only if the run is
-  // near and the scene has not drawn yet (src parked in data-src; without JS the markup's src stands)
-  const lazy = TIER > 0 && !STILL ? [...slot.querySelectorAll('img.td__still[src]')] : [];
+  // with the WebGL stage (desktop, and phones where core/env.js CAM3D lets the real-time scenes draw), the stills are
+  // only a stand-in until the scene draws: they load only if the run is near and the scene has not drawn yet (src parked
+  // in data-src; without JS, at tier 0 and on a gated phone the markup's src stands, loading="lazy")
+  const lazy = TIER > 0 && (!STILL || CAM3D) ? [...slot.querySelectorAll('img.td__still[src]')] : [];
   for (const im of lazy) { im.dataset.src = im.getAttribute('src'); im.removeAttribute('src'); }
   let heroR, orbR, colR, desk = false, tall = false, drawn = false, parked = false, copyTop = 0, mk = false, mkAll = false, gate = 0;
-  // rows placed by a real-time scene (data-anchor3d: Method) also get markers on tablets (all of them, numbered) and
-  // phones (the lit row's only, named); the frame-stream runs (the Kit) keep theirs desktop-only
+  // rows placed by a real-time scene (data-anchor3d: Method, the Kit) also get markers on tablets (all of them,
+  // numbered) and phones (the lit row's only, named); a frame-stream run keeps its markers desktop-only
   const has3d = shots.some((x) => x.rows.some((r) => r.dataset.anchor3d));
   const heroStill = shots[0].stillH;
   let giantLines = [], lineEls = [], tick = null, disc = null, timeline = null, TL = -1;
@@ -406,14 +407,20 @@ function block(el, idx) {
     // stills and keys (WebGL off, the phone still path, or until the scene draws)
     if (!drawn) {
       // the src a screen and a half ahead of the pin (a parked img never paints, _teardown.css: no broken-image box)
-      if (lazy.length && s > -1.6) { for (const im of lazy) im.src = im.dataset.src; lazy.length = 0; }
+      // (per shot: a shot's pair from a screen and a half before it shows to 0.6 after the next cut, so the Kit's four
+      // pairs are not all fetched at once, also when the reader comes back from below after the scene was disposed)
+      if (lazy.length && s > -1.6) for (let i = lazy.length - 1; i >= 0; i--) {
+        const im = lazy[i], j = +(im.dataset.tdStill || 0), t = timeline[j] || timeline[0], nx = timeline[j + 1];
+        if (s > (t.cut ? t.cut[0] : 0) - 1.6 && (!nx || s < nx.cut[1] + 0.6)) { im.src = im.dataset.src; lazy.splice(i, 1); }
+      }
       shots.forEach((x, j) => {
         let oh = 0, op = 0, ko = 0, kx = 0;
         if (j === k) {
           const out = 1 - smooth(seg(cut, 0.3, 0.7));
-          if (x.dev === 'camera3d') {
-            // the 3D stills are two angles of one camera (hero az -38, exploded -62; phones -26 / -50): a dissolve hung
-            // the parts half-transparent over a whole camera, so the hero still dips to black before the exploded one
+          if (/3d$/.test(x.dev)) {
+            // the 3D stills (the camera's, the Kit's devices') are two angles of one device (the camera: hero az -38,
+            // exploded -62; phones -26 / -50): a dissolve hung the parts half-transparent over a whole device, so the hero
+            // still dips to black before the exploded one
             oh = (1 - smooth(seg(ph.explodeLin, 0.16, 0.25))) * out; op = smooth(seg(ph.explodeLin, 0.25, 0.36)) * out;
           } else { const xk = smooth(seg(ph.explodeLin, 0.2, 0.4)); oh = (1 - xk) * out; op = xk * out; }
           ko = x.F.key ? hand : 0;
@@ -493,7 +500,7 @@ function block(el, idx) {
 
     // part markers (desktop; tablets and phones for rows with data-anchor3d: all of them on tablets, the lit row's
     // only on phones): the current shot's, on their parts in the exploded frame, through the shader's transform.
-    // Rows with data-anchor3d (td:camera3d): the section sets each marker's fade here and the scene places it, right
+    // Rows with data-anchor3d (td:camera3d, td:kit): the section sets each marker's fade here and the scene places it, right
     // after it poses this frame (live.place3d below), from its anchors relative to the pin: no lag behind the parts.
     if (mk) {
       const fout = fl.wout ? 1 : 1 - smooth(seg(s, r.L + 0.25, r.L + 0.48));
@@ -523,12 +530,13 @@ function block(el, idx) {
     }
   };
 
-  // td:camera3d: the scene calls this right after it poses (anchors in pin px; visible = revealed x facing x not covered)
+  // td:camera3d, td:kit: the scene calls this right after it poses (anchors in pin px; visible = revealed x facing x not covered)
   live.place3d = (A) => {
     if (!A || !mk) return;
-    for (const x of shots) x.marks.forEach((m) => {
+    // A.shot (the Kit: one device per shot): those anchors place that shot's markers only (part ids repeat across devices)
+    shots.forEach((x, j) => x.marks.forEach((m) => {
       if (!m || !m._id3) return;
-      const a = A.find((q) => q.id === m._id3);
+      const a = A.shot === undefined || A.shot === j ? A.find((q) => q.id === m._id3) : null;
       const kk = (m._kk || 0) * (a ? a.visible : 0);
       put(m, 'opacity', f3(Math.min(1, kk * 1.6)));
       put(m, 'visibility', kk > 0 ? 'visible' : 'hidden');
@@ -540,7 +548,7 @@ function block(el, idx) {
         m.style.setProperty('--ang', `${a.lead.angle}deg`); m.style.setProperty('--lx', px(a.lead.dx * 42)); m.style.setProperty('--ly', px(a.lead.dy * 42));
       }
       put(m, 'transform', `translate3d(${px(a.x)}, ${px(a.y)}, 0)`);
-    });
+    }));
   };
 
   measure();
