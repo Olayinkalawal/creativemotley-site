@@ -23,10 +23,14 @@ function includes() {
 }
 
 /* public/ folders the page no longer uses but that stay in the repo for now (the build leaves them out of the output):
-   assets/teardown/camera, the photoreal camera's frame sets (29 MB, 585 files), replaced by the real-time camera
-   (assets/models/camera, assets/teardown/camera3d); the camera lab (.lab/cam3d: build_cam.py, compare.py,
-   client_sheets.py) still reads them. Delete the folder (git rm) once the lab is done with it, then this list. */
-const RETIRED = ['assets/teardown/camera'];
+   - assets/teardown/camera, the photoreal camera's frame sets (29 MB, 585 files), replaced by the real-time camera
+     (assets/models/camera, assets/teardown/camera3d); the camera lab (.lab/cam3d: build_cam.py, compare.py,
+     client_sheets.py) still reads them;
+   - assets/teardown/mixer, mic, headphones and phone, the Kit's photoreal frame sets (83 MB, 2,140 files),
+     replaced by the four real-time devices (assets/models/<device>, assets/teardown/<device>3d); the device labs
+     (.lab/kit3d/<device>/compare.py) still read their hero.webp and poster.webp.
+   Delete a folder (git rm) once its lab is done with it, then its line here. */
+const RETIRED = ['assets/teardown/camera', 'assets/teardown/mixer', 'assets/teardown/mic', 'assets/teardown/headphones', 'assets/teardown/phone'];
 function retired() {
   let out = 'dist';
   return {

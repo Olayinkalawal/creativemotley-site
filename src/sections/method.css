@@ -14,15 +14,7 @@
   #method { --td-col-w: 228px; --td-gap: 14px; }
   #method .td__head { font-size: clamp(1.25rem, 1.95vw, 1.45rem); }
 }
-/* the rows are numbered where the camera's part markers carry those numbers (desktop, tablets: .td--mk with every
-   marker; sections/_teardown.js), so 08 on the camera reads as Shutter without counting rows (CSS counters: the copy
-   is unchanged) */
-html.js #method.td--mk[data-td-ready]:not(.td-static) .td__specs { counter-reset: part; }
-html.js #method.td--mk[data-td-ready]:not(.td-static) .td__spec { counter-increment: part; }
-html.js #method.td--mk:not(:has(.td__mk--name))[data-td-ready]:not(.td-static) .td__spec b::before {
-  content: counter(part, decimal-leading-zero); display: inline-block; min-width: 2.1em;
-  font: var(--f-small); letter-spacing: var(--ls-caps); color: var(--gold); font-variant-numeric: tabular-nums;
-}
+/* (the rows' numbers, matching the markers': _teardown.css, shared with the Kit) */
 /* desktop screens under ~1180 px tall and phones: the twelve rows with their lines would not fit (about 1,160 px at
    1440), so the list shows the names and the lit part's line (or the hovered one's) sits under it as a caption, all
    lines stacked in one place (opacity only). The same query is _teardown.js's capMode. */

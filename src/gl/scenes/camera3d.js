@@ -26,7 +26,7 @@
    Reduced motion never reaches this scene: main.js does not boot the stage then, and the section shows the static
    layout with the 3D stills (see INTEGRATION.md). */
 import { create, KEYS } from '../lib/camera3d.js';
-import { tdLive, tdFlags, tdTimeline, tdState, tdRun, tdLerpRect, tdPinTop } from '../lib/tdcore.js';
+import { tdLive, tdFlags, tdTimeline, tdState, tdRun, tdLerpRect, tdPinTop, tdIdDue, tdIntroPose, tdStandIn, tdGiveUp, tdPointerStep, TD_INTRO_MS } from '../lib/tdcore.js';
 
 /* the site's art direction over the module's own keys (options and the exported KEYS only: the module and its API stay
    as the lab ships them, so its final drop-in keeps these):
@@ -39,11 +39,9 @@ KEYS.wide.column.fill = 0.88;
      390; every anchor still shows on its own part) */
 const PORTRAIT = { lens: 0.76, lens_el_0: 0.76, lens_el_1: 0.76, lens_el_2: 0.76, lens_el_5: 0.76, lens_el_3: 0.7, lens_el_4: 0.7, aperture: 0.7,
   lcd: 0.74, main_pcb: 0.74, ibis_frame: 0.74, sensor: 0.74, shutter: 0.74, top_cover: 0.62, evf_module: 0.62, battery: 0.66 };
-const INTRO_MS = 900;
-const QA_Q = /[?&]q=/.test(location.search);   // ?q=… (a forced quality, QA): no runtime give-up
+// the intro turn, the id passes' schedule, the stand-in's wait, the phone give-up and the pointer steps are tdcore's
+// (shared with the Kit's devices, gl/scenes/kit3d.js)
 const smooth = (x) => x * x * (3 - 2 * x);
-const seg = (x, a, b) => Math.min(1, Math.max(0, (x - a) / (b - a)));
-const qp = (v) => Math.round(v * 50) / 50;   // pointer steps of 0.02 (< 0.07° of parallax): a resting mouse stops restarting the samples
 
 export default function register(stage) {
   const id = 'td:camera3d';
@@ -52,8 +50,8 @@ export default function register(stage) {
   const live = tdLive(id);
   live.ready = false;
   let cam = null, run = null, pinH = 0, heroR = null, colR = null, fl = null, timeline = null, TL = -1, vw = 0, vh = 0, idV = -1, idPending = false;
-  let first = false, intro = 0, introX = 0, lastIdE = -1, lastIdS = -1, gaveUp = false;
-  const ST = { ph: {}, phN: {} }, S = {}, PH = {};
+  let first = false, intro = 0, introX = 0, gaveUp = false;
+  const ST = { ph: {}, phN: {} }, S = {}, PH = {}, ID = { e: -1, s: -1 };
   const measure = (ctx) => {
     run = section.querySelector('[data-td-run]') || section;
     const pin = section.querySelector('.td__pin'), target = section.querySelector('[data-td-target]');
@@ -62,22 +60,12 @@ export default function register(stage) {
     colR = target ? { x: target.offsetLeft, y: target.offsetTop, w: target.offsetWidth, h: target.offsetHeight } : heroR;
     fl = tdFlags(section); TL = -1; vw = ctx.vw; vh = ctx.vh;
   };
-  // the stand-in: both stills fetched now (parked in data-src or loading="lazy" until the run is near), and decoded
-  // and painted (two frames) before the GLB's parse, the studio bakes and the compile take the main
-  // thread and the GPU (at most 2.5 s: a slow still never holds the camera back)
-  const standIn = async () => {
-    const ims = [...section.querySelectorAll('img.td__still')];
-    for (const im of ims) { if (!im.getAttribute('src') && im.dataset.src) im.src = im.dataset.src; im.loading = 'eager'; }
-    const dec = ims.filter((im) => im.getAttribute('src')).map((im) => im.decode().catch(() => {}));
-    if (!dec.length) return;
-    await Promise.race([Promise.all(dec), new Promise((r) => setTimeout(r, 2500))]);
-    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-  };
   const sc = {
     id, device: true,
     post: { vignette: 0.16, grain: 0.03, fringe: 0.5 },
     async load(ctx) {
-      await standIn();
+      // the stand-in: both stills fetched, decoded and painted (≤ 2.5 s) before the GLB's parse and the bakes (tdcore)
+      await tdStandIn([...section.querySelectorAll('img.td__still')]);
       // phones: the phone GLB and its lighter settings, plus (starting on the high level) the paint grain and 6 samples
       // and a little more exposure on the small, dark body (it read flatter than its own tier-0 still); no bloom anywhere
       // (strength 0.05 over threshold 4: invisible, and 2.7 KB of lazy JS and a full-screen pass per sample)
@@ -91,7 +79,7 @@ export default function register(stage) {
     },
     dispose() {
       cam?.dispose(); cam = null; live.anchors3d = null; live.ready = false;
-      idPending = false; idV = -1; lastIdE = -1; lastIdS = -1; intro = 0; first = false;
+      idPending = false; idV = -1; ID.e = ID.s = -1; intro = 0; first = false;
     },
     resize(w, h, dpr) { cam?.resize(w, h, dpr); },
     update(ctx) {
@@ -101,7 +89,7 @@ export default function register(stage) {
       if (Math.abs(r.L - TL) > 1e-3) { timeline = tdTimeline(1, r.L); TL = r.L; }
       const st = tdState(r.s, timeline, r.L, fl, ST);
       // phones: the governor stepped all the way down while the camera draws: give up to the stills for this visit
-      if (ctx.still && !QA_Q && stage.quality === 'min' && !gaveUp) {
+      if (tdGiveUp(ctx, stage) && !gaveUp) {
         gaveUp = true;
         setTimeout(() => { stage.dispose(sc); sc.failed = true; section.dataset.cam3d = 'stills'; }, 0);
       }
@@ -117,11 +105,8 @@ export default function register(stage) {
         // on the stage's clock (dt ≤ 0.1 s a frame): 0.9 s at a real frame rate; a renderer under 10 fps still shows the
         // turn in steps instead of skipping it
         const k = smooth(intro);
-        intro = Math.max(0, intro - (ctx.dt || 1 / 60) / ((window.__cam3dIntroMs || INTRO_MS) / 1000));
-        Object.assign(PH, st.ph);
-        if (introX) PH.explode += (1 - PH.explode) * k;
-        else { PH.orbit += (1 - PH.orbit) * k; PH.explode *= 1 - k; }
-        ph = PH;
+        intro = Math.max(0, intro - (ctx.dt || 1 / 60) / ((window.__cam3dIntroMs || TD_INTRO_MS) / 1000));
+        ph = tdIntroPose(st.ph, k, introX, PH);
       }
       cam.setPhases(ph);
       // the slot rect: the section's, computed this frame (or the same rect from the same clock)
@@ -130,16 +115,11 @@ export default function register(stage) {
       if (live.f === ctx.frame) { x = live.x; y = live.y; w = live.w; h = live.h; }
       else { tdLerpRect(live.orb || heroR, colR, st.ph.hand, S); x = S.x; y = S.y + pinTop; w = S.w; h = S.h; }   // live.orb: the orbit's slot, clear of the title
       cam.setLayout({ x, y, w, h }, ctx.vw, ctx.vh);
-      cam.setPointer(qp(ctx.pointer.x), qp(ctx.pointer.y), 1);
+      cam.setPointer(tdPointerStep(ctx.pointer.x), tdPointerStep(ctx.pointer.y), 1);
       cam.setFade(st.fade);
-      // the markers draw in as the parts arrive, while scrolling (see the header): a pass every 0.025 of explode from 0.93,
-      // one as it reaches 1 (parts still moving at 0.975 cover anchors they leave), and every third of the settle (its
-      // push and drift)
-      const e = st.ph.explode, sl = st.ph.settle;
-      if (e < 0.93 || intro > 0) { lastIdE = -1; lastIdS = -1; }
-      else if (lastIdE < 0 || Math.abs(e - lastIdE) >= 0.025 || (e > 0.999 && lastIdE <= 0.999) || Math.abs(sl - lastIdS) >= 0.34) {
-        cam.occlusion(); lastIdE = e; lastIdS = sl;
-      }
+      // the markers draw in as the parts arrive, while scrolling (see the header; tdcore tdIdDue): a pass every 0.025 of
+      // explode from 0.93, one as it reaches 1, and every third of the settle
+      if (tdIdDue(ID, st.ph.explode, st.ph.settle, intro > 0)) cam.occlusion();
       // posed for this frame; published relative to the pin (the section adds nothing)
       live.anchors3d = cam.anchors(pinTop); live.anchorsF = ctx.frame; live.pinTop = pinTop;
       live.place3d?.(live.anchors3d);
