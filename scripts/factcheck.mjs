@@ -22,7 +22,8 @@ const facts = JSON.parse(fs.readFileSync(new URL('../docs/facts.json', import.me
 const ui = JSON.parse(fs.readFileSync(new URL('../docs/ui-strings.json', import.meta.url))).strings;
 // kind "draft" = drafted copy awaiting client approval (docs/copy-drafts.md): it traces, but is reported until approved
 const texts = (f) => [f.claim, f.source_sentence, ...[...(f.note || '').matchAll(/alt text verbatim: '([^']+)'/g)].map((m) => m[1])].filter(Boolean).map(norm);
-const corpus = facts.filter((f) => f.kind !== 'draft').flatMap(texts);
+// a fact with "retired" (what it described is gone from the page, e.g. F135, the old Results TV) no longer traces
+const corpus = facts.filter((f) => f.kind !== 'draft' && !f.retired).flatMap(texts);
 const drafts = facts.filter((f) => f.kind === 'draft').map((f) => ({ id: f.id, t: texts(f) }));
 const draftIds = new Set(drafts.map((d) => d.id));
 const draftHits = new Map();   // id → { t: first string seen, ch: chapters it was seen in, tagged: inside its [data-draft] }

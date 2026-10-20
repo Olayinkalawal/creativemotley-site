@@ -1,9 +1,12 @@
-/* X · Apply: the opener over the open gate (title, dek, who we work with, how applying works, the pill), then the
-   dark contact footer (ported from the live site).
-   Wide screens: everything sits in the left of the column, over the calm pink wall (ink type, pale local halos);
-   the woman in the gateway stays clear on the right.
-   Upright screens: title and dek in the sky band at the top; the join block sits at the opener's foot on an ink
-   field that runs on into the footer (cream type), so the gateway and the woman stay clean at the opener's rest. */
+/* X · Apply: the opener over The Birth of Venus (after Botticelli; title, dek, who we work with, how applying works,
+   the pill), then the dark contact footer (ported from the live site).
+   The site's one light painting: ink type on the pale sky, desktop and phone (manifest titleInk dark).
+   Wide screens: the title and dek sit in the left of the column, on the sky, ending left of Venus's hair; the wind
+   pair flies below them, so nothing is set over it. The join block (who we work with, how applying works, the pill)
+   waits below the first screen on an ink field that meets the painting on the brand's torn edge and runs on into the
+   footer (cream type), so the painting is whole at the opener's rest.
+   Upright screens: title and dek in the sky band at the top; the join block sits at the opener's foot on an ink field
+   that rises from the footer (cream type), so the shell and the wind pair stay clean at the opener's rest. */
 .opener.apply-open {
   min-height: 66svh; justify-content: flex-start;
   padding-top: calc(var(--nav-h) + 4svh); padding-bottom: clamp(20px, 3svh, 36px);
@@ -14,20 +17,23 @@
 .apply-who { font: var(--f-lead); letter-spacing: var(--ls-lead); max-width: 17em; text-wrap: pretty; }
 .apply-how { margin-top: 1em; font: var(--f-body); letter-spacing: var(--ls-body); max-width: 27em; }
 .apply-cta { margin-top: clamp(1.2rem, 3vh, 2rem); }
-/* wide screens: the footer meets the painting on the brand's torn edge (ink teeth rising into the painting) */
+/* the join block on its ink field (both widths: cream type, the pill inverted) */
+.apply-join { --th-pill-bg: var(--cream); --th-pill-fg: var(--ink); --th-pill-bg-h: var(--gold); }
 @media (min-width: 1024px) {
-  .apply-light { position: relative; }
-  .apply-light::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 24px; pointer-events: none;
+  .opener.apply-open { min-height: 0; padding-bottom: 0; }
+  /* full bleed (the column sits right of the rail): the field spans the screen, the type keeps the column's line */
+  .apply-join {
+    --jl: calc(var(--rail-w) + clamp(24px, 4.4vw, 72px)); --jr: clamp(24px, 4vw, 64px);
+    max-width: none; margin: 62svh calc(-1 * var(--jr)) 0 calc(-1 * var(--jl));
+    padding: clamp(36px, 6svh, 64px) var(--jr) clamp(28px, 4svh, 44px) var(--jl);
+    background: var(--ink); color: var(--cream); text-shadow: none;
+  }
+  /* the brand's torn edge: ink teeth rising into the painting */
+  .apply-join::before {
+    content: ''; position: absolute; left: 0; right: 0; top: -23px; height: 24px; pointer-events: none;
     background: var(--ink); -webkit-mask: var(--tear) bottom / 1200px 24px repeat-x; mask: var(--tear) bottom / 1200px 24px repeat-x;
   }
-}
-@media (min-width: 1024px) {
-  /* a pale local halo under the block (the wall is light already; it evens out the plaster's texture) */
-  .apply-join::before {
-    content: ''; position: absolute; z-index: -1; inset: -22% -16% -24% -12%; pointer-events: none;
-    background: radial-gradient(closest-side, rgba(244, 237, 223, 0.46), rgba(244, 237, 223, 0.22) 60%, rgba(244, 237, 223, 0));
-  }
+  .apply-how { color: rgba(244, 237, 223, 0.84); }
 }
 @media (max-width: 1023px) {
   .opener.apply-open { min-height: 0; padding-top: calc(var(--nav-h) + 3.5svh); padding-bottom: 0; }
@@ -37,7 +43,6 @@
     max-width: none; margin: 34svh calc(-1 * var(--col-pad)) 0; padding: 12svh var(--col-pad) 1svh;
     color: var(--cream); text-shadow: none;
     background: linear-gradient(180deg, rgba(11, 8, 5, 0), rgba(11, 8, 5, 0.72) 6svh, rgba(11, 8, 5, 0.96) 10svh, var(--ink) 12svh);
-    --th-pill-bg: var(--cream); --th-pill-fg: var(--ink); --th-pill-bg-h: var(--gold);
   }
   .apply-how { color: rgba(244, 237, 223, 0.84); }
 }

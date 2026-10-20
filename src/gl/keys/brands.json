@@ -1,24 +1,24 @@
 {
- "//": "Camera keys for plate:brands (gl/timeline.js; focus y is measured from the painting's bottom, as the plate shader reads it; t = viewports of the opener's pass, 0 = its top enters at the bottom). Track O1.",
- "//1": "1 · t 0–1.04, the title's frame: close on the red velvet and the globe (window x .03–.5), the manifest's calm third under the giant title and dek.",
- "//2": "2 · t 1.04–1.55, as the title leaves: a truck right that eases back a little, to the commission (window x .39–.95): the scroll passing hand to hand, the kit on the table.",
- "//3": "3 · t 1.55–2.3, a gentle push toward the handover as the paper rises; it eases out and lands still.",
+ "//": "Camera keys for plate:brands (gl/timeline.js; focus y is measured from the painting's bottom, as the plate shader reads it; t = viewports of the opener's pass, 0 = its top enters at the bottom). The Arnolfini, signed (masters 2026-10-20): zoom at or below ~1.35.",
+ "//1": "1 · t 0-1.04, the title's frame: zoom 1.48 about the painting's left edge, near its top, so the title and dek sit on the window wall (under the opener's dark gradient) and the man's hat starts just right of the title's last letter; the couple comes in with the truck. At the whole room (the art direction's zoom 1.06) the title ran across his hat and face.",
+ "//2": "2 · t 1.04-1.55, as the title leaves: a truck right that eases back to the couple, the mirror and the joined hands with the contract.",
+ "//3": "3 · t 1.55-2.3, a gentle push as the paper rises; it eases out and lands still.",
  "camera": {
   "zoom": [
-   { "t": 0, "v": 1.9 },
-   { "t": 1.04, "v": 1.9, "ease": [0.62, 0, 0.32, 1] },
-   { "t": 1.55, "v": 1.6, "ease": [0.25, 0.1, 0.25, 1] },
-   { "t": 2.3, "v": 1.7 }
-  ],
+    {"t": 0, "v": 1.48},
+    {"t": 1.04, "v": 1.48, "ease": [0.62, 0, 0.32, 1]},
+    {"t": 1.55, "v": 1.25, "ease": [0.25, 0.1, 0.25, 1]},
+    {"t": 2.3, "v": 1.32}
+   ],
   "focus": [
-   { "t": 0, "v": [0.0, 0.3] },
-   { "t": 1.04, "v": [0.0, 0.3], "ease": [0.62, 0, 0.32, 1] },
-   { "t": 1.55, "v": [1.0, 0.76], "ease": [0.25, 0.1, 0.25, 1] },
-   { "t": 2.3, "v": [0.98, 0.7] }
-  ],
+    {"t": 0, "v": [0.0, 0.95]},
+    {"t": 1.04, "v": [0.0, 0.95], "ease": [0.62, 0, 0.32, 1]},
+    {"t": 1.55, "v": [0.75, 0.62], "ease": [0.25, 0.1, 0.25, 1]},
+    {"t": 2.3, "v": [0.7, 0.62]}
+   ],
   "push": [
-   { "t": 0, "v": 0.015, "ease": [0.45, 0, 0.55, 1] },
-   { "t": 2.3, "v": 0.06 }
-  ]
+    {"t": 0, "v": 0.015, "ease": [0.45, 0, 0.55, 1]},
+    {"t": 2.3, "v": 0.06}
+   ]
  }
 }

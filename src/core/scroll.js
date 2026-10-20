@@ -35,12 +35,17 @@ if (lenis) {
 }
 
 const frameFns = new Set();
-let last = performance.now();
+let last = performance.now(), lastY = view.y;
 function tick(now) {
   view.dt = Math.min(0.1, Math.max(0, now - last) / 1000); last = now;
   view.time += view.dt; view.frame++;
-  if (lenis) lenis.raf(now);
-  else { view.y = window.scrollY; view.velocity *= 0.9; }
+  if (lenis) {
+    lenis.raf(now);
+    // a native scroll (touch, keys, the scrollbar, scrollTo) leaves Lenis's last velocity standing once it stops: let it
+    // die away, so a scene's velocity effects (the stage's chromatic fringe) settle before the stage goes idle
+    if (view.y === lastY) view.velocity = Math.abs(view.velocity) < 0.5 ? 0 : view.velocity * Math.pow(0.7, view.dt * 60);
+  } else { view.y = window.scrollY; view.velocity *= 0.9; }
+  lastY = view.y;
   for (const fn of frameFns) fn(view);
   requestAnimationFrame(tick);
 }

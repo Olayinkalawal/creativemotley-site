@@ -17,14 +17,11 @@
   padding-top: calc(var(--nav-h) + 4.5svh); padding-bottom: 0;
 }
 .dr-open .giant { margin-bottom: clamp(0.9rem, 2.6vh, 2rem); }
-/* a local ink halo: the beam behind the title is bright (cream holds at ≥ 3:1), the set beyond it stays clean */
-.dr-open .scrim::before {
-  inset: -34% -18% -46% -14%;
-  background: radial-gradient(closest-side, rgba(11, 8, 5, 0.66), rgba(11, 8, 5, 0.42) 56%, rgba(11, 8, 5, 0));
-}
+/* the green velvet and damask behind the title are dark and calm (cream holds at 6.8:1 bare): the shell's soft halo
+   only. The dek wraps short, so its first line ends before the globe on the set (the kit starts at u 0.53). */
+.dr-open .dek { max-width: 11em; }
 @media (max-width: 1023px) {
   .opener.dr-open { min-height: 62svh; padding-top: calc(var(--nav-h) + 3.5svh); }
-  .dr-open .dek { max-width: 11em; }
 }
 /* static (reduced motion, no JS): the film does not fade in with the dissolve, so it starts below the opener's rest */
 #directors:not(.dr-on) .opener.dr-open { min-height: 100svh; }

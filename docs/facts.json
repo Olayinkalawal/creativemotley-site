@@ -1242,7 +1242,8 @@
   "url": "https://creativemotley.com/results/results_stage.mp4",
   "location": "#results stage film",
   "kind": "plate-art",
-  "note": "Inside the TV (≈7% of the frame); illegible at film size. Not used as claims."
+  "note": "Inside the TV (≈7% of the frame); illegible at film size. Not used as claims.",
+  "retired": "2026-10-20: the Results painting is now the oculus (Mantegna, masters 2026-10-20), with no TV; the Results film no longer plays (scripts/factcheck.mjs leaves retired facts out of its corpus)"
  },
  {
   "id": "DC01",

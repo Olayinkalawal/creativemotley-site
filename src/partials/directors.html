@@ -1,8 +1,11 @@
-<!-- IX · DIRECTORS · scenes: plate:directors on the opener ("The Empty Set", public/assets/scenes/directors: two empty
-     director's chairs under a tungsten beam; keys in src/gl/keys/directors.json), then plate:umber on the run
-     (shader-only dark umber stage: a warm pool of light, slow dust; src/gl/scenes/umber.js) · owner: track O2
-     - Opener: title and dek near the top, above the chairs and the camera (the painting's calm band); the keys land
-       still at the opener's rest. data-rise: the painting rises with the opener, then holds.
+<!-- IX · DIRECTORS · scenes: plate:directors on the opener ("The Ambassadors' chairs", after Holbein,
+     public/assets/scenes/directors: two empty director's chairs either side of a stand of instruments and kit, on green
+     velvet; keys in src/gl/keys/directors.json), then plate:umber on the run (shader-only dark umber stage: a warm pool
+     of light, slow dust; src/gl/scenes/umber.js) · owner: track O2
+     - Opener: title and dek near the top, in cream on the green damask, left of and above the set (the painting's calm
+       band); the keys land still at the opener's rest, the focus left, then push to the stand between the chairs.
+       data-bleed + data-rise: the painting comes in under Results along this section's top edge (the stage's ink-bleed
+       edge) and rises with it, then holds, so the title never crosses Results' ring of faces.
      - The stage (.dr-stage, pinned briefly): the set dissolves into the umber room as the directors' alpha film (two
        painted portraits on transparency, their foot torn like paper) rises from the foot of the screen; the names
        glide behind their heads on a serif line that runs with scroll (decorative, aria-hidden: the names are read
@@ -18,7 +21,7 @@
      Film sources (scripts/encode-directors.sh): VP9-with-alpha WebM, 1920 px (desktop) and 1280 px (narrow screens,
      data-dr-sm, dropped elsewhere by directors.js); WebKit gets the HEVC-with-alpha mp4 (moved first by directors.js). -->
 <section class="chapter" id="directors" data-chapter data-theme="dark" data-scene="plate:directors" data-plate="directors"
-  data-rise data-umber="-0.12 0.3 0.42 0.5 0.55" aria-labelledby="directors-title">
+  data-bleed data-rise data-umber="-0.12 0.3 0.42 0.5 0.55" aria-labelledby="directors-title">
   <div class="opener col dr-open">
     <div class="scrim">
       <h2 class="giant" id="directors-title" data-reveal>Directors</h2>

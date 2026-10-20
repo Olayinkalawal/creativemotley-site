@@ -1,8 +1,27 @@
-/* I · Storytellers (v3 phase 2). The title sits at the opener's top: it rises over the end of the film (the hero keys
-   the film in screens; the Storytellers painting completes as the title passes mid-screen), so the first chapter title
-   lands by screen 2. Then a short look at the painting under the dek, and the paper. */
-.st-open { min-height: 0; justify-content: flex-start; padding-block: 3svh 44svh; }
-@media (max-width: 1023px) { .st-open { padding-block: 3svh 38svh; } }
+/* I · Storytellers. The title sits at the opener's top, so the first chapter title lands by screen 2. The painting (The
+   School of Athens, now) comes in under the film with the section's top edge (data-bleed, data-rise: see the partial),
+   so the title rides the vault all the way in; then a clear look at the whole hall (the paper arrives as the
+   section's top reaches the top of the screen), and the paper.
+   Wide screens: the title spans the vault between the two niche statues (u 0.25-0.80 of the painting at the keys'
+   rest), the dek sits over the arch; the scrim below, a dark gradient from the top-left over the vault, veils the lit
+   Apollo niche and calms the arch sky behind the dek (the art direction's required scrim: about 0.6 over u 0-0.5,
+   v 0-0.40, gone by v 0.5). It belongs to the opener, so it rises with the painting and leaves with the title.
+   Phones: the portrait's dark vault holds the title (cap above v 0.19); a soft top scrim (about 0.35, gone by
+   v 0.30) takes the dark field to the dek. */
+.st-open { min-height: 0; justify-content: flex-start; padding-block: 3svh 62svh; }
+.st-open::before {
+  content: ''; position: absolute; z-index: -1; pointer-events: none; top: 0; left: calc(-1 * var(--rail-w)); right: 0; height: 56svh;
+  background: linear-gradient(180deg, rgba(11, 8, 5, 0), rgba(11, 8, 5, 0.42) 6svh, rgba(11, 8, 5, 0.6) 14svh, rgba(11, 8, 5, 0.52) 58%, rgba(11, 8, 5, 0.18) 84%, rgba(11, 8, 5, 0));
+  -webkit-mask-image: linear-gradient(90deg, #000 30%, rgba(0, 0, 0, 0.82) 58%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.3));
+  mask-image: linear-gradient(90deg, #000 30%, rgba(0, 0, 0, 0.82) 58%, rgba(0, 0, 0, 0.45) 80%, rgba(0, 0, 0, 0.3));
+}
+@media (max-width: 1023px) {
+  .st-open { padding-block: 3svh 74svh; }
+  .st-open::before {
+    left: 0; height: 34svh; -webkit-mask-image: none; mask-image: none;
+    background: linear-gradient(180deg, rgba(11, 8, 5, 0), rgba(11, 8, 5, 0.38) 5svh, rgba(11, 8, 5, 0.3) 55%, rgba(11, 8, 5, 0));
+  }
+}
 
 /* the paper: the three ways in, converging on one machine, then who we are */
 .st-paper { padding-block: clamp(72px, 12vh, 140px) clamp(96px, 16vh, 180px); }

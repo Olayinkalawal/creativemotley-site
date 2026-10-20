@@ -1,0 +1,22 @@
+{
+ "//": "Camera keys for plate:storytellers (gl/timeline.js; t in viewports of the section's pass, 0 = its top enters at the bottom; focus is the zoom anchor in uv, y up). The School of Athens, now (masters 2026-10-20). The painting rises with the section's top edge (data-rise) under the film's ink-bleed edge (data-bleed), so the title keeps one place on it all the way in.",
+ "//1": "1 · t 0-1, the rest: zoom 1.15 about u 0.2 at the top, so the giant title spans the vault between the two niche statues (Apollo ends at u 0.235, Athena starts at u 0.79; the title sits on about u 0.26-0.77 at 16:10 and 4:3) and the crowd (v 0.40 down) stays under the dek. The art direction's zoom 1.08 about u 0.3 put the title's last two letters on Athena.",
+ "//2": "2 · t 1-2.2, as the paper rises: a push down the hall to the central pair under the arch.",
+ "camera": {
+  "zoom": [
+    {"t": 0, "v": 1.15},
+    {"t": 1.0, "v": 1.15, "ease": "inOut"},
+    {"t": 2.2, "v": 1.32}
+   ],
+  "focus": [
+    {"t": 0, "v": [0.2, 1.0]},
+    {"t": 1.0, "v": [0.2, 1.0], "ease": "inOut"},
+    {"t": 2.2, "v": [0.51, 0.52]}
+   ],
+  "push": [
+    {"t": 0, "v": 0.0},
+    {"t": 1.0, "v": 0.01, "ease": "inOut"},
+    {"t": 2.2, "v": 0.07}
+   ]
+ }
+}

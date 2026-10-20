@@ -6,7 +6,7 @@ The source dir is a mirror of creativemotley.com (frames/, method/, work/posters
 objects/, photos/, results/, directors/, video/). Everything here is derived from
 the brand's own art; nothing is downloaded from third parties.
 """
-import os, sys, shutil, subprocess
+import os, sys, shutil
 from multiprocessing import Pool
 from PIL import Image
 
@@ -58,16 +58,11 @@ with Pool(4) as p: p.map(webp, jobs)
 
 # videos: copy as delivered by the live site
 v = mk('video')
-for rel, name in (('results/results_stage.mp4', 'results.mp4'), ('results/results_stage_sm.mp4', 'results-sm.mp4'),
-                  ('directors/directors.webm', 'directors.webm'), ('directors/directors.mp4', 'directors.mp4')):
+# (Results' film and its plate went with the old Results painting on 2026-10-20: the oculus master is a still,
+#  public/assets/scenes/results, scripts/art-masters.json)
+for rel, name in (('directors/directors.webm', 'directors.webm'), ('directors/directors.mp4', 'directors.mp4')):
     s = os.path.join(SRC, rel)
     if os.path.exists(s) and not os.path.exists(os.path.join(v, name)): shutil.copy(s, os.path.join(v, name))
-# results plate: a still of the watchers (frame 0 of the results film)
-rp = os.path.join(pl, 'results.webp')
-if not os.path.exists(rp):
-    tmp = os.path.join(pl, '_r.png')
-    subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', '0.5', '-i', os.path.join(SRC, 'results/results_stage.mp4'), '-frames:v', '1', tmp], check=True)
-    webp((tmp, rp, 1920, 80)); os.remove(tmp)
 for f in ('og.jpg', 'favicon.svg'):
     s = os.path.join(SRC, f)
     if os.path.exists(s): shutil.copy(s, os.path.join(ROOT, 'public', f))

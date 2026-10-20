@@ -1,23 +1,45 @@
 {
- "//": "Camera keys for plate:creators (gl/timeline.js; focus y is measured from the painting's bottom, as the plate shader reads it; t = viewports of the opener's pass, 0 = its top enters at the bottom). Track O1.",
- "//1": "1 · t 0–1.04, the title's frame: close on the curtain and the lit wall (window x .03–.58 of the painting), the manifest's calm third under the giant title and dek.",
- "//2": "2 · t 1.04–1.55, as the title leaves: a slow truck right at the same zoom to the atelier (window x .41–.95): the creator at her desk, the wall of portraits, the strategist pointing.",
- "//3": "3 · t 1.55–2.3, a gentle push toward her as the paper rises; it eases out and lands still before the paper covers.",
+ "//": "Camera keys for plate:creators (gl/timeline.js; focus y is measured from the painting's bottom, as the plate shader reads it; t = viewports of the opener's pass, 0 = its top enters at the bottom). The Mona Lisa, on camera (masters 2026-10-20): a 16:9 panel made to be seen whole, so the zoom stays low (1.17-1.3).",
+ "//1": "1 · t 0-1.04, the title's frame: zoom 1.22 anchored top-left, so the dark title and dek sit on the pale sky and end left of her hair (u 0.62; the title reaches about u 0.59). The giant title spans about half the column, so the whole panel (the art direction's zoom 1.06) would put its last letters on her hair and face; at this zoom her face is in, at the right edge.",
+ "//2": "2 · t 1.04-1.55, as the title leaves: a truck right to the sitter (her face, the folded hands and the camera on the parapet stay in).",
+ "//3": "3 · t 1.55-2.3, a slow push as the paper rises; it eases out and lands still.",
  "camera": {
   "zoom": [
-   { "t": 0, "v": 1.65 },
-   { "t": 1.55, "v": 1.65, "ease": [0.25, 0.1, 0.25, 1] },
-   { "t": 2.3, "v": 1.74 }
-  ],
+    {"t": 0, "v": 1.22},
+    {"t": 1.04, "v": 1.22, "ease": [0.62, 0, 0.32, 1]},
+    {"t": 1.55, "v": 1.2, "ease": [0.25, 0.1, 0.25, 1]},
+    {"t": 2.3, "v": 1.3}
+   ],
   "focus": [
-   { "t": 0, "v": [0.0, 0.3] },
-   { "t": 1.04, "v": [0.0, 0.3], "ease": [0.62, 0, 0.32, 1] },
-   { "t": 1.55, "v": [0.97, 0.57], "ease": [0.25, 0.1, 0.25, 1] },
-   { "t": 2.3, "v": [0.93, 0.55] }
-  ],
+    {"t": 0, "v": [0.0, 1.0]},
+    {"t": 1.04, "v": [0.0, 1.0], "ease": [0.62, 0, 0.32, 1]},
+    {"t": 1.55, "v": [0.72, 0.6], "ease": [0.25, 0.1, 0.25, 1]},
+    {"t": 2.3, "v": [0.72, 0.62]}
+   ],
   "push": [
-   { "t": 0, "v": 0.015, "ease": [0.45, 0, 0.55, 1] },
-   { "t": 2.3, "v": 0.06 }
-  ]
+    {"t": 0, "v": 0.015, "ease": [0.45, 0, 0.55, 1]},
+    {"t": 2.3, "v": 0.06}
+   ]
+ },
+ "narrow": {
+  "//": "Screens narrower than 1.45:1 (4:3): the title is relatively shorter there, so zoom 1.17 clears her hair and keeps more of her face in.",
+  "camera": {
+   "zoom": [
+     {"t": 0, "v": 1.17},
+     {"t": 1.04, "v": 1.17, "ease": [0.62, 0, 0.32, 1]},
+     {"t": 1.55, "v": 1.2, "ease": [0.25, 0.1, 0.25, 1]},
+     {"t": 2.3, "v": 1.3}
+    ],
+   "focus": [
+     {"t": 0, "v": [0.0, 0.9]},
+     {"t": 1.04, "v": [0.0, 0.9], "ease": [0.62, 0, 0.32, 1]},
+     {"t": 1.55, "v": [0.72, 0.6], "ease": [0.25, 0.1, 0.25, 1]},
+     {"t": 2.3, "v": [0.72, 0.62]}
+    ],
+   "push": [
+     {"t": 0, "v": 0.015, "ease": [0.45, 0, 0.55, 1]},
+     {"t": 2.3, "v": 0.06}
+    ]
+  }
  }
 }

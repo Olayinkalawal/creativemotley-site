@@ -52,9 +52,20 @@ html.gl-ready #stage { opacity: 1; }
 .plates .plate img { width: 100%; height: 100%; object-fit: cover; }
 /* the hero's portrait painting, framed as the phone stage frames it (its manifest's phoneFocus .56 on a ~.46 screen) */
 @media (orientation: portrait) and (max-width: 1023px) { .plates .plate[data-plate='hero'] img { object-position: 83% 50%; } }
-/* the Results plate (?tier=0, reduced motion) framed as the stage frames it at the opener's rest, so the dek sits above
-   the watchers' heads on landscape screens */
-@media (orientation: landscape) and (max-aspect-ratio: 11/5) { .plates .plate[data-plate='results'] { background-size: auto 128%; background-position: 35% 0; } }
+/* the chapter paintings on wide screens (?tier=0, reduced motion: the CSS plate) framed as the stage frames them at the
+   opener's rest (src/gl/keys/<chapter>.json): zoom --z about the point (--fx, --fy from the top) of the cover box, so the
+   title sits on the same calm zone. Creators and Brands carry their own (two frames each: creators.css, brands.css). */
+@media (min-width: 1024px) and (orientation: landscape) {
+  .plates .plate:is([data-plate='storytellers'], [data-plate='results'], [data-plate='directors'], [data-plate='apply']) {
+    --cw: max(100vw, 177.78vh); --ch: max(56.25vw, 100vh);
+    background-size: calc(var(--cw) * var(--z)) auto;
+    background-position: calc((100vw - var(--cw)) / 2 + var(--cw) * var(--fx) * (1 - var(--z))) calc((100vh - var(--ch)) / 2 + var(--ch) * var(--fy) * (1 - var(--z)));
+  }
+  .plates .plate[data-plate='storytellers'] { --z: 1.15; --fx: 0.2; --fy: 0; }
+  .plates .plate[data-plate='results'] { --z: 1.3; --fx: 0.5; --fy: 0; }
+  .plates .plate[data-plate='directors'] { --z: 1.08; --fx: 0.4; --fy: 0; }
+  .plates .plate[data-plate='apply'] { --z: 1.26; --fx: 0; --fy: 0; }
+}
 /* hidden once the canvas has faded in over them (#stage's 0.9 s opacity), not as it starts: no dip toward black at boot */
 html.gl-ready .plates { visibility: hidden; transition: visibility 0s linear 0.9s; }
 
