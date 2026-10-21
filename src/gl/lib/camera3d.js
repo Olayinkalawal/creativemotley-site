@@ -30,6 +30,9 @@
                                           that the anchor's pixel shows its own part, nudges it onto the nearest pixel of its
                                           part when something covers it, and keeps markers >= 28 px apart
    cam.occlusion()                        runs that id pass now (tests; the viewer after a drag)
+   cam.setOffset(az, el)                  degrees added to the view (drag to turn: gl/lib/drag3d.js; el clamped to -25 … 40)
+   cam.setZoom(k, x, y)                   the fitted picture scaled by k about a point (css x' = k·x + x): a product-viewer zoom
+   cam.screenBox()                        the camera's screen box now ({ x0, y0, x1, y1 }, css px): drag3d's hit region
    cam.dispose()                          frees every GPU resource it made (targets, PMREM, shadow map, tiles, programs' refs)
    cam.renderTexture(renderer, n = 0, { id }) (opts.alpha only) re-renders on change, else adds one jittered sample (n: that
                                           many now); returns the running mean as a texture: premultiplied rgba, a = coverage
@@ -153,6 +156,7 @@ export function create(ctx = {}, opts = {}) {
   let rtHDR = null, rtLDR = null, accRT = null, idRT = null, Bloom = null, bloom = null, envs = null, lastInfo = null, tiles = null;
   let scaleNow = Q.scale, msaaNow = Q.msaa;
   const off = { az: 0, el: 0 };
+  const zm = { k: 1, x: 0, y: 0 };    // setZoom: the framed rect scaled by k, then moved by (x, y) css px (drag3d's zoom)
   const lights = {};
   let exOverride = null;              // art direction: { part: { ex: [mm…], rot: [deg…] } } (lab tuning only)
 
@@ -662,6 +666,10 @@ export function create(ctx = {}, opts = {}) {
     }
     return out;
   }
+  /* the zoom on the rect the fit uses (bleed and inset included, so a zoom is a pure scale of the picture about a point):
+     css x' = k x + zm.x, y' = k y + zm.y, in NDC */
+  const zoomNDC = (R) => (zm.k === 1 && !zm.x && !zm.y ? R : [R[0] * zm.k + zm.k - 1 + 2 * zm.x / vw, R[1] * zm.k + zm.k - 1 + 2 * zm.x / vw,
+    R[2] * zm.k + 1 - zm.k - 2 * zm.y / vh, R[3] * zm.k + 1 - zm.k - 2 * zm.y / vh]);
   function rectNDC() {
     if (!rect) return [-1, 1, -1, 1];
     // phones: keep the device clear of the header bar as it lands in the column (the slot starts just under it)
@@ -674,7 +682,7 @@ export function create(ctx = {}, opts = {}) {
     // read as a layout bug: now the whole lens keeps the fit's 4% margin); never left into the copy
     const edge = vw - rect.x - rect.w;  // a slot that already reaches the right edge (the full-frame stills) does not bleed
     const br = portrait() || edge < 1 ? 0 : (edge + (opts.bleedRight ?? 0) * vw) * smooth(ph.explode) * ph.hand;
-    return [(rect.x - bl) / vw * 2 - 1, (rect.x + rect.w + br) / vw * 2 - 1, 1 - (rect.y + rect.h) / vh * 2, 1 - (rect.y + top) / vh * 2];
+    return zoomNDC([(rect.x - bl) / vw * 2 - 1, (rect.x + rect.w + br) / vw * 2 - 1, 1 - (rect.y + rect.h) / vh * 2, 1 - (rect.y + top) / vh * 2]);
   }
   let jitter = [0, 0], fitInfo = null;
   let view = null;            // debug / art-direction override: { az, el, fov, target: [x, y, z], dist }
@@ -708,7 +716,7 @@ export function create(ctx = {}, opts = {}) {
     let mnx = 1e9, mxx = -1e9, mny = 1e9, mxy = -1e9, mnz = 1e9, mxz = -1e9;
     for (let i = 0; i < pts.length; i += 3) { mnx = Math.min(mnx, pts[i]); mxx = Math.max(mxx, pts[i]); mny = Math.min(mny, pts[i + 1]); mxy = Math.max(mxy, pts[i + 1]); mnz = Math.min(mnz, pts[i + 2]); mxz = Math.max(mxz, pts[i + 2]); }
     _c.set((mnx + mxx) / 2, (mny + mxy) / 2, (mnz + mxz) / 2);
-    let dist = 1;
+    let dist = 1, bw = 0, bh = 0;
     for (let it = 0; it < 4; it++) {
       dist = 0;
       for (let i = 0; i < pts.length; i += 3) {
@@ -723,7 +731,7 @@ export function create(ctx = {}, opts = {}) {
         const px = x / ((dist - z) * tanH), py = y / ((dist - z) * tanV);
         a = Math.min(a, px); b = Math.max(b, px); c = Math.min(c, py); e = Math.max(e, py);
       }
-      const mx = (a + b) / 2, my = (c + e) / 2;
+      const mx = (a + b) / 2, my = (c + e) / 2; bw = (b - a) / 2; bh = (e - c) / 2;
       _c.addScaledVector(_r, mx * tanH * dist).addScaledVector(_u, my * tanV * dist);
     }
     camera.position.copy(_c).addScaledVector(_d, dist);
@@ -734,7 +742,9 @@ export function create(ctx = {}, opts = {}) {
     const sx = (R[0] + R[1]) / 2 + jitter[0] * 2 / w, sy = (R[2] + R[3]) / 2 + jitter[1] * 2 / h;
     camera.projectionMatrix.elements[8] = -sx; camera.projectionMatrix.elements[9] = -sy;
     camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
-    fitInfo = { target: _c.toArray(), dist, rig };
+    // the device's screen box (css px; the fit centres it on the rect): drag3d's hit region
+    const bx = (R[0] + R[1]) / 2, by = (R[2] + R[3]) / 2;
+    fitInfo = { target: _c.toArray(), dist, rig, box: { x0: (bx - bw + 1) / 2 * vw, x1: (bx + bw + 1) / 2 * vw, y0: (1 - by - bh) / 2 * vh, y1: (1 - by + bh) / 2 * vh } };
   }
   function pose() {
     if (!loaded) return;
@@ -747,7 +757,7 @@ export function create(ctx = {}, opts = {}) {
   const _cc = new THREE.Color();
   const halton = (i, b) => { let f = 1, r = 0; while (i > 0) { f /= b; r += f * (i % b); i = Math.floor(i / b); } return r; };
   function signature() {
-    return [ph.orbit, ph.hand, ph.explode, ph.settle, ptrS.x, ptrS.y, off.az, off.el, rect ? [rect.x, rect.y, rect.w, rect.h].join(',') : '', W, H, exOverride ? JSON.stringify(exOverride) : ''].map((v) => (typeof v === 'number' ? v.toFixed(5) : v)).join('|');
+    return [ph.orbit, ph.hand, ph.explode, ph.settle, ptrS.x, ptrS.y, off.az, off.el, zm.k, zm.x, zm.y, rect ? [rect.x, rect.y, rect.w, rect.h].join(',') : '', W, H, exOverride ? JSON.stringify(exOverride) : ''].map((v) => (typeof v === 'number' ? v.toFixed(5) : v)).join('|');
   }
   function sample(r) {
     // one (jittered) frame -> HDR -> bloom -> tone map into rtLDR -> folded into the running mean
@@ -939,6 +949,8 @@ export function create(ctx = {}, opts = {}) {
     busy() { return loaded && accN < Q.acc; },
     invalidate() { dirty = true; },
     setOffset(az, el) { off.az = az; off.el = el; },
+    setZoom(k = 1, x = 0, y = 0) { zm.k = k; zm.x = x; zm.y = y; },
+    screenBox() { pose(); return fitInfo?.box || null; },     // the device's screen box (css px, viewport), posed for now
     setFade(f) { copyQ.m.uniforms.fade.value = Math.min(1, Math.max(0, f)); },
     setView(v) { view = v || null; dirty = true; },
     setExplode(o) { exOverride = o || null; dirty = true; },
