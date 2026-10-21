@@ -45,8 +45,8 @@
    draw, split at that edge (feathered, with a faint warm edge light), so the sheet and its device scroll off the
    next scene the way the DOM above it does. A section marked data-bleed comes in the other way round: while its top
    edge is in the viewport the scene above holds above that edge, and the section's own scene bleeds up into it through
-   the dissolve's ink-bleed noise in a band under the edge (I Storytellers: with data-rise its painting rises with the
-   edge, so the title, set at the section's top, rides the same calm part of the painting all the way in), and the
+   the dissolve's ink-bleed noise in a band under the edge (data-rise: its painting rises with the edge, so a title set
+   at the section's top keeps one calm place on it; I Storytellers no longer uses it: the hero's iris hands over, a cut), and the
    scene above dims as the edge climbs, to data-bleed's value (default 0.3), so it recedes beside the rising title. */
 import { WebGLRenderer, WebGLRenderTarget, Vector2, LinearSRGBColorSpace, UnsignedByteType } from 'three';
 import { createPost } from './lib/post.js';
