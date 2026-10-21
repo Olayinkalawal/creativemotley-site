@@ -55,6 +55,9 @@ html.gl-ready .td.is-drawn:is([data-scene="td:camera3d"], [data-scene="td:kit"])
    others stay in the accessibility tree, so a screen reader reads every device's heading and parts */
 html.js .td--seq[data-td-ready]:not(.td-static) .td__copy { opacity: 0; pointer-events: none; transition: opacity 0.3s var(--ease-out); }   /* no will-change: each would be a full-screen layer */
 html.js .td--seq[data-td-ready]:not(.td-static) .td__copy.is-cur { opacity: 1; pointer-events: auto; transition-delay: 0.15s; }
+/* before init (deferred until the reader approaches): only the first shot's copy, so a fast scroll or a ?tier=0 read never
+   sees the four devices' copy stacked on one another (phase 4) */
+html.js .td--seq:not([data-td-ready]) .td__copy:not([data-td-shot="0"]) { opacity: 0; }
 .td__target { position: absolute; visibility: hidden; pointer-events: none; }
 .td__fx { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 @media (min-width: 1024px) {

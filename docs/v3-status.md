@@ -826,3 +826,142 @@ uses the lab's `bytes.mjs` instead: it holds each shot until its device has draw
    (deep links only, ~0.5 MB).
 6. **Headphones at 1024:** the hold keeps 37 px of air to the right edge, under the 50–70 px the review asked for
    (1440: 53 px). Next step if wanted: exploded fill 0.86.
+
+# Phase 4: the bright hero, drag and zoom, the site fixes (verified 2026-10-21)
+A fresh verification of the three tracks that answered the client's 2026-10-21 requests and the four-lens critique:
+HERO (the Creation repainted in daylight, the real-time 3D camera in the fingertip gap, the fly through its lens into
+I Storytellers), SITE-FIX (28 triaged items across the other chapters, the chrome and SEO) and DRAG (drag to turn and zoom
+for every real-time device). Production builds served locally (`scripts/perf.mjs --dist`, a static server on :5533,
+`scripts/build-pages.mjs` under `/creativemotley-site/`), SwiftShader WebGL. Evidence:
+`/tmp/claude-0/-home-user-creativemotley-site/f5fb006b-f00a-5174-8cc3-2633425655d9/scratchpad/p4v/` (perf runs in
+`perf/` and `perf2/`, hero captures in `hero/`, drag runs in `drag/`, axe in `axe/`, keyboard in `kb2/`).
+
+## P4.1 Numbers: 3D Kit live (L.1, e04c7ba) → now
+| | 3D Kit live | **Now** | Target |
+|---|---|---|---|
+| First load, desktop @1× / @2× · phone @2× | 0.68 / 0.78 · 0.51 MB | **0.75 / 0.89 · 0.49 MB** (29 / 29 / 26 req); no GLB before the first input | ≤ 1.5 · ≤ 1.0 MB |
+| Full read, desktop @1× (perf.mjs pace) | 8.24 MB / 112 req | **7.74 MB / 106 req** (camera.glb.gz 1.44 MB, the Directors film 0.97 MB) | ≤ 18 MB |
+| Full read, phone @2× (gated) | 3.81 MB | **3.88 MB / 85 req** | ≤ 6 MB |
+| Entry (gzip -9): index JS · CSS | 25.6 · 21.7 KB | **29.6 · 24.3 KB** | ≤ 60 KB JS |
+| Lazy JS (gzip -9, every lazy chunk but the preloaded `scroll`; both builds counted the same way) | 212.4 KB | **215.5 KB** (+3.1: `drag3d` 3.6 and `hero3d` 5.4 in; `film` 6.1, `filmRanges` 0.6, `frameStream` 1.5 out; `teardowns` +1.2) | 206 KB accepted on L.1's count: **~3 KB over** |
+| LCP unthrottled, desktop / phone (median of 3) | 0.48 / 0.29 s | **0.39 / 0.32 s** (the dek) | ≤ 1.0 s |
+| LCP throttled phone (median of 3) | 2.41 s | **2.23 s** (2208–2248 ms; FCP the same) | ≤ 2.5 s |
+| Steady wheel, WebGL off (min / median, 12 windows) | 59.6–60 fps | **58.6 / 59.4 fps** | ≥ 50 |
+| CLS scrolling (every window) · a full walk at 11 sizes, tier 0, reduced motion | 0 | **0** (reduced motion at 1440 was **1.0**: fixed here, P4.3) | < 0.01 |
+| CLS on deep links (desktop `#kit` `#method` `#results` `#apply`; phone the same) | phone up to 1.0 | desktop 0.001 · **0–0.12** · 0 · 0; phone 0.014 · 0.004 · **0–0.47** · 0.005 (`#method`: a timing race, P4.6) | < 0.01 |
+| Page length, desktop / phone | 34.45 / 33.3 screens | **30.4 / 29.7** (tier 0: 28.1 / 27.7) | ≈ 40 |
+| First chapter title | (film hero) | **1.95 screens** (desktop and phone) | ≤ 2 |
+| Words per screen, desktop / phone | | **31.9 / 29.4** (969 words; 47 drafts await the client) | ≈ 40–60 |
+| Horizontal overflow · console | 0 · none | **0 at 1440, 1280, 1024, 1920, 390, 360, 414, 820, 844×390, tier 0 and reduced motion · no errors** | 0 · none |
+
+The hero painting: mean luma 0.29 → 0.49 (Shopify's 0.33); desktop-2880.avif 229 → 224 KB, phone-828.avif 99 → 56 KB;
+the first-paint plate is `plates/hero.avif` (105 KB). The DOM camera stills: cam-hero 16.6 KB, cam-front 10.6 KB,
+cam-lens 53.9 KB.
+
+## P4.2 Client requests (2026-10-21)
+- **"Use the mouse to move them around" — done.** Every real-time device turns under a drag (`src/gl/lib/drag3d.js`):
+  the hero camera (−56° for a 160 px drag), Method's camera in the orbit and at the hold (markers follow: 11–12 at the
+  hold), the four Kit devices (24.5° each; 6 markers re-placed after the drag; the drag is off through a cut, which now
+  plays on a 0.7 s clock). Each returns to the scroll's pose 2.5 s after the last input, or on scrolling. Keyboard: the
+  device is focusable (`role="img"`, a label naming the keys); the arrows turn it 15°, 0 or Escape resets. Touch at
+  390 (`?cam3d=1`): a horizontal swipe turns it 44° and scrolls 0 px; a vertical swipe on the device scrolls 225 px. The
+  one-time hint reads "Drag to turn · double-click to zoom" (mouse) / "· pinch to zoom" (touch). The glide on release is
+  checked with synthetic fast drags only: SwiftShader draws about one frame a second here.
+- **"Zoom in like the camera I had done" — done.** ctrl/cmd + wheel zooms about the pointer (hero 1.13× for eight
+  notches; the page's own zoom stays 1; a plain wheel scrolls 57 px and the zoom eases out); double-click 2× and back;
+  + / − / reset buttons beside the device (+ + = 2.25×); two-finger pinch on phones reaches 3× on the hero, Method and
+  the Kit with the page scale at 1; double-tap 2× on the hero. Past 1.15× the copy steps back (Method: `d3-zoomed`).
+  The 3D viewer artifact has the same zoom (`viewer-kit/out/`), ready to republish.
+- **"The homepage is heavy … replace that camera with the 3D one … like Shopify's image" — done.** Against
+  `pair_01_theirs.jpg`: ours is now lighter and cleaner than Editions' own (a clear cerulean sky and cumulus, fresh
+  greens, no varnish; theirs is mid-key with dark pines). At 1:1 the faces, hands and fabrics are crisp. One magenta
+  accent (his headphones), no floating kit. The golden frame reads as Editions' does: ink type on a frosted cream panel,
+  a gilt hairline. The live 3D camera floats between the fingertips at 1024, 1280, 1440 and 1920 (141 px at 1440), turns
+  slowly and takes the drag; it is a little darker than the daylight around it and has no contact shadow, so it reads
+  slightly placed rather than painted in. Scrolling flies through it: the camera turns lens-on, pushes in until the
+  front element fills the screen, the dark glass, seven iris blades, the aperture opening onto the School of Athens, a
+  plain cut into I Storytellers; reversible (checked back up at 0.8, 0.5, 0.2, 0). The beats ride the push (ink over
+  the sky, cream over the glass). Phones: the reach crop (hands, gap, sky) with the same 3D move above the gate and the
+  2D move (stills and DOM blades) below it; tier 0 and reduced motion: the still at rest, a cut.
+
+## P4.3 What this round changed (verifier)
+- **Cross-track diffs applied:** `src/gl/stage.js` header comment (HERO's); the `?tier=0` class in `index.html`'s head
+  script and the stopgap removed from `src/partials/creators.html`; a tighter halo on the rail's serif numerals
+  (`src/styles/chrome.css`); `sitemapLastmod()` in `vite.config.js` (the production build now dates `sitemap.xml`);
+  the Kit's later shots' copy hidden until the teardown's init (`src/sections/_teardown.css`).
+- **Not applied, for the director:** the two late font preloads (+34 KB on a throttled LCP with 0.27 s of headroom, for a
+  3 px deep-link shift); `--t-numeral: var(--t-display)` (it would shrink the phone's counters from 71 to 56 px, which
+  item 5 kept unchanged); the teardown's init cost and its pre-init layout (P4.6).
+- **Regression: the frame's mark and index stayed on screen beside the rail's** (desktop, about 2 loads in 5: a frame
+  drawn before `measureFlip` wrote an inline opacity of 1 that beat `.frame.is-docked`). Fixed in `src/ui/hero.js`:
+  desktop clears the inline value. 5 timings re-run: hidden once docked every time.
+- **Regression: reduced motion at 1440 had CLS 1.0** (the teardowns' static switch now ran after the first paint, and
+  the Kit's pinned still moved across the viewport for the browser). Fixed in `src/main.js`: with reduced motion the
+  teardowns' init runs before the first frame, as for a deep link. Walks at 1440 and 390: 0.
+- **Regression: a faint, larger copy of the 3D camera on phones and tablets** (a GLB that landed after the stage's 10 s
+  idle cut-off drew three frames, and the running mean kept the camera's fitted framing from the first). Fixed in
+  `src/gl/scenes/hero3d.js`: the mean starts again on the frame after the hand-over. 390 and 820 at rest: clean.
+
+## P4.4 Item verdicts
+- **HERO (16 items):** fixed: the d1 painting and encodes (2; the lower-right bush still shows a little AI hatching),
+  hero3d with alpha compositing (3), the fly-through (4), the hero and rail links' focus and taps (5: the frame's nav is
+  inert and hidden once out; the rail links have a box and take focus), the frame's contrast (6), the beats (7), the
+  budgets (8), the dock as a 0.6 s FLIP (9, with the regression above fixed), the lines easing back (10), paper tears
+  (12), touch targets (13: desktop rows stay 20 px, see P4.6), safe areas, scroll padding and forced colours (14), the
+  share card, icons, `en-GB`, JSON-LD and skip link (15), `?drafts=0` Storytellers (16). **Partly:** the landscape
+  phone (11): at 844×390 the mark and dek sit over his head and the dek touches the mark.
+- **SITE-FIX (27 items):** fixed per SITE-FIX's evidence and re-checked here where it shows: Showcase 3.82 screens (2),
+  Process (4), Results 2 × 2 (5), Apply stickers (6), Directors (7), focus moves (8: skip link, in-page links, dropdown
+  Escape and tab-out, the video modal's focus return all checked), the video row (10), video hygiene (11), Directors
+  credits (13), the Apply footer (14), the Creators cloud (15), `?drafts=0` (16), idle motion (17), long jumps (18),
+  the dropdown thumbnails (19), the modal on phones (20), touch targets (21), 404 / robots / sitemap (22), Results type
+  (23), Process polish (24), link names (25), the mailto dash (26), facts housekeeping (27), reduced-motion reload (28).
+  **Partly:** deep-link CLS (3: `#method` still races), main-thread blocking (9: the teardown init), the rail theme
+  (12: the numerals' halo is now applied).
+- **DRAG (items 2–12):** fixed: the controller, zoom, Method, the Kit, the hero (2–6), reveals as transitions (7), Kit
+  cuts on a clock (8), screen readers (9), the 820 tablet orbit (10), landscape phones (11), the lines over the device
+  (12).
+- **Checks:** fact check desktop, mobile (485 strings) and `--drafts 0` (392) pass. axe on the phone: no violations in
+  25 states (scroll stops, menu, both modals). axe on desktop: `target-size` ×10 on the rail's 17 px rows (the same ten
+  links are in the Chapters menu at 44 px: WCAG 2.5.8's equivalent-control exception) and `color-contrast` on
+  `#process-title` (a false positive: axe cannot see the WebGL paper behind it). The Pages build under the base: a full
+  desktop read (105 responses) and a full 3D phone read (83) with no failed request; the phone read logs the governor's
+  "stage is at its floor" warnings only.
+
+## P4.5 Sheets
+- `qa/shots/v3p4_desk_sheet_00…02.jpg` (1440, every 0.75 screen), `qa/shots/v3p4_mob_sheet_00…02.jpg` (390).
+- `qa/shots/v3p4_best.jpg`: the new hero, desktop and phone (3D), then the push, the iris (desktop and phone),
+  Storytellers, Creators, Brands, Method taken apart and dragged, Showcase, the Kit's console, Apply.
+- HERO's own: `qa/shots/v3h_hero.jpg`, `qa/shots/v3h_flythrough.mp4`.
+- Some Kit frames on the desktop sheet catch a cut mid-way (the new device in, the old heading still up): the cut's
+  clock runs on drawn frames, about one a second on SwiftShader.
+
+## P4.6 Remaining, ranked
+1. **Lazy JS is ~3 KB over the 206 KB accepted** (215.5 vs 212.4 counted the same way). Moving `drag3d` (3.6 KB) into
+   the entry would meet it at the cost of every first load. Recommendation: accept, as L.4 did for the Kit.
+2. **Deep link to `/#method`: the teardown's layout before its init differs from after** (the copy's position, the
+   spec list): CLS 0–0.12 desktop, 0–0.47 phone, depending on timing. Fix in `_teardown`: match the pre-init layout.
+3. **The teardown's init is one long task** (736 ms desktop, 548 ms on the throttled phone here) when the reader comes
+   within two screens of Method; almost all of it is the lines' mask canvas being read back. Measure on a real GPU
+   before cutting it (a CSS-gradient mask, or building it at idle).
+4. **Landscape phones (844×390):** the hero's mark and dek over his head.
+5. **Phone menu trap:** one Tab lands on the page body before cycling back to the Menu button.
+6. **Deferred init and focus:** after jumping to the Kit, the next Tab skips the Directors' Pause button (made at its
+   init); a phone deep link to `#kit` measured 0.014 CLS once (a 3 px font-swap shift; 0.004 in SITE-FIX's runs).
+7. **The film's files** are no longer referenced (`public/assets/frames/hero/` 79 MB, `public/assets/video/film/` 13 MB,
+   `scripts/encode-film.sh`): `git rm -r public/assets/frames/hero public/assets/video/film` when the director agrees.
+8. **Real hardware:** the drag's glide and hint timing, the hero's idle turn, and the Kit's frame rate are unmeasured
+   off SwiftShader. If nobody touches the page for 10 s while a device loads, its drag region waits for the next input.
+9. Polish: a contact shadow or warmer key for the hero camera; the second beat sits in ink over the dark lens rim for
+   s 0.42–0.47 before it turns cream; the remaining hatch strokes in the lower-right bushes.
+
+## P4.7 Lab and client
+- **Lab (`.lab`, not edited here):** carry the site's additions into `.lab/cam3d/camera3d.js` before the next drop-in
+  (`opts.alpha` + `renderTexture()`, `envSky` / `envGround`, `view.shift` / `view.near`, `setZoom`, `screenBox()`) and
+  `setZoom` / `screenBox()` into `.lab/kit3d`; a hero-only exterior LOD of the camera (~0.7 MB desktop, ~0.45 MB
+  phone); the purple ring-light arcs inside the front element (they show through the whole push); the console's glare,
+  the headphone cushions and the phone's display (L.4); a still per orbit start key.
+- **Client:** approve the new homepage (the d1 painting; phones the reach crop, or the p4 recomposition with both
+  figures as the fallback); the poster small print; DC91 or the credits row; "MultiChoice"; "Monetise"; Process F94 /
+  F95; the four channel-probable YouTube ids; 16:9 key frames for the seven video cards; the applicant email; the 47
+  drafted lines.
