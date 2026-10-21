@@ -29,6 +29,9 @@
    dev.anchors(dy = 0)                    [{ id, label, part, x, y, depth, visible, lead: { angle, dx, dy } }], CSS px minus dy;
                                           posed for this frame first; visible = revealed × facing × not occluded (id pass)
    dev.occlusion(), dev.idVersion         the id pass now; bumps when an id pass lands
+   dev.setOffset(az, el)                  degrees added to the view (drag to turn: gl/lib/drag3d.js; el clamped to the device's range)
+   dev.setZoom(k, x, y)                   the fitted picture scaled by k about a point (css x' = k·x + x): a product-viewer zoom
+   dev.screenBox()                        the device's screen box now ({ x0, y0, x1, y1 }, css px): drag3d's hit region
    dev.setFade(f), dev.setKey(c, e, o)    the copy pass only (render()): fade, colour key ('#rrggbb', the Kit's data-td-key)
    dev.dispose()                          frees every GPU resource it made (a pool's shared targets are the pool's)
 
@@ -197,6 +200,7 @@ export function create(ctx = {}, opts = {}) {
   let rtHDR = null, rtLDR = null, accRT = null, idRT = null, Bloom = null, bloom = null, envs = null, lastInfo = null, tiles = null;
   let scaleNow = Q.scale, msaaNow = Q.msaa;
   const off = { az: 0, el: 0 };
+  const zm = { k: 1, x: 0, y: 0 };    // setZoom: the framed rect scaled by k, then moved by (x, y) css px (drag3d's zoom)
   const lights = {};
   let exOverride = null;              // lab art direction: { part: { ex: [mm], rot: [deg] } }
   let forceShow = false;              // (phone) the prewarm draws the hidden internals too
@@ -1207,10 +1211,14 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
     }
     return out;
   }
+  /* the zoom on the rect the fit uses (bleed and inset included, so a zoom is a pure scale of the picture about a point):
+     css x' = k x + zm.x, y' = k y + zm.y, in NDC */
+  const zoomNDC = (R) => (zm.k === 1 && !zm.x && !zm.y ? R : [R[0] * zm.k + zm.k - 1 + 2 * zm.x / vw, R[1] * zm.k + zm.k - 1 + 2 * zm.x / vw,
+    R[2] * zm.k + 1 - zm.k - 2 * zm.y / vh, R[3] * zm.k + 1 - zm.k - 2 * zm.y / vh]);
   function rectNDC() {
     if (!rect) return [-1, 1, -1, 1];
     const top = portrait() ? (C.insetTop ?? 16) * ph.hand : 0;   // phones: clear of the header bar as it lands in the column
-    return [rect.x / vw * 2 - 1, (rect.x + rect.w) / vw * 2 - 1, 1 - (rect.y + rect.h) / vh * 2, 1 - (rect.y + top) / vh * 2];
+    return zoomNDC([rect.x / vw * 2 - 1, (rect.x + rect.w) / vw * 2 - 1, 1 - (rect.y + rect.h) / vh * 2, 1 - (rect.y + top) / vh * 2]);
   }
   let jitter = [0, 0], fitInfo = null;
   let view = null;            // debug / art-direction override: { az, el, fov, target: [x, y, z], dist }
@@ -1241,7 +1249,7 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
     let mnx = 1e9, mxx = -1e9, mny = 1e9, mxy = -1e9, mnz = 1e9, mxz = -1e9;
     for (let i = 0; i < pts.length; i += 3) { mnx = Math.min(mnx, pts[i]); mxx = Math.max(mxx, pts[i]); mny = Math.min(mny, pts[i + 1]); mxy = Math.max(mxy, pts[i + 1]); mnz = Math.min(mnz, pts[i + 2]); mxz = Math.max(mxz, pts[i + 2]); }
     _c.set((mnx + mxx) / 2, (mny + mxy) / 2, (mnz + mxz) / 2);
-    let dist = 1;
+    let dist = 1, bw = 0, bh = 0;
     for (let it = 0; it < 4; it++) {
       dist = 0;
       for (let i = 0; i < pts.length; i += 3) {
@@ -1256,7 +1264,7 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
         const px = x / ((dist - z) * tanH), py = y / ((dist - z) * tanV);
         a = Math.min(a, px); b = Math.max(b, px); c = Math.min(c, py); e = Math.max(e, py);
       }
-      const mx = (a + b) / 2, my = (c + e) / 2;
+      const mx = (a + b) / 2, my = (c + e) / 2; bw = (b - a) / 2; bh = (e - c) / 2;
       _c.addScaledVector(_r, mx * tanH * dist).addScaledVector(_u, my * tanV * dist);
     }
     camera.position.copy(_c).addScaledVector(_d, dist);
@@ -1276,7 +1284,9 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
     // the view matrix now, not at the next render: anchors() projects right after pose() (a stale matrixWorldInverse put
     // the first frame's markers one pose behind: 80 px on the scratch site, found by sitetest_kit.mjs)
     camera.updateMatrixWorld();
-    fitInfo = { target: _c.toArray(), dist, rig };
+    // the device's screen box (css px; the fit centres it on the rect): drag3d's hit region
+    const bx = (R[0] + R[1]) / 2, by = (R[2] + R[3]) / 2;
+    fitInfo = { target: _c.toArray(), dist, rig, box: { x0: (bx - bw + 1) / 2 * vw, x1: (bx + bw + 1) / 2 * vw, y0: (1 - by - bh) / 2 * vh, y1: (1 - by + bh) / 2 * vh } };
     fitC.copy(_c); updateBoxes(rig.az); applyScreen();
     if (lights.local) { localU.uLLK.value = lights.local.intensity; localU.uLLPos.value.copy(lights.local.position).applyMatrix4(camera.matrixWorldInverse); }
   }
@@ -1298,7 +1308,7 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
   const _cc = new THREE.Color();
   const halton = (i, b) => { let f = 1, r = 0; while (i > 0) { f /= b; r += f * (i % b); i = Math.floor(i / b); } return r; };
   function signature() {
-    return [ph.orbit, ph.hand, ph.explode, ph.settle, ptrS.x, ptrS.y, off.az, off.el, rect ? [rect.x, rect.y, rect.w, rect.h].join(',') : '', W, H, exOverride ? JSON.stringify(exOverride) : ''].map((v) => (typeof v === 'number' ? v.toFixed(5) : v)).join('|');
+    return [ph.orbit, ph.hand, ph.explode, ph.settle, ptrS.x, ptrS.y, off.az, off.el, zm.k, zm.x, zm.y, rect ? [rect.x, rect.y, rect.w, rect.h].join(',') : '', W, H, exOverride ? JSON.stringify(exOverride) : ''].map((v) => (typeof v === 'number' ? v.toFixed(5) : v)).join('|');
   }
   function sample(r) {
     // one (jittered) frame -> HDR (alpha = coverage) -> bloom -> tone map into rtLDR -> folded into the running mean
@@ -1490,6 +1500,8 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
     release() { accRT?.dispose(); accRT = null; accN = 0; lastSig = ''; },   // not drawn: free the running mean (the next sample makes it again)
     invalidate() { dirty = true; },
     setOffset(az, el) { off.az = az; off.el = el; },
+    setZoom(k = 1, x = 0, y = 0) { zm.k = k; zm.x = x; zm.y = y; },
+    screenBox() { pose(); return fitInfo?.box || null; },     // the device's screen box (css px, viewport), posed for now
     setFade(f) { copyQ.m.uniforms.fade.value = Math.min(1, Math.max(0, f)); },
     /** the colour key ('#rrggbb' centre, edge; null = black). o: { amount (0 … 1), hand (true: comes up with the hand-off) } */
     setKey(centre, edge, o = {}) {
