@@ -30,8 +30,10 @@
   <link rel="preload" href="/assets/plates/hero.avif" as="image" type="image/avif" fetchpriority="high" media="not all and (orientation: portrait) and (max-width: 1023px)">
   <link rel="preload" as="image" type="image/avif" imagesrcset="/assets/scenes/hero/phone-828.avif 828w, /assets/scenes/hero/phone-1170.avif 1170w" imagesizes="100vw" fetchpriority="high" media="(orientation: portrait) and (max-width: 1023px)">
   <!-- html.js; html.cv (no #fragment to land on): the first frame styles and lays out only the hero (base.css), the
-       entry module lifts it (core/firstframe.js); html.no-drafts (?drafts=0): drafted copy hidden, to compare -->
-  <script>(function(c){c.add('js');if(!location.hash)c.add('cv');if(/[?&]drafts=0(&|$)/.test(location.search))c.add('no-drafts')})(document.documentElement.classList)</script>
+       entry module lifts it (core/firstframe.js); html.no-drafts (?drafts=0): drafted copy hidden, to compare; html.t0
+       (?tier=0) known at parse time, so the pinned runs that reserve their length in CSS (V Showcase, VI Process) are
+       static before any chapter lays out and a ?tier=0 deep link does not shift -->
+  <script>(function(c){c.add('js');if(!location.hash)c.add('cv');if(/[?&]drafts=0(&|$)/.test(location.search))c.add('no-drafts');if(/[?&]tier=0(&|$)/.test(location.search))c.add('t0')})(document.documentElement.classList)</script>
   <link rel="stylesheet" href="/src/styles/index.css">
 </head>
 <body>
