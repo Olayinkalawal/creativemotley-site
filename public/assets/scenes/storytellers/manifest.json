@@ -7,14 +7,14 @@
     "src": "/assets/scenes/storytellers/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 216034,
-    "q": 72
+    "bytes": 250907,
+    "q": 70
    },
    {
     "src": "/assets/scenes/storytellers/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 317397,
+    "bytes": 390964,
     "q": 72
    }
   ],
@@ -23,14 +23,14 @@
     "src": "/assets/scenes/storytellers/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 281052,
+    "bytes": 343348,
     "q": 86
    },
    {
     "src": "/assets/scenes/storytellers/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 444206,
+    "bytes": 528578,
     "q": 86
    }
   ]
@@ -40,13 +40,13 @@
    "src": "/assets/scenes/storytellers/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 13370
+   "bytes": 15977
   },
   {
    "src": "/assets/scenes/storytellers/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 13366
+   "bytes": 16018
   }
  ],
  "phone": {
@@ -55,22 +55,22 @@
     "src": "/assets/scenes/storytellers/phone-1640.avif",
     "w": 1640,
     "h": 2916,
-    "bytes": 295271,
-    "q": 65
+    "bytes": 306552,
+    "q": 64
    },
    {
     "src": "/assets/scenes/storytellers/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 183822,
-    "q": 65
+    "bytes": 172725,
+    "q": 61
    },
    {
     "src": "/assets/scenes/storytellers/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 102197,
-    "q": 62
+    "bytes": 96791,
+    "q": 57
    }
   ],
   "webp": [
@@ -78,22 +78,22 @@
     "src": "/assets/scenes/storytellers/phone-1640.webp",
     "w": 1640,
     "h": 2916,
-    "bytes": 414088,
-    "q": 84
+    "bytes": 418628,
+    "q": 83
    },
    {
     "src": "/assets/scenes/storytellers/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 263478,
-    "q": 85
+    "bytes": 264032,
+    "q": 83
    },
    {
     "src": "/assets/scenes/storytellers/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 150756,
-    "q": 84
+    "bytes": 150376,
+    "q": 82
    }
   ]
  },
@@ -123,8 +123,8 @@
  },
  "key": "#A62A16",
  "titleBg": {
-  "desktop": "#44281A",
-  "phone": "#2A180E"
+  "desktop": "#523429",
+  "phone": "#2F1F1D"
  },
  "titleInk": {
   "desktop": "light",
@@ -132,17 +132,17 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 13.43,
-   "worst10": 7.44
+   "mean": 11.16,
+   "worst10": 5.25
   },
   "phone": {
-   "mean": 17.0,
-   "worst10": 12.13
+   "mean": 15.74,
+   "worst10": 9.32
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRsIAAABXRUJQVlA4ILYAAABQBQCdASogABIAPu1mqk2ppaQiMAgBMB2JQA7gAH4UmTXw35p/aUr+GhaekFE9GEgPuAAA/vK0jNG/cCZRID3mZja2fwe4DcrV1E4/NYBuP2/EXmKCE0xnTYOb2MJmlt/RRFzOR5pmZ7QFLbkVyqXmY4UpRZzjyZciXva+cmNFLNlbUhqeqyIZTe89A9zbAvsmZbzFft9hWlyMo6trTLTSOBB5NOa68dmRygN9bHFaYBSsK6sAAA==",
-  "phone": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JaACdAB6JNu5/8FILMTVAAP7xf40GF/UR2EY5LFk1oaQ06k3C2fFNeDW72W3zoG+ZJYocsRKD9Huu7WIf7F+z/91N57m6V8rarpjQEm6nI2J8Haw5Lx5S7SVl9j5B1h1sz232m79EwV1ka/nYI/JE2pAymP+ZpUkXnNREHoO/S8AA"
+  "desktop": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACQBQCdASogABIAPu1iqU2ppaQiMAgBMB2JQBOmas0gK5UWx13Jz5R6RMh4cWtRd5Kyj2cg0AD+8X+Cvl09gEf3Z82YJUEh0+i585SRqrUXyDf1sXTxztEPFdqX9CzKVBhXx6Z7B4BSksYHEJH0FYIrEFWnzWLty5M4auG6uzQxnHPXHl2SxL0dnlTp793kWP88qmQ3M7LRcMxq2ijnp6Cops8WKJ6/4qDQlzGveBkh0qXJ7PongeHCQeOjp4t9vR12riKnpVA4M1YAAAA=",
+  "phone": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAADQAwCdASoMABoAPu1iqU2ppaQiMAgBMB2JbACdMoAC+lCMX8qqGqAA/u9h/Fw29XVoaS+ZtHj/V9JbeqpDhwQTEijfqWKxYzJIiKMCOISrB45Tft46wDmzvibKrtc+ZY7bGi5GgcGR6TKHE05DiEKfT75WZZdgGLzQacwm5MdDbt0RDG9vx9ngCNpLWI8OeH4wIhh3lZ7gRNHfpeAAAA=="
  },
  "credit": {
   "desktop": "Nano Banana Pro 4K edit chain e5dca105 > ecb56a24 > 69bf0b47 > cbee6a1a, then local retouch (sunglasses, two faces, craquelure finish; final round: the laptop hand repainted in skin with modelled fingers, sunglasses rim neutralised): masters/storytellers/d7_r4.png",
@@ -151,18 +151,18 @@
  "titleScrim": {
   "desktop": {
    "colour": "ink",
-   "worst10Bare": 7.43,
+   "worst10Bare": 5.26,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 27.5,
+   "zoneLumaSd": 35.1,
    "advice": "REQUIRED: dark gradient ~0.6 over u 0-0.5, v 0-0.40, gone by v 0.5 (Apollo statue)"
   },
   "phone": {
    "colour": "ink",
-   "worst10Bare": 12.13,
+   "worst10Bare": 9.34,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 18.6,
+   "zoneLumaSd": 24.7,
    "advice": "soft dark top scrim ~0.35, gone by v 0.30; title cap above v 0.19"
   }
  },

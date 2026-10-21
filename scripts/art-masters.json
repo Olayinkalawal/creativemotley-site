@@ -4,12 +4,14 @@
   "name": "I Storytellers: The School of Athens, now",
   "masterpiece": "after Raphael, The School of Athens (1509-11)",
   "desktop": {
-   "src": "repo:.art/masters-2026-10-20/storytellers-desktop.png",
+   "src": "repo:.art/masters-2026-10-20/storytellers-desktop-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on storytellers-desktop.png",
    "note": "Nano Banana Pro 4K edit chain e5dca105 > ecb56a24 > 69bf0b47 > cbee6a1a, then local retouch (sunglasses, two faces, craquelure finish; final round: the laptop hand repainted in skin with modelled fingers, sunglasses rim neutralised): masters/storytellers/d7_r4.png",
    "pick": "storytellers/d7_r4.png"
   },
   "phone": {
-   "src": "repo:.art/masters-2026-10-20/storytellers-phone.png",
+   "src": "repo:.art/masters-2026-10-20/storytellers-phone-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on storytellers-phone.png, varnish shift capped at the desktop's",
    "note": "9:16 recomposition from cbee6a1a, job d32e86f3, plus edits f6d5f9bd (palm-down hand, plain laptop, ochre boot) and 767948c8 (gimbal held at the chest) composited locally, round-3 finish, the cone finger cut back to a short thumb: masters/storytellers/final_p2.png",
    "pick": "storytellers/final_p2.png"
   },
@@ -50,12 +52,14 @@
   "name": "II Creators: The Mona Lisa, on camera",
   "masterpiece": "after Leonardo da Vinci, Mona Lisa (c. 1503-19)",
   "desktop": {
-   "src": "repo:.art/masters-2026-10-20/creators-desktop.png",
+   "src": "repo:.art/masters-2026-10-20/creators-desktop-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on creators-desktop.png",
    "note": "Wider for 4:3 (painting fixes 2026-10-20): the live master (Nano Banana Pro 4K edit chain 88f177c9 > f931edb0 > 506535aa + local retouch, d7_r3) at 0.88 in the lower right, 12% new valley on the left and sky on top from 2K job fda32678 (2.2x upscale, craquelure and grain); seams repaired locally (column, the sky over her head, the lower-left lake, the parapet, the left join's crackle): masters/creators/wide_d_r2.png",
    "pick": "creators/wide_d_r2.png"
   },
   "phone": {
-   "src": "repo:.art/masters-2026-10-20/creators-phone.png",
+   "src": "repo:.art/masters-2026-10-20/creators-phone-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on creators-phone.png, varnish shift capped at the desktop's",
    "note": "9:16 recomposition from 506535aa, job 5f92e37c, then local retouch (neckline, specks, path, sleeves, camera badge): masters/creators/p1_r3.png",
    "pick": "creators/p1_r3.png"
   },
@@ -95,7 +99,8 @@
   "name": "III Brands: The Arnolfini, signed",
   "masterpiece": "after Jan van Eyck, The Arnolfini Portrait (1434)",
   "desktop": {
-   "src": "repo:.art/masters-2026-10-20/brands-desktop.png",
+   "src": "repo:.art/masters-2026-10-20/brands-desktop-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on brands-desktop.png",
    "note": "Wider room (painting fixes 2026-10-20): the live master (Nano Banana Pro 4K edit 2c6c6c5e > 322047e0 + local retouch, d5_r3) registered at 0.67 into 4K job fbcc3a18 (a zoom-out of the room), the outer room from 2K job 1afbee35, a shadow glaze over the window wall; seams repaired locally (middle window, bed curtain, far-left sill): masters/brands/wide_d_r2.png",
    "pick": "brands/wide_d_r2.png",
    "widths": [
@@ -105,7 +110,8 @@
    ]
   },
   "phone": {
-   "src": "repo:.art/masters-2026-10-20/brands-phone.png",
+   "src": "repo:.art/masters-2026-10-20/brands-phone-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on brands-phone.png, varnish shift capped at the desktop's",
    "note": "9:16 recomposition from 322047e0, job b5fd8ac6, then local retouch (inscription, painted skin, calmer ceiling, mirror): masters/brands/p1_r3.png",
    "pick": "brands/p1_r3.png",
    "finish": {
@@ -154,7 +160,8 @@
   "name": "VIII Results: The Oculus",
   "masterpiece": "after Mantegna, Camera degli Sposi oculus (1465-74)",
   "desktop": {
-   "src": "repo:.art/masters-2026-10-20/results-desktop.png",
+   "src": "repo:.art/masters-2026-10-20/results-desktop-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on results-desktop.png",
    "note": "Nano Banana Pro 4K e04207f9 > edit 922b10cb, then local retouch and grade (tub, orange branch, oculus sky to mid cerulean, varnish, canvas grain): masters/results/d9.png",
    "pick": "results/d9.png",
    "widths": [
@@ -164,7 +171,8 @@
    ]
   },
   "phone": {
-   "src": "repo:.art/masters-2026-10-20/results-phone.png",
+   "src": "repo:.art/masters-2026-10-20/results-phone-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on results-phone.png, varnish shift capped at the desktop's",
    "note": "9:16 recomposition from 922b10cb, job 9bc59196, graded to match d9 (sky, varnish, grain): masters/results/p3.png",
    "pick": "results/p3.png"
   },
@@ -203,12 +211,14 @@
   "name": "IX Directors: The Ambassadors' chairs",
   "masterpiece": "after Hans Holbein the Younger, The Ambassadors (1533)",
   "desktop": {
-   "src": "repo:.art/masters-2026-10-20/directors-desktop.png",
+   "src": "repo:.art/masters-2026-10-20/directors-desktop-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on directors-desktop.png",
    "note": "Nano Banana Pro 4K text-only job 4e6bedc5 (hero 70d440b1 as a technique reference), local retouch (torquetum band to ticks, black lacquer chairs, hymn-book lines, camera badge; craquelure, varnish, grain; final round: chair latch, brace step and book headings blanked): masters/directors/final_d2.png",
    "pick": "directors/final_d2.png"
   },
   "phone": {
-   "src": "repo:.art/masters-2026-10-20/directors-phone.png",
+   "src": "repo:.art/masters-2026-10-20/directors-phone-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on directors-phone.png, varnish shift capped at the desktop's",
    "note": "9:16 recomposition from da8b8160, job add24dd7, local retouch (displays, sundial, hymn book; craquelure, varnish, grain; monitor light, crest plaque and sundial marks removed: final_p), then (painting fixes 2026-10-20) the second empty black director's chair with a folded navy velvet jacket over its arm, right of the stand, composited from 4K job 2be55d4f: masters/directors/two_chairs_p.png",
    "pick": "directors/two_chairs_p.png",
    "finish": {
@@ -310,7 +320,8 @@
   "name": "X Apply: The Birth of Venus, live",
   "masterpiece": "after Sandro Botticelli, The Birth of Venus (c. 1484-86)",
   "desktop": {
-   "src": "repo:.art/masters-2026-10-20/apply-desktop.png",
+   "src": "repo:.art/masters-2026-10-20/apply-desktop-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on apply-desktop.png",
    "note": "Nano Banana Pro 4K 5f652579 > edit e47abfe4, then local retouch (second camera out, roses, drapery end, fourth foot, hair; final round: the raised fist cleaned of the old camera rim, seam and flecks feathered): masters/apply/final_d2.png",
    "pick": "apply/final_d2.png",
    "widths": [
@@ -320,7 +331,8 @@
    ]
   },
   "phone": {
-   "src": "repo:.art/masters-2026-10-20/apply-phone.png",
+   "src": "repo:.art/masters-2026-10-20/apply-phone-graded.png",
+   "grade": "\"fresh daylight\" (client-approved 2026-10-21): scripts/grade.py on apply-phone.png, varnish shift capped at the desktop's",
    "note": "Nano Banana Pro 4K text-only job efface4c (a true vertical Birth of Venus), local retouch (back wind figure clothed in silk, hair coil, gold hoop, attendant camera, cloud contrast; the gimbal screen glazed down): masters/apply/final_p2.png",
    "pick": "apply/final_p2.png"
   },

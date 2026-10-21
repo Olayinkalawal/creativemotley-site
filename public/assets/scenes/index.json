@@ -27,21 +27,21 @@
   "name": "I Storytellers: The School of Athens, now",
   "key": "#A62A16",
   "placeholder": {
-   "desktop": "data:image/webp;base64,UklGRsIAAABXRUJQVlA4ILYAAABQBQCdASogABIAPu1mqk2ppaQiMAgBMB2JQA7gAH4UmTXw35p/aUr+GhaekFE9GEgPuAAA/vK0jNG/cCZRID3mZja2fwe4DcrV1E4/NYBuP2/EXmKCE0xnTYOb2MJmlt/RRFzOR5pmZ7QFLbkVyqXmY4UpRZzjyZciXva+cmNFLNlbUhqeqyIZTe89A9zbAvsmZbzFft9hWlyMo6trTLTSOBB5NOa68dmRygN9bHFaYBSsK6sAAA==",
-   "phone": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JaACdAB6JNu5/8FILMTVAAP7xf40GF/UR2EY5LFk1oaQ06k3C2fFNeDW72W3zoG+ZJYocsRKD9Huu7WIf7F+z/91N57m6V8rarpjQEm6nI2J8Haw5Lx5S7SVl9j5B1h1sz232m79EwV1ka/nYI/JE2pAymP+ZpUkXnNREHoO/S8AA"
+   "desktop": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACQBQCdASogABIAPu1iqU2ppaQiMAgBMB2JQBOmas0gK5UWx13Jz5R6RMh4cWtRd5Kyj2cg0AD+8X+Cvl09gEf3Z82YJUEh0+i585SRqrUXyDf1sXTxztEPFdqX9CzKVBhXx6Z7B4BSksYHEJH0FYIrEFWnzWLty5M4auG6uzQxnHPXHl2SxL0dnlTp793kWP88qmQ3M7LRcMxq2ijnp6Cops8WKJ6/4qDQlzGveBkh0qXJ7PongeHCQeOjp4t9vR12riKnpVA4M1YAAAA=",
+   "phone": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAADQAwCdASoMABoAPu1iqU2ppaQiMAgBMB2JbACdMoAC+lCMX8qqGqAA/u9h/Fw29XVoaS+ZtHj/V9JbeqpDhwQTEijfqWKxYzJIiKMCOISrB45Tft46wDmzvibKrtc+ZY7bGi5GgcGR6TKHE05DiEKfT75WZZdgGLzQacwm5MdDbt0RDG9vx9ngCNpLWI8OeH4wIhh3lZ7gRNHfpeAAAA=="
   },
   "thumb": [
    {
     "src": "/assets/scenes/storytellers/thumb-320.avif",
     "w": 320,
     "h": 180,
-    "bytes": 13370
+    "bytes": 15977
    },
    {
     "src": "/assets/scenes/storytellers/thumb-320.webp",
     "w": 320,
     "h": 180,
-    "bytes": 13366
+    "bytes": 16018
    }
   ]
  },
@@ -50,21 +50,21 @@
   "name": "II Creators: The Mona Lisa, on camera",
   "key": "#9A6A2A",
   "placeholder": {
-   "desktop": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAACwBACdASogABIAPu1ep06ppKMmMBgMATAdiUAXYAaLktXLpq35jlxfFuFgGQEcAP7fuEwD88555y2rB1dLjmyvdhm5D/t828jOzyUtWJSXcZKcXyNSYzgNetD2e/MqqqaaSPBEfli4ENkh6tU7znOGKMugrR4gISYyJGBjBQQgHw1AAAA=",
-   "phone": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAAAwBACdASoMABoAPu1krU6ppaSiMAgBMB2JZAC7ACFqzsPLWdoQLagp8gAA/lHswCk9Ciw9Ws9lmEQvo+xKtN/lRjmNXVdOni/MpBisTsaR6GOmK3qRYCMPTP6B7zHgy/RGWlqAJfOYNSyMRBA1dafU3Vvf9CMJFHHbmTuwXIkAAA=="
+   "desktop": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAADwBACdASogABIAPu1kq06ppaOpqA1RMB2JYgC2yEXemkjImf2o5x6DwbP4cPxDfWwA/u2btGMxdctiioOFU6ft2alksmu/P9etLSaaHbZP75JnOnQjUaHWR+mK6L2F/W6ZRy+wI5l/ajY8wOt1/eI0i0O9KSqlSzf8XWNJ59VftYEMhgA2WrZIDOGyAAAA",
+   "phone": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADQAwCdASoMABoALrV2u12jqampiYC0SzAFR6IdeLUs9jSUEizxhgAA/t7Nu+OV3ZqQ/CqUBOGbLNNydn3C+ewf3qw4NXKm7yvW6wlcjnmI0hkFyHybtO27nlDqV3l/oHHm/WI0niJWoFS88Uz7La7qDsrHFzjcb/rflEKWgccCHB0AAAA="
   },
   "thumb": [
    {
     "src": "/assets/scenes/creators/thumb-320.avif",
     "w": 320,
     "h": 180,
-    "bytes": 4752
+    "bytes": 5889
    },
    {
     "src": "/assets/scenes/creators/thumb-320.webp",
     "w": 320,
     "h": 180,
-    "bytes": 5362
+    "bytes": 6632
    }
   ]
  },
@@ -73,21 +73,21 @@
   "name": "III Brands: The Arnolfini, signed",
   "key": "#6E1418",
   "placeholder": {
-   "desktop": "data:image/webp;base64,UklGRqAAAABXRUJQVlA4IJQAAAAQBQCdASogABIAPuFUpU2opCOiN/qoARAcCUAToAQ4kN7hIylOzEKEMZeJd9K9z/KAAP7sQUPUVgbkZSy/b5g0xwMmVmx37LGeRk5rnXBaz7ubMRGq0GhpvqHGOrxGhNkJmpFCfpIy4ClYBWc4CsIrbMxpUbJ8x0RJe6WmDA6btLcaQ52VgrImQRLl8CEqLEr0wAAA",
-   "phone": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQBACdASoMABoAPu1iqU2ppaOiMAgBMB2JZACdMoADTr6R73l94TK3AAD+7n8/FDva+jO4ckuglro4Tp9Y2mNLvYgpyXfyGc3NBr6+PkiFZcmuZ+O9vOdgijQ1JkpmnUv8M+ba7fT6PxcqQBQdQzQbpzAAAA=="
+   "desktop": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADwBACdASogABIAPuVeo02pJSMiMAwBIByJQBYdg9BJhsaYibqRPYQIpryNBvnukQAA/uQjKKxPz925bPJoH4ThpO6KOHRoqbTYZKKIc+dt6GPYqJRsBaNqMgztYNQfsuwEF02dAeP4yMsZUNQsV+ssL3/zdnubjd38XNu437fqd0xMHkAAHcpVa1bEyCJckAv1ZrV6sUvCxAAA",
+   "phone": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAAAQBACdASoMABoAPu1iqk2ppaQiMAgBMB2JZgCdMoADTeuIht6wKttIeAD+7oRoIY9jAmZfQaF5lZnm3UeCIXoLqwKSbTku/kM5uaDX18fuzrrYPhjoJHA1bSUlOovSGulyT+zx1medqK2p1yDreyEukKuRorIhjQAAAA=="
   },
   "thumb": [
    {
     "src": "/assets/scenes/brands/thumb-320.avif",
     "w": 320,
     "h": 180,
-    "bytes": 5311
+    "bytes": 6886
    },
    {
     "src": "/assets/scenes/brands/thumb-320.webp",
     "w": 320,
     "h": 180,
-    "bytes": 5824
+    "bytes": 7438
    }
   ]
  },
@@ -96,21 +96,21 @@
   "name": "VIII Results: The Oculus",
   "key": "#7298A6",
   "placeholder": {
-   "desktop": "data:image/webp;base64,UklGRtQAAABXRUJQVlA4IMgAAADQBQCdASogABIAPu1kqU2ppaOiMAgBMB2JaACdMtUwBtkp3gronSyTMaTBTqU1q8+F06+xI/BgANvH8sRqognGA3MElGZp4KB2pmPk1Ouis/aDamW/tOvnAccSxQ0mllMzguT7w5dEUbbhOmBlh/I9Y8bmQFhHHGeFOScWEmXva34DAjC16dx/QmoOpiTi7SsPInZrM5bDQBxje/3GFB1CS5B8+2ioAAZ+2osmW27ksTBL38+LaAulmJYlB2nzcP6qIUNsEt4gAA==",
-   "phone": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAAAQBACdASoMABoAPu1krU6ppaSiMAgBMB2JagCdMoRwACfJYXP4EnQaoAD6SFSSdds1mcfv6oQtoCo7IEiVaSIbzH9rQt0tMhw57xDIx+Ds5XRb4ZrMl6D3a9+7WovzwWYEwRYx2w2p0VpVtjqvhnx6+wuv8IpJiDe52yvdmuBmVnBkoBQZ2SEPfeh5oIo6AAA="
+   "desktop": "data:image/webp;base64,UklGRt4AAABXRUJQVlA4INIAAACQBQCdASogABIAPu1kqE2ppaOiMAgBMB2JagCdMtVBbwIZTOLRqUhKYiHmJBpJbMVsQ+Zo3AD8rApXS2tRbzkH1xLQZ2gfaIQNFeqDz+AdzTWiZDzwosytMUXDQ42l7PXdNiDTV2g95Lnq+QucoAV2BVwIuJhZztpQ4UvkJqBIO/5jUQUmb2Nym2FDRn3u0ZBuKbad5vxCwV5xh5Y3t9Hje/3GFCoDko8TZz0KWIAHZWoJzxrE5bxJ8w8ZakZZj3h0s+7QXsSveSCzU7/2TUooAAA=",
+   "phone": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABQBACdASoMABoALrV2u12jqampiYC0S2AE6ZQYwa5oCgdU9Nigmvq5oDwAAMouNqQdy/f1upiTCjcTKGqT0tHlqUJKRS++idbXhvKDDXovlGmKUXQuw58iFrIVUZQwPf7eA2paC0cPlfz+pjnrkGALbQoT+4dYLigjun6fr11bNC2QjJy+tcHdvXZxyAAA"
   },
   "thumb": [
    {
     "src": "/assets/scenes/results/thumb-320.avif",
     "w": 320,
     "h": 180,
-    "bytes": 13989
+    "bytes": 15698
    },
    {
     "src": "/assets/scenes/results/thumb-320.webp",
     "w": 320,
     "h": 180,
-    "bytes": 14050
+    "bytes": 15822
    }
   ]
  },
@@ -119,21 +119,21 @@
   "name": "IX Directors: The Ambassadors' chairs",
   "key": "#3F4D1F",
   "placeholder": {
-   "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sqlEppaOiqAqpMB2JZQC06DTkBzqvVS/elO9DQtgJKH0n8TCgAP7s3MHSZHZonCyr5VPUU75nJFkHRYJwFy41tp/PP8s9uz75zQUCcxbbDRNWTFhXpDY5sqwesGYMyVr1IiVgXa5zJWqcVpV4IRsias7Oooo/vNhnva5F2AKOHDSf2AAAAA==",
-   "phone": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JQBbZDSv4JqaCEKtO/ewAAP79sAiZgSHtvIN0cEX/0AiTeCE6//c0D5JMhnnk7yTVZbDEYyi57WA2CJBlT1I3LeFQRegV8YAy95+gXkX5xR3TyT1wAA=="
+   "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sq1EppiOiqAqpMB2JZQC3uDTwM7iFBJUXaDRkZRV5OCbBnFyYAP7c6jXRPZIWGXILjuabe4ZBl17dSJ5FG2wJuOc+MtscoLrLwz9OlS9SUFfOWHzbOX8BSH9Pfn/8fCUza6WteOMDaGlmKwf2zJZgRpVmJxG8ZFCDOdV39zoewxjpaAAAAA==",
+   "phone": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JQBadDSwBazV0MBVbfkAAAP79soqcH+VMh9sE0cv/1Zxekry7j71fd7ggBn8fFGIElCWf1Ww482GYPHg6N37VfHnN7q/RmXdgk1sfC64hFrikLoqEhg096KCWuTslOQYfkwAA"
   },
   "thumb": [
    {
     "src": "/assets/scenes/directors/thumb-320.avif",
     "w": 320,
     "h": 180,
-    "bytes": 7309
+    "bytes": 9030
    },
    {
     "src": "/assets/scenes/directors/thumb-320.webp",
     "w": 320,
     "h": 180,
-    "bytes": 8080
+    "bytes": 10150
    }
   ]
  },
@@ -142,21 +142,21 @@
   "name": "X Apply: The Birth of Venus, live",
   "key": "#DFAFA0",
   "placeholder": {
-   "desktop": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAAAwBQCdASogABIAPu1qrVCppaQiqAqpMB2JQBdgZctUQILfsXWRUupYMiZGWnWy/UL9oAD+78KplY4VSiWUz8opsRbTzqBsf9141aPtMld3ycKHncClPT9tyAsfqKJ48HsZFMCQw7gRlkNTt80hXJRNLx10eHYmMHizkltjKtuaSmeBPOiyoiTXbRaUKK8+lGEzk3YYCfEbysff6356Wro3XKxwvwtwvLl2Mu1YgxAx4GnidXjGcC8m+i1x6D6oKB4AAA==",
-   "phone": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAABQBACdASoMABoAPu1iqk2ppaQiMAgBMB2JYgCdAYt+tW9rUn42WoTPV1MAAP7wF2Wd5F2zv5qmTV6JU9X5zb/Wdd+4RxR8n7oocuzf1hhP2bja4ch9dujtGM6E8uI7de4DLqFW/wTsjX4XnQmJ/PlXRFxBvBxYCeEvpX/80YuvICi/sQ4VKjyrhP+hhZLKmAA="
+   "desktop": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACwBQCdASogABIAPu1qrVCppaQiqAqpMB2JQBOmZgjLc9FrYEDi5W5KxNRSR0TnEkLLz+xELiAA/vN0E+BUVMdLdugbE6/2GWE2tUYWI4SiKX4O984u5rVkKQAdwi+ncR2koQzcGqzDEZF+MgRBPtQIfCoS/kQx0laPzi+NEoFDUYBmkeIAI5kPVlPyjA/laz68rQRt+LFJdLfB/psMtSg5rWrZZVswFKJ5iLKGAINkp+8mK49F/cATtOg235iKJv2qKtEQaPFMLxsAAAA=",
+   "phone": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoMABoAPu1mqk4ppaOiMAgBMB2JZACdAYv2tW68w8eCFi/wAAD+9jJLKMVTyAWQBPUYa8kzj55HGJRahln7TinrSH/Vq8h9BM8Ef6238L46oi2iEuKJhqxpODeR5pbNl+i0SUd+cSN9FKeCQoMHPV+Wl3sseelLxhhsztsGdTnXUytfyjo1OYdw8yAAAA=="
   },
   "thumb": [
    {
     "src": "/assets/scenes/apply/thumb-320.avif",
     "w": 320,
     "h": 180,
-    "bytes": 13405
+    "bytes": 14854
    },
    {
     "src": "/assets/scenes/apply/thumb-320.webp",
     "w": 320,
     "h": 180,
-    "bytes": 13232
+    "bytes": 14414
    }
   ]
  }

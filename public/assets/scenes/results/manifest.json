@@ -7,22 +7,22 @@
     "src": "/assets/scenes/results/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 244987,
-    "q": 62
+    "bytes": 241052,
+    "q": 59
    },
    {
     "src": "/assets/scenes/results/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 449235,
-    "q": 65
+    "bytes": 440066,
+    "q": 62
    },
    {
     "src": "/assets/scenes/results/desktop-3840.avif",
     "w": 3840,
     "h": 2160,
-    "bytes": 761047,
-    "q": 69
+    "bytes": 745396,
+    "q": 67
    }
   ],
   "webp": [
@@ -30,21 +30,21 @@
     "src": "/assets/scenes/results/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 376430,
-    "q": 84
+    "bytes": 377592,
+    "q": 83
    },
    {
     "src": "/assets/scenes/results/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 683926,
+    "bytes": 711524,
     "q": 85
    },
    {
     "src": "/assets/scenes/results/desktop-3840.webp",
     "w": 3840,
     "h": 2160,
-    "bytes": 1117940,
+    "bytes": 1162938,
     "q": 86
    }
   ]
@@ -54,13 +54,13 @@
    "src": "/assets/scenes/results/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 13989
+   "bytes": 15698
   },
   {
    "src": "/assets/scenes/results/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 14050
+   "bytes": 15822
   }
  ],
  "phone": {
@@ -69,22 +69,22 @@
     "src": "/assets/scenes/results/phone-1640.avif",
     "w": 1640,
     "h": 2916,
-    "bytes": 289487,
-    "q": 59
+    "bytes": 300602,
+    "q": 57
    },
    {
     "src": "/assets/scenes/results/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 176295,
-    "q": 57
+    "bytes": 178416,
+    "q": 54
    },
    {
     "src": "/assets/scenes/results/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 99973,
-    "q": 54
+    "bytes": 95864,
+    "q": 50
    }
   ],
   "webp": [
@@ -92,22 +92,22 @@
     "src": "/assets/scenes/results/phone-1640.webp",
     "w": 1640,
     "h": 2916,
-    "bytes": 411292,
-    "q": 79
+    "bytes": 426776,
+    "q": 78
    },
    {
     "src": "/assets/scenes/results/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 264198,
-    "q": 80
+    "bytes": 267696,
+    "q": 78
    },
    {
     "src": "/assets/scenes/results/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 151400,
-    "q": 79
+    "bytes": 148902,
+    "q": 76
    }
   ]
  },
@@ -137,8 +137,8 @@
  },
  "key": "#7298A6",
  "titleBg": {
-  "desktop": "#819798",
-  "phone": "#889091"
+  "desktop": "#82ADBB",
+  "phone": "#8FA5B1"
  },
  "titleInk": {
   "desktop": "light",
@@ -146,17 +146,17 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 3.08,
-   "worst10": 2.73
+   "mean": 2.43,
+   "worst10": 2.18
   },
   "phone": {
-   "mean": 6.13,
-   "worst10": 5.0
+   "mean": 7.79,
+   "worst10": 6.55
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRtQAAABXRUJQVlA4IMgAAADQBQCdASogABIAPu1kqU2ppaOiMAgBMB2JaACdMtUwBtkp3gronSyTMaTBTqU1q8+F06+xI/BgANvH8sRqognGA3MElGZp4KB2pmPk1Ouis/aDamW/tOvnAccSxQ0mllMzguT7w5dEUbbhOmBlh/I9Y8bmQFhHHGeFOScWEmXva34DAjC16dx/QmoOpiTi7SsPInZrM5bDQBxje/3GFB1CS5B8+2ioAAZ+2osmW27ksTBL38+LaAulmJYlB2nzcP6qIUNsEt4gAA==",
-  "phone": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAAAQBACdASoMABoAPu1krU6ppaSiMAgBMB2JagCdMoRwACfJYXP4EnQaoAD6SFSSdds1mcfv6oQtoCo7IEiVaSIbzH9rQt0tMhw57xDIx+Ds5XRb4ZrMl6D3a9+7WovzwWYEwRYx2w2p0VpVtjqvhnx6+wuv8IpJiDe52yvdmuBmVnBkoBQZ2SEPfeh5oIo6AAA="
+  "desktop": "data:image/webp;base64,UklGRt4AAABXRUJQVlA4INIAAACQBQCdASogABIAPu1kqE2ppaOiMAgBMB2JagCdMtVBbwIZTOLRqUhKYiHmJBpJbMVsQ+Zo3AD8rApXS2tRbzkH1xLQZ2gfaIQNFeqDz+AdzTWiZDzwosytMUXDQ42l7PXdNiDTV2g95Lnq+QucoAV2BVwIuJhZztpQ4UvkJqBIO/5jUQUmb2Nym2FDRn3u0ZBuKbad5vxCwV5xh5Y3t9Hje/3GFCoDko8TZz0KWIAHZWoJzxrE5bxJ8w8ZakZZj3h0s+7QXsSveSCzU7/2TUooAAA=",
+  "phone": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABQBACdASoMABoALrV2u12jqampiYC0S2AE6ZQYwa5oCgdU9Nigmvq5oDwAAMouNqQdy/f1upiTCjcTKGqT0tHlqUJKRS++idbXhvKDDXovlGmKUXQuw58iFrIVUZQwPf7eA2paC0cPlfz+pjnrkGALbQoT+4dYLigjun6fr11bNC2QjJy+tcHdvXZxyAAA"
  },
  "credit": {
   "desktop": "Nano Banana Pro 4K e04207f9 > edit 922b10cb, then local retouch and grade (tub, orange branch, oculus sky to mid cerulean, varnish, canvas grain): masters/results/d9.png",
@@ -165,18 +165,18 @@
  "titleScrim": {
   "desktop": {
    "colour": "ink",
-   "worst10Bare": 2.73,
-   "alphaForTitle3": 0.1,
-   "alphaForDek4_5": 0.3,
-   "zoneLumaSd": 12.4,
+   "worst10Bare": 2.18,
+   "alphaForTitle3": 0.2,
+   "alphaForDek4_5": 0.35,
+   "zoneLumaSd": 12.7,
    "advice": "dark halo ~0.3 behind the cream title and dek (the oculus sky is mid cerulean)"
   },
   "phone": {
    "colour": "paper",
-   "worst10Bare": 4.98,
+   "worst10Bare": 6.53,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 17.9
+   "zoneLumaSd": 18.7
   }
  },
  "masterpiece": "after Mantegna, Camera degli Sposi oculus (1465-74)",
