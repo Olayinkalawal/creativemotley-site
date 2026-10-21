@@ -421,3 +421,56 @@ scrim optional (~0.2 at most); Creators focus [0.72, 0.36], titleBox [0.04, 0.04
 under the glaze and the haze); the Brands reveal above the old seam is the master's plank continued (its scratch marks
 softened, not repeated); the Creators lower-left water is plainer than the master's; the Directors phone's right chair
 stands in front of the stand's right half, with a brass bar across the lute.
+
+### Fresh daylight grade (2026-10-21, client-approved)
+The client approved `qa/shots/v3-grade-study.jpg` ("yes please"); the grade is now live on the six chapter paintings,
+desktop and phone. **No credits spent.**
+- **Recipe:** `scripts/grade.py` (craquelure fill, part of the varnish cast removed, a toe-preserving lift, clarity,
+  gentle vibrance, a whisper of cool in neutral shadows). `RECIPE` is the study's: the six graded desktops are
+  bit-identical to the study's graded masters. A stronger, unapproved tuning that had reached the working copy after the
+  approval (cast removal 0.85 / cap 17, crack pre-blur) was reverted, not shipped.
+- **Files:** `python3 scripts/grade.py --live` writes `<chapter>-<desktop|phone>-graded.png` beside the masters in
+  `.art/masters-2026-10-20/` (the originals untouched; `SHA256SUMS` lists both and checks clean), and
+  `scripts/art-masters.json` points the six chapters' `src` at them (a `grade` field says so; the hero entry is
+  untouched). Rebuild: `python3 scripts/art.py --config scripts/art-masters.json --sheet-path
+  qa/shots/v3-masters-sheet.jpg storytellers creators brands results directors apply` without `--depth`.
+- **Phones:** the same recipe and footprints (spatial scale now taken from the long side, so a 3072×5504 portrait gets
+  the 5504-px sizes). Each reads its own varnish cast but never takes more than its desktop's shift: Directors'
+  portrait read its cream floor tiles as varnish (b* 24 against 12) and its own shift turned the green velvet teal.
+  Capped: Storytellers, Brands, Directors, Apply; Creators (bluer sky than its desktop) and Results keep their own.
+
+| Master (shift a*, b*; crack fill) | desktop | phone |
+|---|---|---|
+| Storytellers | −1.8, −6.6; 0.9% | −1.8, −6.6 (own −7.7); 3.3% |
+| Creators | −2.6, −9.7; 1.1% | −0.6, −2.4; 5.6% |
+| Brands | −1.6, −5.9; 0.6% | −1.6, −5.9 (own −7.9); 1.2% |
+| Results | −2.6, −9.7; 3.0% | −2.6, −9.7; 3.3% |
+| Directors | −1.0, −3.8; 1.7% | −1.0, −3.8 (own −9.6); 2.9% |
+| Apply | −0.8, −2.8; 1.7% | −0.8, −2.8 (own −4.9); 4.4% |
+
+- **Encodes** (AVIF KB, before → after; every file within its `art.py` budget): desktop 2048 Storytellers 211 → 245
+  (q72 → q70), Creators 92 → 107, Brands 89 → 115, Results 239 → 235, Directors 145 → 178, Apply 245 → 247; phone 1170
+  169 / 150 / 154 / 174 / 174 / 175. The extra local contrast costs bytes on the darker paintings. Production build,
+  `scripts/perf.mjs`: first load 0.71 / 0.85 MB desktop @1×/@2×, 0.51 MB phone; full read 8.95 MB desktop, 3.84 MB phone;
+  LCP 0.41 / 0.34 s; console errors only the blocked YouTube thumbnails.
+- **Depth:** geometry is unchanged, so all six maps are byte-identical to before. Directors' stays hand-layered:
+  `scripts/depth-directors.py` run on the pre-grade 2048 encode reproduces the live map exactly, but on the graded
+  encode its `green < 4` test reads the deep velvet folds as set and lifts curtain strips to the mid plane; re-run it
+  only on the pre-grade encode (or retune that test) until it is made grade-proof.
+- **Paper-card crops** (`public/assets/thumbs/crops/`): recut by `grade.py --live` (or `--crops`) from
+  `creators-desktop-v1-graded.png` and `brands-desktop-v1-graded.png`, graded with their live desktop's shift.
+  `scripts/crops.py` itself still names the ungraded v1 files: run it through `grade.py --crops`, or point its `SOURCE`
+  at the `-graded` files.
+- **Contrast at rest** (worst 10% of glyph pixels, title / dek, WebGL): 1440 Storytellers 14.7/12.4 → 13.6/10.8,
+  Creators 10.5/7.5 → 12.0/8.7, Brands 13.6/11.9 → 12.2/9.9, Results 6.9/7.2 → 8.6/8.8, Directors 10.0/8.6 → 7.8/6.5,
+  Apply 13.5/14.4 → 15.0/15.8; 1024 lowest 7.9 (Creators' dek) and 7.7 (Directors' dek); 390 lowest Results 8.2/8.8,
+  Creators' dek 10.0. Tier 0 (1440, 390): lowest Directors 1440 7.8 / 6.5, Storytellers 1440 11.1 / 7.9. Results'
+  ledger figures 6.2+, labels 6.8+. Light ink loses a little, dark ink gains; every title is above 7:1 and every dek above 6:1, so no scrim
+  was changed.
+- **By eye** (masters at full size and 1:1, encodes at 1:1): skies lose their crack networks and the yellow, with no
+  banding in the encodes (Apply's and Results' skies, Directors' velvet, Storytellers' vault, Brands' ceiling); blacks
+  keep their depth and turn a cool near-black (Brands' hat and ceiling, the vault). Skin keeps its modelling; Creators'
+  portrait loses some pore texture at 1:1 (invisible at the 1640 encode). Creators' portrait valley, a dense craquelure,
+  turns dappled at master 1:1 and reads as painterly brushwork at encode size.
+- **Sheets:** `qa/shots/v3-masters-sheet.jpg` (encodes, all chapters), `qa/shots/v3-grade-applied.jpg` (the six openers at
+  rest, desktop 1440 and phone 390, before and after).

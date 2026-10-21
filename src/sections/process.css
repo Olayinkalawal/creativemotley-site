@@ -20,8 +20,8 @@
   --proc-mute: color-mix(in srgb, var(--paper-mute) 78%, var(--paper-ink));
 }
 .proc .proc-more { --pp-mute: var(--proc-mute); }
-.proc-run { position: relative; }
-.proc-pin { position: relative; padding-block: calc(var(--nav-h) + clamp(40px, 9vh, 96px)) clamp(64px, 12vh, 140px); }
+.proc-run { position: relative; --proc-intro: 16; }
+.proc-pin { position: relative; padding-bottom: clamp(64px, 12vh, 140px); }
 /* the pin's paper, its grain baked in (one raster; a multiply-blended layer the size of the screen cost the compositor
    a pass every scrolled frame): the same noise at the same strength as the shell's .paper-grain */
 .proc-bg {
@@ -32,14 +32,20 @@
 /* the torn rims: paper + the half-strength grain, overlapping their sheet by 2px (no hairline gap can open at
    fractional positions). On a top rim the grain stops 2px short, so on the overlap rows the sheet's own .paper-grain
    (painted later) is the only grain: no darker seam. The grain tile is phased to continue the sheet's. */
+/* (phase 4: the grain runs to the rim's foot; it is phased to the sheet's tile, so the two overlap rows are the sheet's
+   own pixels: no ungrained seam) */
 .proc-bg::before, .proc .proc-more::before {
-  content: ''; position: absolute; left: 0; right: 0; top: -22px; height: 24px; box-sizing: border-box; padding-bottom: 2px;
-  background: var(--proc-noise) 0 22px / 220px 220px content-box, linear-gradient(var(--paper), var(--paper)) border-box;
+  content: ''; position: absolute; left: 0; right: 0; top: -22px; height: 24px;
+  background: var(--proc-noise) 0 22px / 220px 220px, linear-gradient(var(--paper), var(--paper));
   background-blend-mode: multiply, normal;
   -webkit-mask: var(--tear) top / 1200px 24px repeat-x; mask: var(--tear) top / 1200px 24px repeat-x;
 }
 .proc-head, .proc-desk { position: relative; z-index: 1; }
-.proc-head .head { max-width: 15em; }
+/* the head: the chapter's giant title (ink on the paper) and its dek, at the same place static and pinned, so the switch
+   at init moves nothing on screen (a deep link to #process) */
+.proc-head { padding-top: calc(var(--nav-h) + clamp(14px, 4svh, 44px)); }
+.proc-head .giant { margin-bottom: clamp(14px, 3svh, 30px); }
+.proc-dek { max-width: 15em; }
 
 /* ── static: the seven steps as a calm grid / list ───────────────────────────────────────────────────── */
 .proc-desk { margin-top: clamp(48px, 9vh, 104px); }
@@ -57,11 +63,28 @@
 .proc-step__txt { display: grid; gap: 6px; padding-top: 12px; box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.16); }
 .proc-step__t { font: var(--f-label); letter-spacing: var(--ls-label); }
 .proc-step__s { font: var(--f-lead); letter-spacing: var(--ls-lead); color: var(--proc-mute); text-wrap: pretty; }
+/* the step's long line: read once by screen readers everywhere; shown only in the static phone layout (under its
+   object), where it replaces the dense sheet (the wide static layout shows the long lines in that sheet) */
+.proc-step__l {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  font: var(--f-body); letter-spacing: var(--ls-body); color: var(--proc-mute); text-wrap: pretty;
+}
 .proc-frame { display: none; }
 @media (max-width: 639px) {
-  .proc-list { grid-template-columns: minmax(0, 1fr); gap: 26px; }
-  .proc-step { grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr); align-items: center; gap: 18px; }
+  .proc-list { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+  .proc-step { grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr); align-items: center; gap: 6px 18px; }
   .proc-step__txt { padding-top: 0; box-shadow: none; }
+  /* static phones: object | title and short line, the long line under both; the dense sheet is dropped */
+  .proc:not(.proc-on) .proc-step__txt { display: contents; }
+  .proc:not(.proc-on) .proc-step__obj { grid-column: 1; grid-row: 1 / span 2; }
+  .proc:not(.proc-on) .proc-step__t { grid-column: 2; grid-row: 1; align-self: end; }
+  .proc:not(.proc-on) .proc-step__s { grid-column: 2; grid-row: 2; align-self: start; }
+  .proc:not(.proc-on) .proc-step__l {
+    position: static; width: auto; height: auto; margin: 4px 0 0; overflow: visible; clip: auto; white-space: normal;
+    grid-column: 1 / -1; grid-row: 3; padding-top: 10px; box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.16);
+  }
+  .proc:not(.proc-on) .proc-more { display: none; }
+  .proc:not(.proc-on) .proc-pin { padding-bottom: clamp(72px, 12vh, 120px); }
 }
 
 /* ── the long lines: a sheet laid over the desk, torn off at the bottom onto the Kit's black stage ─────── */
@@ -89,7 +112,25 @@
 .proc-dense { box-shadow: inset 0 1px 0 rgba(20, 16, 10, 0.16); padding-top: 10px; }
 
 /* ── animated: the pinned run ───────────────────────────────────────────────────────────────────────── */
-.proc-on .proc-run { --proc-intro: 16; --proc-dwell: 24; height: calc((var(--proc-intro) + 7 * var(--proc-dwell) + 100) * 1svh); }
+/* the run's length (--proc-run / --proc-run-m, written on the run in the markup: intro + 7 × dwell + the pin's own
+   screen), reserved before any script runs where process.js will pin it (JS, a WebGL tier: not html.t0 /
+   [data-tier='0'], motion allowed: TIER > 0 && !REDUCED), with the long lines' sheet already out of the flow, so the
+   chapter never grows or shrinks at init and a deep link to a chapter below lands where it stays (CLS 0). Until
+   .proc-on the static list is not painted (it would jump onto the desk); a fail-safe shows it if the script never
+   comes. */
+@keyframes proc-failsafe { to { visibility: visible; } }
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not(.t0):not([data-tier='0']) .proc-run { height: var(--proc-run, 284svh); }
+  html.js:not(.t0):not([data-tier='0']) .proc:not(.proc-on) .proc-desk { visibility: hidden; animation: proc-failsafe 0s linear 6s forwards; }
+  html.js:not(.t0):not([data-tier='0']) .proc .proc-more {
+    position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+    overflow: hidden; clip-path: inset(50%); white-space: normal; border: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 719px) {
+  html.js:not(.t0):not([data-tier='0']) .proc-run { height: var(--proc-run-m, 256svh); }
+}
+.proc-on .proc-run { height: var(--proc-run, 284svh); }
 /* the run's end: the desk tears off onto the Kit's stage (the stage splits the two scenes at this edge) */
 .proc-on .proc-run::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: -22px; height: 24px; z-index: 3; pointer-events: none;
@@ -116,7 +157,7 @@
   position: sticky; top: 0; height: 100svh; padding: 0;
   display: grid; grid-template-rows: auto minmax(0, 1fr);
 }
-.proc-on .proc-head { grid-row: 1; z-index: 2; padding-top: calc(var(--nav-h) + clamp(14px, 4svh, 44px)); }
+.proc-on .proc-head { grid-row: 1; z-index: 2; }
 .proc-on .proc-desk { position: absolute; inset: 0; width: auto; margin: 0; padding: 0; overflow: clip; pointer-events: none; }
 .proc-on .proc-list {
   position: absolute; inset: 0; display: block; gap: 0;
@@ -152,9 +193,11 @@
   display: grid; grid-template-rows: minmax(0, 1fr) auto;
   padding-bottom: clamp(18px, 4.6svh, 48px);
 }
+/* (phase 4: the camera ~1.35× closer than phase 2's 28vw × 380 slot, and the row sits down toward the caption: the
+   objects were small on a lot of empty paper) */
 .proc-slot {
-  align-self: center; justify-self: center;
-  width: min(28vw, 400px); height: min(92%, 380px);
+  align-self: end; justify-self: center;
+  width: min(37vw, 540px); height: min(100%, 430px);
 }
 .proc-cap { width: min(100%, 31rem); }
 .proc-cap__items { display: grid; }
@@ -163,6 +206,7 @@
   font: var(--f-head); letter-spacing: var(--ls-head);
 }
 .proc-cap__s { font: var(--f-lead); letter-spacing: var(--ls-lead); text-wrap: pretty; }
+.proc-on .proc-cap__s { display: none; }   /* the pinned caption: title and long line (the short line says it twice) */
 .proc-cap__l { font: var(--f-body); letter-spacing: var(--ls-body); color: var(--proc-mute); max-width: 31em; text-wrap: pretty; }
 
 /* seven short rules; the chapter's one accent slides along them with the track */
@@ -183,7 +227,7 @@
   .proc-slot { width: min(58vw, 460px); height: min(36svh, 400px); }
 }
 @media (max-width: 719px) {
-  .proc-on .proc-run { --proc-dwell: 20; }
+  .proc-on .proc-run { height: var(--proc-run-m, 256svh); }
   .proc-slot { width: min(80vw, 340px); height: min(36svh, 300px); }
 }
 

@@ -13,12 +13,12 @@ Shopify Editions reference frames (/home/user/ref-editions/review/visual-desktop
 RECIPE below is the approved one: it reproduces the study's graded masters bit for bit. Spatial sizes are in pixels of
 the 5504 x 3072 masters and scale with the long side, so the 3072 x 5504 phone portraits take the same footprints.
 
-The masters are read only. Outputs are new files named <stem><suffix>.png; an output never replaces an input or any
-file that does not already carry the suffix, and writing into the masters folder needs a suffix.
+The masters are read only. Outputs are new files named <stem><suffix>.png and never replace an input; in the masters
+folder only <stem>-graded.png files are written (from sources that are not graded files), so a master is never touched.
   python3 scripts/grade.py --live          grade the live set into the masters folder as *-graded.png (below), add their
                                            sums to SHA256SUMS, then recut the paper-card crops from the graded files
   python3 scripts/grade.py --crops         only that last step: scripts/crops.py run on the *-graded.png sources
-  python3 scripts/grade.py OUT_DIR [IMAGE ...] [--scale S] [--suffix -graded]     (studies; no IMAGE: the live set)
+  python3 scripts/grade.py OUT_DIR [IMAGE ...] [--scale S] [--suffix -graded]   (studies; no IMAGE: the six desktops)
 The live set: the six chapters' desktop and phone masters (scripts/art-masters.json points at their -graded files),
 plus creators-desktop-v1.png and brands-desktop-v1.png, which scripts/crops.py cuts the paper cards from; those two
 take the varnish shift measured on their chapter's live desktop master (the same paint, so the cards match it).

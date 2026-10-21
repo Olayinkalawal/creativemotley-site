@@ -11,7 +11,8 @@
      No JS: a <noscript> still of the same frame.
    - The names run on a serif line behind the heads: its position is a pure function of scroll (one period of
      the repeated pair over the stage's pass), so scrolling back is exact. It fades in as it rises from the fold.
-   - The film fades in as the set's painting dissolves into the umber room, so the cut-outs never stand over the set.
+   - The film fades in with the stage's own dissolve from the set's painting into the umber room (the same mix the
+     stage computes), so the cut-outs never stand over the set.
    - Portrait screens: the film is wider than the screen; the scroll pans the camera from one portrait to the other
      while the film rises whole across the screen (no pin there: the first portrait rises in, the second leaves).
    REDUCED: the poster only (the film is never downloaded); no running line (the static layout: the people list
@@ -30,6 +31,7 @@ export function init() {
   if (!sec) return;
   const stage = sec.querySelector('[data-dr-stage]');
   const film = sec.querySelector('[data-dr-film]');
+  const run = sec.querySelector('[data-dr-run]');
   const video = sec.querySelector('[data-dr-video]');
   const track = sec.querySelector('[data-dr-track]');
   const band = sec.querySelector('[data-dr-band]');
@@ -83,6 +85,7 @@ export function init() {
   sec.classList.add('dr-on');
   const units = track.querySelectorAll('.dr-unit');
   let period = 0, tall = false, W = 0, room = 0;
+  const dis = parseFloat(run?.dataset.dissolve) || 0.4;   // the stage's dissolve half-width here (viewports; its default 0.4)
   const measure = () => {
     period = units[1].offsetLeft - units[0].offsetLeft;
     tall = window.innerWidth < window.innerHeight;
@@ -104,17 +107,22 @@ export function init() {
     // below the middle of the screen (the line would sit sliced by the fold, over the set), whole once it is at 0.2
     const o = smooth(clamp((0.5 - (g.top - v.y) / v.vh) / 0.3)).toFixed(3);
     if (o !== lastO) { band.style.opacity = o; lastO = o; }
-    // the film rises a little faster than the page as the stage arrives
+    // the film (and the names line behind it) rides a little ahead of the page as the stage arrives, so the heads are
+    // up in the room as soon as the set has dissolved, never a bare umber screen with the dek alone at its top
+    // (phase 4; it used to lag 12% behind)
     const rise = 1 - smooth(clamp((v.y + v.vh - g.top) / v.vh));
+    const lead = -rise * 0.3 * W;
     // portrait screens: from the first head's centre (22.5% of the frame) to the second's (72.5%), while the film is
     // whole on screen (no pin there: the stage's top from 0.3 screen down to 0.05, the film rising whole)
     let tx = 0;
     if (W > room + 1) tx = clamp(room / 2 - W * (0.225 + 0.5 * smooth(seg((v.y - g.top) / v.vh, -0.3, -0.05))), room - W, 0);
-    const f = `translate3d(${tx.toFixed(1)}px,${(rise * 12).toFixed(2)}%,0)`;
-    if (f !== lastF) { film.style.transform = f; lastF = f; }
-    // the portraits never stand over the set's painting: they fade in only as the set dissolves into the room
-    // (the stage's top from 0.62 to 0.42 of the screen; the dissolve runs around the middle)
-    const fo = smooth(clamp((0.62 - (g.top - v.y) / v.vh) / 0.2)).toFixed(3);
+    const ly = (lead * 0.5625).toFixed(1);   // W is the film's width; its height is 9/16 of it
+    const f = `translate3d(${tx.toFixed(1)}px,${ly}px,0)`;
+    if (f !== lastF) { film.style.transform = f; band.style.transform = `translate3d(0,${ly}px,0)`; lastF = f; }
+    // the portraits never stand over the set's painting: they fade in with the stage's own dissolve at this boundary
+    // (gl/stage.js: mix = 0.5 + d / 2w around the reading line, w = data-dissolve viewports), from 0.6 to 0.9 of it
+    const mix = clamp(0.5 + (0.5 * v.vh - (g.top - v.y)) / (2 * dis * v.vh));
+    const fo = smooth(seg(mix, 0.6, 0.9)).toFixed(3);
     if (fo !== lastFO) { film.style.opacity = fo; lastFO = fo; }
     const sh = +fo > 0.02;
     if (sh !== shown) { shown = sh; sync(); }

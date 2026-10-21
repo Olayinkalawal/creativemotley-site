@@ -52,6 +52,9 @@
   display: flex; flex-wrap: wrap; justify-content: center; gap: 18px;   /* no-JS fallback: a plain row */
 }
 .fan.is-live { display: block; height: calc(var(--fan-w) * 1.12 + 96px); }
+/* the fanned row's height from the first layout (initFan sets .is-live wherever JS runs), so the sheet never grows at
+   init and a deep link below lands where it stays (CLS 0); below 900 px both are the same CSS grid */
+@media (min-width: 900px) { html.js .fan { height: calc(var(--fan-w) * 1.12 + 96px); align-items: flex-start; align-content: flex-start; } }
 .fan__card {
   position: relative; width: var(--fan-w); flex: none;
   padding: 9px 9px 0; border-radius: 16px;

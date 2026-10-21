@@ -37,7 +37,9 @@
      post: { grain, vignette, fringe },  // optional finish overrides
    })
    Scenes ask for a redraw with ctx.stage.invalidate() (a texture or stream frame that landed between scrolls).
-   Boundaries: where the scene changes, the two dissolve through ink-bleed noise around the reading line. A section
+   Boundaries: where the scene changes, the two dissolve through ink-bleed noise around the reading line (data-dissolve:
+   its half-width in viewports, default 0.4; data-dissolve-noise: the noise's scale, default 2.4 per screen height;
+   data-dissolve-rim: the warm rim's strength, default 0.18). A section
    marked data-wipe is a sheet instead (the black teardown stage): while its bottom edge is in the viewport both scenes
    draw, split at that edge (feathered, with a faint warm edge light), so the sheet and its device scroll off the
    next scene the way the DOM above it does. A section marked data-bleed comes in the other way round: while its top
@@ -112,7 +114,7 @@ export class Stage {
     // only regions whose scene is known and that have height: an empty or unbuilt slot must not turn a dissolve into hold-then-cut
     this.segs = [...document.querySelectorAll('[data-scene]')]
       .filter((el) => this.known(el.dataset.scene) && el.getBoundingClientRect().height > 0)
-      .map((el) => ({ el, id: el.dataset.scene, dissolve: parseFloat(el.dataset.dissolve) || 0, wipe: el.hasAttribute('data-wipe'), bleed: el.hasAttribute('data-bleed'), dim: el.hasAttribute('data-bleed') ? parseFloat(el.dataset.bleed) || 0.3 : 1, run: 0 }));
+      .map((el) => ({ el, id: el.dataset.scene, dissolve: parseFloat(el.dataset.dissolve) || 0, noise: parseFloat(el.dataset.dissolveNoise) || 0, rim: el.dataset.dissolveRim !== undefined ? parseFloat(el.dataset.dissolveRim) : -1, wipe: el.hasAttribute('data-wipe'), bleed: el.hasAttribute('data-bleed'), dim: el.hasAttribute('data-bleed') ? parseFloat(el.dataset.bleed) || 0.3 : 1, run: 0 }));
     this.runs = [];
     for (const s of this.segs) {
       const r = this.runs[this.runs.length - 1];
@@ -343,6 +345,9 @@ export class Stage {
     const u = this.post.u, pf = first.post || {};
     u.tA.value = this.rtA.texture; u.tB.value = this.rtB.texture;
     u.mixAB.value = second && wipe < 0 ? mix : 0;
+    // a boundary may ask for finer dissolve noise and a fainter rim (data-dissolve-noise / -rim on its section)
+    u.nScale.value = second && wipe < 0 && B.noise ? B.noise : 2.4;
+    u.rimK.value = second && wipe < 0 && B.rim >= 0 ? B.rim : 0.18;
     u.wipe.value = second ? wipe : -1;
     u.bleed.value = second && bleed ? 1 : 0;
     u.bleedDim.value = second && bleed ? B.dim : 1;

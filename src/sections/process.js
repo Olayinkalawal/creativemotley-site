@@ -80,7 +80,8 @@ export function trackAt(y) {
   state.e = into / vh;
   // the pin's paper clears once the stage has finished dissolving into the objects scene (L.c0, from the marker)
   state.cover = 1 - smooth(seg(state.e, L.c0, L.c0 + 0.24));
-  state.cap = smooth(seg(into, -vh * 0.12, intro * 0.8)) * (1 - smooth(seg(-pinTop, vh * 0.06, vh * 0.4)));
+  // the caption comes up with the first object's lift (phase 4: it waited ~0.3 screen longer, a captionless first screen)
+  state.cap = smooth(seg(into, -vh * 0.3, intro * 0.75)) * (1 - smooth(seg(-pinTop, vh * 0.06, vh * 0.4)));
   state.visible = pinTop < vh && pinTop > -L.pinH;
   state.active = clamp(Math.round(state.pos), 0, N - 1);
   state.bottom = gs.bottom - y;                            // the dense sheet's torn bottom edge on screen
@@ -178,7 +179,7 @@ export function init() {
     const cx = sr.left - pr.left + SW / 2, cy = sr.top - pr.top + SH / 2;
     const phone = vw < 720;
     const tau = phone ? 0.52 : 0.6;
-    const shrink = phone ? 0.64 : 0.66;                    // a resting object's scale against the lifted one
+    const shrink = phone ? 0.64 : 0.6;                     // a resting object's scale against the lifted one
     const D = pr.height * (phone ? 1.9 : 1.75);
     const Zd = D * (1 / shrink - 1);
     // neighbours: on a phone they fade out before the screen edge (see place()); on wide screens the row reads three across
@@ -266,15 +267,17 @@ export function init() {
       if (al !== lastA[k]) { lastA[k] = al; lis[k].style.opacity = al; }
     }
     if (!shown) { sec.classList.add('is-measured'); shown = true; }
-    // the caption: each step's title + line fades through the ease, so text never sits over a passing object
+    // the caption: each step's title + long line crossfades with its neighbour's in the middle of the ease (out over
+    // |dk| 0.38 → 0.62, in over 0.62 → 0.38), so the nearest step always shows at 0.5 or more: no dead zone between
+    // steps. The two part vertically as they cross (±34 px), and the ease spends little time there
     for (let k = 0; k < N; k++) {
       const dk = state.pos - k;
-      const a = state.cap * (1 - smooth(seg(Math.abs(dk), 0.08, 0.4)));
+      const a = state.cap * (1 - smooth(seg(Math.abs(dk), 0.38, 0.62)));
       const s = `${f2(a)}|${f2(clamp(dk, -1, 1))}`;
       if (s !== lastCap[k]) {
         lastCap[k] = s;
         caps[k].style.opacity = f2(a);
-        caps[k].style.transform = `translate3d(0,${f2(-clamp(dk, -1, 1) * 14)}px,0)`;
+        caps[k].style.transform = `translate3d(0,${f2(-clamp(dk, -1, 1) * 34)}px,0)`;
         caps[k].style.visibility = a > 0.002 ? 'visible' : 'hidden';
       }
     }

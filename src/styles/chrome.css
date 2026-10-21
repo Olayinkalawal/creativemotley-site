@@ -5,7 +5,7 @@
   --th-pill-bg: var(--cream); --th-pill-fg: var(--ink); --th-pill-bg-h: var(--gold);
   position: fixed; inset: 0 0 auto 0; z-index: 50; height: var(--nav-h);
   display: flex; align-items: center; gap: clamp(16px, 2.6vw, 40px);
-  padding-inline: clamp(12px, 1.2vw, 18px) clamp(10px, 1vw, 14px);
+  padding-inline: max(clamp(12px, 1.2vw, 18px), env(safe-area-inset-left, 0px)) max(clamp(10px, 1vw, 14px), env(safe-area-inset-right, 0px));
   font: var(--f-body); letter-spacing: var(--ls-body);
   color: var(--cream); transition: color 0.35s var(--ease-out);
 }
@@ -91,10 +91,14 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
   }
   .rail .is-light { color: var(--paper-ink); }
   .rail a { pointer-events: auto; text-decoration: none; }
-  .rail__mark { opacity: 0; transition: opacity 0.4s; }
-  .rail__index { position: absolute; left: 16px; right: 16px; bottom: 74px; opacity: 0; transition: opacity 0.4s; }
+  /* the mark and index belong to the hero until it docks them (ui/hero.js: a FLIP from the hero frame's copies); hidden
+     (and inert) before, so neither a tap nor Tab can land on them while they are invisible */
+  .rail__mark { opacity: 0; visibility: hidden; transition: opacity 0.4s, color 0.3s var(--ease-out); }
+  .rail__index { position: absolute; left: 16px; right: 16px; bottom: 74px; opacity: 0; visibility: hidden; transition: opacity 0.4s; }
   .rail__legal { position: absolute; left: 16px; bottom: 14px; font: var(--f-small); letter-spacing: var(--ls-small); opacity: 0.85; }
-  html.rail-docked .rail__mark, html.rail-docked .rail__index { opacity: 1; }
+  html.rail-docked .rail__mark, html.rail-docked .rail__index { opacity: 1; visibility: visible; }
+  .rail .index a { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 6px; }   /* a real box (focusable) */
+  .rail .index li :is(.nm, .rn) { transition: opacity 0.3s, color 0.3s var(--ease-out); }
 }
 /* the edition mark (a lockup: the head role, its "New" in the serif at the same size). The rail's copy is the same
    lockup scaled down, so the hero's mark lands on it exactly (ui/hero.js flies one onto the other). */
@@ -125,56 +129,92 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
 .rail .index li.is-light.is-plate:not(.is-active) :is(.nm, .rn) { color: rgba(20, 16, 10, 0.8); }
 .rail .index li.is-light.is-plate:not(.is-active) a:hover .nm { color: var(--paper-ink); }
 
-/* ── hero frame: the edition mark, dek and index inside a golden frame ──────────────────────────────── */
-.hero { position: relative; height: 190svh; }   /* one screen at rest, then the film's three beats (gl/lib/filmRanges.js) */
+/* ── hero: the Creation in daylight, the golden frame over it (mark, dek, index), the 3D camera in the gap ─────────
+   Light, as Editions' frame reads over its painting: ink type with a cream halo (the sky behind it is bright), a gilt
+   hairline, no dark veil; a cream frosted panel only behind the dek and the index (they sit over the pines and the
+   garden), never over the camera, which floats between the mark and the dek (ui/hero.js, gl/scenes/hero3d.js). */
+.hero { position: relative; height: 190svh; }   /* one screen at rest, then the camera's move (ui/hero.js) */
 .hero__pin { position: sticky; top: 0; height: 100svh; display: grid; place-items: center; overflow: hidden; }
 .frame {
+  --frame-halo: 0 0 2px rgba(244, 237, 223, 0.8), 0 0 8px rgba(244, 237, 223, 0.85), 0 0 18px rgba(244, 237, 223, 0.6);
   position: relative; width: min(84vw, 360px); aspect-ratio: 0.732;
-  padding: clamp(18px, 1.6vw, 22px); color: var(--cream);
-  box-shadow: inset 0 0 0 1px rgba(244, 237, 223, 0.7);
+  padding: clamp(18px, 1.6vw, 22px); color: var(--paper-ink);
+  box-shadow: inset 0 0 0 1px rgba(169, 127, 66, var(--line-a, 0.85));   /* gilt hairline (the ochre gold) */
   display: flex; flex-direction: column;
 }
+.frame .mark { text-shadow: var(--frame-halo); }
+.frame__foot { position: relative; margin-top: auto; }
+.frame__foot::before { /* the cream panel behind the dek and the index (the pines and the garden under them) */
+  content: ''; position: absolute; inset: -12px -10px -10px; z-index: -1; pointer-events: none; border-radius: 2px;
+  background: rgba(244, 237, 223, 0.62); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  opacity: var(--veil, 1);
+}
+.frame.is-out .frame__foot::before { display: none; }   /* no backdrop blur once the frame has faded out */
 .frame__dek { /* the serif at the label size (an index companion), not a size of its own */
-  margin-top: auto; margin-bottom: 0.9rem;
-  font: 400 var(--t-label) / 1.08 var(--serif); letter-spacing: -0.01em; text-shadow: 0 1px 12px rgba(11, 8, 5, 0.5);
+  margin-bottom: 0.9rem;
+  font: 400 var(--t-label) / 1.08 var(--serif); letter-spacing: -0.01em;
 }
-.frame .index { text-shadow: 0 1px 10px rgba(11, 8, 5, 0.45); }
-.frame .index a { display: flex; width: 100%; justify-content: space-between; pointer-events: auto; text-decoration: none; }
+.frame .index a { display: flex; width: 100%; min-height: 24px; align-items: center; justify-content: space-between; text-decoration: none; }
 .frame .index a:hover .nm { opacity: 0.7; }
-.frame::before { /* veil inside the frame */
-  content: ''; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(180deg, rgba(11, 8, 5, 0.12), rgba(11, 8, 5, 0.2) 45%, rgba(11, 8, 5, 0.5));   /* deeper under the dek and index */
-  backdrop-filter: blur(1.5px); -webkit-backdrop-filter: blur(1.5px); opacity: var(--veil, 1);
-}
-.frame.is-out::before { display: none; }   /* no backdrop blur once the hero frame has faded out */
+.frame.is-docked [data-flip-src] { opacity: 0; }   /* docked: the rail's copies have taken their place (ui/hero.js) */
 @media (max-width: 1023px) {
   .frame { width: min(86vw, 340px); aspect-ratio: auto; height: min(74svh, 560px); }
-  /* phones: no backdrop blur (the first frame is composited before anything else and pays for it); the veil is a
-     touch deeper instead, which holds the frame's type at >= 5:1 against the brightest tenth of the painting */
-  .frame::before { background: linear-gradient(180deg, rgba(11, 8, 5, 0.5), rgba(11, 8, 5, 0.42) 40%, rgba(11, 8, 5, 0.64)); backdrop-filter: none; -webkit-backdrop-filter: none; }
+  /* phones: no backdrop blur (the first frame is composited before anything else and pays for it); a touch more cream */
+  .frame__foot::before { background: rgba(244, 237, 223, 0.7); backdrop-filter: none; -webkit-backdrop-filter: none; }
+}
+/* phones held sideways: the frame is wider than tall, the index in two columns (the camera keeps clear of the mark) */
+@media (orientation: landscape) and (max-height: 520px) {
+  .frame { height: auto; width: min(640px, 76vw); aspect-ratio: auto; }
+  .frame .index { columns: 2; column-gap: 28px; }
 }
 
-/* Da Vinci construction lines */
-.lines { position: absolute; inset: 0; pointer-events: none; }
-.lines svg { width: 100%; height: 100%; }
-.lines path, .lines line, .lines rect, .lines circle { fill: none; stroke: rgba(244, 237, 223, 0.34); stroke-width: 1; vector-effect: non-scaling-stroke; }
-.lines .is-strong { stroke: rgba(244, 237, 223, 0.6); }
+/* Da Vinci construction lines: ink, faint (cream vanished over the cumulus); after the draw-in they settle to 40%, and
+   keep off the two faces and the camera (soft holes in their mask, ui/hero.js --holes) */
+.lines { position: absolute; inset: 0; pointer-events: none; -webkit-mask-image: var(--holes); mask-image: var(--holes); -webkit-mask-composite: source-in; mask-composite: intersect; }
+.lines svg { width: 100%; height: 100%; transition: opacity 1.2s var(--ease-out); }
+.lines.is-rest svg { opacity: 0.4; }
+.lines path, .lines line, .lines rect, .lines circle { fill: none; stroke: rgba(20, 16, 10, 0.16); stroke-width: 1; vector-effect: non-scaling-stroke; }
 
-/* the three beat lines over the hero film */
-.beats { position: absolute; inset: 0; pointer-events: none; }
+/* the three beats: in the sky band above the camera's path. Ink with a cream halo over the painting; cream with an ink
+   halo once the camera's dark body and glass are behind them (.is-dark, ui/hero.js; 0.3 s) */
+.beats { position: absolute; inset: 0; pointer-events: none; --halo: 244, 237, 223; }
+.beats.is-dark { --halo: 11, 8, 5; }
 .beat {
-  position: absolute; left: 50%; top: 50%; width: min(88vw, 15em);
-  transform: translate(-50%, -50%); text-align: left; color: var(--cream);
-  opacity: 0; text-shadow: 0 2px 26px rgba(11, 8, 5, 0.55);
+  position: absolute; left: 50%; top: 18%; width: min(88vw, 15em);
+  transform: translate(-50%, -50%); text-align: left; color: var(--paper-ink); opacity: 0;
+  text-shadow: 0 0 2px rgba(var(--halo), 0.7), 0 1px 18px rgba(var(--halo), 0.6);
+  transition: color 0.3s var(--ease-out);
 }
+.beats.is-dark .beat { color: var(--cream); }
 @media (min-width: 1024px) { .beat { left: calc(var(--rail-w) + (100vw - var(--rail-w)) * 0.5); } }
-.beat::before { /* a soft ink halo (static, fades with the line) so the cream holds over the bright sky of the still */
+.beat::before { /* a soft halo (static, fades with the line) */
   content: ''; position: absolute; inset: -130% -16% -140% -12%; z-index: -1; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(var(--halo), 0.4), rgba(var(--halo), 0.22) 45%, rgba(var(--halo), 0.06) 75%, rgba(var(--halo), 0));
+  background: radial-gradient(closest-side, rgba(var(--halo), 0.5), rgba(var(--halo), 0.3) 45%, rgba(var(--halo), 0.08) 75%, rgba(var(--halo), 0));
 }
-@media (max-width: 1023px) {   /* phones: the portrait still is brightest behind the lines, so the halo is rounder and deeper */
-  .beat::before { inset: -2.2em -12% -2.4em -14%; background: radial-gradient(closest-side, rgba(var(--halo), 0.62), rgba(var(--halo), 0.44) 50%, rgba(var(--halo), 0.14) 80%, rgba(var(--halo), 0)); }
-  .beat { text-shadow: 0 1px 2px rgba(var(--halo), 0.45), 0 2px 26px rgba(var(--halo), 0.6); }
+@media (max-width: 1023px) {
+  .beat { top: 16%; }
+  .beat::before { inset: -2.2em -12% -2.4em -14%; background: radial-gradient(closest-side, rgba(var(--halo), 0.66), rgba(var(--halo), 0.46) 50%, rgba(var(--halo), 0.14) 80%, rgba(var(--halo), 0)); }
+}
+
+/* the camera move with stills (ui/hero.js): fixed over the stage, under the hero's copy; transforms and opacity only.
+   At first paint it holds the camera still in the gap (cam-hero); the live camera takes over from it (0.3 s) */
+.hero__fly { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; contain: strict; }
+.fly__cam { position: absolute; inset: 0; }
+.fly__still, .fly__lens { position: absolute; left: 0; top: 0; max-width: none; transform-origin: 0 0; opacity: 0; will-change: transform, opacity; }
+.hero__fly[data-mode='3d'] .fly__still { transition: opacity 0.3s var(--ease-out); }
+.fly__iris { position: absolute; inset: 0; opacity: 0; }
+.fly__iris i { /* a blade: a half-plane, its inner edge at the aperture */
+  position: absolute; left: 50%; top: 50%; width: 400vmax; height: 200vmax; transform-origin: 0 0; will-change: transform;
+  background: linear-gradient(180deg, #2a2a2d 0, #141417 3px, #0e0e10 4vmax, #08080a 40vmax);
+  box-shadow: inset 0 1px 0 rgba(217, 188, 133, 0.3);
+}
+.fly__story { position: absolute; inset: 0; opacity: 0; background: var(--ink) center / cover no-repeat; }
+@media (min-width: 1024px) and (orientation: landscape) {   /* framed as the CSS plate it hands over to (base.css) */
+  .fly__story {
+    --cw: max(100vw, 177.78vh); --ch: max(56.25vw, 100vh); --z: 1.15; --fx: 0.2; --fy: 0;
+    background-size: calc(var(--cw) * var(--z)) auto;
+    background-position: calc((100vw - var(--cw)) / 2 + var(--cw) * var(--fx) * (1 - var(--z))) calc((100vh - var(--ch)) / 2 + var(--ch) * var(--fy) * (1 - var(--z)));
+  }
 }
 
 /* ── mobile menu sheet: 56px rows with hairline dividers, over the hero's grain and faint golden lines ── */
@@ -205,4 +245,8 @@ html.menu-open .nav::after { opacity: 1; }
 .menu__foot a { text-decoration: none; }
 .menu__social { display: flex; gap: 22px; opacity: 0.8; }
 .menu__social a, .menu__foot > a { display: inline-flex; align-items: center; min-height: 32px; }
+@media (pointer: coarse) {   /* touch: 44 px targets in the shell (the look holds: the rows only grow their padding) */
+  .menu__social a, .menu__foot > a, .nav__brand { min-height: 44px; }
+  .nav__brand { align-items: center; }
+}
 @media (min-width: 1024px) { .menu { display: none; } }

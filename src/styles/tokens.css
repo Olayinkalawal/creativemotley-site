@@ -100,9 +100,10 @@
   --f-small: 600 var(--t-small) / var(--lh-small) var(--sans);
 
   /* layout: the right 4/5 column, as in the Editions grid */
-  --gutter: clamp(16px, 2.2vw, 32px);
+  /* the side insets also clear an iPhone's notch and rounded corners held sideways (viewport-fit=cover, index.html) */
+  --gutter: max(clamp(16px, 2.2vw, 32px), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
   --rail-w: clamp(200px, 20vw, 288px);
-  --col-pad: clamp(16px, 4.8vw, 72px);
+  --col-pad: max(clamp(16px, 4.8vw, 72px), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
   --nav-h: 56px;
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
