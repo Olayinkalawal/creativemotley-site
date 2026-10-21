@@ -105,7 +105,7 @@
   "url": "https://creativemotley.com/",
   "location": "#film .beats .beat.align-l (beat II) p.beat-line",
   "kind": "positioning",
-  "note": "Hero beat over the wide painting, film progress in .05 / peak .11 / out .19. Site markup uses &nbsp; here (between 'the problem.'); source_sentence normalises it to a plain space to match visible_text.txt — keep those two words together on screen."
+  "note": "Hero beat over the wide painting, film progress in .05 / peak .11 / out .19. Site markup uses &nbsp; here (between 'the problem.'); source_sentence normalises it to a plain space to match visible_text.txt — keep those two words together on screen. | On this site (v3, 2026-10-21): one of the hero’s three beats (.hero .beats p.beat, src/partials/hero.html), over the Creation in daylight; the film and its #film .beats are gone."
  },
  {
   "id": "F13",
@@ -114,7 +114,7 @@
   "url": "https://creativemotley.com/",
   "location": "#film .beats .beat.align-c (beat III) p.beat-line",
   "kind": "positioning",
-  "note": "'distribution' is wrapped in <em> — Instrument Serif italic; rest Archivo 600. Beat in .22 / peak .27 / out .325 as the lens fills frame."
+  "note": "'distribution' is wrapped in <em> — Instrument Serif italic; rest Archivo 600. Beat in .22 / peak .27 / out .325 as the lens fills frame. | On this site (v3, 2026-10-21): one of the hero’s three beats (.hero .beats p.beat, src/partials/hero.html), over the Creation in daylight; the film and its #film .beats are gone."
  },
  {
   "id": "F14",
@@ -123,7 +123,7 @@
   "url": "https://creativemotley.com/",
   "location": "#film .beats .beat.align-c (beat IV) p.beat-line",
   "kind": "positioning",
-  "note": "Beat 'through the glass', in .575 / peak .615 / out .665. Site markup uses &nbsp; here (between 'carries them.'); source_sentence normalises it to a plain space to match visible_text.txt — keep those two words together on screen."
+  "note": "Beat 'through the glass', in .575 / peak .615 / out .665. Site markup uses &nbsp; here (between 'carries them.'); source_sentence normalises it to a plain space to match visible_text.txt — keep those two words together on screen. | On this site (v3, 2026-10-21): one of the hero’s three beats (.hero .beats p.beat, src/partials/hero.html), over the Creation in daylight; the film and its #film .beats are gone."
  },
  {
   "id": "F15",
@@ -1224,7 +1224,8 @@
   "url": "https://creativemotley.com/frames/",
   "location": "hero film (brand's own art)",
   "kind": "plate-art",
-  "note": "Third-party mark painted into the brand's own film. Shown only in motion: the remap passes f300–f342 in ~0.45 s. Not a claim; never held."
+  "note": "Third-party mark painted into the brand's own film. Shown only in motion: the remap passes f300–f342 in ~0.45 s. Not a claim; never held.",
+  "retired": "2026-10-21: the hero film and its frames (the SONY lettering among them) are deleted; the hero is the Creation in daylight with the real-time camera (gl/scenes/hero3d.js). Nothing on the page shows this art."
  },
  {
   "id": "F134",

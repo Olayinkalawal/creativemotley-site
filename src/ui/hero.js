@@ -26,9 +26,11 @@ const root = document.documentElement;
 
 /* ── the painting and the camera move (public/assets/scenes/hero/manifest.json: focus, phoneFocus, propCentre, faces) ── */
 export const HERO = {
-  desktop: { aspect: 16 / 9, focus: [0.5, 0.5], gap: [0.491, 0.383], camW: 0.08 },
+  // the camera's centre (uv, y down) on the line between the fingertips (his at 0.432, 0.397; hers at 0.550, 0.355), a
+  // little under the gap's centre so it clears the mark by 12 px or more; its width a share of the painting's
+  desktop: { aspect: 16 / 9, focus: [0.5, 0.5], gap: [0.491, 0.392], camW: 0.088 },
   // phones: the 'reach' crop of the same painting (desktop uv x 0.334 … 0.648), so the camera keeps its size to the hands
-  phone: { aspect: 9 / 16, focus: [0.5, 0.376], gap: [0.5, 0.383], camW: 0.08 / 0.314 },
+  phone: { aspect: 9 / 16, focus: [0.5, 0.376], gap: [0.5, 0.392], camW: 0.088 / 0.314 },
   faces: [[0.319, 0.336, 0.05, 0.08], [0.697, 0.207, 0.05, 0.08]],   // desktop uv centre + radii (the lines avoid them)
   crop: [0.334, 0.314],                                              // the phone crop's left edge and width (desktop uv)
   rest: { az: -35, el: 8 },                                          // the still's pose (and the live camera's at rest)
@@ -39,9 +41,9 @@ export const HERO = {
    w, h (px); upx: world units per image px at the target's depth; t: the target (the body's centre) in image px;
    lens: the front element's centre in image px; bw: the camera's silhouette width at rest in px (cam-hero) */
 export const STILLS = {
-  hero: { src: '/assets/scenes/hero/cam-hero', w: 480, h: 480, upx: 0.004, t: [240, 240], lens: [300, 240], bw: 400 },
-  front: { src: '/assets/scenes/hero/cam-front', w: 480, h: 480, upx: 0.004, t: [240, 240], lens: [255, 250] },
-  lens: { src: '/assets/scenes/hero/cam-lens', w: 1600, h: 1600, upx: 0.0002, t: [800, 800] },
+  hero: { src: '/assets/scenes/hero/cam-hero', w: 520, h: 520, upx: 0.00260127, t: [260, 260], lens: [399, 291.3], bw: 419.9 },
+  front: { src: '/assets/scenes/hero/cam-front', w: 520, h: 520, upx: 0.00260127, t: [260, 260], lens: [294.6, 279] },
+  lens: { src: '/assets/scenes/hero/cam-lens', w: 1600, h: 1600, upx: 0.000286497, t: [800, 800] },
   fov: 14,                                                           // the stills' vertical field (degrees)
 };
 export const PORTRAIT_MQ = window.matchMedia('(orientation: portrait) and (max-width: 1023px)');
@@ -79,8 +81,11 @@ export function heroDist(dRest, m) {
   if (m.push <= 0) return d1;
   return Math.exp(lerp(Math.log(dRest / HERO.grow), Math.log(HERO.near), m.push));
 }
-/* shared with gl/scenes/hero3d.js: which renderer has the hero ('2d' | '3d'), and what the 3D scene publishes */
-export const heroLive = { mode: '2d', s: 0, shift: [0, 0], box: null, dRest: 0, ready: false };
+/* shared with gl/scenes/hero3d.js: which renderer has the hero ('2d' | '3d'), what the 3D scene publishes (box: the
+   camera's silhouette in css px; dRest), and two hooks for the drag-to-turn track: drag { az, el } (degrees, added to the
+   pose) and zoom { k, at: [x, y] } (closer by k about a screen point); the scene reads them every frame (call
+   window.__stage.invalidate() after a change) */
+export const heroLive = { mode: '2d', s: 0, shift: [0, 0], box: null, dRest: 0, ready: false, drag: { az: 0, el: 0 }, zoom: null };
 
 function linesSVG(w, h, fr) {
   // golden-ratio construction around the centred frame: nested golden rectangles, quarter arcs,
@@ -135,9 +140,6 @@ export function initHero() {
     fovR = (slot.art.portrait ? 16 : 14) * Math.PI / 180;
     ppu0 = slot.w / (STILLS.hero.bw * STILLS.hero.upx);
     dRest = (vh / 2) / (ppu0 * Math.tan(fovR / 2));
-    hero.style.setProperty('--cam-x', `${slot.x.toFixed(1)}px`);
-    hero.style.setProperty('--cam-y', `${slot.y.toFixed(1)}px`);
-    hero.style.setProperty('--cam-w', `${slot.w.toFixed(1)}px`);
     // the construction lines keep off the two faces and the camera (soft holes in their mask)
     const holes = [];
     if (!slot.art.portrait) for (const [u, v, ru, rv] of HERO.faces) { const [x, y] = slot.art.toScreen(u, v); holes.push([x, y, ru * slot.art.dw, rv * slot.art.dh]); }
@@ -178,7 +180,26 @@ export function initHero() {
     return im;
   };
   let heroStill = null, frontStill = null, lensLoaded = false, storyLoaded = false;
-  if (camBox) { heroStill = still('hero', 'hero'); camBox.append(heroStill); }
+  /* the first paint's still is drawn into a canvas (not shown as an <img>): a canvas is never a Largest Contentful Paint
+     candidate, so the LCP stays the frame's dek (the copy), not a 40 KB still that lands after it. Its backing store is
+     sized for twice its rest size on this screen (the turn grows it 2.5x while it fades). */
+  if (camBox) {
+    const S = STILLS.hero, cv = document.createElement('canvas');
+    cv.className = 'fly__still fly__still--hero';
+    cv.style.width = `${S.w}px`; cv.style.height = `${S.h}px`;
+    camBox.append(cv);
+    heroStill = cv;
+    const im = still('hero', 'hero');
+    const paint = () => {
+      const k = Math.min(1, (slot.w / S.bw) * Math.min(3, window.devicePixelRatio || 1) * 2);
+      cv.width = Math.round(S.w * k); cv.height = Math.round(S.h * k);
+      const g = cv.getContext('2d');
+      g.imageSmoothingQuality = 'high';
+      g.drawImage(im, 0, 0, cv.width, cv.height);
+    };
+    im.addEventListener('load', () => (im.decode ? im.decode().catch(() => {}) : Promise.resolve()).then(paint));
+    onResize(() => { if (im.complete && im.naturalWidth) paint(); });
+  }
   const lazyFront = () => { if (!frontStill && camBox) { frontStill = still('front', 'front'); frontStill.style.opacity = '0'; camBox.append(frontStill); } };
   const lazyLens = () => {
     if (lensLoaded || !lensEl) return;
@@ -290,7 +311,8 @@ export function initHero() {
     // the beats: ink with a cream halo over the bright painting; cream with an ink halo once the camera's dark body
     // and glass are behind them (a class; their colour eases over 0.3 s)
     const mode = heroLive.mode;
-    const dark = s > T.dark && s < T.end + 0.6;
+    // (reduced motion: no push, the painting stays behind them until Storytellers; past the hero, Storytellers' own theme)
+    const dark = REDUCED ? s > T.end : s > T.dark;
     if (dark !== lastDark) { beatsBox.classList.toggle('is-dark', dark); lastDark = dark; }
     // the chrome reads the hero's theme (core/chapters.js): light over the painting, dark over the dark glass
     const theme = dark ? 'dark' : 'light';
@@ -333,15 +355,18 @@ export function initHero() {
     }
     placeStill(heroStill, STILLS.hero, 'h');
     placeStill(frontStill, STILLS.front, 'f');
-    // the turn: the three-quarter still gives way to the lens-on one; the push: the lens close-up takes over once the
-    // front element nears the screen's size (the 3D's dist ~1.6 … 1.05), the camera stills go
-    const kF = smooth(seg(m.turn, 0.25, 0.75));
-    const kL = two ? smooth(seg(dist, 1.7, 1.08)) : 0;
-    const camOn = mode === '3d' ? (heroLive.ready ? 0 : 1) : 1 - kL;
-    put(heroStill, 'ho', 'opacity', q((1 - kF) * camOn));
+    // each layer fades in over the one before it, which stays opaque underneath until it is covered (no see-through):
+    // the turn: the lens-on still over the three-quarter one; the push: the lens close-up over the camera once the front
+    // element nears the screen's size (the 3D's dist ~1.6 … 1.08); the blades over the close-up
+    const kF = smooth(seg(m.turn, 0.35, 0.65));
+    // (the close-up covers the screen once dist <= dCover: its 1600 px at this field and distance span the longer side)
+    const dCover = (vh / 2) * STILLS.lens.upx * STILLS.lens.w / (Math.tan(fovR / 2) * Math.max(vw, vh));
+    const kL = two ? smooth(seg(dist, dCover * 1.5, dCover)) : 0;
+    const camOn = mode === '3d' ? (heroLive.ready ? 0 : 1) : kL < 1 ? 1 : 0;
+    put(heroStill, 'ho', 'opacity', q((kF < 1 ? 1 : 0) * camOn));
     put(frontStill, 'fo', 'opacity', q(kF * camOn));
     if (lensEl) {
-      put(lensEl, 'lo', 'opacity', q(two ? kL * (1 - m.blades) : 0));
+      put(lensEl, 'lo', 'opacity', q(two && m.iris <= 0 ? kL : 0));
       if (two && kL > 0) {
         const L = STILLS.lens, k = ppu * L.upx;
         put(lensEl, 'lt', 'transform', `translate(${px(cx - L.t[0] * k)}, ${px(cy - L.t[1] * k)}) scale(${k.toFixed(5)})`);

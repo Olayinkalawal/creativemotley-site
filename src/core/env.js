@@ -2,24 +2,32 @@
 const mq = (q) => window.matchMedia(q).matches;
 const Q = new URLSearchParams(location.search);
 export const REDUCED = mq('(prefers-reduced-motion: reduce)');
+// read once at boot: Lenis, the stage, the film and the marquee are set up for it, so a change mid-visit reloads the
+// page (which then sets them up for the new preference)
+try { window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', () => location.reload()); } catch {}
 export const FINE = mq('(pointer: fine)');
 export const isDesktop = () => window.innerWidth >= 1024;
 
+/* The probe opens its context on the stage's own canvas (#stage), with the stage's attributes (gl/stage.js), and keeps
+   it: the stage's renderer then gets that same context back instead of creating a second one (creating a context
+   blocks the main thread: ~0.45 s on a throttled phone profile). Where the stage will not boot (tier 0, reduced
+   motion) the context is let go below. ?tier=0 skips the probe. */
+const STAGE_GL = { antialias: false, alpha: false, depth: true, stencil: false, powerPreference: 'high-performance' };
+let probe = null;
 function glOk() {
   try {
-    const c = document.createElement('canvas');
-    const gl = c.getContext('webgl2') || c.getContext('webgl');
+    const c = document.getElementById('stage') || document.createElement('canvas');
+    const gl = c.getContext('webgl2', STAGE_GL) || c.getContext('webgl', STAGE_GL);
     if (!gl) return null;
+    probe = gl;
     const ext = gl.getExtension('WEBGL_debug_renderer_info');
-    const r = ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : '';
-    gl.getExtension('WEBGL_lose_context')?.loseContext();
-    return r;
+    return ext ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) : '';
   } catch { return null; }
 }
 
 /* Tier 0: no WebGL (still plates). 1: light (phones, software GL, few cores). 2: full.
    (Sections read TIER > 0 as "animated"; the stage's own quality is QUALITY / STILL below.) */
-export const GL_RENDERER = glOk();
+export const GL_RENDERER = Q.get('tier') === '0' ? null : glOk();
 export const SOFTWARE_GL = GL_RENDERER !== null && /swiftshader|llvmpipe|software|basic render/i.test(GL_RENDERER);
 export const TIER = (() => {
   const q = Q.get('tier');
@@ -63,6 +71,12 @@ export const QUALITY = (() => {
   if (SOFTWARE_GL) return 'low';
   return TIER >= 2 ? 'high' : 'medium';
 })();
+
+// no stage here (tier 0, reduced motion, or the probe's context is not WebGL 2, which the stage needs): let it go
+if (probe && (!(TIER > 0 && !REDUCED) || !(typeof WebGL2RenderingContext !== 'undefined' && probe instanceof WebGL2RenderingContext))) {
+  probe.getExtension('WEBGL_lose_context')?.loseContext();
+}
+probe = null;
 
 const root = document.documentElement;
 root.dataset.tier = String(TIER);

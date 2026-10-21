@@ -11,7 +11,14 @@ export const view = { y: window.scrollY, vw: window.innerWidth, vh: window.inner
 const expoOut = (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t));
 const MOUSE = 0.85, PAD = 0.15;
 export const lenis = REDUCED ? null : new Lenis({ duration: MOUSE, easing: expoOut, smoothWheel: true, syncTouch: false, wheelMultiplier: 0.95, autoRaf: false });
-export const input = { trackpad: false };
+/* input.last: when the reader last did anything (scrolled, pointed, touched, typed). Things that move on their own
+   (the stage's ambient scenes, the footer's marquee, Process's drifting object) rest after IDLE_LIFE without input. */
+export const input = { trackpad: false, last: performance.now() };
+export const IDLE_LIFE = 10000;
+export const idleFor = () => performance.now() - input.last;
+for (const t of ['wheel', 'touchstart', 'touchmove', 'pointerdown', 'pointermove', 'keydown', 'scroll']) {
+  window.addEventListener(t, () => { input.last = performance.now(); }, { capture: true, passive: true });
+}
 if (lenis) {
   lenis.on('scroll', (e) => { view.y = e.scroll; view.velocity = e.velocity; });
   // wheel-rate detection, ahead of Lenis's own handler (capture on window): the mean interval over the last few
@@ -70,15 +77,48 @@ window.addEventListener('resize', () => {
 export function onResize(fn) { resizeFns.add(fn); return () => resizeFns.delete(fn); }
 
 let jumpT = 0;
+/* a long jump (a rail or dropdown link to a chapter more than LONG_JUMP screens away) does not glide through every
+   chapter between (1.6 s of them, each loading its art as it passed): the screen dips to the target's ground (ink, or
+   paper for a paper chapter) in 0.2 s, jumps, and the dip lifts over the target */
+const LONG_JUMP = 3;
+let dipEl = null, dipT = 0;
+function dipTo(el, done) {
+  if (!dipEl) {
+    dipEl = document.createElement('div');
+    dipEl.setAttribute('aria-hidden', 'true');
+    dipEl.style.cssText = 'position:fixed;inset:0;z-index:35;pointer-events:none;opacity:0;transition:opacity .2s cubic-bezier(.22,1,.36,1)';
+    document.body.append(dipEl);
+  }
+  const light = el.closest('[data-theme]')?.dataset.theme === 'light' && el.querySelector(':scope > [data-opaque], :scope [data-proc-bg]');
+  dipEl.style.background = light ? 'var(--paper)' : 'var(--ink)';
+  clearTimeout(dipT);
+  dipEl.style.transitionDuration = '.2s'; dipEl.style.opacity = '1';
+  dipT = setTimeout(() => {
+    done();
+    requestAnimationFrame(() => requestAnimationFrame(() => { dipEl.style.transitionDuration = '.45s'; dipEl.style.opacity = '0'; }));
+  }, 210);
+}
+
+/* opts.focus: move focus to the target as the scroll starts (in-page links: the next Tab and a screen reader continue
+   from there); the target needs a tabindex (chapters get -1 in ui/chrome.js) */
 export function scrollTo(target, opts = {}) {
   const el = typeof target === 'string' ? document.querySelector(target) : target;
   if (!el) return;
+  const { focus, ...o } = opts;
+  if (lenis && o.duration === undefined && Math.abs(el.getBoundingClientRect().top) > window.innerHeight * LONG_JUMP) {
+    view.jump = true;
+    clearTimeout(jumpT); jumpT = setTimeout(() => { view.jump = false; }, 900);
+    dipTo(el, () => { jumpTo(el); view.velocity = 0; o.onComplete?.(lenis); });
+    if (focus) el.focus({ preventScroll: true });
+    return;
+  }
   if (lenis) {
-    const duration = opts.duration ?? 1.6;
+    const duration = o.duration ?? 1.6;
     view.jump = true;
     clearTimeout(jumpT); jumpT = setTimeout(() => { view.jump = false; }, duration * 1000 + 400);   // in case it is cut short
-    lenis.scrollTo(el, { offset: 0, duration, easing: (t) => 1 - Math.pow(1 - t, 4), ...opts, onComplete: (l) => { view.jump = false; view.velocity = 0; opts.onComplete?.(l); } });
+    lenis.scrollTo(el, { offset: 0, duration, easing: (t) => 1 - Math.pow(1 - t, 4), ...o, onComplete: (l) => { view.jump = false; view.velocity = 0; o.onComplete?.(l); } });
   } else el.scrollIntoView({ behavior: 'auto' });
+  if (focus) el.focus({ preventScroll: true });
 }
 /* straight to an element, no glide (a deep link landing again after the page below the fold has grown) */
 export function jumpTo(el) {

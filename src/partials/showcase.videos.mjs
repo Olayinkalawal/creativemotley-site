@@ -5,8 +5,10 @@
 // To change a video, edit its id in docs/videos.json, give its display title a fact in docs/facts.json (kind "draft"
 // until the client approves; `url` = https://www.youtube.com/watch?v=<id>), and run this script. A video whose id has
 // no fact is left out (no untraced copy on the page). The ids are unverified until the client confirms them.
-// Card art: public/assets/thumbs/video/<slug>-{640,1280,1920}.{avif,webp} (the creator's poster, composed 16:9) is the
-// fallback; with JS the YouTube thumbnail replaces it once Showcase is near (src/sections/showcase.js).
+// Card art: public/assets/thumbs/video/<slug>-{640,1280,1920}.{avif,webp} (the creator's poster, composed 16:9), always:
+// the page makes no third-party request until a click.
+//   node src/partials/showcase.videos.mjs --verify  also asks YouTube's oEmbed whether each card's id exists (needs the
+//   network; the page itself no longer probes i.ytimg.com).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -41,7 +43,7 @@ const li = (c, i) => {
                 <div class="wv__meta">
                   <p class="wv__by">${esc(c.name)}</p>
                   <h4 class="wv__t" id="wv-t-${n}"${d(c.draft)}>${esc(c.title)}</h4>
-                  <a class="boxlink wv__yt" href="https://www.youtube.com/watch?v=${c.id}" target="_blank" rel="noopener" data-draft="DC62">Watch on YouTube <span class="ar">↗</span></a>
+                  <a class="boxlink wv__yt" href="https://www.youtube.com/watch?v=${c.id}" target="_blank" rel="noopener" aria-describedby="wv-t-${n}" data-draft="DC62">Watch on YouTube <span class="ar" aria-hidden="true">↗</span></a>
                 </div>
               </article>
             </li>`;
@@ -54,7 +56,16 @@ const file = path.join(root, 'src/partials/showcase.html');
 const html = fs.readFileSync(file, 'utf8');
 const re = /<!-- videos:start[\s\S]*?<!-- videos:end -->/;
 if (!re.test(html)) { console.error('markers not found in showcase.html'); process.exit(2); }
-const next = html.replace(re, block).replace(/(data-wv-total>)\d+/, `$1${String(cards.length).padStart(2, '0')}`);
+const next = html.replace(re, block).replace(/(data-wv-total>)\d+/g, `$1${String(cards.length).padStart(2, '0')}`);
+if (process.argv.includes('--verify')) {
+  let bad = 0;
+  for (const c of cards) {
+    const r = await fetch(`https://www.youtube.com/oembed?format=json&url=${encodeURIComponent('https://www.youtube.com/watch?v=' + c.id)}`).catch((e) => ({ ok: false, status: e.message }));
+    console.log(`${r.ok ? 'ok ' : 'BAD'} ${c.id} ${c.name}${r.ok ? '' : ` (${r.status})`}`);
+    if (!r.ok) bad++;
+  }
+  if (bad) process.exitCode = 1;
+}
 if (process.argv.includes('--check')) {
   if (next !== html) { console.error('showcase.html video cards are out of date: run node src/partials/showcase.videos.mjs'); process.exit(1); }
   console.log(`ok: ${cards.length} cards`);

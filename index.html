@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -10,15 +10,24 @@
   <meta property="og:title" content="Creative Motley — The New Pantheon">
   <meta property="og:description" content="Africa’s creators, run like media companies. 100M+ monthly views.">
   <meta property="og:image" content="https://creativemotley.com/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Two figures reach toward a camera in a Renaissance-style painting">
+  <meta property="og:site_name" content="Creative Motley">
+  <meta property="og:locale" content="en_GB">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://creativemotley.com/og.jpg">
-  <meta name="theme-color" content="#0B0805">
+  <meta name="twitter:image:alt" content="Two figures reach toward a camera in a Renaissance-style painting">
+  <meta name="theme-color" content="#A0C6E2">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="canonical" href="https://creativemotley.com/">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Creative Motley","url":"https://creativemotley.com/","description":"Creative Motley is Africa’s creator service provider — helping creators, filmmakers and media brands turn views into long-term revenue.","sameAs":["https://www.instagram.com/creativemotley","https://www.youtube.com/@creativemotley","https://www.tiktok.com/@creativemotley"]}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Creative Motley","legalName":"Creative Motley Ltd","email":"info@creativemotley.com","url":"https://creativemotley.com/","description":"Creative Motley is Africa’s creator service provider — helping creators, filmmakers and media brands turn views into long-term revenue.","sameAs":["https://www.instagram.com/creativemotley","https://www.youtube.com/@creativemotley","https://www.tiktok.com/@creativemotley"]}</script>
   <link rel="preload" href="/fonts/archivo-latin-var.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="/assets/plates/hero.webp" as="image" fetchpriority="high" media="not all and (orientation: portrait) and (max-width: 1023px)">
+  <!-- the first paint: the hero painting (AVIF where it decodes; the <picture> below falls back to WebP) -->
+  <link rel="preload" href="/assets/plates/hero.avif" as="image" type="image/avif" fetchpriority="high" media="not all and (orientation: portrait) and (max-width: 1023px)">
   <link rel="preload" as="image" type="image/avif" imagesrcset="/assets/scenes/hero/phone-828.avif 828w, /assets/scenes/hero/phone-1170.avif 1170w" imagesizes="100vw" fetchpriority="high" media="(orientation: portrait) and (max-width: 1023px)">
   <!-- html.js; html.cv (no #fragment to land on): the first frame styles and lays out only the hero (base.css), the
        entry module lifts it (core/firstframe.js); html.no-drafts (?drafts=0): drafted copy hidden, to compare -->
@@ -26,7 +35,7 @@
   <link rel="stylesheet" href="/src/styles/index.css">
 </head>
 <body>
-  <a class="skip" href="#storytellers">Skip to content</a>
+  <a class="skip" href="#main">Skip to content</a>
 
   <!-- top bar -->
   <header class="nav" data-nav>
@@ -41,13 +50,13 @@
     </nav>
     <div class="nav__right">
       <a class="nav__mail" href="mailto:info@creativemotley.com">info@creativemotley.com</a>
-      <a class="pill pill--solid" href="mailto:info@creativemotley.com?subject=Application%20—%20Creative%20Motley">Apply to join</a>
+      <a class="pill pill--solid" href="mailto:info@creativemotley.com?subject=Application%20%E2%80%94%20Creative%20Motley">Apply to join</a>
       <button class="nav__menu" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle><span></span><b class="sr-only">Menu</b></button>
     </div>
   </header>
 
   <!-- side rail (desktop): edition mark, chapter index, legal -->
-  <aside class="rail" aria-label="Chapters">
+  <aside class="rail" aria-label="Edition">
     <a class="rail__mark mark" href="#top" data-scroll-to="#top" data-flip="mark">The <em>New</em><br>Pantheon<span class="mark__ed">Edition I</span></a>
     <ol class="rail__index index" data-flip="index" data-index></ol>
     <div class="rail__legal"><p>© 2026 Creative Motley Ltd</p></div>
@@ -69,11 +78,13 @@
 
   <!-- the persistent stage: still plates (first paint + no-WebGL fallback) under one WebGL canvas -->
   <div class="plates" aria-hidden="true">
-    <!-- portrait screens (the phone still path) paint the hero's portrait recomposition, the same file the stage then
-         draws (public/assets/scenes/hero), so phones never fetch the landscape plate and nothing swaps at boot -->
+    <!-- portrait screens (the phone still path) paint the hero's portrait crop (the 'reach': the hands and the gap), the
+         same file the stage then draws (public/assets/scenes/hero), so phones never fetch the landscape plate and nothing
+         swaps at boot; wide screens the 1920 plate, AVIF where it decodes (the stage draws the same file) -->
     <div class="plate is-on" data-plate="hero"><picture>
       <source media="(orientation: portrait) and (max-width: 1023px)" type="image/avif" srcset="/assets/scenes/hero/phone-828.avif 828w, /assets/scenes/hero/phone-1170.avif 1170w" sizes="100vw">
       <source media="(orientation: portrait) and (max-width: 1023px)" type="image/webp" srcset="/assets/scenes/hero/phone-828.webp 828w, /assets/scenes/hero/phone-1170.webp 1170w" sizes="100vw">
+      <source type="image/avif" srcset="/assets/plates/hero.avif">
       <img src="/assets/plates/hero.webp" alt="" fetchpriority="high" width="1920" height="1080"></picture></div>
     <!-- the rest load when first shown (src/main.js): data-bg, or data-bg-phone on portrait screens -->
     <div class="plate" data-plate="storytellers" data-bg="/assets/scenes/storytellers/desktop-2048.webp" data-bg-phone="/assets/scenes/storytellers/phone-828.webp"></div>
@@ -88,7 +99,7 @@
   </div>
   <canvas id="stage" aria-hidden="true"></canvas>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <!-- @include partials/hero.html -->
     <!-- @include partials/storytellers.html -->
     <!-- @include partials/creators.html -->

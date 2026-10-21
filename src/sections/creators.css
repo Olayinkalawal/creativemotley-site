@@ -10,6 +10,12 @@
 .cr__cloud { height: clamp(220px, 30vh, 260px); --cloud-drift: 0.16; }
 .cr__cloud .cloud__node:not(.cloud__card) { font: var(--f-lead); letter-spacing: var(--ls-lead); }
 .cr__cloud .cloud__card { padding: 16px 18px 13px; }
+/* every command stays whole inside the cloud's box (phase 4: at 1024 the right-hand commands were cut, "/retention-chec"):
+   the right-hand ones hang from the box's right edge, the echoes from its left */
+.cr__cloud .cloud__list > .cloud__node:not(.cloud__card) { left: auto; right: 0; translate: 0 -50%; max-width: 100%; }
+.cr__cloud .cloud__echoes .cloud__node { left: 0; translate: 0 -50%; max-width: 100%; }
+/* the echoes repeat the two commands: depth on wide screens only (below 1280 and on phones they read as doubled text) */
+@media (max-width: 1279px) { .cr__cloud .cloud__echoes { display: none; } }
 .cr__cloud .cloud__cmd { padding-bottom: 12px; }
 .cr__block--owners .pf__body { margin-bottom: 0.4rem; }
 .cr__block--owners .svc__row--solo { margin-bottom: 0.9rem; }
@@ -63,3 +69,10 @@
    rail), from the opener's top down to the parapet's top at its rest (about 0.75 of the screen at 16:10 and 4:3, by the
    keys' rest framing), so rail items over the sky and the lake turn ink and those over the dark parapet stay cream */
 .cr-light { position: absolute; top: 0; left: calc(100% - 100vw); right: 0; height: 74svh; pointer-events: none; }
+
+/* ?drafts=0 (html.no-drafts): without "What we run" the cloud and Media Owners share the full width (it left a hole of
+   ~570 × 600 px under the fan) */
+@media (min-width: 1024px) {
+  html.no-drafts .cr__owners { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; column-gap: clamp(36px, 4.4vw, 80px); align-items: start; }
+  html.no-drafts .cr__cloud { margin-top: 0; }
+}

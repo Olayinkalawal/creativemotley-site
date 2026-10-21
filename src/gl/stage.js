@@ -17,7 +17,8 @@
        its first draw;
      - dirty-checked render loop: it draws only while something changes (scroll, pointer, a scene that asks with
        stage.invalidate(), a stream frame landing) and stops ~300 ms after the last change. Scenes that are alive on
-       their own (ambient(ctx) → true: dust, a playing video) keep drawing at 30 fps while idle;
+       their own (ambient(ctx) → true: dust, a playing video) keep drawing at 30 fps while idle, for up to IDLE_LIFE
+       (10 s, core/scroll.js) after the reader's last input;
      - one canvas size per quality level, from a pixel budget (longest side 1280 / 1920 / 2880 px, DPR ≤ 2; phones
        on the still path 1280 / 1920 / 2560, DPR ≤ 3; a 960-px floor for software rasterisers). A frame-rate average
        steps the level down below 45 fps; "low" (and the floor) cap the stage at 30 fps. A level change is applied
@@ -49,7 +50,7 @@
    scene above dims as the edge climbs, to data-bleed's value (default 0.3), so it recedes beside the rising title. */
 import { WebGLRenderer, WebGLRenderTarget, Vector2, LinearSRGBColorSpace, UnsignedByteType } from 'three';
 import { createPost } from './lib/post.js';
-import { onFrame, onResize, clamp } from '../core/scroll.js';
+import { onFrame, onResize, clamp, idleFor, IDLE_LIFE } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
 import { TIER, FINE, REDUCED, STILL, QUALITY } from '../core/env.js';
 
@@ -75,7 +76,6 @@ export class Stage {
     this.scenes = new Map();
     this.segs = []; this.runs = []; this.opaque = [];
     this.post = createPost();
-    this.renderer.compile(this.post.scene, this.post.camera);   // the finishing pass, once, before the first frame
     this.rtA = this.makeRT(); this.rtB = this.makeRT();
     this.pointer = new Vector2(); this.pTarget = new Vector2();
     this.drawn = new Set();
@@ -245,7 +245,8 @@ export class Stage {
     const g = geo(seg.el);
     return { el: seg.el, top: g.top, height: g.height, p: clamp((y - g.top) / Math.max(1, g.height - vh)), pe: clamp((y + vh - g.top) / Math.max(1, g.height + vh)) };
   }
-  start() { onFrame((v) => this.frame(v)); }
+  // the finishing pass compiles at idle, a task of its own (it used to share the boot task with the renderer's creation)
+  start() { idle(600).then(() => this.renderer.compile(this.post.scene, this.post.camera)); onFrame((v) => this.frame(v)); }
   frame(v) {
     const now = performance.now();
     const { y, vh } = v;
@@ -264,7 +265,9 @@ export class Stage {
     for (let j = 0; j < this.segs.length; j++) if (geo(this.segs[j].el).top <= c) ai = j;
     const run = this.segs[ai].run;
     if (run !== this.activeRun) { this.activeRun = run; this.runSince = now; }
-    if (this.mountedRun !== run && (now - this.runSince > 150 || this.mountedRun === -2)) { this.mountedRun = run; this.mount(now); this.nextGC = now + 1000; }
+    // (not while a programmatic scroll is under way, view.jump: a chapter link's glide only passes the runs between)
+    if (v.jump) { /* mount where it lands */ }
+    else if (this.mountedRun !== run && (now - this.runSince > 150 || this.mountedRun === -2)) { this.mountedRun = run; this.mount(now); this.nextGC = now + 1000; }
     else if (now > this.nextGC) { this.mount(now); this.nextGC = now + 1000; }
 
     // covered by paper? then nothing to draw (a good moment for a quality change)
@@ -320,7 +323,9 @@ export class Stage {
 
     // dirty check: draw while something changes, then stop; ambient scenes keep drawing at ≤ 30 fps
     const active = now - this.lastActive < IDLE_MS;
-    const ambient = list.some((s) => s.ambient?.(ctx));
+    // (ambient life rests after IDLE_LIFE without input: dust and drifting objects no longer keep a software or
+    // battery-powered GPU busy on a page nobody is touching)
+    const ambient = idleFor() < IDLE_LIFE && list.some((s) => s.ambient?.(ctx));
     // the last frame drawn while scrolling carried the velocity fringe: draw once more without it before stopping (on a
     // slow renderer the idle cut-off can come before the scroll velocity has died away)
     const settle = this.lastFringe > 0.0005;

@@ -173,8 +173,12 @@ export function initCloud(root) {
   const measure = () => {
     vh = window.innerHeight;
     amp = parseFloat(getComputedStyle(root).getPropertyValue('--cloud-drift')) || 0.5;   // scroll travel (× vh)
-    // offsetLeft/Top ignore transforms; with translate:-50% -50% they are the node's centre
-    for (const it of items) { it.bx = it.el.offsetLeft; it.by = it.el.offsetTop; }
+    // offsetLeft/Top ignore transforms; with translate:-50% -50% they are the node's centre (a node that hangs from an
+    // edge instead, translate 0 -50%, has its centre half its width in)
+    for (const it of items) {
+      const edge = !/^-50%/.test(getComputedStyle(it.el).translate || '');
+      it.bx = it.el.offsetLeft + (edge ? it.el.offsetWidth / 2 : 0); it.by = it.el.offsetTop;
+    }
     const W = root.clientWidth, H = root.clientHeight;
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     // each node joins its two nearest neighbours (a sparse constellation)

@@ -43,14 +43,32 @@ function themeAt(y, x) {
   return 'dark';
 }
 
-/* fixed chrome pieces that flip colour on their own (rail items, legal): each gets .is-light when
-   the region under its centre is light, so a torn edge passing under the rail splits it cleanly */
+/* fixed chrome pieces that flip colour on their own (rail items, legal): each samples the region under its own box,
+   at its top and its bottom line (phase 4: one probe at its centre).
+   - the mark (a three-line lockup) flips only when both lines agree; while a boundary runs through it, it keeps its
+     colour and takes .is-plate, whose halo holds on either ground (half the lockup vanished at sheet edges);
+   - every other piece turns light as soon as any of its box is over a light region (ink with the cream halo over the
+     Results oculus, the Venus sky), with the halo while it straddles the boundary. */
 let probes = [];
 export function registerProbes(els) {
-  probes = [...els].map((el) => ({ el, x: 0, y: 0, light: null, plate: null }));
+  probes = [...els].map((el) => ({ el, mark: el.classList.contains('rail__mark'), x: 0, y: 0, y0: 0, y1: 0, light: null, plate: null }));
   measureProbes();
 }
-function measureProbes() { for (const p of probes) { const r = p.el.getBoundingClientRect(); p.x = r.left + r.width / 2; p.y = r.top + r.height / 2; } }
+let waiting = false;
+function measureProbes() {
+  // a probe caught mid-animation (the hero's FLIP flies the mark and index rows to the rail: transforms) would keep
+  // the animated position until the next layout pass: measure again once its animations have finished
+  const anims = !waiting && document.getAnimations ? document.getAnimations().filter((a) => {
+    const t = a.effect?.target;
+    return t instanceof Element && probes.some((p) => p.el === t || t.contains(p.el));
+  }) : [];
+  if (anims.length) { waiting = true; Promise.allSettled(anims.map((a) => a.finished)).then(() => { waiting = false; measureProbes(); }); }
+  for (const p of probes) {
+    const r = p.el.getBoundingClientRect();
+    p.x = r.left + r.width / 2; p.y = r.top + r.height / 2;
+    p.y0 = r.top + Math.min(4, r.height * 0.2); p.y1 = r.bottom - Math.min(4, r.height * 0.2);
+  }
+}
 
 export function initChapters() {
   onLayout(measureProbes);
@@ -66,9 +84,11 @@ export function initChapters() {
     if (nav !== lastNav) { root.classList.toggle('nav-light', nav === 'light'); lastNav = nav; }
     if (rail !== lastRail) { root.classList.toggle('rail-light', rail === 'light'); lastRail = rail; }
     for (const p of probes) {
-      const light = themeAt(v.y + p.y, p.x) === 'light';
+      const l0 = themeAt(v.y + p.y0, p.x) === 'light', l1 = themeAt(v.y + p.y1, p.x) === 'light';
+      const split = l0 !== l1;
+      const light = p.mark ? (split ? p.light ?? l0 : l0) : l0 || l1;
       if (light !== p.light) { p.el.classList.toggle('is-light', light); p.light = light; }
-      const plate = light ? paintedAt(v.y + p.y) && !opaqueAt(v.y + p.y) : paintedAt(v.y + p.y);
+      const plate = split || (light ? paintedAt(v.y + p.y) && !opaqueAt(v.y + p.y) : paintedAt(v.y + p.y));
       if (plate !== p.plate) { p.el.classList.toggle('is-plate', plate); p.plate = plate; }
     }
   });

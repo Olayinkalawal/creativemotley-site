@@ -101,7 +101,7 @@ export default function register(stage) {
 
   let map = null, dep = null, mapHi = false, gen = 0, ctxRef = null;
   let cam = null, camState = 'none', camGen = 0, cal = null, model = null, rtStory = null;
-  let s = 0, m = heroMove(0), lastView = '', lastOff = '', handed = false, dirtyCal = true;
+  let s = 0, m = heroMove(0), lastView = '', lastOff = '', handed = false, dirtyCal = true, pose = null;
   // the idle turn: its phase advances at `speed` (0 … 1), which eases toward 1 while the reader is about and to 0 after
   // 12 s without input (the camera holds its angle, supersamples, and the stage stops drawing)
   let phase = 0, speed = 0, lastInput = performance.now();
@@ -232,6 +232,7 @@ export default function register(stage) {
       } else srcs = [...((await avifOK()) ? ['/assets/plates/hero.avif'] : []), '/assets/plates/hero.webp'];
       const [t, d] = await Promise.all([loadFirst(srcs), portrait ? null : loadTexture('/assets/plates/hero-depth.webp').catch(() => null)]);
       if (g !== gen) { t?.dispose(); d?.dispose(); return; }
+      if (map && map !== t) map.dispose(); if (dep && dep !== d) dep.dispose();   // (a reload after the screen turned)
       map = t; dep = d;
       const u = mat.uniforms;
       u.map.value = map; u.imgSize.value.set(map.image.width, map.image.height);
@@ -285,7 +286,7 @@ export default function register(stage) {
       if (speed < 0.002 && !about) speed = 0;
       phase += dt * speed;
       const idleAz = 20 * Math.sin(phase * 2 * Math.PI / 18);
-      const drag = heroLive.drag || { az: 0, el: 0 };   // the DRAG track's offset (drag to turn), added on top
+      const drag = heroLive.drag || { az: 0, el: 0 };   // the DRAG track's offset (drag to turn: degrees), added on top
       const f = QA.force || {};
       let az = lerp(HERO.rest.az + idleAz, 0, m.turn), el = lerp(lerp(HERO.rest.el, 2, m.turn), 0, m.toLens);
       if (f.az != null) az = f.az; if (f.el != null) el = f.el;
@@ -295,15 +296,22 @@ export default function register(stage) {
       const ptr = ctx.reduced || f.s != null || f.dist != null ? 0 : 1 - m.turn;
       cam.setPointer(Math.round(ctx.pointer.x * 50) / 50 * ptr, Math.round(ctx.pointer.y * 50) / 50 * ptr, 1);
       if (off.join() !== lastOff) { cam.setOffset(+off[0], +off[1]); lastOff = off.join(); }
-      const dist = f.dist ?? heroDist(cal.dRest, m);
+      let dist = f.dist ?? heroDist(cal.dRest, m);
       const tl = f.lens != null ? f.lens : m.toLens;
       const T = [0, 1, 2].map((i) => lerp(model.body[i], model.lens[i], tl));
-      const shift = f.dist != null ? [0, 0] : [lerp(cal.shift0[0], 0, m.turn), lerp(cal.shift0[1], 0, m.turn)];
-      const v = { target: T, dist, shift, near: Math.max(0.02, dist - 1.5) };
-      const key = [...T, dist, ...shift].map((x) => x.toFixed(5)).join();
+      let shift = f.dist != null ? [0, 0] : [lerp(cal.shift0[0], 0, m.turn), lerp(cal.shift0[1], 0, m.turn)];
+      // the DRAG track's zoom (heroLive.zoom = { k, at: [x, y] css px }): closer by k, about that screen point
+      const z = heroLive.zoom;
+      if (z && z.k > 1.0001) {
+        const P = [z.at[0] / ctx.vw * 2 - 1, 1 - z.at[1] / ctx.vh * 2];
+        dist /= z.k; shift = [P[0] + (shift[0] - P[0]) * z.k, P[1] + (shift[1] - P[1]) * z.k];
+      }
+      const v = { target: T, dist, shift, near: Math.max(0.02, dist - 1.5), ...(f.fov ? { fov: f.fov } : {}) };
+      const key = [...T, dist, ...shift, f.fov || 0].map((x) => x.toFixed(5)).join();
       if (key !== lastView) { cam.setView(v); lastView = key; }
+      pose = { az, el, fov: f.fov || K.fov, aspect: cal.aspect, T, dist, shift, vw: ctx.vw, vh: ctx.vh };
       heroLive.box = (() => {   // the silhouette's box (css px), for the DOM (the lines' hole, the beats)
-        const b = boxNDC(az, el, K.fov, cal.aspect, T, dist, shift);
+        const b = boxNDC(az, el, pose.fov, cal.aspect, T, dist, shift);
         return { x0: (b.x0 + 1) / 2 * ctx.vw, x1: (b.x1 + 1) / 2 * ctx.vw, y0: (1 - b.y1) / 2 * ctx.vh, y1: (1 - b.y0) / 2 * ctx.vh };
       })();
     },
@@ -338,6 +346,8 @@ export default function register(stage) {
     },
   };
   stage.add(sc);
+  // a screen turned between portrait and landscape: the other painting (the reach crop or the wide one)
+  PORTRAIT_MQ.addEventListener?.('change', () => { if (map && ctxRef) sc.load(ctxRef).then(() => { dirtyCal = true; stage.invalidate(); }); });
 
   window.__hero3d = {
     get cam() { return cam; }, get state() { return camState; }, get cal() { return cal; }, get model() { return model; }, get s() { return s; },
@@ -345,6 +355,17 @@ export default function register(stage) {
     set bg(v) { QA.bg = v; if (v) { post.grain = 0; post.vignette = 0; } stage.invalidate(); }, get bg() { return QA.bg; },
     start() { if (camState === 'none') startCam(); },
     box() { return heroLive.box; },
+    /* a world point → css px in the current view (scripts/hero-cam-stills.mjs: where the front element lands) */
+    project(P) {
+      if (!pose) return null;
+      const a = pose.az * DEG, b = pose.el * DEG, sa = Math.sin(a), ca = Math.cos(a), sb = Math.sin(b), cb = Math.cos(b);
+      const d = [sa * cb, sb, ca * cb], r = [ca, 0, -sa], u = [-sb * sa, cb, -sb * ca];
+      const q = [P[0] - pose.T[0], P[1] - pose.T[1], P[2] - pose.T[2]], tv = Math.tan(pose.fov * DEG / 2);
+      const z = pose.dist - (q[0] * d[0] + q[1] * d[1] + q[2] * d[2]);
+      const x = (q[0] * r[0] + q[2] * r[2]) / (z * tv * pose.aspect) + pose.shift[0], y = (q[0] * u[0] + q[1] * u[1] + q[2] * u[2]) / (z * tv) + pose.shift[1];
+      return [(x + 1) / 2 * pose.vw, (1 - y) / 2 * pose.vh];
+    },
+    get pose() { return pose; },
     post,
   };
 }

@@ -7,9 +7,10 @@
      encodes, scripts/art.py; the six chapter paintings are the 2026-10-20 masters, scripts/art-masters.json): AVIF
      where it decodes, else WebP, at the smallest width that covers the canvas at the pixel budget (2048 on a 1x
      desktop, 2880 at 2x). Depth: the plate's own map (public/assets/scenes/<chapter>/depth.webp: MiDaS via
-     scripts/depth.py; Directors' is hand-layered, scripts/depth-directors.py), or the old plate's map for the hero
-     (a 4K upscale of the 1920 px plate, the same composition).
-     In use: plate:storytellers (I, its opener: the film's last frame dissolves into it), plate:creators (II),
+     scripts/depth.py; Directors' is hand-layered, scripts/depth-directors.py); the hero's (public/assets/plates/hero-depth.webp)
+     is its MiDaS map too (the hero is drawn by gl/scenes/hero3d.js; plate:hero is registered but unused).
+     In use: plate:storytellers (I, its opener: the hero's iris opens onto it, gl/scenes/hero3d.js draws this very scene
+     inside the aperture), plate:creators (II),
      plate:brands (III), plate:results (VIII), plate:directors (IX, its opener), plate:apply (X).
    Every plate is a still now: the Results TV (a video texture over the old painting) went with that painting.
    (Method is the real-time 3D camera now, td:camera3d in camera3d.js: no painted plate.) */

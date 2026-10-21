@@ -105,7 +105,7 @@ html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none
 .sc-slot { height: var(--sc-h); aspect-ratio: 4 / 5; }
 /* the caption sits under the centred poster like a museum label, as wide as the slot */
 .sc-cap { width: min(100%, calc(var(--sc-h) * 0.8)); color: var(--cream); transition: opacity 0.35s var(--ease-out); }
-.sc-on.is-modal .sc-cap { opacity: 0; }   /* it would show through the modal's scrim */
+.sc-on.is-modal .sc-cap { opacity: 0 !important; }   /* it would show through the modal's scrim (!important: showcase.js writes its opacity inline) */
 .sc-cap__rule { position: relative; height: 1px; background: rgba(244, 237, 223, 0.24); margin-bottom: 14px; }
 .sc-cap__ticks { position: absolute; inset: 0; display: flex; justify-content: space-between; }
 .sc-cap__ticks i { width: 1px; height: 7px; margin-top: -3px; background: rgba(244, 237, 223, 0.42); }
@@ -172,13 +172,16 @@ html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none
 }
 .wv__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: clamp(24px, 4.4vh, 48px); }
 .wv__title { max-width: 12em; }
-.wv__nav { display: none; align-items: center; gap: 10px; flex: none; }
+.wv__nav { display: none; align-items: center; gap: 10px; flex: none; margin-left: auto; }   /* (right-aligned even without the drafted title) */
 @media (min-width: 720px) { .wv__nav:not([hidden]) { display: flex; } }
 .wv__n {
   margin-right: 8px; font: var(--f-small); letter-spacing: var(--ls-caps); color: var(--cream-mute);
   font-variant-numeric: lining-nums tabular-nums; white-space: nowrap;
 }
 .wv__n b { font-weight: inherit; color: var(--cream); }
+/* phones: the position under the row (the head's counter is hidden there with the buttons) */
+.wv__n--foot { margin: clamp(10px, 2vh, 16px) 0 0; }
+@media (min-width: 720px) { .wv__n--foot { display: none; } }
 .wv__btn {
   font: var(--f-small); text-transform: uppercase; letter-spacing: var(--ls-caps);
   min-height: 40px; padding: 10px 16px; border-radius: 100px; box-shadow: inset 0 0 0 1px rgba(244, 237, 223, 0.4);
@@ -194,6 +197,16 @@ html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none
 }
 .wv__scroller::-webkit-scrollbar { display: none; }
 .wv__list { display: flex; gap: var(--wv-gap); width: max-content; padding: 8px var(--col-pad) 12px var(--wv-x); }
+@media (min-width: 1024px) {
+  /* the row stays out of the rail's column: the scroller starts at the rail's edge (a card that has scrolled past
+     fades out there instead of sliding under the rail's names and numerals) */
+  .wv__scroller {
+    margin-left: var(--rail-w); scroll-padding-inline: clamp(24px, 4.4vw, 72px);
+    -webkit-mask-image: linear-gradient(90deg, transparent calc(clamp(24px, 4.4vw, 72px) * 0.3), #000 clamp(24px, 4.4vw, 72px));
+    mask-image: linear-gradient(90deg, transparent calc(clamp(24px, 4.4vw, 72px) * 0.3), #000 clamp(24px, 4.4vw, 72px));
+  }
+  .wv__list { padding-left: clamp(24px, 4.4vw, 72px); }
+}
 .wv__item { flex: 0 0 var(--wv-w); width: var(--wv-w); scroll-snap-align: start; }
 .wv__item[hidden] { display: none; }
 .wv__card { display: grid; gap: clamp(14px, 2.2vh, 22px); }
@@ -256,4 +269,17 @@ html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none
 @media (max-width: 639px) {
   .wvm__cap { grid-template-columns: minmax(0, 1fr); padding-right: 0; }
   .wvm__yt { grid-column: 1; grid-row: auto; justify-self: start; }
+}
+
+/* ── the shared modal over this chapter's content (src/ui/modal.js sets html.modal-open; the modal's own rules are
+   src/styles/modal.css): on phones a near-opaque scrim, so the page's type never reads through doubled, and the top
+   bar steps away while a modal is open (its Close sat over the faint nav pill and menu button) ───────────────── */
+@media (max-width: 719px) { #modal .modal__scrim { background: rgba(11, 8, 5, 0.97); } }
+html.modal-open .nav { visibility: hidden; }
+
+/* ── touch targets (coarse pointers): at least 44 px tall ───────────────────────────────────────────────────── */
+@media (pointer: coarse) {
+  .scm__btn { min-height: 44px; }
+  .wv__yt { position: relative; }
+  .wv__yt::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 44px; translate: 0 -50%; }
 }

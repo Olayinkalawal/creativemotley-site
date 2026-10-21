@@ -99,3 +99,7 @@
 @media (max-width: 899px) {
   .rx-stat { padding-block: clamp(16px, 2.6svh, 24px) clamp(34px, 6.4svh, 56px); }
 }
+
+/* the opener's light region (results.html): from the opener's top down to the watchers' heads at its rest */
+.rx-light { position: absolute; top: 0; left: calc(100% - 100vw); right: 0; height: 36svh; pointer-events: none; }
+@media (max-width: 1023px) { .rx-light { height: 30svh; } }

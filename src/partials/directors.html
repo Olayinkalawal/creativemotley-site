@@ -38,7 +38,7 @@
           <p class="dr-track" data-dr-track><span class="dr-unit"><span>Olayinka Lawal</span><i>✦</i><span>Gbenga Sosanya</span><i>✦</i></span><span class="dr-unit"><span>Olayinka Lawal</span><i>✦</i><span>Gbenga Sosanya</span><i>✦</i></span><span class="dr-unit"><span>Olayinka Lawal</span><i>✦</i><span>Gbenga Sosanya</span><i>✦</i></span></p>
         </div>
         <div class="dr-film" data-dr-film>
-          <video class="dr-video" data-dr-video muted playsinline loop preload="none" aria-hidden="true" tabindex="-1"
+          <video class="dr-video" data-dr-video muted playsinline preload="none" aria-hidden="true" tabindex="-1"
             disablepictureinpicture disableremoteplayback width="1920" height="1080" data-poster="/assets/video/directors-poster.webp">
             <source data-dr-sm src="/assets/video/directors-sm.webm?v=2" type='video/webm; codecs="vp9"'>
             <source src="/assets/video/directors.webm?v=2" type='video/webm; codecs="vp9"'>
@@ -46,6 +46,8 @@
           </video>
           <noscript><img class="dr-video" src="/assets/video/directors-poster.webp" alt="" width="1600" height="900"></noscript>
         </div>
+        <!-- the film moves on its own (20 s, once, then it holds its last frame): a pause control (WCAG 2.2.2) -->
+        <button class="dr-toggle" type="button" data-dr-toggle hidden>Pause</button>
         <!-- the still pair: the static layout on upright screens (reduced motion, no JS), where the film's wide frame
              would leave the faces small; each portrait gets its own crop of the still, side by side, under the names -->
         <div class="dr-duo" aria-hidden="true">
