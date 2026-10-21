@@ -23,11 +23,16 @@
    Phones (the still path): the phone GLB; only where core/env.js CAM3D allows it, and if the frame-rate governor
    has to step all the way down to "min" while the camera draws, the scene gives up for the session (the section keeps
    its 3D stills, as at tier 0; ?q=… turns that off for QA, ?cam3d=1 forces the camera onto a phone below CAM3D).
+   Drag to turn, zoom (gl/lib/drag3d.js): once the camera draws, a hit region over it (the module's screen box, in the
+   pin) turns it (setOffset) and zooms it about the pointer (setZoom: the fitted picture scaled about a point) through the
+   whole run (orbit, explode, hold), but not while it turns from the still's pose; the markers follow (an id pass every
+   5° of turn and when the turn or the zoom settles, beside tdIdDue's schedule); it eases back to the scroll's pose.
    Reduced motion never reaches this scene: main.js does not boot the stage then, and the section shows the static
    layout with the 3D stills (see INTEGRATION.md). */
 import { create, KEYS } from '../lib/camera3d.js';
 import { tdLive, tdFlags, tdTimeline, tdState, tdRun, tdLerpRect, tdPinTop, tdIdDue, tdIntroPose, tdIntroTurn, tdStandIn, tdGiveUp, tdPointerStep, TD_INTRO_MS } from '../lib/tdcore.js';
 import { fetchGLB } from '../lib/glbfetch.js';
+import { drag3d } from '../lib/drag3d.js';
 
 /* the site's art direction over the module's own keys (options and the exported KEYS only: the module and its API stay
    as the lab ships them, so its final drop-in keeps these):
@@ -51,7 +56,7 @@ export default function register(stage) {
   const live = tdLive(id);
   live.ready = false; live.turning = false;
   let cam = null, run = null, pinH = 0, heroR = null, colR = null, fl = null, timeline = null, TL = -1, vw = 0, vh = 0, idV = -1, idPending = false;
-  let first = false, intro = 0, introX = 0, gaveUp = false;
+  let first = false, intro = 0, introX = 0, gaveUp = false, dg = null;
   const ST = { ph: {}, phN: {} }, S = {}, PH = {}, ID = { e: -1, s: -1 };
   const measure = (ctx) => {
     run = section.querySelector('[data-td-run]') || section;
@@ -83,9 +88,11 @@ export default function register(stage) {
     },
     dispose() {
       cam?.dispose(); cam = null; live.anchors3d = null; live.ready = false; live.turning = false;
+      dg?.dispose(); dg = null;
       idPending = false; idV = -1; ID.e = ID.s = -1; intro = 0; first = false;
     },
     resize(w, h, dpr) { cam?.resize(w, h, dpr); },
+    deactivate() { dg?.off(); },
     update(ctx) {
       if (!cam || !cam.loaded) return;
       if (!run || ctx.vw !== vw || ctx.vh !== vh) measure(ctx);
@@ -120,21 +127,34 @@ export default function register(stage) {
       if (live.f === ctx.frame) { x = live.x; y = live.y; w = live.w; h = live.h; }
       else { tdLerpRect(live.orb || heroR, colR, st.ph.hand, S); x = S.x; y = S.y + pinTop; w = S.w; h = S.h; }   // live.orb: the orbit's slot, clear of the title
       cam.setLayout({ x, y, w, h }, ctx.vw, ctx.vh);
-      cam.setPointer(tdPointerStep(ctx.pointer.x), tdPointerStep(ctx.pointer.y), 1);
+      // drag to turn and zoom (gl/lib/drag3d.js): its offset and zoom on top of the scroll's pose; the pointer parallax
+      // holds while dragging
+      if (!dg && live.ready) dg = drag3d(stage, section.querySelector('.td__pin'), 'camera');
+      const pv = dg ? dg.ptr(ctx.pointer) : ctx.pointer;
+      cam.setOffset(dg?.az || 0, dg?.el || 0); cam.setZoom(dg?.k || 1, dg?.x || 0, dg?.y || 0);
+      cam.setPointer(tdPointerStep(pv.x), tdPointerStep(pv.y), 1);
       cam.setFade(st.fade);
       // the markers draw in as the parts arrive, while scrolling (see the header; tdcore tdIdDue): a pass every 0.025 of
-      // explode from 0.93, one as it reaches 1, and every third of the settle
-      if (tdIdDue(ID, st.ph.explode, st.ph.settle, intro > 0)) cam.occlusion();
+      // explode from 0.93, one as it reaches 1, and every third of the settle; and as the reader turns or zooms it
+      const due = tdIdDue(ID, st.ph.explode, st.ph.settle, intro > 0);
+      if ((dg?.due() && st.ph.explode >= 0.93) || due) cam.occlusion();
       // while it turns (no id pass yet) the section keeps the stills' markers on their uv (no blink at the hand-over)
       live.turning = intro > 0;
       // posed for this frame; published relative to the pin (the section adds nothing)
       live.anchors3d = cam.anchors(pinTop); live.anchorsF = ctx.frame; live.pinTop = pinTop;
       live.place3d?.(live.anchors3d);
       idPending = false;              // this frame's anchors carry the last id pass
+      // the hit region follows the camera (every phase, once it draws and has stopped turning from the still's pose); the
+      // hint may show at a resting point (the orbit before the hand-off, or the hold)
+      if (dg) {
+        const ph0 = st.ph;
+        dg.step(ctx, cam.screenBox(), pinTop, live.ready && intro <= 0 && st.fade > 0.5, st.fade > 0.9 && (ph0.hand < 0.001 || ph0.settle > 0.3));
+      }
     },
     render(renderer, target) {
       if (!cam) return;
       cam.render(renderer, target);
+      if (!live.ready) requestAnimationFrame(() => stage.invalidate());   // (one more frame: the next update makes the drag region)
       live.ready = true;
       // the occlusion test ran (the view settled): one more frame (ambient) so the markers take it
       const v = cam.idVersion;
