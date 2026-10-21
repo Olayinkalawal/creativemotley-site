@@ -11,7 +11,7 @@
    proxy asks for the 1200-px file, the one the WebGL scene uploads, so each poster is fetched once.
    After the run: "Watch the work" (initVideos below), the XXL video cards. */
 import './showcase.css';
-import { onFrame, clamp, smooth, seg, lenis } from '../core/scroll.js';
+import { onFrame, clamp, smooth, seg, lenis, view } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
 import { REDUCED, TIER, FINE, STILL } from '../core/env.js';
 import { openModal } from '../ui/modal.js';
@@ -20,6 +20,11 @@ export const N = 7;
 const HOLD = [0.17, 0.83];                    // within each step: hold, ease across, hold
 const smoother = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 const pad = (n) => String(n).padStart(2, '0');
+
+/* resolved once init() has read the posters (state.items): the posters scene waits for it before it loads (the chapter
+   is set up only as the reader comes within two screens of it, src/main.js; the stage may mount the scene earlier) */
+let markReady;
+export const ready = new Promise((r) => { markReady = r; });
 
 export const state = {
   items: [],          // { slug, src, title, name, tag, aspect }
@@ -83,6 +88,7 @@ export function init() {
     const avif = li.querySelector('source[type="image/avif"]')?.srcset.match(/(\S+)\s+1200w/)?.[1] || null;
     return { slug: li.dataset.slug, src: img.getAttribute('src'), avif, title: img.alt, name, tag, aspect: +img.getAttribute('width') / +img.getAttribute('height') };
   });
+  markReady();
 
   const animated = TIER > 0 && !REDUCED;
   initVideos(sec);
@@ -93,7 +99,8 @@ export function init() {
   let quiet = false;
 
   /* ── modal: the large poster, its full title, Previous / Next ─────────── */
-  function openPoster(k) {
+  // centre: turn the arc to k behind the modal while it morphs open (a click on a side poster opens it at once)
+  function openPoster(k, centre = false) {
     let cur = k;
     const fig = document.createElement('figure');
     fig.className = 'scm'; fig.dataset.theme = 'dark';
@@ -134,6 +141,7 @@ export function init() {
     sec.classList.add('is-modal');
     openModal(fig, {
       from: cards[k],
+      during: centre ? () => jumpTo(k) : null,
       onClose() {
         document.removeEventListener('keydown', onKey);
         sec.classList.remove('is-modal');
@@ -200,21 +208,32 @@ export function init() {
     ruleW = rule.clientWidth;
     lastY = NaN;
   }
+  // measured at once (a chapter set up late, as the reader arrives, must not show its proxy unplaced for a frame), and
+  // again after the next layout
+  measure();
   requestAnimationFrame(measure);
   onLayout(measure);
 
+  const yFor = (k) => { const g = geo(run); return g.top + ((k + 0.5) / N) * Math.max(1, g.height - state.L.pinH); };
   function goTo(k) {
-    const L = state.L;
-    if (!L) return;
-    const g = geo(run);
-    const y = g.top + ((k + 0.5) / N) * Math.max(1, g.height - L.pinH);
+    if (!state.L) return;
+    const y = yFor(k);
     if (lenis) lenis.scrollTo(y, { duration: Math.min(2.2, 0.9 + 0.28 * Math.abs(k - state.pos)), easing: (t) => 1 - Math.pow(1 - t, 3) });
     else window.scrollTo(0, y);
   }
+  // straight to poster k, no glide (behind the opening modal: the scroll is locked, so it is forced)
+  function jumpTo(k) {
+    if (!state.L) return;
+    const y = Math.round(yFor(k));
+    if (lenis) lenis.scrollTo(y, { immediate: true, force: true }); else window.scrollTo(0, y);
+    view.y = y;
+  }
   const glOn = () => state.gl && document.documentElement.classList.contains('gl-ready');
+  // any poster you can see opens (phase 4: a click on a side poster only turned the arc to it); a side poster's
+  // modal morphs open from where it stands while the arc centres it behind
   const activate = (k, keyboard) => {
-    if (keyboard || (k === state.active && Math.abs(state.pos - k) < 0.3)) openPoster(k);
-    else goTo(k);
+    const centred = k === state.active && Math.abs(state.pos - k) < 0.3;
+    openPoster(k, !keyboard && !centred);
   };
 
   // keyboard / screen reader / pre-WebGL pointer: the real buttons
@@ -267,20 +286,13 @@ export function init() {
 }
 
 /* ── Watch the work: the XXL video cards (markup: src/partials/showcase.html, from docs/videos.json) ───────────
-   - art: each card starts with its creator's poster composed 16:9 (no third-party request). Once Showcase is within
-     about a screen, cards near the row's view ask i.ytimg.com for maxresdefault, then hqdefault; a 120×90 answer is
-     YouTube's placeholder: no maxres → try hq; no hq → the id does not exist and the card is hidden. A blocked or
-     failed request keeps the poster art.
+   - art: each card shows its creator's poster composed 16:9 (self-hosted AVIF / WebP): no third-party request until a
+     click (phase 4: the cards used to probe i.ytimg.com on scroll and swap in YouTube's own thumbnails; the ids are
+     checked when the cards are generated instead: node src/partials/showcase.videos.mjs --verify).
    - play: the shared modal morphs from the card art (View Transitions); the youtube-nocookie iframe is created once
      the modal has opened and removed before it closes. No iframe exists until a click.
-   - the row: native horizontal scroll with snap; Previous / Next and the 0N / 0M counter from 720 px. */
-const YT = (id, q) => `https://i.ytimg.com/vi/${id}/${q}.jpg`;
-const probe = (src) => new Promise((res) => {
-  const im = new Image();
-  im.onload = () => res(im.naturalWidth > 120 ? src : 'placeholder');
-  im.onerror = () => res(null);
-  im.src = src;
-});
+   - the row: native horizontal scroll with snap; Previous / Next and the 0N / 0M counter from 720 px, the counter alone
+     under the row on phones (both polite live regions: the one shown is announced). */
 export function initVideos(sec) {
   const wv = sec.querySelector('[data-wv]');
   if (!wv) return;
@@ -288,39 +300,9 @@ export function initVideos(sec) {
   const items = [...wv.querySelectorAll('.wv__item')];
   const nav = wv.querySelector('[data-wv-nav]');
   const prev = wv.querySelector('[data-wv-prev]'), next = wv.querySelector('[data-wv-next]');
-  const num = wv.querySelector('[data-wv-num]'), total = wv.querySelector('[data-wv-total]');
+  const nums = [...wv.querySelectorAll('[data-wv-num]')], totals = [...wv.querySelectorAll('[data-wv-total]')];
   const pad2 = (n) => String(n).padStart(2, '0');
   const shown = () => items.filter((li) => !li.hidden);
-
-  /* art */
-  async function art(li) {
-    if (li.dataset.art) return;
-    li.dataset.art = 'pending';
-    const id = li.dataset.yt;
-    let got = await probe(YT(id, 'maxresdefault'));
-    if (got === 'placeholder' || got === null) {
-      const hq = await probe(YT(id, 'hqdefault'));
-      if (hq === 'placeholder' && got === 'placeholder') { li.hidden = true; li.dataset.art = 'missing'; update(true); return; }
-      got = hq === 'placeholder' ? null : hq;
-    }
-    if (!got) { li.dataset.art = 'poster'; return; }
-    const pic = li.querySelector('.wv__art'), img = pic.querySelector('img');
-    pic.querySelectorAll('source').forEach((n) => n.remove());
-    img.removeAttribute('srcset'); img.removeAttribute('sizes');
-    img.src = got;
-    li.dataset.art = 'youtube';
-  }
-  if ('IntersectionObserver' in window) {
-    const near = new IntersectionObserver((es) => {
-      for (const e of es) if (e.isIntersecting) { art(e.target); near.unobserve(e.target); }
-    }, { root: scroller, rootMargin: '0px 120% 0px 120%' });
-    const gate = new IntersectionObserver((es) => {
-      if (!es.some((e) => e.isIntersecting)) return;
-      gate.disconnect();
-      items.forEach((li) => near.observe(li));
-    }, { rootMargin: '100% 0px 100% 0px' });
-    gate.observe(wv);
-  }
 
   /* the row */
   let step = 1, lastI = -1;
@@ -330,14 +312,14 @@ export function initVideos(sec) {
   };
   function update(force) {
     const a = shown();
-    if (force) { measure(); if (total) total.textContent = pad2(a.length); lastI = -1; }
+    if (force) { measure(); for (const t of totals) t.textContent = pad2(a.length); lastI = -1; }
     const max = scroller.scrollWidth - scroller.clientWidth;
     const i = scroller.scrollLeft >= max - 2 ? a.length - 1 : Math.min(a.length - 1, Math.round(scroller.scrollLeft / Math.max(1, step)));
     if (prev) prev.disabled = scroller.scrollLeft <= 2;
     if (next) next.disabled = scroller.scrollLeft >= max - 2;
     if (i === lastI && !force) return;
     lastI = i;
-    if (num) num.textContent = pad2(i + 1);
+    for (const n of nums) n.textContent = pad2(i + 1);
   }
   let raf = 0;
   scroller.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); }, { passive: true });
@@ -385,9 +367,9 @@ export function initVideos(sec) {
         frame = document.createElement('iframe');
         frame.className = 'wvm__player';
         frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&playsinline=1`;
-        frame.title = t.textContent;
-        frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
-        frame.allowFullscreen = true;
+        // the player's name: the video's title, or (?drafts=0, where the drafted titles are hidden) the creator's name
+        frame.title = document.documentElement.classList.contains('no-drafts') && t.dataset.draft ? by.textContent : t.textContent;
+        frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';   // (no allowfullscreen: allow wins)
         frame.referrerPolicy = 'strict-origin-when-cross-origin';
         frame.addEventListener('load', () => frame?.classList.add('is-in'), { once: true });
         fig.querySelector('.wvm__frame').append(frame);

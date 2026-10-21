@@ -20,10 +20,13 @@
     <div class="apply-join" data-theme="dark">
       <p class="apply-who" data-draft="DC100" data-reveal>We work with established creators, filmmakers, media companies and content owners who already have traction and want to build a sustainable business.</p>
       <p class="apply-how" data-draft="DC101" data-reveal="0.06">Apply with your channel details. We review each application and, if there is a fit, book a discovery call.</p>
-      <p class="apply-cta" data-reveal="0.12"><a class="pill pill--solid" href="mailto:info@creativemotley.com?subject=Application%20—%20Creative%20Motley">Apply to join</a></p>
+      <p class="apply-cta" data-reveal="0.12"><a class="pill pill--solid" href="mailto:info@creativemotley.com?subject=Application%20%E2%80%94%20Creative%20Motley">Apply to join</a></p>
     </div>
   </div></div>
   <footer class="contact" data-theme="dark" data-opaque>
+    <!-- the marquee moves on its own: a pause control (WCAG 2.2.2); it also rests off-screen, in a hidden tab and after
+         ~10 s without input (apply.js) -->
+    <button class="ct-toggle" type="button" data-ct-toggle hidden>Pause</button>
     <div class="ct-marquee" aria-hidden="true"><div class="ct-track" data-ct-track>
       <span>Contact&nbsp;✦&nbsp;</span><span>Contact&nbsp;✦&nbsp;</span><span>Contact&nbsp;✦&nbsp;</span><span>Contact&nbsp;✦&nbsp;</span><span>Contact&nbsp;✦&nbsp;</span><span>Contact&nbsp;✦&nbsp;</span>
     </div></div>
@@ -33,7 +36,8 @@
       <p>© 2026 Creative Motley Ltd<br>All rights reserved</p>
     </div>
     <div class="ct-field" data-ct-field>
-      <a class="st st-badge" style="--x:4%;--y:8%;--rot:-9deg" href="https://www.instagram.com/creativemotley" target="_blank" rel="noopener">
+      <!-- the IG badge and the Instagram pill go to the same place: the badge is out of the Tab order (the pill is the link) -->
+      <a class="st st-badge" style="--x:4%;--y:8%;--rot:-9deg" href="https://www.instagram.com/creativemotley" target="_blank" rel="noopener" tabindex="-1">
         <span class="st-body"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><path id="ctc1" d="M60,60 m-42,0 a42,42 0 1,1 84,0 a42,42 0 1,1 -84,0"/></defs><text class="st-arc"><textPath href="#ctc1">Drag me · Drag me · Drag me · </textPath></text></svg><b aria-hidden="true">IG</b></span><span class="st-peel"></span><span class="sr-only">Instagram</span>
       </a>
       <a class="st st-pill" style="--x:21%;--y:22%;--rot:-7deg" href="https://www.instagram.com/creativemotley" target="_blank" rel="noopener"><span class="st-body">Instagram</span><span class="st-peel"></span></a>

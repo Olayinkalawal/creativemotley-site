@@ -79,7 +79,21 @@
 .ct-track {
   display: flex; width: max-content; will-change: transform;
   font: 400 var(--t-title) / 1 var(--serif); letter-spacing: var(--ls-display); white-space: nowrap;   /* the serif at the title size */
+  animation: ct-run var(--ct-dur, 70s) linear infinite; animation-play-state: paused;
 }
+.contact.is-running .ct-track { animation-play-state: running; }
+@keyframes ct-run { to { transform: translate3d(-50%, 0, 0); } }   /* six copies: half the track is one loop */
+@media (prefers-reduced-motion: reduce) { .ct-track { animation: none; } }
+/* its pause control: a small pill over the marquee's top right */
+.ct-toggle {
+  position: absolute; z-index: 2; top: clamp(10px, 1.6vh, 18px); right: var(--gut);
+  font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: rgba(244, 237, 223, 0.82);
+  min-height: 32px; padding: 6px 14px; border-radius: 100px; box-shadow: inset 0 0 0 1px rgba(244, 237, 223, 0.32);
+  transition: background 0.2s, color 0.2s;
+}
+.ct-toggle:hover { background: rgba(244, 237, 223, 0.12); color: var(--cream); }
+.ct-toggle[hidden] { display: none; }
+@media (pointer: coarse) { .ct-toggle { min-height: 44px; } }
 .ct-rule { height: 1px; background: rgba(244, 237, 223, 0.28); margin: clamp(22px, 3.6vh, 44px) var(--gut) clamp(14px, 2vh, 22px); }
 .ct-cols { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(16px, 3vw, 40px); padding: 0 var(--gut); }
 .ct-cols p { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: rgba(244, 237, 223, 0.82); }
@@ -88,11 +102,14 @@
 .ct-field { position: relative; height: clamp(262px, 29vh, 360px); margin: clamp(20px, 3vh, 40px) var(--gut) 0; touch-action: pan-y; perspective: 1100px; perspective-origin: 50% 42%; }
 .st { position: absolute; left: var(--x); top: var(--y); transform: rotate(var(--rot)); transform-origin: 50% 50%; cursor: grab; user-select: none; -webkit-user-select: none; text-decoration: none; touch-action: none; }
 .st:active { cursor: grabbing; }
+/* touch: a vertical swipe that starts on a sticker scrolls the page; apply.js turns a sideways move or a 300 ms hold
+   into a drag */
+@media (pointer: coarse) { .st { touch-action: pan-y; } }
 .st:focus-visible { outline-offset: 6px; }
 .st-body { position: relative; display: block; background: var(--cream); color: var(--ink); box-shadow: 0 2px 3px rgba(0, 0, 0, 0.45), 0 14px 26px rgba(0, 0, 0, 0.42); transition: box-shadow 0.3s var(--ease-out); }
 .st.is-lifted .st-body { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4), 0 40px 60px rgba(0, 0, 0, 0.55); }
 .st-pill .st-body {
-  font: var(--f-head); letter-spacing: 0.01em; text-transform: uppercase;
+  font: var(--f-head); letter-spacing: var(--ls-head); text-transform: uppercase;
   padding: 0.36em 0.62em; border-radius: 999px; white-space: nowrap;
   clip-path: polygon(0 0, 100% 0, 100% 74%, 90% 100%, 0 100%);
 }
@@ -102,7 +119,7 @@
   clip-path: polygon(50% 0%,58% 3%,66% 1%,72% 7%,80% 7%,84% 14%,91% 17%,93% 25%,99% 30%,98% 38%,100% 46%,97% 53%,100% 61%,95% 67%,96% 75%,90% 80%,88% 88%,81% 90%,76% 96%,68% 96%,61% 100%,54% 97%,46% 100%,39% 96%,32% 97%,26% 92%,18% 91%,14% 84%,7% 81%,5% 73%,0% 67%,2% 59%,0% 51%,3% 44%,0% 36%,5% 30%,4% 22%,10% 17%,14% 10%,22% 8%,27% 3%,35% 4%,42% 0%);
 }
 .st-badge svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.st-arc { font-size: 11.5px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; fill: rgba(20, 16, 10, 0.5); }
+.st-arc { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; fill: rgba(20, 16, 10, 0.5); }   /* the small role */
 .st-badge b { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font: var(--f-head); letter-spacing: var(--ls-head); }
 .st-peel {
   position: absolute; right: 0; bottom: 0; width: 11%; height: 27%; min-width: 17px; min-height: 17px; pointer-events: none;
@@ -112,6 +129,7 @@
 .st-badge .st-peel { right: auto; left: 6%; bottom: 8%; width: 17%; height: 17%; clip-path: polygon(0 0, 0 100%, 100% 100%); background: linear-gradient(222deg, #fff 0%, #f6f1e4 38%, #ded6c4 66%, #b3ab9a 100%); filter: drop-shadow(2px -2px 3px rgba(0, 0, 0, 0.32)); }
 .ct-mail {
   display: block; margin-top: clamp(12px, 2vh, 28px); padding: 0 var(--gut);
+  margin-bottom: clamp(64px, 9vh, 96px);   /* room under the address at the page's end (it ended ~31 px above it) */
   font: var(--f-display); letter-spacing: var(--ls-display); text-decoration: none; color: rgba(244, 237, 223, 0.62); white-space: nowrap; transition: color 0.35s var(--ease-out);
 }
 .ct-mail:hover, .ct-mail:focus-visible { color: var(--cream); }
@@ -128,5 +146,20 @@
   .st:nth-child(5) { --x: 64% !important; --y: 52% !important; }
   .ct-mail { font: var(--f-dek); letter-spacing: var(--ls-dek); }   /* the address fits a phone at the dek's size */
 }
-/* the rail steps aside over the full-bleed footer */
-html.ct-over .rail__index, html.ct-over .rail__mark { opacity: 0 !important; }
+/* the rail steps aside over the full-bleed footer, its legal line too (the footer carries its own: two © lines
+   showed together, and the rail's ran over "Just drop us a line") */
+html.ct-over .rail__index, html.ct-over .rail__mark, html.ct-over .rail__legal { opacity: 0 !important; }
+
+/* touch targets (coarse pointers): at least 44 px tall; the pill keeps its look, its hit area grows */
+@media (pointer: coarse) {
+  .ct-mail { padding-block: 9px; }
+  .apply-cta .pill { position: relative; }
+  .apply-cta .pill::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 44px; translate: 0 -50%; }
+}
+
+/* ?drafts=0 (html.no-drafts): with the two drafted lines hidden, the pill sits under the dek in one column (it floated
+   alone in the right column) */
+@media (min-width: 1024px) {
+  html.no-drafts .apply-join { grid-template-columns: minmax(0, 1fr); }
+  html.no-drafts .apply-join .apply-cta { grid-column: 1; grid-row: auto; margin-top: 0; }
+}

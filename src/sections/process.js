@@ -18,7 +18,7 @@
    The desk is a plane tilted back by `tau` and Zd px behind the slot plane; objects at rest lie flat on it.
    Static mode (no JS, ?tier=0, reduced motion): the list is a plain grid / list; nothing here runs. */
 import './process.css';
-import { onFrame, clamp, smooth, seg } from '../core/scroll.js';
+import { onFrame, clamp, smooth, seg, idleFor, IDLE_LIFE } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
 import { REDUCED, TIER } from '../core/env.js';
 import { coverPlates } from './_paper.js';   // shared paper helper (read-only)
@@ -40,6 +40,11 @@ const LOOK = [
   { f: 0.86, u: -0.01, v: -0.05, h: 0.022, rz: 0.045 },  // tablet
   { f: 0.76, u: 0.0, v: 0.04, h: 0.016, rz: -0.07 },     // instant photo
 ];
+
+/* resolved once init() has read the objects (state.items): the objects scene waits for it before it loads (the chapter
+   is set up only as the reader comes within two screens of it, src/main.js; the stage may mount the scene earlier) */
+let markReady;
+export const ready = new Promise((r) => { markReady = r; });
 
 export const state = {
   items: [],          // { src, aspect, w, h } (w, h: size in world px when active)
@@ -144,6 +149,7 @@ export function init() {
     const img = li.querySelector('img');
     return { src: img.getAttribute('src'), aspect: +img.getAttribute('height') / +img.getAttribute('width'), w: 1, h: 1 };
   });
+  markReady();
   if (!(TIER > 0 && !REDUCED)) { coverPlates(sec); return; }   // static: the calm grid (the plate is hidden while it covers)
 
   /* ── animated: the pinned run ─────────────────────────────────────────── */
@@ -211,6 +217,9 @@ export function init() {
     });
     lastY = NaN;
   }
+  // measured at once (a chapter set up late, as the reader arrives, must not show its proxy unplaced for a frame), and
+  // again after the next layout
+  measure();
   requestAnimationFrame(measure);
   onLayout(measure);
 
@@ -241,7 +250,7 @@ export function init() {
     const cover = 1 - glK * (1 - state.cover);
     const proxy = crisp || cover > 0.002;
     // between scroll changes only the active object's idle drift moves, and only while the proxy is the one drawn
-    if (!moved && !(proxy && state.lift > 0)) return;
+    if (!moved && !(proxy && state.lift > 0 && idleFor() < IDLE_LIFE)) return;   // (the drift rests after 10 s idle)
     lastY = v.y; lastVer = state.ver; lastK = glK; lastCrisp = crisp;
 
     const cs = f2(cover);

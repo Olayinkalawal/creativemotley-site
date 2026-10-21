@@ -66,7 +66,7 @@ function sourceFor(el, needW) {
   return { kind: 'color', color: COLORS[plate] || COLORS.dark };
 }
 
-/* shared textures (the hero painting serves the film and Apply): loaded once, freed when the last user lets go */
+/* shared textures (the hero holds Storytellers' still too: the same texture): loaded once, freed when the last user lets go */
 const cache = new Map();
 async function acquire(srcs) {
   for (const src of srcs) {

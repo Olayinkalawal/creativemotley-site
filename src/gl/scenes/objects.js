@@ -17,7 +17,7 @@
    layer and this scene draws only the desk and the shadows. */
 import * as THREE from 'three';
 import { texture } from '../lib/loaders.js';
-import { state, trackAt, place, drift, N } from '../../sections/process.js';
+import { state, trackAt, place, drift, N, ready as sectionReady } from '../../sections/process.js';
 
 /* the reading paper as it renders (--paper under the shell's .paper-grain), so the desk and the sheets match */
 const PAPER = [220 / 255, 215 / 255, 197 / 255];
@@ -187,6 +187,7 @@ export default function register(stage) {
     id: 'objects', scene, camera,
     post: { grain: 0.04, vignette: 0.3, fringe: 0.5 },
     async load(ctx) {
+      await sectionReady;   // the section has read its objects (state.items)
       const aniso = Math.min(8, ctx.renderer.capabilities.getMaxAnisotropy());
       const opts = { colorSpaceConversion: 'none', premultiplyAlpha: 'premultiply' };
       ellTex = texture(ellipse(), { mips: false });

@@ -10,9 +10,10 @@ import { scrollTo, lockScroll, onFrame } from '../core/scroll.js';
 import { geo } from '../core/layout.js';
 
 const root = document.documentElement;
-const THUMBS = {   // chapters with no painted scene in the art index yet (tiny crops of their existing art)
-  method: '/assets/thumbs/method.webp', showcase: '/assets/thumbs/showcase.webp',
-  process: '/assets/thumbs/process.webp', kit: '/assets/thumbs/kit.webp',
+const THUMBS = {   // chapters with no painted scene in the art index yet (tiny crops of their existing art; Method and Kit:
+  // the real-time 3D devices those chapters show, cut from public/assets/teardown/{camera3d,mixer3d}/still_hero.webp)
+  method: '/assets/thumbs/method-3d.webp', showcase: '/assets/thumbs/showcase.webp',
+  process: '/assets/thumbs/process.webp', kit: '/assets/thumbs/kit-3d.webp',
 };
 
 function thumbFor(idx, id) {
@@ -29,6 +30,8 @@ export function initChrome() {
     const list = target.tagName === 'OL' ? target : target.appendChild(document.createElement('ol'));
     list.classList.add('index');
     list.innerHTML = src.innerHTML;
+    // the numerals are decoration in the copies (the names carry the meaning; "I", "II" read as letters)
+    for (const n of list.querySelectorAll('.rn')) n.setAttribute('aria-hidden', 'true');
   }
   const items = [...document.querySelectorAll('.rail .index li, .chapters__panel li, .menu .index li')];
   registerProbes(document.querySelectorAll('.rail__mark, .rail .index li, .rail__legal'));
@@ -50,15 +53,18 @@ export function initChrome() {
     if (s !== scrolled) { root.classList.toggle('scrolled', s); scrolled = s; }
   });
 
-  // in-page links glide with Lenis
+  // in-page links glide with Lenis, and move focus to where they lead (a chapter is focusable by script only:
+  // tabindex -1), so the next Tab continues from there and a screen reader reads on from the chapter
+  for (const el of document.querySelectorAll('[data-chapter], #top')) if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '-1');
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
     const id = a.getAttribute('href');
-    if (id.length < 2 || !document.querySelector(id)) return;
+    const target = id.length > 1 ? document.querySelector(id) : null;
+    if (!target) return;
     e.preventDefault();
-    closeAll();
-    scrollTo(id);
+    closeAll(false);
+    scrollTo(target, { focus: true });
     history.replaceState(null, '', id === '#top' ? location.pathname : id);
   });
 
@@ -107,6 +113,7 @@ export function initChrome() {
     });
   };
   const setDD = (open) => {
+    if (!dd) return;
     if (open) loadThumbs();
     dd.classList.toggle('open', open); ddBtn.setAttribute('aria-expanded', String(open));
   };
@@ -114,20 +121,41 @@ export function initChrome() {
   ddBtn?.addEventListener('focus', loadThumbs);
   ddBtn?.addEventListener('click', () => setDD(!dd.classList.contains('open')));
   document.addEventListener('click', (e) => { if (dd && !dd.contains(e.target)) setDD(false); });
+  // keyboard: focus that leaves the dropdown closes it; Escape inside it closes it and returns to its button
+  dd?.addEventListener('focusout', (e) => { if (!e.relatedTarget || !dd.contains(e.relatedTarget)) setDD(false); });
+  dd?.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || !dd.classList.contains('open')) return;
+    e.stopPropagation(); setDD(false); ddBtn.focus();
+  });
 
-  // mobile menu
+  // mobile menu: a modal dialog while open. Everything behind it is inert (the page, the rail, the plates, the skip
+  // link, the bar but its toggle), so Tab stays in the menu and its toggle; closing returns focus to the toggle
+  // (a menu link moves it to its chapter instead)
   const menu = document.getElementById('menu');
   const mBtn = document.querySelector('[data-menu-toggle]');
-  const setMenu = (open) => {
+  const label = mBtn?.querySelector('.sr-only')?.textContent.trim() || 'Menu';
+  menu.setAttribute('role', 'dialog'); menu.setAttribute('aria-modal', 'true'); menu.setAttribute('aria-label', label);
+  const behind = () => [
+    document.getElementById('main'), document.querySelector('.rail'), document.querySelector('.plates'), document.querySelector('.skip'),
+    ...document.querySelectorAll('.nav > :not(.nav__right), .nav__right > :not([data-menu-toggle])'),
+  ].filter(Boolean);
+  const setMenu = (open, back = true) => {
     root.classList.toggle('menu-open', open);
     mBtn.setAttribute('aria-expanded', String(open));
     menu.setAttribute('aria-hidden', String(!open));
     menu.inert = !open;
+    for (const el of behind()) el.inert = open;
     lockScroll(open);
     if (open) menu.querySelector('a')?.focus();
+    else if (back) mBtn.focus({ preventScroll: true });
   };
   menu.inert = true;
   mBtn?.addEventListener('click', () => setMenu(!root.classList.contains('menu-open')));
-  function closeAll() { if (dd) setDD(false); if (root.classList.contains('menu-open')) setMenu(false); }
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+  function closeAll(back = true) { if (dd) setDD(false); if (root.classList.contains('menu-open')) setMenu(false, back); }
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const inDD = dd?.contains(document.activeElement);
+    closeAll();
+    if (inDD) ddBtn.focus();
+  });
 }

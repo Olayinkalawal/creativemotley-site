@@ -7,7 +7,8 @@
      the film itself starts loading then on wide screens, but only 0.6 of a screen ahead on narrow ones, and never
      when the reader asked to save data or is on a 2G/3G connection (the poster stands). It plays only while it is
      in view (IntersectionObserver) and faded in (it fades in with the dissolve into the room), and fades in once
-     the poster or a frame is there, so nothing pops.
+     the poster or a frame is there, so nothing pops. It plays once (20 s) and holds its last frame; its Pause / Play
+     button stops it at any time.
      No JS: a <noscript> still of the same frame.
    - The names run on a serif line behind the heads: its position is a pure function of scroll (one period of
      the repeated pair over the stage's pass), so scrolling back is exact. It fades in as it rises from the fold.
@@ -67,11 +68,25 @@ export function init() {
   };
   // it plays only while it can be seen: in view, and faded in (shown, below); decoding a hidden alpha film is the
   // costliest thing in the chapter
-  let shown = REDUCED;
+  // the reader's pause (its button, shown wherever the film can play); the film plays once, then holds its last frame
+  // (phase 4: it looped for as long as it was in view)
+  const toggle = sec.querySelector('[data-dr-toggle]');
+  let shown = REDUCED, held = false;
+  const label = () => { if (toggle) toggle.textContent = held || video.ended ? 'Play' : 'Pause'; };
   const sync = () => {
-    if (inView && !posterOnly) { load(); if (shown) video.play().catch(() => {}); else if (!video.paused) video.pause(); }
+    if (inView && !posterOnly) { load(); if (shown && !held && !video.ended) video.play().catch(() => {}); else if (!video.paused) video.pause(); }
     else if (!video.paused) video.pause();
   };
+  if (toggle && !posterOnly) {
+    toggle.hidden = false;
+    toggle.addEventListener('click', () => {
+      if (video.ended) { video.currentTime = 0; held = false; }
+      else held = !held;
+      label(); sync();
+    });
+    video.addEventListener('ended', label);
+    video.addEventListener('play', label);
+  }
   if ('IntersectionObserver' in window) {
     new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) (narrow ? poster : load)(); }, { rootMargin: '250% 0px' }).observe(film);
     if (narrow) new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) load(); }, { rootMargin: '60% 0px' }).observe(film);
@@ -123,7 +138,10 @@ export function init() {
     // (gl/stage.js: mix = 0.5 + d / 2w around the reading line, w = data-dissolve viewports), from 0.6 to 0.9 of it
     const mix = clamp(0.5 + (0.5 * v.vh - (g.top - v.y)) / (2 * dis * v.vh));
     const fo = smooth(seg(mix, 0.6, 0.9)).toFixed(3);
-    if (fo !== lastFO) { film.style.opacity = fo; lastFO = fo; }
+    if (fo !== lastFO) {
+      film.style.opacity = fo; lastFO = fo;
+      if (toggle) { toggle.style.opacity = fo; toggle.style.visibility = +fo > 0.02 ? '' : 'hidden'; }   // never an invisible focus stop
+    }
     const sh = +fo > 0.02;
     if (sh !== shown) { shown = sh; sync(); }
   });

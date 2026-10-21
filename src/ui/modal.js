@@ -1,6 +1,8 @@
-/* One shared dialog. openModal(node, { onClose, from, onOpen, beforeClose }) moves focus in, traps Tab (iframes included;
+/* One shared dialog. openModal(node, { onClose, from, onOpen, beforeClose, during }) moves focus in, traps Tab (iframes included;
    focus that escapes the dialog, e.g. Shift+Tab out of an embedded player, is brought back), closes on Esc/scrim.
-   onOpen runs once the dialog has opened (after the morph), e.g. to create a player only then; beforeClose runs before
+   onOpen runs once the dialog has opened (after the morph), e.g. to create a player only then; during runs as the
+   dialog is shown (inside the morph's update, after the page behind was captured), e.g. to move the page behind it;
+   html.modal-open is set while it is open (the section that owns the content styles the page behind); beforeClose runs before
    the closing morph captures the page, e.g. to remove that player so the morph shrinks the still art, not the video.
    Opening morphs from the clicked element (View Transitions): the element's picture grows into the modal's first
    picture, and the rest cross-fades. `from` names the source explicitly; otherwise it is the button or link the
@@ -41,7 +43,7 @@ function morph(update, done) {
 const FOCUSABLE = 'a[href],button:not([tabindex="-1"]),iframe,[tabindex="0"]';
 const focusables = () => [...el.querySelectorAll(FOCUSABLE)].filter((n) => n.offsetParent !== null && !n.disabled);
 
-export function openModal(node, { onClose, from, onOpen, beforeClose } = {}) {
+export function openModal(node, { onClose, from, onOpen, beforeClose, during } = {}) {
   clearTimeout(clearT);
   lastFocus = document.activeElement; onCloseFn = onClose || null; beforeCloseFn = beforeClose || null;
   // isOpen: a close that starts during the opening morph (Esc pressed early) skips that morph and resolves its
@@ -54,6 +56,8 @@ export function openModal(node, { onClose, from, onOpen, beforeClose } = {}) {
     isOpen = true;
     body.replaceChildren(node);
     el.inert = false; el.setAttribute('aria-hidden', 'false'); el.classList.add('open');
+    document.documentElement.classList.add('modal-open');
+    try { during?.(); } catch (e) { console.warn('[modal]', e); }
     const target = pictureIn(body.firstElementChild);
     openedWith = mediaKey(target);
     if (source) { source.style.viewTransitionName = ''; if (target) target.style.viewTransitionName = VT; }
@@ -72,6 +76,7 @@ export function closeModal() {
   const back = !!source && usable(source) && !!target && mediaKey(target) === openedWith;
   const hide = () => {
     el.classList.remove('open'); el.setAttribute('aria-hidden', 'true'); el.inert = true;
+    document.documentElement.classList.remove('modal-open');
     if (target) target.style.viewTransitionName = '';
     if (back) source.style.viewTransitionName = VT;
   };

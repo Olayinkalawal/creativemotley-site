@@ -12,7 +12,7 @@
    Click / hover: state.pick ray-casts the posters (the section turns the arc or opens the modal). */
 import * as THREE from 'three';
 import { texture, avifOK } from '../lib/loaders.js';
-import { state, arcAt, place, N } from '../../sections/showcase.js';
+import { state, arcAt, place, N, ready as sectionReady } from '../../sections/showcase.js';
 
 const roomVert = /* glsl */`void main() { gl_Position = vec4(position.xy, 0.0, 1.0); }`;
 const roomFrag = /* glsl */`
@@ -195,6 +195,7 @@ export default function register(stage) {
     id: 'posters', scene, camera,
     post: { grain: 0.05, vignette: 0.3 },
     async load(ctx) {
+      await sectionReady;   // the section has read its posters (state.items)
       const small = ctx.vw < 900;
       const aniso = Math.min(8, ctx.renderer.capabilities.getMaxAnisotropy());
       const opts = { colorSpaceConversion: 'none', premultiplyAlpha: 'none' };
