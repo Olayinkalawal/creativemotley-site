@@ -21,6 +21,10 @@
    - '2d' (no 3D camera here: phones below the gate never load this module; before the GLB, or after a failed load):
      the painting with the same push and dim, and Storytellers from s 0.62, while the DOM's lens still and blades cover
      the screen.
+   - Drag to turn, zoom (gl/lib/drag3d.js): at rest (s < 0.06), once the live camera has the hero, a hit region over its
+     silhouette's box turns it (degrees on top of the pose: heroLive.drag) and zooms it about the pointer (heroLive.zoom:
+     closer by k about a screen point); the push takes over as s leaves the rest band (both ease to 0 by s 0.06). The
+     idle turn holds while the camera is dragged or zoomed and comes back 2.5 s after.
    QA: window.__hero3d (force: { s } or { dist, lens } pose overrides; bg: [r, g, b] draws a flat colour in place of the
    painting; start(): load the camera now; box(): the camera's silhouette box in css px); ?hero3d=0 keeps the 2D path,
    ?hero3d=now loads the GLB without waiting for an input. */
@@ -31,6 +35,7 @@ import { fetchGLB } from '../lib/glbfetch.js';
 import { create, KEYS } from '../lib/camera3d.js';
 import { HERO, heroArt, heroSlot, heroMove, heroDist, heroLive, PORTRAIT_MQ } from '../../ui/hero.js';
 import { CAM3D } from '../../core/env.js';
+import { drag3d } from '../lib/drag3d.js';
 import { clamp, lerp, smooth, seg } from '../../core/scroll.js';
 
 const DEG = Math.PI / 180;
@@ -104,7 +109,7 @@ export default function register(stage) {
   let s = 0, m = heroMove(0), lastView = '', lastOff = '', handed = false, dirtyCal = true, pose = null;
   // the idle turn: its phase advances at `speed` (0 … 1), which eases toward 1 while the reader is about and to 0 after
   // 12 s without input (the camera holds its angle, supersamples, and the stage stops drawing)
-  let phase = 0, speed = 0, lastInput = performance.now();
+  let phase = 0, speed = 0, lastInput = performance.now(), dg = null, heldAt = -1e9;
   const QA = { force: null, bg: null };
 
   /* ── the model's numbers (once per load): a few thousand world points, the body's centre, the front element's ── */
@@ -207,6 +212,7 @@ export default function register(stage) {
     camGen++;
     cam?.dispose(); cam = null; camState = 'none'; cal = null; model = null; handed = false;
     heroLive.mode = '2d'; heroLive.ready = false;
+    dg?.dispose(); dg = null; heroLive.drag = { az: 0, el: 0 }; heroLive.zoom = null;
   }
   /* the stage's own Storytellers scene, drawn into rt (false when it is not ready: the iris then opens on dark glass) */
   function drawStory(renderer, rt, ctx) {
@@ -252,6 +258,7 @@ export default function register(stage) {
       mat.uniforms.res.value.set(w, h); compU.res.value.set(w, h);
       cam?.resize(w, h, dpr); rtStory?.setSize(w, h); dirtyCal = true; lastView = '';
     },
+    deactivate() { dg?.off(); },   // not drawn: no drag region
     // turning, accumulating its idle samples, or handing over from the still: the stage keeps drawing (≤ 30 fps idle)
     ambient() { return camState === 'ready' && (speed > 0.002 || cam.busy() || (!handed && s < HERO.T.turn[0])); },
     update(ctx, sg) {
@@ -281,7 +288,20 @@ export default function register(stage) {
       if (dirtyCal || !cal || cal.vw !== ctx.vw || cal.vh !== ctx.vh) calibrate(ctx);
       // the idle turn
       const now = performance.now(), dt = Math.min(0.1, ctx.dt || 1 / 60);
-      const about = !QA.force && now - lastInput < 12000 && !document.hidden && s < HERO.T.turn[0] + 0.01;
+      // drag to turn and zoom (gl/lib/drag3d.js), at rest only: as s leaves the rest band the push takes over (w → 0)
+      if (!dg && heroLive.mode === '3d') dg = drag3d(stage, section.querySelector('.hero__pin'), 'camera', (b) => {
+        // the hint: under the camera, inside the frame, clear of the dek (34 px: the pill and 6 px of air)
+        const dk = section.querySelector('.frame__dek')?.getBoundingClientRect();
+        return [(b.x0 + b.x1) / 2, Math.min(b.y1 + 6, dk ? dk.top - 34 : 1e9)];
+      });
+      const w = 1 - smooth(seg(s, 0.02, 0.06));
+      if (dg) {
+        heroLive.drag = { az: dg.az * w, el: dg.el * w };
+        heroLive.zoom = dg.k > 1.0001 && w > 0 ? { k: 1 + (dg.k - 1) * w, at: [dg.cx, dg.cy] } : null;
+        if (dg.busy() || dg.k > 1.0001) heldAt = now;
+      }
+      // (the idle turn holds while the camera is dragged or zoomed, and for 2.5 s after)
+      const about = !QA.force && now - lastInput < 12000 && !document.hidden && s < HERO.T.turn[0] + 0.01 && now - heldAt > 2500;
       speed += ((about ? 1 : 0) - speed) * Math.min(1, dt * 1.5);
       if (speed < 0.002 && !about) speed = 0;
       phase += dt * speed;
@@ -294,7 +314,8 @@ export default function register(stage) {
       const off = [(az - K.az + drag.az).toFixed(3), (el - K.el + drag.el).toFixed(3)];
       cam.setPhases({ orbit: 1, hand: 0, explode: 0, settle: 0 });
       const ptr = ctx.reduced || f.s != null || f.dist != null ? 0 : 1 - m.turn;
-      cam.setPointer(Math.round(ctx.pointer.x * 50) / 50 * ptr, Math.round(ctx.pointer.y * 50) / 50 * ptr, 1);
+      const pv = dg ? dg.ptr(ctx.pointer) : ctx.pointer;
+      cam.setPointer(Math.round(pv.x * 50) / 50 * ptr, Math.round(pv.y * 50) / 50 * ptr, 1);
       if (off.join() !== lastOff) { cam.setOffset(+off[0], +off[1]); lastOff = off.join(); }
       let dist = f.dist ?? heroDist(cal.dRest, m);
       const tl = f.lens != null ? f.lens : m.toLens;
@@ -309,11 +330,14 @@ export default function register(stage) {
       const v = { target: T, dist, shift, near: Math.max(0.02, dist - 1.5), ...(f.fov ? { fov: f.fov } : {}) };
       const key = [...T, dist, ...shift, f.fov || 0].map((x) => x.toFixed(5)).join();
       if (key !== lastView) { cam.setView(v); lastView = key; }
-      pose = { az, el, fov: f.fov || K.fov, aspect: cal.aspect, T, dist, shift, vw: ctx.vw, vh: ctx.vh };
+      pose = { az: az + drag.az, el: el + drag.el, fov: f.fov || K.fov, aspect: cal.aspect, T, dist, shift, vw: ctx.vw, vh: ctx.vh };   // (turned as dragged)
       heroLive.box = (() => {   // the silhouette's box (css px), for the DOM (the lines' hole, the beats)
-        const b = boxNDC(az, el, pose.fov, cal.aspect, T, dist, shift);
+        const b = boxNDC(pose.az, pose.el, pose.fov, cal.aspect, T, dist, shift);
         return { x0: (b.x0 + 1) / 2 * ctx.vw, x1: (b.x1 + 1) / 2 * ctx.vw, y0: (1 - b.y1) / 2 * ctx.vh, y1: (1 - b.y0) / 2 * ctx.vh };
       })();
+      // the hit region over the camera's silhouette (in the pin: at rest its top is the viewport's); the hint once it rests
+      if (dg) dg.step(ctx, heroLive.box, sg.top - ctx.scrollY + clamp(ctx.scrollY - sg.top, 0, Math.max(0, sg.height - ctx.vh)),
+        heroLive.mode === '3d' && s < 0.06 && !QA.force, s < 0.02);
     },
     render(renderer, target, ctx) {
       const two = heroLive.mode !== '3d';
@@ -327,7 +351,8 @@ export default function register(stage) {
       let tCam = null;
       if (ready && (!two || s < HERO.T.turn[0] || QA.bg)) {
         tCam = cam.renderTexture(renderer, 0, { id: false });
-        if (tCam && two && s < HERO.T.turn[0] && !QA.bg) { heroLive.mode = '3d'; heroLive.ready = true; handed = true; }
+        // (one more frame: the next update makes the drag region, even if nothing else moves)
+        if (tCam && two && s < HERO.T.turn[0] && !QA.bg) { heroLive.mode = '3d'; heroLive.ready = true; handed = true; requestAnimationFrame(() => stage.invalidate()); }
       }
       let story = false;
       if (tCam && m.blades > 0) {

@@ -107,6 +107,30 @@ export function tdState(s, T, L, fl, out = { ph: {}, phN: {} }) {
   return out;
 }
 
+/* the Kit's cuts on the clock instead of scrubbed by scroll (a reader stopping inside one rested mid-wipe: the previous
+   device's parts sliced by the ink front, the next one half in, no heading): the cut to shot k + 1 plays forward over
+   TD_CUT_S when s crosses its window's start going down (or s is past the window), and back when s crosses the
+   window's end going up; inside the window it keeps the way it was going, so the window is a hold. Reversible mid-play;
+   a jump lands without playing (as does the first frame after C.p is cleared: the section clears it while parked). The
+   clock is real time (≤ 0.25 s a frame, so a slow renderer still plays the cut in a few steps). C (per run, kept
+   between frames): p, the visual position (shot index + cut progress); C.kv, the shot leaving (or on screen), C.cut
+   (0 … 1), C.moving */
+export const TD_CUT_S = 0.7;
+export function tdCutClock(C, s, T, k, jump) {
+  const nx = T[k + 1], now = performance.now();
+  let to = k;
+  if (nx && s >= nx.cut[0]) {
+    if (C.w !== k + 1) C.fw = !(C.ls >= nx.cut[1]);   // entering the window: from above, forward; from below, back
+    C.w = k + 1; to = k + (C.fw ? 1 : 0);
+  } else C.w = -1;
+  const step = Math.min(0.25, (now - (C.t || now)) / 1000) / TD_CUT_S;
+  if (jump || !(C.p >= 0) || Math.abs(to - C.p) > 1) C.p = to;   // (the first run, a jump)
+  else C.p += clamp(to - C.p, -step, step);
+  C.ls = s; C.t = now; C.moving = C.p !== to;
+  C.kv = Math.min(T.length - 1, Math.floor(C.p + 1e-6)); C.cut = Math.max(0, C.p - C.kv);
+  return C;
+}
+
 /* how far along from the orbit's start key to its hero key the real-time views are at orbit o (the runtimes' pace over
    the orbit with this file's re-timing inverted: gl/lib/camera3d.js, kit3d.js) */
 const pace = (u) => (0.5 * u + 0.5 * (1 - Math.cos(Math.PI * u)) / Math.PI) / (0.5 + 1 / Math.PI);

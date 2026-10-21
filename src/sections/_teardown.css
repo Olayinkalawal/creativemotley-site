@@ -51,8 +51,10 @@ html.gl-ready .td.is-drawn:is([data-scene="td:camera3d"], [data-scene="td:kit"])
   background: radial-gradient(var(--krx, 34%) var(--kry, 46%) at var(--kx, 66%) var(--ky, 50%), var(--k0, #000), var(--k1, #000));
 }
 .td__key::before { content: ''; position: absolute; top: 0; bottom: 0; right: 100%; width: 16%; background: linear-gradient(90deg, transparent, var(--k1, #000)); }
-/* several shots: one copy at a time (JS shows the current one) */
-html.js .td--seq[data-td-ready]:not(.td-static) .td__copy { visibility: hidden; }   /* no will-change: each would be a full-screen layer */
+/* several shots: one copy at a time (JS marks the current one, .is-cur; the cut's heading crossfade). Opacity only: the
+   others stay in the accessibility tree, so a screen reader reads every device's heading and parts */
+html.js .td--seq[data-td-ready]:not(.td-static) .td__copy { opacity: 0; pointer-events: none; transition: opacity 0.3s var(--ease-out); }   /* no will-change: each would be a full-screen layer */
+html.js .td--seq[data-td-ready]:not(.td-static) .td__copy.is-cur { opacity: 1; pointer-events: auto; transition-delay: 0.15s; }
 .td__target { position: absolute; visibility: hidden; pointer-events: none; }
 .td__fx { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 @media (min-width: 1024px) {
@@ -97,20 +99,36 @@ html.js .td--seq[data-td-ready]:not(.td-static) .td__copy { visibility: hidden; 
 .td__ic { width: 22px; height: 22px; color: var(--gold); margin-top: -1px; }
 .td__ic svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
 
-/* kinetic copy: heads reveal line by line through a mask (JS splits the lines and sets --k per line) */
+/* kinetic copy: heads reveal line by line through a mask (JS splits the lines, --i on each; the heading gets .is-in when
+   scroll reaches it, and the lines rise as a CSS transition, 70 ms apart, out again without the stagger). A waiting
+   line sits a whole line plus 0.45em below its mask (112 % of its box left the tops of tall letters showing under a
+   tight line height), transparent */
 .td-ln { display: block; overflow: hidden; padding: 0.06em 0 0.12em; margin: -0.06em 0 -0.12em; }
-/* a waiting line sits a whole line plus 0.45em below its mask (112 % of its box left the tops of tall letters showing
-   under a tight line height: dots and dashes under a label held mid-cut), and is transparent at --k 0 */
-.td-ln__in { display: block; transform: translate3d(0, calc((1 - var(--k, 1)) * (100% + 0.45em)), 0); opacity: min(1, calc(var(--k, 1) * 8)); will-change: transform; }
-.td__giant .td-ln { padding: 0.12em 0.08em 0.16em; margin: -0.12em -0.08em -0.16em; }
-
-/* spec rows (pinned): stagger in with the hand-off (--in), then light in step with the explode (--on) */
-html.js .td[data-td-ready]:not(.td-static) .td__spec {
-  opacity: calc(var(--in, 1) * (0.5 + 0.5 * var(--on, 1)));
-  transform: translate3d(0, calc((1 - var(--in, 1)) * 18px), 0); will-change: transform, opacity;
+.td-ln__in { display: block; will-change: transform; }
+html.js .td[data-td-ready]:not(.td-static) .td-ln__in {
+  transform: translate3d(0, calc(100% + 0.45em), 0); opacity: 0; transition: transform 0.35s var(--ease-out), opacity 0.2s var(--ease-out) 0.1s;
 }
+html.js .td[data-td-ready]:not(.td-static) .is-in > .td-ln > .td-ln__in {
+  transform: none; opacity: 1; --d: calc(0.06s + var(--i, 0) * 70ms);
+  transition: transform 0.65s var(--ease-out) var(--d), opacity 0.2s var(--ease-out) var(--d);
+}
+.td__giant .td-ln { padding: 0.12em 0.08em 0.16em; margin: -0.12em -0.08em -0.16em; }
+/* the label: in with the head; the chapter title: out (up, faded) before the hand-off */
+html.js .td[data-td-ready]:not(.td-static) .td__label { opacity: 0; transform: translate3d(0, 14px, 0); transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out); }
+html.js .td[data-td-ready]:not(.td-static) .td__label.is-in { opacity: 1; transform: none; transition-duration: 0.6s; }
+html.js .td[data-td-ready]:not(.td-static) .td__hero { transition: opacity 0.5s var(--ease-out), transform 0.8s var(--ease-out); }
+html.js .td[data-td-ready]:not(.td-static) .td__hero.is-out { opacity: 0; transform: translate3d(0, -5svh, 0); pointer-events: none; }
+
+/* spec rows (pinned): in with the copy (.is-in: a transition, 45 ms apart), then each lights as the explode reaches it
+   (.is-on: its icon and text from half to full) */
+html.js .td[data-td-ready]:not(.td-static) .td__spec {
+  opacity: 0; transform: translate3d(0, 18px, 0); will-change: transform, opacity;
+  transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+html.js .td[data-td-ready]:not(.td-static) .td__spec.is-in { opacity: 1; transform: none; transition-duration: 0.6s; transition-delay: calc(0.18s + var(--i, 0) * 45ms); }
+html.js .td[data-td-ready]:not(.td-static) .td__spec > * { opacity: 0.5; transition: opacity 0.4s var(--ease-out); }
+html.js .td[data-td-ready]:not(.td-static) .td__spec:is(.is-on, .is-hl) > * { opacity: 1; }
 html.js .td[data-td-ready]:not(.td-static) .td__spec:is(.is-hot, .is-hl) b { color: var(--gold); }
-html.js .td[data-td-ready]:not(.td-static) .td__spec.is-hl { opacity: var(--in, 1); }
 
 /* construction lines: one static layer revealed by its opacity (JS), masked inside its SVG by one mask image painted
    once per resize (JS: the rail's edge, the top bar, the title's hole, the device dimmed). Nothing in it is redrawn
@@ -206,6 +224,26 @@ html.js .td.td--mk:not(:has(.td__mk--name))[data-td-ready]:not(.td-static) .td__
   .td[data-td-compact] .td__spec .td__l { display: none; }   /* long lists: titles only on phones */
 }
 
+/* ── phones held sideways (844×390): the exploded device ran under the heading and the two-column list, so they get
+   the desktop's layout, scaled down: the copy in a column on the left (the names only, in two columns), the device
+   beside it (sections/_teardown.js frames it with the wide keys there: the screen is wider than tall) ──────────── */
+@media (max-width: 1023px) and (orientation: landscape) and (max-height: 500px) {
+  .td { --td-col-x: max(var(--col-pad), env(safe-area-inset-left)); --td-col-w: min(40vw, 340px); --td-gap: 14px; }
+  html.js .td[data-td-ready]:not(.td-static) .td__target { left: calc(var(--td-col-x) + var(--td-col-w) + var(--td-gap)); right: max(2vw, env(safe-area-inset-right)); top: calc(var(--nav-h) + 1svh); bottom: 3svh; height: auto; }
+  html.js .td[data-td-ready]:not(.td-static) .td__copy { left: var(--td-col-x); right: auto; width: var(--td-col-w); justify-content: center; padding: calc(var(--nav-h) + 1svh) 0 2svh; }
+  html.js .td[data-td-ready]:not(.td-static) .td__copy::before { inset: 0 -14% 0 -30%; background: linear-gradient(90deg, rgba(0, 0, 0, 0.82), rgba(0, 0, 0, 0.6) 75%, rgba(0, 0, 0, 0)); }
+  html.js .td.td[data-td-ready]:not(.td-static) .td__head { font-size: 1.05rem; }
+  html.js .td[data-td-ready]:not(.td-static) .td__label { margin-bottom: 0.3rem; }
+  html.js .td[data-td-ready]:not(.td-static) .td__specs { margin-top: 0.6rem; column-gap: 12px; padding-bottom: 0; }
+  html.js .td.td[data-td-ready]:not(.td-static) .td__spec { padding: 3px 0 4px; gap: 6px; grid-template-columns: 14px minmax(0, 1fr); }
+  html.js .td[data-td-ready]:not(.td-static) .td__spec .td__l { display: none; }
+  html.js .td[data-td-ready]:not(.td-static) .td__ic { width: 14px; height: 14px; }
+  /* (over method.css's phone sizes and its caption's room) */
+  html.js #method.td[data-td-ready]:not(.td-static) .td__head { font-size: 1.05rem; }
+  html.js #method.td[data-td-ready]:not(.td-static) .td__spec { padding: 3px 0 4px; }
+  html.js #method.td[data-td-ready]:not(.td-static) .td__specs--lines { padding-bottom: 0; }
+}
+
 /* ── static: reduced motion (.td-static) or no JS ──────────────────────────────────────────────── */
 :is(.td-static, html:not(.js) .td) .td__run {
   height: auto; display: grid; grid-template-columns: var(--td-col-x) var(--td-col-w) var(--td-gap) minmax(0, 1fr) 1.2vw;
@@ -277,3 +315,48 @@ html.js .td.td--mk:not(:has(.td__mk--name))[data-td-ready]:not(.td-static) .td__
   :is(.td-static, html:not(.js) .td).td--seq .td__copy[data-td-shot="2"] { grid-row: 7; }
   :is(.td-static, html:not(.js) .td).td--seq .td__copy[data-td-shot="3"] { grid-row: 9; }
 }
+
+/* ── drag to turn, zoom (gl/lib/drag3d.js): one layer (.d3w, shown while the device may be turned: .is-on) over a
+   real-time 3D device (the hero camera, Method's camera, the Kit's devices; made by the scene once its device draws, so
+   never at tier 0, on the stills or under reduced motion): the hit region (.d3), the one-time hint and the zoom buttons.
+   touch-action pan-y: a vertical swipe scrolls the page, and the browser's pinch zooms nothing here (drag3d zooms the
+   device instead). The buttons show while the device is hovered or focused, or zoomed (.is-z), and linger 0.5 s ── */
+.d3w { display: none; position: absolute; inset: 0; z-index: 3; pointer-events: none; contain: strict; }   /* (its writes stay inside it) */
+.d3w.is-on { display: block; }
+.d3 {
+  position: absolute; left: 0; top: 0; border-radius: 14px; outline: none; pointer-events: auto;
+  cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;
+}
+.d3.is-drag { cursor: grabbing; }
+.d3:focus-visible { box-shadow: 0 0 0 2px var(--gold), 0 0 0 5px rgba(11, 8, 5, 0.4); }
+.d3__hint {
+  position: absolute; left: 0; top: 0; translate: -50% 0; opacity: 0; transition: opacity 0.5s var(--ease-out);
+  padding: 7px 13px 6px; border-radius: 999px; white-space: nowrap; font: var(--f-small); letter-spacing: var(--ls-caps);
+  color: var(--cream); background: rgba(11, 8, 5, 0.66);
+}
+.d3__btns {
+  position: absolute; left: 0; top: 0; display: flex; flex-direction: column; gap: 6px; pointer-events: auto;
+  opacity: 0; visibility: hidden; transition: opacity 0.25s var(--ease-out) 0.5s, visibility 0s linear 0.75s;
+}
+.d3:is(:hover, :focus-visible) ~ .d3__btns, .d3__btns:is(:hover, :focus-within), .d3w.is-z .d3__btns { opacity: 1; visibility: visible; transition-delay: 0s; }
+.d3__b {
+  position: relative; width: 34px; height: 34px; padding: 0; border-radius: 50%; cursor: pointer;
+  color: var(--cream); background: rgba(11, 8, 5, 0.62); border: 1px solid rgba(244, 237, 223, 0.26); transition: background 0.2s, color 0.2s;
+}
+/* the icons: + (two bars), − (one), reset (an open ring and its arrowhead) */
+.d3__b::before, .d3__b::after { content: ''; position: absolute; left: 50%; top: 50%; width: 11px; height: 1.5px; margin: -0.75px 0 0 -5.5px; border-radius: 1px; background: currentColor; }
+.d3__b:first-child::after { transform: rotate(90deg); }
+.d3__b:nth-child(2)::after { display: none; }
+.d3__b:last-child::before { width: 10px; height: 10px; margin: -5px 0 0 -5px; border: 1.5px solid; border-left-color: transparent; border-radius: 50%; background: none; transform: rotate(-45deg); }
+.d3__b:last-child::after { width: 0; height: 0; margin: -7.5px 0 0 -6px; border: 3px solid transparent; border-bottom: 4px solid; border-radius: 0; background: none; transform: rotate(-60deg); }
+.d3__b:hover { background: var(--gold); color: var(--ink); }
+.d3__b:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+@media (pointer: coarse) { .d3__b { width: 40px; height: 40px; } }   /* (drag3d.js places the column by these sizes) */
+/* over the hero's bright painting: cream pills, ink type */
+.hero :is(.d3__hint, .d3__b) { color: var(--paper-ink); background: rgba(244, 237, 223, 0.8); }
+.hero .d3__b { border-color: rgba(169, 127, 66, 0.5); }
+.hero .d3__b:hover { background: var(--gold); }
+.hero .d3:focus-visible { box-shadow: 0 0 0 2px rgba(169, 127, 66, 0.95), 0 0 0 5px rgba(244, 237, 223, 0.6); }
+/* zoomed in (past 1.15×): the copy the enlarged device passes under steps back */
+:is(.td__copy > *, .td__hero > *, .hero .frame) { transition: opacity 0.35s var(--ease-out); }
+:is(.td.d3-zoomed :is(.td__copy > *, .td__hero > *), .hero.d3-zoomed .frame) { opacity: 0.25; }

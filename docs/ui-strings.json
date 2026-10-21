@@ -1,5 +1,5 @@
 {
- "note": "Interface labels with no fact in facts.json. Everything else on the page must trace to facts.json. Device labels and part names (Console … Rear glass) name what the Kit's devices show (the real-time 3D devices and their stills, public/assets/teardown/<device>3d/still_exploded.webp; each part row's marker sits on that part's 3D anchor, data-anchor3d); they are descriptive labels, not claims.",
+ "note": "Interface labels with no fact in facts.json. Everything else on the page must trace to facts.json. Device labels and part names (Console … Rear glass) name what the Kit's devices show (the real-time 3D devices and their stills, public/assets/teardown/<device>3d/still_exploded.webp; each part row's marker sits on that part's 3D anchor, data-anchor3d); they are descriptive labels, not claims. The drag-to-turn and zoom strings (the one-time hint, the zoom buttons, each 3D device's aria-label: gl/lib/drag3d.js) are interface instructions.",
  "strings": [
   "Skip to content",
   "Chapters",
@@ -47,6 +47,16 @@
   "Rear screen (LCD)",
   "Lens elements",
   "Shutter",
-  "Image sensor"
+  "Image sensor",
+  "Drag to turn · pinch to zoom",
+  "Drag to turn · double-click to zoom",
+  "Zoom in",
+  "Zoom out",
+  "Reset view",
+  "3D camera: drag or use the arrow keys to turn, + and − to zoom",
+  "3D console: drag or use the arrow keys to turn, + and − to zoom",
+  "3D microphone: drag or use the arrow keys to turn, + and − to zoom",
+  "3D headphones: drag or use the arrow keys to turn, + and − to zoom",
+  "3D phone: drag or use the arrow keys to turn, + and − to zoom"
  ]
 }

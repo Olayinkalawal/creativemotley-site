@@ -45,15 +45,20 @@
    its 3D stills; ?q=… turns that off for QA, ?cam3d=1 forces the 3D onto a phone below CAM3D, as for the camera).
    No bloom (the camera's choice: strength 0.05 over threshold 4 never shows, and it is a full-screen pass per sample).
    Idle-stop: re-renders on change, then adds jittered samples while ambient() (≤ 12 frames), then the stage stops.
+   Drag to turn, zoom (gl/lib/drag3d.js): the shot on screen's device (A) turns and zooms under the pointer (setOffset,
+   setZoom), through its orbit, explode and hold, once it is live and has stopped turning from the still's pose; never
+   during a cut (the offsets spring back as it starts, and reset at each cut; the incoming device is always at the
+   scroll's pose). Its markers follow (an id pass every 5° of turn and when it settles, beside tdIdDue's schedule).
    Reduced motion never reaches this scene (main.js does not boot the stage; the section shows the static layout with
    the 3D stills); if it did (ctx.reduced): no orbit, each device held exploded in the column, cuts as cross-fades. */
 import { Scene, OrthographicCamera, ShaderMaterial, Mesh, PlaneGeometry, Vector2, Vector3, Vector4, WebGLRenderTarget, UnsignedByteType, LinearFilter } from 'three';
 import { create, createPool } from '../lib/kit3d.js';
 import { DEVICES } from '../lib/kit3d_devices.js';
 import { loadTexture } from '../lib/loaders.js';
-import { TD_ASPECT, tdLive, tdRun, tdFlags, tdShots, tdDev, tdTimeline, tdState, tdFraming, tdFit, tdView, tdLerpRect, tdPinTop,
+import { TD_ASPECT, tdLive, tdRun, tdFlags, tdShots, tdDev, tdTimeline, tdState, tdShotPhases, tdFraming, tdFit, tdView, tdLerpRect, tdPinTop,
   tdIdDue, tdIntroPose, tdIntroTurn, tdStandIn, tdGiveUp, tdPointerStep, TD_INTRO_MS } from '../lib/tdcore.js';
 import { fetchGLB } from '../lib/glbfetch.js';
+import { drag3d } from '../lib/drag3d.js';
 
 /* the site's art direction over the package's view keys (data only, set before any create(), so kit3d_devices.js stays
    the package's file, as camera3d.js does with the camera's KEYS); kit.html's still framings match these:
@@ -214,7 +219,8 @@ export default function register(stage) {
   let ctxRef = null, pool = null, shots = [], loading = null, queued = null, disposed = true, gaveUp = false, showsK = false;
   let lastS = NaN, up = false;     // the reader's last direction (s falling: on the way back up)
   let run = null, pinH = 0, heroR = null, colR = null, fl = null, timeline = null, TL = -1, vw = 0, vh = 0, tall = false;
-  let A = null, N = null, lastA = null, idV = -1, idPending = false, moving = false;
+  let A = null, N = null, lastA = null, idV = -1, idPending = false, moving = false, dg = null, dgA = null;
+  const NAME = { mixer3d: 'console', mic3d: 'microphone', headphones3d: 'headphones', phone3d: 'phone' };   // drag3d's aria-labels
   const ST = { ph: {}, phN: {} }, S = {}, VS = {}, VN = {}, PA = {}, PN = {}, PV = {};
   const RPH = { orbit: 1, hand: 1, explode: 1, settle: 1, handLin: 1, mix: 1, explodeLin: 1 };   // reduced: the exploded hold
 
@@ -379,19 +385,24 @@ export default function register(stage) {
       for (const x of shots) { dropDevice(x); dropStills(x); }
       shots = []; loading = null; queued = null; A = N = lastA = null; idPending = false; idV = -1; moving = false; showsK = false;
       live.anchors3d = null; live.ready = false; live.turning = false;
+      dg?.dispose(); dg = null; dgA = null;
       pool?.dispose(); pool = null;
       shRT.forEach((t, i) => { t?.dispose(); shRT[i] = null; });
       const u = mat.uniforms;
       u.mapA.value = u.stA0.value = u.stA1.value = u.shA.value = u.mapN.value = u.stN0.value = u.shN.value = null;
       run = null;
     },
-    deactivate() { for (const x of shots) if (x.d && x.held) { x.d.release(); x.held = false; } },   // not drawn: free the running means
+    deactivate() { dg?.off(); for (const x of shots) if (x.d && x.held) { x.d.release(); x.held = false; } },   // not drawn: free the running means; no drag region
     resize(w, h, dpr) { mat.uniforms.res.value.set(w, h); mat.uniforms.shTexel.value.set(SHADOW_DIV / w, SHADOW_DIV / h); for (const x of shots) x.d?.resize(w, h, dpr); },
     update(ctx) {
       if (!shots.length) return;
       if (!run || ctx.vw !== vw || ctx.vh !== vh) measure(ctx);
       const { r, st } = shotNow(ctx);
-      const k = st.k, sh = shots[k], nx = shots[k + 1], reduced = ctx.reduced;
+      // the cut on the section's clock (sections/_teardown.js, tdcore tdCutClock; this frame's): k is the shot leaving (or
+      // on screen), cutK the wipe; its phases (and the incoming shot's) at this s
+      const clk = live.cf === ctx.frame && !ctx.reduced, k = clk ? live.kv : st.k, cutK = clk ? live.cutC : st.cut;
+      if (k !== st.k) { tdShotPhases(timeline[k], r.s, st.ph); if (timeline[k + 1]) tdShotPhases(timeline[k + 1], r.s, st.phN); }
+      const sh = shots[k], nx = shots[k + 1], reduced = ctx.reduced;
       // phones: the governor stepped all the way down while the Kit draws: give up to the stills for this visit
       if (tdGiveUp(ctx, stage) && !gaveUp) {
         gaveUp = true;
@@ -408,7 +419,10 @@ export default function register(stage) {
       if (live.f === ctx.frame && !reduced) { x = live.x; y = live.y; w = live.w; h = live.h; }
       else { tdLerpRect(live.orb || heroR, colR, reduced ? 1 : (k === 0 ? ph.hand : 1), S); x = S.x; y = S.y + pinTop; w = S.w; h = S.h; }
       const lay = { x, y, w, h };
-      const u = mat.uniforms, dk = ctx.dpr, px = tdPointerStep(ctx.pointer.x), py = tdPointerStep(ctx.pointer.y);
+      // drag to turn and zoom (gl/lib/drag3d.js): shot k's device only; a new device starts at the scroll's pose
+      if (!dg && live.ready) dg = drag3d(stage, section.querySelector('.td__pin'), 'console');
+      const pv = dg ? dg.ptr(ctx.pointer) : ctx.pointer;
+      const u = mat.uniforms, dk = ctx.dpr, px = tdPointerStep(pv.x), py = tdPointerStep(pv.y);
       u.rect.value.set(x * dk, (ctx.vh - y - h) * dk, Math.max(1, w * dk), Math.max(1, h * dk));
       // shot k: its device posed from the clock, over its key (or its stills, the stand-in)
       A = sh.d && sh.d.loaded ? sh.d : null;
@@ -416,12 +430,16 @@ export default function register(stage) {
       const la = A ? fadeK(sh, dt) : 0;
       u.liveA.value = la;
       let turning = false;
+      if (dg && A !== dgA) { dg.reset(); dgA?.setOffset(0, 0); dgA?.setZoom(); dgA = A; dg.name(NAME[sh.dev]); }
       if (A) {
         const P = posed(sh, ph, PA, dt); turning = P !== ph;
         A.setPhases(P); A.setLayout(lay, ctx.vw, ctx.vh); A.setPointer(px, py, 1);
+        A.setOffset(dg?.az || 0, dg?.el || 0); A.setZoom(dg?.k || 1, dg?.x || 0, dg?.y || 0);
         // the markers draw in with the scroll (tdcore tdIdDue, the camera's schedule): an id pass every 0.025 of explode
-        // from 0.93, one as it reaches 1, every third of the settle (and one whenever the view settles, inside render())
-        if (tdIdDue(sh.ID, ph.explode, ph.settle, P !== ph)) A.occlusion();
+        // from 0.93, one as it reaches 1, every third of the settle (and one whenever the view settles, inside render());
+        // and as the reader turns or zooms it
+        const due = tdIdDue(sh.ID, ph.explode, ph.settle, P !== ph);
+        if ((dg?.due() && ph.explode >= 0.93) || due) A.occlusion();
         // while it turns from the still's pose (no id pass yet), the section keeps the markers on the still's uv: they hand
         // over to the 3D anchors after the turn, with the first id pass, instead of blinking off at the dissolve
         live.turning = P !== ph;
@@ -451,7 +469,7 @@ export default function register(stage) {
       // the cut: the incoming shot, whole on its key in the column (the same rect: the slot is the column by now); a device
       // and still that are both late wipe in the bare key (the still lands on it), rather than holding the cut back
       N = null;
-      const cut = nx && st.cut > 0 ? (reduced ? smooth(st.cut) : easeIO(st.cut)) : 0;
+      const cut = nx && cutK > 0 ? (reduced ? smooth(cutK) : easeIO(cutK)) : 0;
       u.cutT.value = cut; u.xfade.value = reduced ? 1 : 0;
       let ln = 0;
       if (cut > 0) {
@@ -460,7 +478,7 @@ export default function register(stage) {
         if (N && nx.liveAt < 0) goLive(nx, phN);
         ln = N ? fadeK(nx, dt) : 0;
         u.liveN.value = ln;
-        if (N) { const P = posed(nx, phN, PN, dt); turning ||= P !== phN; N.setPhases(P); N.setLayout(lay, ctx.vw, ctx.vh); N.setPointer(px, py, 1); }
+        if (N) { const P = posed(nx, phN, PN, dt); turning ||= P !== phN; N.setPhases(P); N.setLayout(lay, ctx.vw, ctx.vh); N.setPointer(px, py, 1); N.setOffset(0, 0); N.setZoom(); }
         else nx.pend = 'gl';
         if (ln < 1) { tdView(FN, phN, VN); u.zoomN.value = VN.zoom; u.shiftN.value.set(VN.sx, VN.sy); u.stN0.value = nx.stH; }
         const kn = FN.key || [0, 0, 0, 0, 0, 0];
@@ -471,6 +489,10 @@ export default function register(stage) {
       moving = turning || !!(A && la < 1) || !!(N && ln < 1);
       u.fade.value = st.fade;
       live.px = ctx.pointer.x; live.py = ctx.pointer.y; live.push = 0; live.strength = 0;
+      // the hit region over shot k's device (not during a cut, nor while it turns from its still's pose); the hint may
+      // show at a resting point (the console's orbit before the hand-off, or a device's hold)
+      if (dg) dg.step(ctx, A ? A.screenBox() : null, pinTop, !!A && live.ready && !turning && la > 0.5 && cut <= 0 && st.fade > 0.5,
+        st.fade > 0.9 && ((k === 0 && ph.hand < 0.001) || ph.settle > 0.3));
       // a loaded neighbour that is not drawn frees its running mean
       for (const q of shots) if (q.d && q.held && q.d !== A && q.d !== N) { q.d.release(); q.held = false; }
     },
@@ -491,6 +513,7 @@ export default function register(stage) {
       renderer.setRenderTarget(target);
       renderer.render(scene, camera);
       // the section's stills go once this scene shows shot k (its device, or its own stand-in)
+      if (showsK && !live.ready) requestAnimationFrame(() => stage.invalidate());   // (one more frame: the next update makes the drag region)
       live.ready = showsK;
       // the occlusion test landed (the view settled): one more frame (ambient) so the markers take it
       if (A) { const v = A.idVersion; if (v !== idV) { idV = v; idPending = true; stage.invalidate(); } }

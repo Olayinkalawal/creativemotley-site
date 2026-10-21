@@ -1213,8 +1213,7 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
   }
   /* the zoom on the rect the fit uses (bleed and inset included, so a zoom is a pure scale of the picture about a point):
      css x' = k x + zm.x, y' = k y + zm.y, in NDC */
-  const zoomNDC = (R) => (zm.k === 1 && !zm.x && !zm.y ? R : [R[0] * zm.k + zm.k - 1 + 2 * zm.x / vw, R[1] * zm.k + zm.k - 1 + 2 * zm.x / vw,
-    R[2] * zm.k + 1 - zm.k - 2 * zm.y / vh, R[3] * zm.k + 1 - zm.k - 2 * zm.y / vh]);
+  const zoomNDC = (R) => R.map((v, i) => v * zm.k + (i < 2 ? zm.k - 1 + 2 * zm.x / vw : 1 - zm.k - 2 * zm.y / vh));
   function rectNDC() {
     if (!rect) return [-1, 1, -1, 1];
     const top = portrait() ? (C.insetTop ?? 16) * ph.hand : 0;   // phones: clear of the header bar as it lands in the column
