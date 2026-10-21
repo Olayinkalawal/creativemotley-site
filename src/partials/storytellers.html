@@ -1,23 +1,21 @@
 <!-- I · STORYTELLERS · scene: plate:storytellers ("The School of Athens, now", public/assets/scenes/storytellers; keys in
      src/gl/keys/storytellers.json) · owner: track S
-     The film plays out inside the hero. This section's painting comes in under it: data-bleed, the stage's ink-bleed
-     dissolve riding the section's top edge (the film holds above the edge and the painting eats up into it through
-     the noise, in a band under the edge; the film's line art dims to 0.2 as the edge climbs, data-bleed="0.2", so it
-     recedes before the rising title reaches it), and data-rise, the painting rising with that edge until the section's top
-     reaches the top of the screen. So the title, set at the opener's top, rides the vault all the way in and lands by
-     screen 2, never crossing the crowd; the opener's dark scrim veils the lit Apollo niche in the title's zone. Then a
-     clear look at the hall, and the paper: the three ways in converging on one machine, and who we are (drafts DC01 +
-     DC03, data-draft, for the client). Phones: the hero still holds and the portrait rises the same way (its dark
-     vault holds the title). -->
+     The hero's fly through the lens of its 3D camera ends on this painting: the iris opens onto it (gl/scenes/hero3d.js
+     draws this section's own scene inside the aperture), so the boundary with the hero is a plain cut between two
+     identical frames (data-dissolve="0.001"; no bleed, no rise). The painting then holds still while the opener scrolls
+     up, and the title and its scrim stay hidden until the opener's top passes 0.2 of the screen, then come in on the
+     clock (0.6 s, sections/storytellers.js: .is-shown), so they never ride across the crowd. Then a clear look at the
+     hall, and the paper: the three ways in converging on one machine, and who we are (drafts DC01 + DC03, data-draft,
+     for the client). -->
 <section class="chapter" id="storytellers" data-chapter data-theme="dark" data-scene="plate:storytellers" data-plate="storytellers"
-  data-bleed="0.2" data-rise aria-labelledby="storytellers-title">
-  <div class="opener st-open col">
+  data-dissolve="0.001" data-dissolve-rim="0" aria-labelledby="storytellers-title">
+  <div class="opener st-open col" data-st-open>
     <div class="scrim">
-      <h2 class="giant" id="storytellers-title" data-reveal>Storytellers</h2>
-      <p class="dek" data-reveal="0.08"><span class="dc">C</span>reators, media owners and brands — three ways in, one machine behind them.</p>
+      <h2 class="giant" id="storytellers-title">Storytellers</h2>
+      <p class="dek"><span class="dc">C</span>reators, media owners and brands — three ways in, one machine behind them.</p>
     </div>
   </div>
-  <div class="paper paper--baked st-paper" data-theme="light" data-opaque>
+  <div class="paper paper--baked paper--tear-out st-paper" data-theme="light" data-opaque>
     <div class="paper-grain" aria-hidden="true"></div>
     <div class="col ways" data-ways>
       <ol class="ways__list">

@@ -1,4 +1,6 @@
-/* I · Storytellers: three ways in draw hairlines that converge on "One machine" as you scroll. */
+/* I · Storytellers: the opener's title comes in on the clock once its top passes 0.2 of the screen (the hero's iris has
+   already shown the painting, which holds still: the title never rides across the crowd); then three ways in draw
+   hairlines that converge on "One machine" as you scroll. */
 import './storytellers.css';
 import { onFrame, onResize, seg, smooth } from '../core/scroll.js';
 import { geo } from '../core/layout.js';
@@ -6,6 +8,15 @@ import { REDUCED } from '../core/env.js';
 import { coverPlates } from './_paper.js';   // shared paper helper (read-only): hides the fixed plates under the sheet
 
 export function init() {
+  // the title and its scrim: shown (0.6 s, storytellers.css) while the opener's top is above 0.2 of the screen
+  const open = document.querySelector('[data-st-open]');
+  if (open) {
+    let shown = null;
+    onFrame((v) => {
+      const on = geo(open).top - v.y < v.vh * 0.2;
+      if (on !== shown) { open.classList.toggle('is-shown', on); shown = on; }
+    });
+  }
   const box = document.querySelector('[data-ways]');
   if (!box) return;
   coverPlates(box.closest('.paper'));   // WebGL off: the plate under the opaque sheet is not composited while it covers

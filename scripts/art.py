@@ -104,7 +104,9 @@ TITLE_BOX = {
     'left': (0.0, 0.18, 0.33, 0.82),        # desktop default: the left third
     'top': (0.02, 0.03, 0.62, 0.30),        # desktop Results: the sky above the three figures
     'phone-top': (0.06, 0.04, 0.94, 0.30),  # phone default: the top of the frame
-    'phone-left': (0.04, 0.24, 0.48, 0.50), # phone hero: the cloud bank left of the flying woman
+    'phone-left': (0.04, 0.24, 0.48, 0.50), # phone hero (phase 1): the cloud bank left of the flying woman
+    'frame': (0.3875, 0.227, 0.6125, 0.773),       # the hero (2026-10-21): the golden frame, centred (1440x900)
+    'phone-frame': (0.147, 0.13, 0.853, 0.87),     # the hero's frame on a 390x844 phone
 }
 
 # One entry per painted chapter.
@@ -178,6 +180,11 @@ CHAPTERS = {
 #   scrim          {"desktop": "...", "phone": "..."}: the scrim the art direction asks for to calm a busy zone
 #                  (manifest titleScrim.<kind>.advice; the alphas beside it are for luminance contrast only)
 #   note           free text for the director (manifest "artNote")
+#   budgets        {"<desktop|phone>-<avif|webp>-<width>": KB}: per-chapter byte budgets in place of BUDGET's (the hero:
+#                  "no heavier than the painting it replaces", whose budgets are its old encodes' sizes)
+#   plate          {"w": 1920, "h": 1080, "maxKB": 113, "depth": true}: also write public/assets/plates/<chapter>.webp, the
+#                  first-paint plate under the canvas (the hero's LCP preload), and with "depth" (and --depth) copy
+#                  <chapter>/depth.webp to plates/<chapter>-depth.webp
 
 
 def load_config(path: str) -> dict:
@@ -421,6 +428,23 @@ def placeholder(im: Image.Image, w: int, h: int) -> str:
     return 'data:image/webp;base64,' + base64.b64encode(buf.getvalue()).decode()
 
 
+def budget(cfg: dict, kind: str, fmt: str, w: int) -> int:
+    """the file's byte budget (KB): the chapter's own (cfg budgets) or BUDGET's"""
+    return int(cfg.get('budgets', {}).get(f'{kind}-{fmt}-{w}', BUDGET[(kind, fmt, w)]))
+
+
+def plate(ch: str, cfg: dict, dm: Image.Image, speed: int) -> None:
+    """cfg plate: the first-paint plate public/assets/plates/<chapter>.webp (and its depth map beside it)"""
+    pc = cfg['plate']
+    w, h = int(pc.get('w', 1920)), int(pc.get('h', 1080))
+    im = shrink(dm, w, h)
+    # AVIF (the first paint where it decodes: index.html's <picture>) and WebP (the fallback), each under maxKB
+    for fmt in ('avif', 'webp'):
+        data, q = fit(im, fmt, int(pc.get('maxKB', 120)), speed)
+        (ROOT / 'public' / 'assets' / 'plates' / f'{ch}.{fmt}').write_bytes(data)
+        print(f'  {ch:13s} plates/{ch}.{fmt} {w}x{h}  q{q:<3d} {len(data) / 1024:7.1f} KB')
+
+
 def build(ch: str, cfg: dict, speed: int) -> dict:
     out = OUT / ch
     out.mkdir(parents=True, exist_ok=True)
@@ -451,7 +475,7 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
                 (out / f'thumb-320.{fmt}').write_bytes(data)
                 man['thumb'].append(dict(src=f'{URL_ROOT}/{ch}/thumb-320.{fmt}', w=320, h=180, bytes=len(data)))
         for fmt in ('avif', 'webp'):
-            data, q = fit(im, fmt, BUDGET[('desktop', fmt, w)], speed)
+            data, q = fit(im, fmt, budget(cfg, 'desktop', fmt, w), speed)
             name = f'desktop-{w}.{fmt}'
             (out / name).write_bytes(data)
             man['desktop'][fmt].append(dict(src=f'{URL_ROOT}/{ch}/{name}', w=w, h=h, bytes=len(data), q=q))
@@ -476,7 +500,7 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
                         im, cfg.get('phoneTitleBox', TITLE_BOX['phone-' + cfg['phoneTitle']]), ink))
                 ph['phone'] = placeholder(im, 12, 26)
             for fmt in ('avif', 'webp'):
-                data, q = fit(im, fmt, BUDGET[('phone', fmt, w)], speed)
+                data, q = fit(im, fmt, budget(cfg, 'phone', fmt, w), speed)
                 name = f'phone-{w}.{fmt}'
                 (out / name).write_bytes(data)
                 man['phone'][fmt].append(dict(src=f'{URL_ROOT}/{ch}/{name}', w=w, h=h, bytes=len(data), q=q))
@@ -495,6 +519,9 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
         placeholder=ph,
         credit={'desktop': d['note'], 'phone': p['note']},
     )
+    for k in ('propBox', 'propCentre', 'faces'):   # the hero: the 3D camera's gap, and the faces the construction lines avoid
+        if cfg.get(k):
+            man[k] = cfg[k]
     if STAGED:
         # the art direction's ink wins over the zone's raw best ink; titleScrim says what it costs
         man['titleInk'] = {k: scrims[k]['ink'] for k in scrims}
@@ -507,6 +534,10 @@ def build(ch: str, cfg: dict, speed: int) -> dict:
                 man['artNote' if k == 'note' else k] = cfg[k]
     if DEPTH_MODEL:
         man['depth'] = depth_map(out, ch)
+    if cfg.get('plate') and OUT == ROOT / 'public' / 'assets' / 'scenes':   # live runs only (never from a staged --out)
+        plate(ch, cfg, dm, speed)
+        if cfg['plate'].get('depth') and (out / 'depth.webp').exists():
+            (ROOT / 'public' / 'assets' / 'plates' / f'{ch}-depth.webp').write_bytes((out / 'depth.webp').read_bytes())
     (out / 'manifest.json').write_text(json.dumps(man, indent=1, ensure_ascii=False) + '\n')
     return man
 

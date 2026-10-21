@@ -3,8 +3,8 @@
    Opener: title and dek set near the top (the painting's open sky, its manifest's titleBox), a short region, so the
    first figure arrives at the foot of the first screen. Every width: dark ink on the sky (the oculus is mid cerulean
    with pale clouds: ink holds 5:1 and more bare, so there is no dark halo to smudge the sky; the same rule as
-   Creators and Apply, ink on light skies), a faint pale halo only. Wide screens: the dek is indented under the title,
-   so its swash cap clears the first turbaned man at the ring's top left. Phones and tablets: the title's cap line
+   Creators and Apply, ink on light skies), a faint pale halo only. The dek aligns with the title, as every
+   other dek does. Phones and tablets: the title's cap line
    below the ring's top arc, title and dek moved in from the ring's inner curve.
    The ledger: each figure sits on a hairline with its label right under it, rows set close (≈ 0.29 screen each on
    desktop). On wide screens the ledger is only as wide as its widest row and runs on the sky, under an ink veil shaped
@@ -18,7 +18,6 @@
 }
 .rx-open .giant { margin-bottom: clamp(0.9rem, 2.6vh, 2rem); }
 .rx-open .dek { max-width: 13em; }
-@media (min-width: 1024px) { .rx-open .dek { margin-left: 2.4em; } }
 /* ink on the sky: a faint pale halo only, no text glow (a dark halo here left a smudge on the cerulean) */
 .rx-open .scrim { text-shadow: none; }
 .rx-open .scrim::before {
@@ -78,12 +77,24 @@
 .rx-lbl {
   font: var(--f-dek); letter-spacing: var(--ls-dek); color: var(--gold); max-width: 13em; text-wrap: balance;
 }
-/* Instrument Serif's 1 reads as an l: the one figure inside a label is set in the sans, at the body weight and 0.8 of
-   the dek (the scale's one documented exception: a figure inside a serif line) */
-.rx-fig { font-family: var(--sans); font-weight: var(--fw-body); font-size: 0.8em; letter-spacing: -0.02em; }
+/* the one figure inside a label: the label's own serif, lining figures (phase 4: it was the sans at 0.8 of the dek, a
+   size on no step of the scale, and the mixed face read as a glitch) */
+.rx-fig { font-variant-numeric: lining-nums; font-feature-settings: 'lnum' 1; }
 
-@media (min-width: 900px) {
+@media (min-width: 900px) and (max-width: 1023px) {
   .rx-list { grid-template-columns: minmax(0, max-content); }
+}
+/* wide screens (phase 4): the four figures as a 2 × 2 ledger at the display size, set in the sky right of the left
+   group of watchers (from about 0.32 of the screen), so no figure ever crosses a face (at the title size, 13+ and 16+
+   sat on the turbaned and the headphones watchers at 1280 and 1440); the veil stays, centred on the ledger */
+@media (min-width: 1024px) {
+  .rx-list.col {
+    grid-template-columns: repeat(2, max-content); column-gap: clamp(28px, 3vw, 48px);
+    padding-left: max(clamp(24px, 4.4vw, 72px), calc(31vw - var(--rail-w)));
+  }
+  .rx-num { font-size: var(--t-display); }
+  .rx-lbl { max-width: 5.6em; }
+  .rx::before { background: radial-gradient(ellipse 50% 100% at 52% 50%, rgba(11, 8, 5, 0.8), rgba(11, 8, 5, 0.72) 36%, rgba(11, 8, 5, 0.46) 60%, rgba(11, 8, 5, 0) 90%); }
 }
 @media (max-width: 899px) {
   .rx-stat { padding-block: clamp(16px, 2.6svh, 24px) clamp(34px, 6.4svh, 56px); }

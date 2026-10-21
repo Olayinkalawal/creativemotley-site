@@ -21,7 +21,7 @@ function collect() {
     const r = el.getBoundingClientRect();   // horizontal extent (the page never scrolls sideways)
     return { el, depth, x0: r.left, x1: r.right, wide: r.width >= window.innerWidth * 0.9 };
   }).sort((a, b) => b.depth - a.depth);
-  paints = [...document.querySelectorAll('[data-scene^="plate:"]:not([data-scene="plate:umber"]), [data-scene="film"]')];
+  paints = [...document.querySelectorAll('[data-scene^="plate:"]:not([data-scene="plate:umber"]), [data-scene="hero3d"]')];
   opaque = [...document.querySelectorAll('[data-opaque]')];
 }
 function opaqueAt(y) {

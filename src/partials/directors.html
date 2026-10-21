@@ -15,6 +15,8 @@
      - The people (.dr-info): the two names, each with its role line (DC90) and a slot for the bio the client will
        send (data-bio; empty until then, and an empty slot renders nothing), then the line they share (DC91) and the
        "Leadership experience from" credits (F54–F59, moved here from III Brands).
+     The set dissolves into the room quickly (data-dissolve 0.16 viewport) through finer noise with a fainter rim
+     (data-dissolve-noise / -rim, gl/stage.js → gl/lib/post.js), so it never rests as an island of curtain.
      The room is a sheet at its foot (data-wipe on the run): X's light painting is revealed exactly under the
      chapter's end as it scrolls up, so X's ink title never crosses the dark room mid-dissolve.
      data-umber keys the room's pool of light per region (umber.js): a dim, low pool on the opener, a bright one behind
@@ -29,7 +31,7 @@
       <p class="dek" data-reveal="0.08"><span class="dc">T</span>he two people answerable for all of it.</p>
     </div>
   </div>
-  <div class="dr-run" data-dr-run data-scene="plate:umber" data-plate="umber" data-dissolve="0.25" data-wipe data-umber="0 0.54 0.74 1 1">
+  <div class="dr-run" data-dr-run data-scene="plate:umber" data-plate="umber" data-dissolve="0.16" data-dissolve-noise="4.6" data-dissolve-rim="0.07" data-wipe data-umber="0 0.54 0.74 1 1">
     <div class="dr-stage" data-dr-stage>
       <div class="dr-pin">
         <div class="dr-band" data-dr-band aria-hidden="true">
@@ -69,7 +71,9 @@
         </li>
       </ul>
       <div class="dr-shared" data-reveal="0.1">
-        <p class="dr-shared__line" data-draft="DC91">Between them, leadership experience from YouTube, Paramount, Multichoice, Africa Magic and Circo Live.</p>
+        <!-- DC91 names the same five companies as the credits list right under it: hidden until the client chooses
+             one of the two (wording unchanged; remove `hidden` to show it) -->
+        <p class="dr-shared__line" data-draft="DC91" hidden>Between them, leadership experience from YouTube, Paramount, Multichoice, Africa Magic and Circo Live.</p>
         <div class="dr-credits">
           <p class="dr-credits__label" id="directors-credits">Leadership experience from</p>
           <ul class="dr-credits__list" aria-labelledby="directors-credits">

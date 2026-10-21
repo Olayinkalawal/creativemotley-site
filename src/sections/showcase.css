@@ -4,14 +4,15 @@
    .sc-on.is-gl under html.gl-ready: WebGL draws the posters; the proxy is invisible and lets the pointer
    through, but keeps its buttons for keyboard focus and screen readers. */
 
-/* the opener holds the title alone, so it is shorter than the shell's 140svh (phase-1 issue f: two nearly empty dark
-   screens before the posters rose on phones) */
-#showcase > .opener { min-height: 112svh; }
-@media (max-width: 719px) { #showcase > .opener { min-height: 96svh; } }
+/* the title: at the top of the run (static), at the top of the pin (.sc-on), the same place in both, so the switch at
+   init moves nothing on screen (a deep link to #showcase) */
+.sc-head { position: relative; z-index: 2; padding-top: calc(var(--nav-h) + clamp(8px, 2svh, 20px)); color: var(--cream); }
+.sc-head .giant { margin: 0; }
 
 /* ── static ─────────────────────────────────────────────────────────── */
-.sc-run { position: relative; padding-block: clamp(8px, 2vh, 24px) clamp(96px, 16vh, 180px); }
+.sc-run { position: relative; padding-bottom: clamp(96px, 16vh, 180px); }
 .sc-pin { position: relative; }
+#showcase:not(.sc-on) .sc-head { padding-bottom: clamp(32px, 6vh, 64px); }
 .sc-frame { display: none; }
 .sc-list {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
@@ -42,9 +43,33 @@
   .sc-item { flex: 0 0 min(74vw, 320px); scroll-snap-align: center; }
 }
 
+/* ── the run's length, reserved before any script runs ─────────────────
+   The pinned run is N × dwell + the pin's own screen (--sc-run / --sc-run-m, written on the run in the markup). Where
+   showcase.js will run it (JS, a WebGL tier: not html.t0 / [data-tier='0'], motion allowed: the same test as
+   TIER > 0 && !REDUCED), CSS gives the run that height from the first layout, so the section never grows at init and a
+   deep link to a chapter below lands where it stays (CLS 0). Until .sc-on the static list is not painted (it would
+   jump into the arc at init); a fail-safe shows it if the script never comes. */
+@keyframes sc-failsafe { to { visibility: visible; } }
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not(.t0):not([data-tier='0']) .sc-run { height: var(--sc-run, 282svh); padding: 0; }
+  html.js:not(.t0):not([data-tier='0']) #showcase:not(.sc-on) .sc-list { visibility: hidden; animation: sc-failsafe 0s linear 6s forwards; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 719px) {
+  html.js:not(.t0):not([data-tier='0']) .sc-run { height: var(--sc-run-m, 254svh); }
+}
+
 /* ── animated: the pinned run ───────────────────────────────────────── */
-.sc-on .sc-run { --sc-dwell: 60svh; height: calc(7 * var(--sc-dwell) + 100svh); padding: 0; }
-.sc-on .sc-pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.sc-on .sc-run { height: var(--sc-run, 282svh); padding: 0; }
+@media (max-width: 719px) { .sc-on .sc-run { height: var(--sc-run-m, 254svh); } }
+/* the pin: the title on top, the arc's frame under it. The slot's height is what the screen leaves under the title
+   (title line, the caption, the gaps), so the centred poster never reaches the title */
+.sc-on .sc-pin {
+  position: sticky; top: 0; height: 100svh; overflow: hidden;
+  display: grid; grid-template-rows: auto minmax(0, 1fr);
+  --sc-gap: clamp(16px, 3svh, 36px); --sc-bot: clamp(14px, 3svh, 32px);
+  --sc-h: max(200px, min(56svh, 700px, calc(100svh - var(--nav-h) - clamp(8px, 2svh, 20px) - var(--t-title) * var(--lh-title) - 2 * var(--sc-gap) - 48px - var(--sc-bot))));
+}
+.sc-on .sc-head { grid-row: 1; }
 .sc-on .sc-stage { position: absolute; inset: 0; }
 .sc-on .sc-col { position: static; }
 .sc-on .sc-list {
@@ -73,10 +98,9 @@ html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none
 
 /* the frame over the pin: the slot the centred poster fills, and the caption under it */
 .sc-on .sc-frame {
-  --sc-h: min(60svh, 700px);
-  position: relative; z-index: 2; height: 100%; pointer-events: none;
-  display: grid; align-content: center; justify-items: center; row-gap: clamp(20px, 4.4svh, 48px);
-  padding-top: calc(var(--nav-h) + 2svh); padding-bottom: clamp(14px, 3svh, 32px);
+  grid-row: 2; position: relative; z-index: 2; min-height: 0; pointer-events: none;
+  display: grid; align-content: center; justify-items: center; row-gap: var(--sc-gap);
+  padding-top: var(--sc-gap); padding-bottom: var(--sc-bot);
 }
 .sc-slot { height: var(--sc-h); aspect-ratio: 4 / 5; }
 /* the caption sits under the centred poster like a museum label, as wide as the slot */
@@ -99,7 +123,7 @@ html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none
 .sc-cap__names > span.is-before { transform: translate3d(0, -0.45em, 0); }
 .sc-cap__names > span.is-on { opacity: 1; transform: none; }
 @media (max-width: 719px) {
-  .sc-on .sc-frame { --sc-h: min(50svh, calc((100vw - 96px) * 1.25)); }
+  .sc-on .sc-pin { --sc-h: min(50svh, calc((100vw - 96px) * 1.25)); }
 }
 
 /* ── the poster modal ───────────────────────────────────────────────── */

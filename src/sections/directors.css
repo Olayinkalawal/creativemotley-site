@@ -4,6 +4,10 @@
    Static by default (no JS, reduced motion): no running line (the names are in the list below); on upright screens
    the heads are two crops of the still, side by side (.dr-duo).
    .dr-on (JS, motion allowed): the line repeats and runs with scroll; the stage pins briefly; on phones the film pans.
+   The layout that differs between the two (the opener's length, the stage's height and pin, the film's height, the
+   still pair on upright screens) is keyed on what is known before any script runs (html.js and the reduced-motion
+   query, the same test as directors.js's !REDUCED), not on .dr-on, so the chapter keeps its height at init and a deep
+   link to X lands where it stays (CLS 0). .dr-on keeps the running line's look (out of the flow).
    The pinned stage is exactly the screen (no floor): the film and the line are sized to fit under the bar on short
    landscapes too, so the faces are never below the fold while it is pinned. */
 #directors {
@@ -24,7 +28,8 @@
   .opener.dr-open { min-height: 62svh; padding-top: calc(var(--nav-h) + 3.5svh); }
 }
 /* static (reduced motion, no JS): the film does not fade in with the dissolve, so it starts below the opener's rest */
-#directors:not(.dr-on) .opener.dr-open { min-height: 100svh; }
+html:not(.js) #directors .opener.dr-open { min-height: 100svh; }
+@media (prefers-reduced-motion: reduce) { #directors .opener.dr-open { min-height: 100svh; } }
 
 .dr-run { position: relative; }
 .dr-stage { position: relative; }
@@ -32,7 +37,7 @@
 
 /* the film: as wide as the column on desktop, bottom-anchored (--film-b lifts it off the foot on upright screens) */
 .dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 64svh); --film-b: 0px; }
-.dr-on .dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 74svh); }
+@media (prefers-reduced-motion: no-preference) { html.js .dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 74svh); } }
 @media (min-width: 1024px) { .dr-run { --col-left: var(--rail-w); } }
 .dr-film { position: absolute; z-index: 1; bottom: var(--film-b); right: 0; left: var(--col-left, 0px); display: flex; justify-content: center; }
 .dr-video {
@@ -70,8 +75,10 @@ html.js .dr-video.is-ready { opacity: 1; }
 }
 
 /* the running line: a short pin (the stage is 112svh: the portraits rest whole for a moment, then leave) */
-.dr-on .dr-stage { height: 112svh; }
-.dr-on .dr-pin { position: sticky; top: 0; height: 100svh; min-height: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  html.js .dr-stage { height: 112svh; }
+  html.js .dr-pin { position: sticky; top: 0; height: 100svh; min-height: 0; }
+}
 .dr-on .dr-band {
   left: 0; justify-content: flex-start; overflow: hidden; bottom: calc(var(--film-h) * 0.855 + var(--film-b));
   opacity: 0;                              /* directors.js fades it in as it rises (a pure function of scroll) */
@@ -86,25 +93,30 @@ html.js .dr-video.is-ready { opacity: 1; }
 .dr-on .dr-unit, .dr-on .dr-unit + .dr-unit { display: flex; align-items: baseline; }
 .dr-on .dr-unit > span { flex: none; }
 .dr-on .dr-track i { display: inline; }
-.dr-on .dr-film { will-change: transform; }
+.dr-on .dr-film, .dr-on .dr-band { will-change: transform; }
 
 /* short landscapes (phones on their side, short windows): the stage is the screen, so the film and the line are
    sized to fit under the bar with the heads whole */
+@media (orientation: landscape) and (max-height: 560px) and (prefers-reduced-motion: no-preference) {
+  html.js .dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 72svh); }
+}
 @media (orientation: landscape) and (max-height: 560px) {
-  .dr-on .dr-run { --film-h: min(calc((100vw - var(--col-left, 0px)) * 0.5625), 72svh); }
   .dr-on .dr-track { font-size: min(var(--t-display), 15svh); }
 }
 
 /* portrait screens (phones, upright tablets): a film wider than the screen; the scroll pans across it.
    The group (line + heads) is lifted off the foot so it sits near the optical centre, not under a bare sky. */
-@media (orientation: portrait) {
+@media (orientation: portrait) and (prefers-reduced-motion: no-preference) {
   /* each portrait is about a screen wide at this height (the film is 16:9: two portraits side by side) */
-  .dr-on .dr-run { --film-h: min(max(52svh, calc(100vw * 1.14)), 640px); --film-b: 3svh; }
+  html.js .dr-run { --film-h: min(max(52svh, calc(100vw * 1.14)), 640px); --film-b: 3svh; }
   /* no pin on upright screens: the stage is the film plus the line above it; the pan runs while it passes */
-  .dr-on .dr-stage { height: calc(var(--film-h) + var(--film-b) + 14svh); }
-  .dr-on .dr-pin { position: relative; height: 100%; }
+  html.js .dr-stage { height: calc(var(--film-h) + var(--film-b) + 14svh); }
+  html.js .dr-pin { position: relative; height: 100%; }
+}
+@media (orientation: portrait) {
   .dr-on .dr-film { right: auto; justify-content: flex-start; }
-  .dr-on .dr-band { bottom: calc(var(--film-h) * 0.86 + var(--film-b)); }
+  /* a touch higher than on wide screens: the cut-outs' torn rims rise into the line's foot on phones */
+  .dr-on .dr-band { bottom: calc(var(--film-h) * 0.86 + var(--film-b) + 5svh); }
   .dr-info { padding-top: clamp(20px, 3svh, 32px); }
 }
 
@@ -112,10 +124,18 @@ html.js .dr-video.is-ready { opacity: 1; }
    in the frame, --f; y: from just above the hat to below the collar), side by side under the names, foot torn */
 .dr-duo { display: none; }
 @media (orientation: portrait) {
-  #directors:not(.dr-on) .dr-pin { height: auto; min-height: 0; overflow: visible; padding-top: 4svh; }
-  #directors:not(.dr-on) .dr-band { position: relative; bottom: auto; }
-  #directors:not(.dr-on) .dr-film { display: none; }
-  #directors:not(.dr-on) .dr-duo {
+  html:not(.js) #directors .dr-pin { height: auto; min-height: 0; overflow: visible; padding-top: 4svh; }
+  html:not(.js) #directors .dr-film { display: none; }
+  html:not(.js) #directors .dr-duo {
+    display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 3vw, 24px);
+    margin: clamp(18px, 3svh, 36px) 0 0 var(--col-left, 0px);
+    padding-inline: max(var(--col-pad), calc((100% - var(--col-left, 0px) - 36rem) / 2));
+  }
+}
+@media (orientation: portrait) and (prefers-reduced-motion: reduce) {
+  #directors .dr-pin { height: auto; min-height: 0; overflow: visible; padding-top: 4svh; }
+  #directors .dr-film { display: none; }
+  #directors .dr-duo {
     display: grid; grid-template-columns: 1fr 1fr; gap: clamp(10px, 3vw, 24px);
     margin: clamp(18px, 3svh, 36px) 0 0 var(--col-left, 0px);
     padding-inline: max(var(--col-pad), calc((100% - var(--col-left, 0px) - 36rem) / 2));

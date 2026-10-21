@@ -10,6 +10,7 @@ const frag = /* glsl */`
 precision highp float;
 uniform sampler2D tA; uniform sampler2D tB;
 uniform float mixAB; uniform float time; uniform vec2 res; uniform float wipe; uniform float bleed; uniform float bleedDim;
+uniform float nScale; uniform float rimK;
 uniform float grain; uniform float vignette; uniform float fringe; uniform vec3 fadeColor; uniform float fade;
 varying vec2 vUv;
 float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
@@ -26,11 +27,11 @@ void main(){
   vec3 c = a;
   if (mixAB > 0.0005) {
     vec3 b = texture2D(tB, vUv).rgb;
-    float n = fbm(vUv * vec2(res.x / res.y, 1.0) * 2.4 + 3.1);
+    float n = fbm(vUv * vec2(res.x / res.y, 1.0) * nScale + 3.1);
     float edge = smoothstep(mixAB * 1.25 - 0.18, mixAB * 1.25 + 0.02, n);   // 1 = still A
     float rim = smoothstep(0.0, 0.08, edge) * (1.0 - smoothstep(0.08, 0.22, edge));
     c = mix(b, a, edge);
-    c += vec3(0.85, 0.66, 0.38) * rim * 0.18 * (1.0 - abs(mixAB - 0.5) * 2.0);
+    c += vec3(0.85, 0.66, 0.38) * rim * rimK * (1.0 - abs(mixAB - 0.5) * 2.0);
   } else if (wipe >= 0.0 && bleed > 0.5) {
     // the dissolve's noise and rim, its threshold a ramp from the edge (all A) to a band below it (all B); the band
     // narrows as the edge nears the top, so A is gone exactly when the edge leaves the screen (no pop)
@@ -68,6 +69,7 @@ export function createPost() {
       tA: { value: null }, tB: { value: null }, mixAB: { value: 0 }, time: { value: 0 },
       res: { value: new THREE.Vector2(1, 1) }, grain: { value: 0.045 }, vignette: { value: 0.32 },
       fringe: { value: 0 }, fadeColor: { value: new THREE.Color(0x0b0805) }, fade: { value: 0 }, wipe: { value: -1 }, bleed: { value: 0 }, bleedDim: { value: 1 },
+      nScale: { value: 2.4 }, rimK: { value: 0.18 },
     },
   });
   const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), mat);

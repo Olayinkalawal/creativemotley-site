@@ -13,9 +13,14 @@
      ?tier=0, reduced motion), a paper sheet that tears off onto the Kit; in the pinned run it stays only for screen
      readers.
      data-plate="umber": with WebGL off the still behind this opaque chapter stays the dark room, so both torn edges
-     read against it. -->
+     read against it.
+     Phase 4: the chapter's giant title (F73/F128) heads the sheet, F74 is its dek. Each step carries its long line too
+     (shown under its object in the static phone layout, read once by screen readers); the dense sheet repeats the
+     titles and long lines for the static wide layout only, so it is aria-hidden. The run's length (--proc-run desktop,
+     --proc-run-m below 720 px: intro + 7 × dwell + the pin's screen, 16 + 7 × 24 + 100 and 16 + 7 × 20 + 100) is
+     written here, so CSS reserves it before any script runs (process.css). -->
 <section class="chapter proc" id="process" data-chapter data-theme="light" data-plate="umber" aria-labelledby="process-title">
-  <div class="proc-run" data-proc-run>
+  <div class="proc-run" data-proc-run style="--proc-run: 284svh; --proc-run-m: 256svh">
     <!-- the stage switches to the objects scene at this marker, ~0.9 viewport into the run: by then the pin's own
          paper covers the screen, so the posters keep drawing above the rising tear and the dissolve happens under paper -->
     <div class="proc-scene" data-scene="objects" data-proc-scene data-wipe aria-hidden="true"></div>
@@ -23,38 +28,39 @@
       <div class="proc-bg" data-proc-bg aria-hidden="true"><div class="paper-grain"></div></div>
 
       <div class="proc-head col">
-        <h2 class="head" id="process-title" data-reveal><span class="dc">S</span>even steps, every&nbsp;time.</h2>
+        <h2 class="giant" id="process-title" data-reveal>Process</h2>
+        <p class="dek proc-dek" data-reveal="0.08"><span class="dc">S</span>even steps, every&nbsp;time.</p>
       </div>
 
       <div class="proc-desk col">
         <ol class="proc-list" data-proc-list>
           <li class="proc-step">
             <div class="proc-step__obj"><img src="/assets/objects/01-blank-page.webp" alt="A blank sheet of paper held by a bulldog clip" width="700" height="551" loading="lazy" decoding="async"></div>
-            <div class="proc-step__txt"><h3 class="proc-step__t">Blank page</h3><p class="proc-step__s">The channel as it stands — nothing assumed.</p></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Blank page</h3><p class="proc-step__s">The channel as it stands — nothing assumed.</p><p class="proc-step__l">We audit what is already there — watch time, retention, the shape of the back catalogue.</p></div>
           </li>
           <li class="proc-step">
             <div class="proc-step__obj"><img src="/assets/objects/02-moodboard.webp" alt="Fabric swatches and colour cards with a printed portrait" width="700" height="468" loading="lazy" decoding="async"></div>
-            <div class="proc-step__txt"><h3 class="proc-step__t">Moodboard</h3><p class="proc-step__s">Look, palette, references. What it should feel like.</p></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Moodboard</h3><p class="proc-step__s">Look, palette, references. What it should feel like.</p><p class="proc-step__l">Palette, typography, thumbnail language. Agreed before a frame is shot.</p></div>
           </li>
           <li class="proc-step">
             <div class="proc-step__obj"><img src="/assets/objects/03-storyboard.webp" alt="A storyboard sheet of six hand-drawn panels" width="700" height="504" loading="lazy" decoding="async"></div>
-            <div class="proc-step__txt"><h3 class="proc-step__t">Storyboard</h3><p class="proc-step__s">Series design and upload calendar, mapped out.</p></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Storyboard</h3><p class="proc-step__s">Series design and upload calendar, mapped out.</p><p class="proc-step__l">Series design and an upload calendar you can actually keep to.</p></div>
           </li>
           <li class="proc-step">
             <div class="proc-step__obj"><img src="/assets/objects/04-clapperboard.webp" alt="A well-used yellow film clapperboard" width="700" height="742" loading="lazy" decoding="async"></div>
-            <div class="proc-step__txt"><h3 class="proc-step__t">Production</h3><p class="proc-step__s">Shoot days, kit, crew — or your own, better run.</p></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Production</h3><p class="proc-step__s">Shoot days, kit, crew — or your own, better run.</p><p class="proc-step__l">Crew and kit where you need them, or your own team run properly.</p></div>
           </li>
           <li class="proc-step">
             <div class="proc-step__obj"><img src="/assets/objects/05-boom.webp" alt="A shotgun microphone on a boom pole" width="700" height="482" loading="lazy" decoding="async"></div>
-            <div class="proc-step__txt"><h3 class="proc-step__t">Sound</h3><p class="proc-step__s">Because bad audio loses the audience first.</p></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Sound</h3><p class="proc-step__s">Because bad audio loses the audience first.</p><p class="proc-step__l">Mixed and mastered for phone speakers, because that is where it is heard.</p></div>
           </li>
           <li class="proc-step">
             <div class="proc-step__obj"><img src="/assets/objects/06-timeline.webp" alt="A tablet showing a video editing timeline" width="700" height="497" loading="lazy" decoding="async"></div>
-            <div class="proc-step__txt"><h3 class="proc-step__t">Edit</h3><p class="proc-step__s">Thumbnails, titles, metadata, cut to retain.</p></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Edit</h3><p class="proc-step__s">Thumbnails, titles, metadata, cut to retain.</p><p class="proc-step__l">Titles, tags, chapters and thumbnails — cut for retention, not for us.</p></div>
           </li>
           <li class="proc-step">
             <div class="proc-step__obj"><img src="/assets/objects/07-published.webp" alt="An instant photo of a finished frame" width="700" height="605" loading="lazy" decoding="async"></div>
-            <div class="proc-step__txt"><h3 class="proc-step__t">Published</h3><p class="proc-step__s">Then measured, and done again.</p></div>
+            <div class="proc-step__txt"><h3 class="proc-step__t">Published</h3><p class="proc-step__s">Then measured, and done again.</p><p class="proc-step__l">Then measured against the audit, and the loop starts again.</p></div>
           </li>
         </ol>
       </div>
@@ -80,7 +86,7 @@
   </div>
 
   <!-- the long lines: a calm sheet laid over the desk (torn top, with a soft shadow), torn off at the bottom onto the Kit's black -->
-  <div class="paper paper--baked proc-more" data-theme="light" data-opaque>
+  <div class="paper paper--baked proc-more" data-theme="light" data-opaque aria-hidden="true">
     <div class="proc-more__shade" aria-hidden="true"><i></i></div>
     <div class="paper-grain" aria-hidden="true"></div>
     <div class="col">

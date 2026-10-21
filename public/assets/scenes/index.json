@@ -1,24 +1,24 @@
 {
  "hero": {
   "manifest": "/assets/scenes/hero/manifest.json",
-  "name": "Hero: the Creation, with kit",
-  "key": "#C8643C",
+  "name": "Hero: the Creation, in daylight",
+  "key": "#9EC6E3",
   "placeholder": {
-   "desktop": "data:image/webp;base64,UklGRqwAAABXRUJQVlA4IKAAAADwBACdASogABIAPu1kqE2ppaOiMAgBMB2JQBUfVpYXEdE1BaTf/aPNTvSGtdZpGWAA/un72iYhQCUWGZ1+VY15BAg00M1dpJjqqW8jUG5FsXhjTi0HzCQgfHkAuGnih8B0AEU5o7aRA9++l29MJscJY+B1P/OVOuddAOWYhiNbC6+PRxHQAB36DnT8fVT6AKoCezvqY+Rx9ynbgIzzgAAA",
-   "phone": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAABwBACdASoMABoAPu1iqU2ppaOiMAgBMB2JYgCsABn2l2OEZlJ+4f7DT+rD4AD4p880nsylhWWsidC6i+re/vmerAA8Ef4/SPPxwT5dyA0TGBo5Itm7r3V+iWPHbaMSTrL+aq33P8TIkBeRNVD5Uz3wmbx9B3X0H0PmZ061H/O+2JxHGInHiruh2bC2qR7FQkWHjhsKBJSaHFXPxIAAAA=="
+   "desktop": "data:image/webp;base64,UklGRvIAAABXRUJQVlA4IOYAAACwBQCdASogABIAPu1gqE2ppSOiMAgBMB2JZgCdMvuDgPI76eeSEf4qAPnGYVb1vZUaYFwa2YAA/kEzfsm0dvqi4nxzzezxDuU87zgpzY+sfayQWuyyDxudYjqglsxPepmrOQwfkaf4czfTky/sI32uARAWPlww6BeSrpOAAVJ1u9DCspCffbJMo6scuF4OiW7Leef21dGzkSrOrEwEJh1frHmF3lVgdh1znPTsW808lZThrSYPkt0D6NVOG/2/pZxCI4p76GjgSzSJma3IGKfGeSqsqDBKVicCr5+qZIVr+tz6ZAAAAA==",
+   "phone": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAQBACdASoMABoAPu1yrU+pp6QiMAgBMB2JagCdAGYXTi4CXoj+3n0swAD+86SFjzlXTSI+bAFyGmuiN8Q+lTfLROUE9WeOBV2pGyepUQjuu23V6Ki+hFifKuPnemSSh846WlxcKdTxtgI6rK7R25cM3rXKWAAA"
   },
   "thumb": [
    {
     "src": "/assets/scenes/hero/thumb-320.avif",
     "w": 320,
     "h": 180,
-    "bytes": 7726
+    "bytes": 11920
    },
    {
     "src": "/assets/scenes/hero/thumb-320.webp",
     "w": 320,
     "h": 180,
-    "bytes": 7666
+    "bytes": 11992
    }
   ]
  },

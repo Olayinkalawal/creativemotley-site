@@ -1,18 +1,22 @@
 <!-- V · SHOWCASE · scene: posters (three.js) · owner: builder C
      One list of seven poster buttons serves every mode:
-       - static (no JS, ?tier=0, reduced motion): a calm grid on desktop, a scroll-snap row on phones, captions under each;
-       - .sc-on (JS + a WebGL tier): a tall pinned run; the list becomes an exact CSS-3D proxy of the WebGL arc
-         (same camera, same positions), visible until the posters scene has drawn, then kept as invisible
-         focus / screen-reader targets over the WebGL posters. -->
+       - static (no JS, ?tier=0, reduced motion): the title, then a calm grid on desktop, a scroll-snap row on phones,
+         captions under each;
+       - .sc-on (JS + a WebGL tier): a pinned run with the title at the top of the pin, so poster 01 rises with it (no
+         screen shows the title alone); the list becomes an exact CSS-3D proxy of the WebGL arc (same camera, same
+         positions), visible until the posters scene has drawn, then kept as invisible focus / screen-reader targets
+         over the WebGL posters.
+     The run's length is written here (--sc-run desktop, --sc-run-m below 720 px: N × dwell + the pin's own screen,
+     7 × 26 + 100 and 7 × 22 + 100), so CSS reserves it before any script runs and a deep link lands where it stays
+     (showcase.css; showcase.js reads the run's height, it never sets it). -->
 <section class="chapter" id="showcase" data-chapter data-theme="dark" data-scene="posters" data-plate="umber" aria-labelledby="showcase-title">
-  <div class="opener col">
-    <div class="scrim">
-      <h2 class="giant" id="showcase-title" data-reveal>Showcase</h2>
-    </div>
-  </div>
-
-  <div class="sc-run" data-sc-run>
+  <div class="sc-run" data-sc-run style="--sc-run: 282svh; --sc-run-m: 254svh">
     <div class="sc-pin" data-sc-pin>
+      <div class="sc-head col">
+        <div class="scrim">
+          <h2 class="giant" id="showcase-title" data-reveal>Showcase</h2>
+        </div>
+      </div>
       <div class="sc-stage">
         <div class="sc-col col">
           <ol class="sc-list" data-sc-list>

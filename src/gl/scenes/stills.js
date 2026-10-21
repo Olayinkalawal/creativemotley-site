@@ -6,16 +6,18 @@
    - otherwise the section's own tier-0 plate (data-plate): the hero, Storytellers and Results paintings as a cover
      crop (centred on the section's data-cam-from-tall focus, kept inside the painting); ink (black: the teardowns,
      whose sections show their device stills over it), paper, or the umber room (the CSS plate's gradient);
-   - the film: the hero still, with a slow push over the film's frames (no film frames on phones). Storytellers'
-     portrait then comes in under it as on desktop: the stage's ink-bleed edge rising with the section (data-bleed,
-     data-rise), so the hero still holds above that edge.
+   - the hero (hero3d, on a phone below core/env.js CAM3D): its painting (the portrait 'reach' crop; the desktop one on
+     a phone held sideways), pushing toward the fingertip gap and dimming as the DOM's 2D camera move plays over it
+     (ui/hero.js: the camera stills, the lens close-up, the iris blades); from s 0.62, while that move covers the screen,
+     it draws I Storytellers' still instead (the same view of the same texture as Storytellers' own scene), so the
+     iris opens onto it and the boundary with Storytellers is a cut between two identical frames.
    A slow push over each section's pass keeps a still alive while it scrolls. No depth maps, no video, no streams. */
 import { Scene, OrthographicCamera, ShaderMaterial, Vector2, Vector3, DataTexture } from 'three';
 import { fullscreenQuad } from '../lib/plate.js';
 import { texture } from '../lib/loaders.js';
-import { filmRanges, frameAt } from '../lib/filmRanges.js';
-import { smooth, clamp } from '../../core/scroll.js';
+import { smooth, clamp, seg } from '../../core/scroll.js';
 import { CAM3D } from '../../core/env.js';
+import { HERO, heroArt } from '../../ui/hero.js';
 
 /* the art track's manifests (scripts/art.py → public/assets/scenes/<chapter>/manifest.json), bundled at build time;
    only the phone fields are imported: phone { avif: [{ src, w, h }], webp: [...] }, phoneFocus [x, y] (the view
@@ -25,7 +27,7 @@ const PHONE = import.meta.glob('/public/assets/scenes/*/manifest.json', { eager:
 const FOCUS = import.meta.glob('/public/assets/scenes/*/manifest.json', { eager: true, import: 'phoneFocus' });
 const HOLD = import.meta.glob('/public/assets/scenes/*/manifest.json', { eager: true, import: 'placeholder' });
 const key = (chapter) => `/public/assets/scenes/${chapter}/manifest.json`;
-const PLATES = { hero: '/assets/plates/hero.webp', storytellers: '/assets/scenes/storytellers/desktop-2048.webp', results: '/assets/scenes/results/desktop-2048.webp', method: '/assets/plates/method.webp' };
+const PLATES = { hero: '/assets/plates/hero.avif', storytellers: '/assets/scenes/storytellers/desktop-2048.webp', results: '/assets/scenes/results/desktop-2048.webp', method: '/assets/plates/method.webp' };
 const COLORS = { ink: [0, 0, 0], paper: [0.91, 0.89, 0.831], dark: [0.043, 0.031, 0.02] };
 
 /* the portrait encodes to try, best first: AVIF, then WebP, each the smallest width that covers the canvas */
@@ -44,6 +46,8 @@ function portraitPick(chapter, needW) {
 /* what a section shows: { kind: 'img', srcs, focus, zoom } | { kind: 'color', color } | { kind: 'umber' } */
 function sourceFor(el, needW) {
   if (!el) return { kind: 'color', color: COLORS.dark };
+  // the hero on a phone held sideways: the desktop painting (the CSS plate's too), centred
+  if (el.closest('.hero') && window.innerWidth > window.innerHeight) return { kind: 'img', srcs: ['/assets/plates/hero.avif', '/assets/plates/hero.webp'], focus: [0.5, 0.5], zoom: 1 };
   // a region that names the umber room for itself (IX Directors' film run) keeps it, as on desktop
   if (el.dataset.scene === 'plate:umber') return { kind: 'umber' };
   const chapter = el.closest('[data-chapter]')?.id || (el.closest('.hero') ? 'hero' : el.id);
@@ -88,7 +92,7 @@ precision highp float;
 uniform sampler2D mapA; uniform sampler2D mapB;
 uniform vec2 sizeA; uniform vec2 sizeB; uniform vec3 colA; uniform vec3 colB; uniform float kindA; uniform float kindB;
 uniform vec2 ctrA; uniform vec2 ctrB; uniform float zoomA; uniform float zoomB;
-uniform float mixT; uniform vec2 res;
+uniform float mixT; uniform vec2 res; uniform float dimA;
 varying vec2 vUv;
 float hash(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
 float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.0-2.0*f);
@@ -109,7 +113,7 @@ vec3 layer(sampler2D m, vec2 size, vec3 col, float kind, vec2 ctr, float zoom){
   return mix(vec3(0.2275, 0.1569, 0.0784), vec3(0.0431, 0.0314, 0.0196), clamp(length(d) / 0.7, 0.0, 1.0));
 }
 void main(){
-  vec3 a = layer(mapA, sizeA, colA, kindA, ctrA, zoomA);
+  vec3 a = layer(mapA, sizeA, colA, kindA, ctrA, zoomA) * dimA;
   vec3 c = a;
   if (mixT > 0.0005) {
     vec3 b = layer(mapB, sizeB, colB, kindB, ctrB, zoomB);
@@ -129,12 +133,13 @@ function stillScene(id, stage) {
     mapA: { value: blank }, mapB: { value: blank }, sizeA: { value: new Vector2(1, 1) }, sizeB: { value: new Vector2(1, 1) },
     colA: { value: new Vector3() }, colB: { value: new Vector3() }, kindA: { value: 1 }, kindB: { value: 1 },
     ctrA: { value: new Vector2(0.5, 0.5) }, ctrB: { value: new Vector2(0.5, 0.5) }, zoomA: { value: 1 }, zoomB: { value: 1 },
-    mixT: { value: 0 }, res: { value: new Vector2(1, 1) },
+    mixT: { value: 0 }, res: { value: new Vector2(1, 1) }, dimA: { value: 1 },
   };
   scene.add(fullscreenQuad(new ShaderMaterial({ vertexShader: vert, fragmentShader: frag, depthTest: false, depthWrite: false, uniforms: U })));
-  const film = id === 'film';
+  const hero = id === 'hero3d';
   let views = new Map();   // element → { src, handle }
-  let held = [], ranges = [], filmA = null, token = null;
+  let held = [], heroA = null, storyB = null, storyEl = null, token = null;
+  const STORY_2D = 0.62;   // ui/hero.js's 2D move covers the screen from about 0.52 until the iris opens at 0.74
   const setLayer = (k, v, pe, rise = 0) => {
     const u = (n) => U[n + k];
     if (!v || v.src.kind !== 'img' || !v.handle) {
@@ -157,10 +162,9 @@ function stillScene(id, stage) {
     post: { fringe: 0.35 },   // a calm finish on the paintings: a flick on a touch screen would otherwise hit the cap
     async load(ctx) {
       const els = [...document.querySelectorAll(`[data-scene="${id}"]`)];
-      if (film) {
-        ranges = filmRanges('hero');
-        els.splice(0, els.length, document.querySelector('.hero') || els[0]);
-      }
+      // the hero also holds Storytellers' still (its iris opens onto it): the same source, so the same shared texture
+      const story = hero ? document.querySelector('[data-scene="plate:storytellers"]') : null;
+      if (story) els.push(story);
       const W = ctx.w, tok = (token = {});
       const next = new Map();
       const keep = (h) => { if (!h) return false; if (tok !== token) { release(h); return false; } held.push(h); return true; };
@@ -175,23 +179,38 @@ function stillScene(id, stage) {
         else await full;
       }));
       views = next;
-      if (film) filmA = views.get(els[0]);
+      if (hero) { heroA = views.get(els[0]); storyB = story ? views.get(story) : null; storyEl = story; }
     },
     dispose() {
       token = null;
       held.forEach(release); held = [];
-      views = new Map(); filmA = null;
+      views = new Map(); heroA = storyB = storyEl = null;
       U.mapA.value = U.mapB.value = blank;
     },
     resize(w, h) { U.res.value.set(w, h); },
     update(ctx, s) {
-      if (film) {
-        if (!ranges.length || !document.body.contains(ranges[0].el)) ranges = filmRanges('hero');
-        // the push follows the film's frames, not the section's pass
-        setLayer('A', filmA, clamp(frameAt(ranges, ctx.scrollY, ctx.vh) / 400));
+      if (hero) {
+        const sc = Math.max(0, (ctx.scrollY - s.top) / Math.max(1, ctx.vh));   // screens since the top (ui/hero.js)
+        if (sc >= STORY_2D && storyB) {
+          // under the DOM's cover: Storytellers' still, as its own scene draws it at this scroll
+          const top = storyEl.getBoundingClientRect().top + ctx.scrollY, h = storyEl.offsetHeight;
+          setLayer('A', storyB, clamp((ctx.scrollY + ctx.vh - top) / Math.max(1, h + ctx.vh)));
+        } else {
+          // the painting pushing toward the gap (1.15x) and dimming 15% as the camera moves (ui/hero.js HERO.T)
+          setLayer('A', heroA, 0);
+          const art = heroArt(ctx.vw, ctx.vh), k = smooth(seg(sc, HERO.T.turn[0], HERO.T.push[1]));
+          if (heroA?.handle && !(window.innerWidth > window.innerHeight)) {
+            const z = 1 + 0.15 * k, g = art.A.gap, c = U.ctrA.value;
+            // zoom about the gap: the view centre moves toward it as the zoom grows (the gap stays put on screen)
+            c.set(g[0] + (c.x - g[0]) / z, g[1] + (c.y - g[1]) / z);
+            U.zoomA.value = z;
+          }
+          U.dimA.value = 1 - 0.15 * k;
+        }
         U.mixT.value = 0;
         return;
       }
+      U.dimA.value = 1;
       let v = views.get(s.el);
       if (!v) { const src = sourceFor(s.el, ctx.w); v = { src, handle: null }; }
       setLayer('A', v, s.pe, ctx.reduced || !s.el.hasAttribute('data-rise') ? 0 : Math.max(0, 1 - (s.pe * (s.height + ctx.vh)) / ctx.vh));
@@ -202,5 +221,5 @@ function stillScene(id, stage) {
 
 export default function register(stage) {
   const ids = new Set([...document.querySelectorAll('[data-scene]')].map((el) => el.dataset.scene));
-  for (const id of ids) if ((id !== 'td:camera3d' && id !== 'td:kit') || !CAM3D) stillScene(id, stage);   // the 3D camera and the Kit's 3D devices draw themselves where the phone can carry them (gl/boot.js)
+  for (const id of ids) if ((id !== 'td:camera3d' && id !== 'td:kit' && id !== 'hero3d') || !CAM3D) stillScene(id, stage);   // the hero's and Method's 3D camera and the Kit's 3D devices draw themselves where the phone can carry them (gl/boot.js)
 }

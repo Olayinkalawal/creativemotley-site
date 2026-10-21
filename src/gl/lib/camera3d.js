@@ -14,6 +14,9 @@
                                           tdcore already re-times the orbit (0.72·o + 0.28·easeSine(o)); setPhases inverts
                                           that before applying this module's own pace curve, so the orbit is eased once
    cam.setLayout({ x, y, w, h }, vw, vh)  the slot rect (CSS px, viewport) the device is framed in
+   cam.setView({ az?, el?, fov?, target, dist, shift?, near? }) overrides the fitted framing: the view looks at target (world)
+                                          from dist; az / el / fov left out come from the keys (with the pointer and setOffset);
+                                          shift [x, y] (NDC) moves the target off the screen's centre; null returns to the fit
    cam.setPointer(x, y)                   -1 … 1 (pointer parallax: a few degrees of drift, eased)
    cam.resize(w, h, dpr)                  drawing-buffer px
    cam.pose()                             applies the current phases/layout/pointer to the scene now (no jitter); anchors()
@@ -28,6 +31,14 @@
                                           part when something covers it, and keeps markers >= 28 px apart
    cam.occlusion()                        runs that id pass now (tests; the viewer after a drag)
    cam.dispose()                          frees every GPU resource it made (targets, PMREM, shadow map, tiles, programs' refs)
+   cam.renderTexture(renderer, n = 0, { id }) (opts.alpha only) re-renders on change, else adds one jittered sample (n: that
+                                          many now); returns the running mean as a texture: premultiplied rgba, a = coverage
+                                          (the scene clears to transparent; the tone map runs on un-premultiplied colour), for
+                                          a scene that composites the camera over its own picture (gl/scenes/hero3d.js: the
+                                          hero painting). render() is unchanged (opaque, on black: Method).
+
+   Daylight (create() options, all off by default): envSky / envGround (hex): the main studio's dome is a sky over a
+   ground instead of black, so the body's dark paint mirrors a bright day (the hero, over its painting), not a black studio.
 
    Tiers: opts.tier 2 = desktop (PCF shadows 2048, MSAA 4 at dpr < 1.5 else 2, subtle bloom, 12 idle samples); 1 = light
    (shadows 1024, no bloom, 6 samples); opts.mobile = the phone/still path (camera_mobile.glb, no shadows, MSAA 2,
@@ -99,6 +110,11 @@ vec3 aces(vec3 c){
 }
 vec3 oetf(vec3 c){ return mix(c * 12.92, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c)); }
 void main(){ gl_FragColor = vec4(pow(oetf(aces(texture2D(tHDR, vUv).rgb)), vec3(lift)), 1.0); }`;   // lift < 1: a gentle mid-tone grade (blacks and whites stay put)
+/* opts.alpha: the HDR target holds premultiplied colour and coverage (cleared to transparent): un-premultiply, tone map,
+   premultiply again (a tone curve on premultiplied colour would darken the silhouette's anti-aliased edge) */
+const OUT_FRAG_A = OUT_FRAG.replace(/void main\(\)\{[^\n]*$/, `void main(){ vec4 t = texture2D(tHDR, vUv); float a = clamp(t.a, 0.0, 1.0);
+  vec3 c = t.rgb / max(a, 1e-4); gl_FragColor = vec4(pow(oetf(aces(c)), vec3(lift)) * a, a); }`);
+const BLEND_FRAG_A = 'uniform sampler2D t; varying vec2 vUv; void main(){ gl_FragColor = texture2D(t, vUv); }';   // running mean of premultiplied rgba (constant-alpha blend)
 const QUAD_VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
 const BLEND_FRAG = 'uniform sampler2D t; uniform float w; varying vec2 vUv; void main(){ gl_FragColor = vec4(texture2D(t, vUv).rgb, w); }';
 const COPY_FRAG = /* glsl */`
@@ -122,8 +138,9 @@ export function create(ctx = {}, opts = {}) {
     paintGrain: opts.paintGrain ?? (!mobile && tier >= 2),
   };
   const file = opts.file ?? (mobile ? 'camera_mobile.glb' : 'camera.glb');
+  const alpha = !!opts.alpha;          // renderTexture(): alpha = coverage (the scene clears to transparent black)
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000000);
+  scene.background = alpha ? null : new THREE.Color(0x000000);
   const camera = new THREE.PerspectiveCamera(16, 16 / 9, 0.1, 80);
   let renderer = ctx.renderer || null;
   let W = 16, H = 16, vw = innerWidth, vh = innerHeight, dpr = 1;
@@ -147,8 +164,11 @@ export function create(ctx = {}, opts = {}) {
     return { m, sc };
   };
   const qcam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-  const outQ = quad(OUT_FRAG, { tHDR: { value: null }, exposure: { value: opts.exposure ?? 1.0 }, lift: { value: opts.lift ?? 0.9 } });
-  const blendQ = quad(BLEND_FRAG, { t: { value: null }, w: { value: 1 } }, { transparent: true, blending: THREE.CustomBlending, blendSrc: THREE.SrcAlphaFactor, blendDst: THREE.OneMinusSrcAlphaFactor });
+  const outQ = quad(alpha ? OUT_FRAG_A : OUT_FRAG, { tHDR: { value: null }, exposure: { value: opts.exposure ?? 1.0 }, lift: { value: opts.lift ?? 0.9 } });
+  const blendQ = alpha
+    ? quad(BLEND_FRAG_A, { t: { value: null }, w: { value: 1 } }, { transparent: true, blending: THREE.CustomBlending, blendSrc: THREE.ConstantAlphaFactor, blendDst: THREE.OneMinusConstantAlphaFactor,
+      blendSrcAlpha: THREE.ConstantAlphaFactor, blendDstAlpha: THREE.OneMinusConstantAlphaFactor })
+    : quad(BLEND_FRAG, { t: { value: null }, w: { value: 1 } }, { transparent: true, blending: THREE.CustomBlending, blendSrc: THREE.SrcAlphaFactor, blendDst: THREE.OneMinusSrcAlphaFactor });
   const copyQ = quad(COPY_FRAG, { t: { value: null }, fade: { value: 1 } });
   const idMat = new THREE.ShaderMaterial({ vertexShader: ID_VERT, fragmentShader: ID_FRAG, uniforms: { pid: { value: 0 } }, side: THREE.DoubleSide });
 
@@ -156,7 +176,14 @@ export function create(ctx = {}, opts = {}) {
   /* kind: 'main' (the opaque parts), 'glass' (black + two softbox cards + one strip), 'shiny' (sensor, LCD glass) */
   function studioEnv(kind) {
     const env = new THREE.Scene();
-    env.add(new THREE.Mesh(new THREE.SphereGeometry(30, 32, 16), new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide })));
+    if (kind === 'main' && opts.envSky != null) {
+      // daylight: the dome is a sky (envSky) over a ground (envGround), blended across the horizon, not a black studio
+      const g = new THREE.SphereGeometry(30, 32, 16), pos = g.attributes.position, col = new Float32Array(pos.count * 3);
+      const sky = new THREE.Color(opts.envSky), ground = new THREE.Color(opts.envGround ?? 0x000000), c = new THREE.Color();
+      for (let i = 0; i < pos.count; i++) { c.copy(ground).lerp(sky, smooth(clamp01(pos.getY(i) / 30 * 2.5 + 0.5))); col.set([c.r, c.g, c.b], i * 3); }
+      g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      env.add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide })));
+    } else env.add(new THREE.Mesh(new THREE.SphereGeometry(30, 32, 16), new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide })));
     // soft: a window that falls off smoothly to its edges (v6: the dome's one big reflection reads as a soft shape, not
     // a hard-edged card)
     let softTex = null;
@@ -661,9 +688,11 @@ export function create(ctx = {}, opts = {}) {
       const az = rig.az * D, el = rig.el * D;
       _d.set(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el));
       camera.position.set(...view.target).addScaledVector(_d, view.dist); camera.up.set(0, 1, 0); camera.lookAt(...view.target);
-      camera.near = 0.02; camera.far = view.dist + 6; camera.updateProjectionMatrix();
-      const w = rtHDR ? rtHDR.width : W, h = rtHDR ? rtHDR.height : H;
-      camera.projectionMatrix.elements[8] = -jitter[0] * 2 / w; camera.projectionMatrix.elements[9] = -jitter[1] * 2 / h;
+      camera.near = view.near ?? 0.02; camera.far = view.dist + 6; camera.updateProjectionMatrix();
+      // view.shift [x, y] (NDC): where the target lands on screen (default the centre: the hero3d scene floats the camera
+      // in the painting's fingertip gap); view.near: a nearer plane than 0.02 wastes depth precision on a far view
+      const w = rtHDR ? rtHDR.width : W, h = rtHDR ? rtHDR.height : H, sh = view.shift || [0, 0];
+      camera.projectionMatrix.elements[8] = -sh[0] - jitter[0] * 2 / w; camera.projectionMatrix.elements[9] = -sh[1] - jitter[1] * 2 / h;
       camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
       return;
     }
@@ -727,7 +756,7 @@ export function create(ctx = {}, opts = {}) {
     const shadowWas = r.shadowMap.enabled, typeWas = r.shadowMap.type, rtWas = r.getRenderTarget(), acWas = r.autoClear;
     r.getClearColor(_cc); const caWas = r.getClearAlpha();
     r.shadowMap.enabled = !!Q.shadows; r.shadowMap.type = THREE.PCFShadowMap;
-    r.setRenderTarget(rtHDR); r.setClearColor(0x000000, 1); r.clear();
+    r.setRenderTarget(rtHDR); r.setClearColor(0x000000, alpha ? 0 : 1); r.clear();
     const ar = r.info.autoReset; r.info.autoReset = false; r.info.reset();
     r.render(scene, camera);
     lastInfo = { calls: r.info.render.calls, triangles: r.info.render.triangles };
@@ -737,24 +766,35 @@ export function create(ctx = {}, opts = {}) {
     outQ.m.uniforms.tHDR.value = rtHDR.texture;
     outQ.m.uniforms.exposure.value = (opts.exposure ?? 1.0) * (1 + (opts.expRamp ?? 0.15) * ph.explode);
     r.setRenderTarget(rtLDR); r.render(outQ.sc, qcam);
-    blendQ.m.uniforms.t.value = rtLDR.texture; blendQ.m.uniforms.w.value = 1 / (accN + 1);
+    blendQ.m.uniforms.t.value = rtLDR.texture; blendQ.m.uniforms.w.value = 1 / (accN + 1); blendQ.m.blendAlpha = 1 / (accN + 1);
     r.autoClear = false; r.setRenderTarget(accRT); r.render(blendQ.sc, qcam); r.autoClear = acWas;
     r.shadowMap.enabled = shadowWas; r.shadowMap.type = typeWas; r.setRenderTarget(rtWas);
     accN++;
     jitter = [0, 0];
   }
-  function render(r = renderer, target = null, samplesNow = 0) {
-    renderer = r || renderer;
-    if (!loaded) return false;
+  function accumulate(r, samplesNow = 0, idOK = true) {
     const s = signature();
     if (s !== lastSig || dirty) { accN = 0; lastSig = s; dirty = false; }
     const n = samplesNow || (accN < Q.acc ? 1 : 0);
-    for (let i = 0; i < n && accN < Math.max(Q.acc, samplesNow); i++) sample(renderer);
+    for (let i = 0; i < n && accN < Math.max(Q.acc, samplesNow); i++) sample(r);
     // the view has settled (or a still was asked for): test what covers each anchor, once per pose
-    if ((accN >= Q.acc || (samplesNow && opts.idOnSamples !== false)) && idSig !== s) idPass(renderer);
+    if (idOK && (accN >= Q.acc || (samplesNow && opts.idOnSamples !== false)) && idSig !== s) idPass(r);
+  }
+  function render(r = renderer, target = null, samplesNow = 0) {
+    renderer = r || renderer;
+    if (!loaded) return false;
+    accumulate(renderer, samplesNow);
     copyQ.m.uniforms.t.value = accRT.texture;
     renderer.setRenderTarget(target); renderer.render(copyQ.sc, qcam);
     return true;
+  }
+  /* opts.alpha: the running mean itself (premultiplied rgba, a = coverage), for the caller to composite; o.id false skips
+     the anchors' id pass (a scene without markers) */
+  function renderTexture(r = renderer, samplesNow = 0, o = {}) {
+    renderer = r || renderer;
+    if (!loaded) return null;
+    accumulate(renderer, samplesNow, o.id !== false);
+    return accRT.texture;
   }
 
   // ---------------------------------------------------------------- anchors + occlusion (id pass)
@@ -894,7 +934,7 @@ export function create(ctx = {}, opts = {}) {
     setPhases(x) { ph = { orbit: untime(x.orbit ?? 1), hand: x.hand ?? 1, explode: x.explode ?? 0, settle: x.settle ?? 0 }; },
     setLayout(r, w, h) { rect = r ? { x: r.x, y: r.y, w: r.w, h: r.h } : null; if (w) vw = w; if (h) vh = h; },
     setPointer(x, y, k = 0.12) { ptr.set(x, y); ptrS.lerp(ptr, k); if (ptrS.distanceToSquared(ptr) < 1e-6) ptrS.copy(ptr); },
-    resize, render, anchors, dispose, pose,
+    resize, render, renderTexture, anchors, dispose, pose,
     occlusion() { if (loaded) idPass(renderer); return anchors(); },
     busy() { return loaded && accN < Q.acc; },
     invalidate() { dirty = true; },
