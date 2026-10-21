@@ -7,14 +7,14 @@
     "src": "/assets/scenes/directors/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 148715,
+    "bytes": 181945,
     "q": 72
    },
    {
     "src": "/assets/scenes/directors/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 237044,
+    "bytes": 291779,
     "q": 72
    }
   ],
@@ -23,14 +23,14 @@
     "src": "/assets/scenes/directors/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 198892,
+    "bytes": 238540,
     "q": 86
    },
    {
     "src": "/assets/scenes/directors/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 334810,
+    "bytes": 403888,
     "q": 86
    }
   ]
@@ -40,13 +40,13 @@
    "src": "/assets/scenes/directors/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 7309
+   "bytes": 9030
   },
   {
    "src": "/assets/scenes/directors/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 8080
+   "bytes": 10150
   }
  ],
  "phone": {
@@ -55,22 +55,22 @@
     "src": "/assets/scenes/directors/phone-1640.avif",
     "w": 1640,
     "h": 2916,
-    "bytes": 255233,
-    "q": 72
+    "bytes": 302483,
+    "q": 70
    },
    {
     "src": "/assets/scenes/directors/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 170314,
-    "q": 72
+    "bytes": 178173,
+    "q": 65
    },
    {
     "src": "/assets/scenes/directors/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 100815,
-    "q": 69
+    "bytes": 101728,
+    "q": 61
    }
   ],
   "webp": [
@@ -78,22 +78,22 @@
     "src": "/assets/scenes/directors/phone-1640.webp",
     "w": 1640,
     "h": 2916,
-    "bytes": 348438,
+    "bytes": 422720,
     "q": 86
    },
    {
     "src": "/assets/scenes/directors/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 221058,
+    "bytes": 273302,
     "q": 86
    },
    {
     "src": "/assets/scenes/directors/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 135808,
-    "q": 86
+    "bytes": 147292,
+    "q": 83
    }
   ]
  },
@@ -123,8 +123,8 @@
  },
  "key": "#3F4D1F",
  "titleBg": {
-  "desktop": "#32412A",
-  "phone": "#1E1F0C"
+  "desktop": "#3C523C",
+  "phone": "#212719"
  },
  "titleInk": {
   "desktop": "light",
@@ -132,17 +132,17 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 10.91,
-   "worst10": 6.79
+   "mean": 8.52,
+   "worst10": 4.71
   },
   "phone": {
-   "mean": 16.71,
-   "worst10": 12.4
+   "mean": 15.34,
+   "worst10": 9.43
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sqlEppaOiqAqpMB2JZQC06DTkBzqvVS/elO9DQtgJKH0n8TCgAP7s3MHSZHZonCyr5VPUU75nJFkHRYJwFy41tp/PP8s9uz75zQUCcxbbDRNWTFhXpDY5sqwesGYMyVr1IiVgXa5zJWqcVpV4IRsias7Oooo/vNhnva5F2AKOHDSf2AAAAA==",
-  "phone": "data:image/webp;base64,UklGRnoAAABXRUJQVlA4IG4AAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JQBbZDSv4JqaCEKtO/ewAAP79sAiZgSHtvIN0cEX/0AiTeCE6//c0D5JMhnnk7yTVZbDEYyi57WA2CJBlT1I3LeFQRegV8YAy95+gXkX5xR3TyT1wAA=="
+  "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sq1EppiOiqAqpMB2JZQC3uDTwM7iFBJUXaDRkZRV5OCbBnFyYAP7c6jXRPZIWGXILjuabe4ZBl17dSJ5FG2wJuOc+MtscoLrLwz9OlS9SUFfOWHzbOX8BSH9Pfn/8fCUza6WteOMDaGlmKwf2zJZgRpVmJxG8ZFCDOdV39zoewxjpaAAAAA==",
+  "phone": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JQBadDSwBazV0MBVbfkAAAP79soqcH+VMh9sE0cv/1Zxekry7j71fd7ggBn8fFGIElCWf1Ww482GYPHg6N37VfHnN7q/RmXdgk1sfC64hFrikLoqEhg096KCWuTslOQYfkwAA"
  },
  "credit": {
   "desktop": "Nano Banana Pro 4K text-only job 4e6bedc5 (hero 70d440b1 as a technique reference), local retouch (torquetum band to ticks, black lacquer chairs, hymn-book lines, camera badge; craquelure, varnish, grain; final round: chair latch, brace step and book headings blanked): masters/directors/final_d2.png",
@@ -151,17 +151,17 @@
  "titleScrim": {
   "desktop": {
    "colour": "ink",
-   "worst10Bare": 6.78,
+   "worst10Bare": 4.71,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 22.8
+   "zoneLumaSd": 29.3
   },
   "phone": {
    "colour": "ink",
-   "worst10Bare": 12.4,
+   "worst10Bare": 9.43,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 14.8
+   "zoneLumaSd": 21.3
   }
  },
  "masterpiece": "after Hans Holbein the Younger, The Ambassadors (1533)",

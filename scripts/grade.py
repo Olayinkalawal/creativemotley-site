@@ -22,6 +22,10 @@ file that does not already carry the suffix, and writing into the masters folder
 The live set: the six chapters' desktop and phone masters (scripts/art-masters.json points at their -graded files),
 plus creators-desktop-v1.png and brands-desktop-v1.png, which scripts/crops.py cuts the paper cards from; those two
 take the varnish shift measured on their chapter's live desktop master (the same paint, so the cards match it).
+Phone portraits (the tuning for them): the same recipe and footprints, and each reads its own varnish cast, but never
+takes a larger shift than its chapter's desktop master. A portrait's lights are whatever its crop holds, and Directors'
+read the cream floor tiles as varnish (b* 24 against the desktop's 12): its own shift turned the green velvet teal.
+Capped, both viewports of one painting carry one grade; Creators' portrait, bluer than its desktop, keeps its own.
 """
 import argparse
 import hashlib
@@ -38,9 +42,14 @@ ROOT = Path(__file__).resolve().parent.parent
 MASTERS = ROOT / '.art' / 'masters-2026-10-20'
 CHAPTERS = ('storytellers', 'creators', 'brands', 'results', 'directors', 'apply')
 SUFFIX = '-graded'
-# file -> the master whose measured varnish shift it borrows (None: its own)
-LIVE = {f'{c}-{k}.png': None for c in CHAPTERS for k in ('desktop', 'phone')}
-LIVE.update({'creators-desktop-v1.png': 'creators-desktop.png', 'brands-desktop-v1.png': 'brands-desktop.png'})
+# file -> (how it gets its varnish shift, from which master): None = its own measurement; ('borrow', m) = m's shift;
+# ('cap', m) = its own, no larger than m's (see the docstring)
+LIVE = {}
+for _c in CHAPTERS:
+    LIVE[f'{_c}-desktop.png'] = None
+    LIVE[f'{_c}-phone.png'] = ('cap', f'{_c}-desktop.png')
+LIVE.update({'creators-desktop-v1.png': ('borrow', 'creators-desktop.png'),
+             'brands-desktop-v1.png': ('borrow', 'brands-desktop.png')})
 
 # The recipe (approved 2026-10-21). Spatial sizes are for the 5504-px masters and scale with the long side.
 RECIPE = {
@@ -126,15 +135,8 @@ def measure_cast(L, a, b, C, r=RECIPE):
 
 
 # ---- the grade ---------------------------------------------------------------------------------------------------
-def grade(rgb8, r=RECIPE, log=None, k=None, shift=None):
-    """rgb8: HxWx3 uint8. k: spatial scale against the 5504-px masters (default: from the long side).
-    shift: (da, db) to use instead of the varnish shift measured on this image (see LIVE)."""
-    h, w = rgb8.shape[:2]
-    k = max(w, h) / 5504.0 if k is None else k
-    L, a, b = srgb_to_lab(rgb8)
-    info = {}
-
-    # 1. craquelure
+def crack_fill(L, a, b, r, k, info):
+    """Step 1: thin dark cracks found with a grey closing of L and filled back in (returns L, a, b)."""
     size = max(3, int(round(r['crack_close_px'] * k)) | 1)
     yy, xx = np.mgrid[-(size // 2):size // 2 + 1, -(size // 2):size // 2 + 1]
     disk = (xx * xx + yy * yy) <= (size / 2) ** 2
@@ -162,18 +164,46 @@ def grade(rgb8, r=RECIPE, log=None, k=None, shift=None):
         ch += gate * (bg - ch)
         del bg
     info['crack_px'] = float((gate * res > 2).mean())
-    del closed, res, det, sd, gate, wgt
+    return L, a, b
+
+
+def varnish_shift(L, a, b, C, r=RECIPE):
+    """Step 2's measurement: the lights' a*, b* and the (da, db) shift the recipe takes off them."""
+    a0, b0 = measure_cast(L, a, b, C, r)
+    ux, uy = np.cos(np.radians(r['cast_axis_deg'])), np.sin(np.radians(r['cast_axis_deg']))
+    along = (a0 - r['cast_target'][0]) * ux + (b0 - r['cast_target'][1]) * uy
+    amt = float(np.clip(r['cast_amount'] * along, 0, r['cast_max']))   # only ever removes warmth
+    return a0, b0, (float(-amt * ux), float(-amt * uy))
+
+
+def measure_shift(rgb8, r=RECIPE, k=None):
+    """The varnish shift grade() would take off this image (steps 1-2 only)."""
+    h, w = rgb8.shape[:2]
+    k = max(w, h) / 5504.0 if k is None else k
+    L, a, b = srgb_to_lab(rgb8)
+    L, a, b = crack_fill(L, a, b, r, k, {})
+    return varnish_shift(L, a, b, np.hypot(a, b), r)[2]
+
+
+def grade(rgb8, r=RECIPE, log=None, k=None, shift=None, cap=None):
+    """rgb8: HxWx3 uint8. k: spatial scale against the 5504-px masters (default: from the long side).
+    shift: (da, db) to use instead of the varnish shift measured on this image; cap: (da, db) of the master whose
+    shift this one may not exceed (see LIVE)."""
+    h, w = rgb8.shape[:2]
+    k = max(w, h) / 5504.0 if k is None else k
+    L, a, b = srgb_to_lab(rgb8)
+    info = {}
+
+    # 1. craquelure
+    L, a, b = crack_fill(L, a, b, r, k, info)
 
     # 2. varnish cast
     C = np.hypot(a, b)
-    a0, b0 = measure_cast(L, a, b, C, r)
-    ux, uy = np.cos(np.radians(r['cast_axis_deg'])), np.sin(np.radians(r['cast_axis_deg']))
-    if shift is None:
-        along = (a0 - r['cast_target'][0]) * ux + (b0 - r['cast_target'][1]) * uy
-        amt = float(np.clip(r['cast_amount'] * along, 0, r['cast_max']))   # only ever removes warmth
-        da, db = float(-amt * ux), float(-amt * uy)
-    else:
-        da, db = (float(v) for v in shift)
+    a0, b0, own = varnish_shift(L, a, b, C, r)
+    da, db = own if shift is None else (float(v) for v in shift)
+    if shift is None and cap is not None and np.hypot(*own) > np.hypot(*cap):
+        da, db = (float(v) for v in cap)
+        info['capped'] = (round(own[0], 1), round(own[1], 1))
     info.update(cast=(round(a0, 1), round(b0, 1)), shift=(round(da, 1), round(db, 1)), shift_exact=(da, db))
     sk = skin_weight(a, b, C)
     keep = 1 - (1 - r['cast_keep_saturated']) * smoothstep(16, 44, C)
@@ -265,14 +295,15 @@ def recut_crops(suffix=SUFFIX, preview=None):
         sys.argv = argv
 
 
-def grade_file(src, dst, scale=1.0, shift=None):
+def grade_file(src, dst, scale=1.0, shift=None, cap=None):
     im = Image.open(src).convert('RGB')
     if scale != 1.0:
         im = im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
     info = {}
-    out = grade(np.asarray(im), log=info, shift=shift)
+    out = grade(np.asarray(im), log=info, shift=shift, cap=cap)
     Image.fromarray(out).save(dst, optimize=False, compress_level=3)
-    print(f'{src.name} -> {dst}  cast a*,b* {info["cast"]}  shift {info["shift"]}{" (borrowed)" if shift else ""}  '
+    how = ' (borrowed)' if shift else (f' (capped at the desktop\'s; its own {info["capped"]})' if 'capped' in info else '')
+    print(f'{src.name} -> {dst}  cast a*,b* {info["cast"]}  shift {info["shift"]}{how}  '
           f'crack fill > 2 L*: {info["crack_px"]:.2%} of pixels', flush=True)
     return info
 
@@ -297,22 +328,21 @@ def main():
         unknown = [n for n in names if n not in LIVE]
         if unknown:
             sys.exit(f'grade.py: not in the live set: {unknown}')
-        check_masters(names + [v for n in names if (v := LIVE[n])])
+        check_masters(names + [v[1] for n in names if (v := LIVE[n])])
         done, shifts = [], {}
         for name in names:
             src, dst = MASTERS / name, MASTERS / f'{Path(name).stem}{SUFFIX}.png'
-            borrow = LIVE[name]
-            if borrow and borrow not in shifts:    # the live master's shift, exactly as its own grade measures it
-                info = {}
-                grade(np.asarray(Image.open(MASTERS / borrow).convert('RGB')), log=info)
-                shifts[borrow] = info['shift_exact']
-            info = grade_file(src, dst, shift=shifts[borrow] if borrow else None)
-            if not borrow:
+            mode, ref = LIVE[name] or (None, None)
+            if ref and ref not in shifts:          # the desktop master's shift, exactly as its own grade measures it
+                shifts[ref] = measure_shift(np.asarray(Image.open(MASTERS / ref).convert('RGB')))
+            info = grade_file(src, dst, shift=shifts[ref] if mode == 'borrow' else None,
+                              cap=shifts[ref] if mode == 'cap' else None)
+            if not mode:
                 shifts[name] = info['shift_exact']
             done.append(dst)
         update_sums(done)
         print(f'SHA256SUMS: {len(done)} graded files added or refreshed')
-        if not args.only or any(LIVE.get(n) for n in names):
+        if not args.only or any((LIVE[n] or ('',))[0] == 'borrow' for n in names):
             recut_crops(preview=args.preview)
         return
 
@@ -322,7 +352,7 @@ def main():
     in_masters = out_dir == MASTERS.resolve() or MASTERS.resolve() in out_dir.parents
     if in_masters and args.suffix != SUFFIX:
         sys.exit(f'grade.py: writing into the masters folder takes --suffix {SUFFIX} (or use --live)')
-    srcs = [Path(p).resolve() for p in args.images] or [MASTERS / n for n in LIVE if not LIVE[n]]
+    srcs = [Path(p).resolve() for p in args.images] or [MASTERS / n for n in LIVE if not LIVE[n]]   # the desktops
     out_dir.mkdir(parents=True, exist_ok=True)
     for src in srcs:
         dst = out_dir / f'{src.stem}{args.suffix}.png'

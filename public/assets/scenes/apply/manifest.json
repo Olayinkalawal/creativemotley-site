@@ -7,21 +7,21 @@
     "src": "/assets/scenes/apply/desktop-2048.avif",
     "w": 2048,
     "h": 1152,
-    "bytes": 251272,
-    "q": 70
+    "bytes": 253287,
+    "q": 69
    },
    {
     "src": "/assets/scenes/apply/desktop-2880.avif",
     "w": 2880,
     "h": 1620,
-    "bytes": 402680,
+    "bytes": 417502,
     "q": 72
    },
    {
     "src": "/assets/scenes/apply/desktop-3840.avif",
     "w": 3840,
     "h": 2160,
-    "bytes": 555578,
+    "bytes": 571410,
     "q": 72
    }
   ],
@@ -30,21 +30,21 @@
     "src": "/assets/scenes/apply/desktop-2048.webp",
     "w": 2048,
     "h": 1152,
-    "bytes": 320588,
+    "bytes": 336824,
     "q": 86
    },
    {
     "src": "/assets/scenes/apply/desktop-2880.webp",
     "w": 2880,
     "h": 1620,
-    "bytes": 519094,
+    "bytes": 536182,
     "q": 86
    },
    {
     "src": "/assets/scenes/apply/desktop-3840.webp",
     "w": 3840,
     "h": 2160,
-    "bytes": 744552,
+    "bytes": 784090,
     "q": 86
    }
   ]
@@ -54,13 +54,13 @@
    "src": "/assets/scenes/apply/thumb-320.avif",
    "w": 320,
    "h": 180,
-   "bytes": 13405
+   "bytes": 14854
   },
   {
    "src": "/assets/scenes/apply/thumb-320.webp",
    "w": 320,
    "h": 180,
-   "bytes": 13232
+   "bytes": 14414
   }
  ],
  "phone": {
@@ -69,21 +69,21 @@
     "src": "/assets/scenes/apply/phone-1640.avif",
     "w": 1640,
     "h": 2916,
-    "bytes": 303307,
-    "q": 64
+    "bytes": 305878,
+    "q": 69
    },
    {
     "src": "/assets/scenes/apply/phone-1170.avif",
     "w": 1170,
     "h": 2080,
-    "bytes": 181711,
-    "q": 62
+    "bytes": 179059,
+    "q": 64
    },
    {
     "src": "/assets/scenes/apply/phone-828.avif",
     "w": 828,
     "h": 1472,
-    "bytes": 95730,
+    "bytes": 99834,
     "q": 59
    }
   ],
@@ -92,21 +92,21 @@
     "src": "/assets/scenes/apply/phone-1640.webp",
     "w": 1640,
     "h": 2916,
-    "bytes": 420606,
-    "q": 83
+    "bytes": 418478,
+    "q": 85
    },
    {
     "src": "/assets/scenes/apply/phone-1170.webp",
     "w": 1170,
     "h": 2080,
-    "bytes": 264208,
-    "q": 84
+    "bytes": 267754,
+    "q": 85
    },
    {
     "src": "/assets/scenes/apply/phone-828.webp",
     "w": 828,
     "h": 1472,
-    "bytes": 148760,
+    "bytes": 146870,
     "q": 83
    }
   ]
@@ -137,8 +137,8 @@
  },
  "key": "#DFAFA0",
  "titleBg": {
-  "desktop": "#DFD4C7",
-  "phone": "#C5C1A5"
+  "desktop": "#E8E0D6",
+  "phone": "#D1D1B6"
  },
  "titleInk": {
   "desktop": "dark",
@@ -146,17 +146,17 @@
  },
  "titleContrast": {
   "desktop": {
-   "mean": 13.68,
-   "worst10": 12.68
+   "mean": 15.28,
+   "worst10": 14.51
   },
   "phone": {
-   "mean": 10.98,
-   "worst10": 9.49
+   "mean": 12.85,
+   "worst10": 11.41
   }
  },
  "placeholder": {
-  "desktop": "data:image/webp;base64,UklGRs4AAABXRUJQVlA4IMIAAAAwBQCdASogABIAPu1qrVCppaQiqAqpMB2JQBdgZctUQILfsXWRUupYMiZGWnWy/UL9oAD+78KplY4VSiWUz8opsRbTzqBsf9141aPtMld3ycKHncClPT9tyAsfqKJ48HsZFMCQw7gRlkNTt80hXJRNLx10eHYmMHizkltjKtuaSmeBPOiyoiTXbRaUKK8+lGEzk3YYCfEbysff6356Wro3XKxwvwtwvLl2Mu1YgxAx4GnidXjGcC8m+i1x6D6oKB4AAA==",
-  "phone": "data:image/webp;base64,UklGRpwAAABXRUJQVlA4IJAAAABQBACdASoMABoAPu1iqk2ppaQiMAgBMB2JYgCdAYt+tW9rUn42WoTPV1MAAP7wF2Wd5F2zv5qmTV6JU9X5zb/Wdd+4RxR8n7oocuzf1hhP2bja4ch9dujtGM6E8uI7de4DLqFW/wTsjX4XnQmJ/PlXRFxBvBxYCeEvpX/80YuvICi/sQ4VKjyrhP+hhZLKmAA="
+  "desktop": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACwBQCdASogABIAPu1qrVCppaQiqAqpMB2JQBOmZgjLc9FrYEDi5W5KxNRSR0TnEkLLz+xELiAA/vN0E+BUVMdLdugbE6/2GWE2tUYWI4SiKX4O984u5rVkKQAdwi+ncR2koQzcGqzDEZF+MgRBPtQIfCoS/kQx0laPzi+NEoFDUYBmkeIAI5kPVlPyjA/laz68rQRt+LFJdLfB/psMtSg5rWrZZVswFKJ5iLKGAINkp+8mK49F/cATtOg235iKJv2qKtEQaPFMLxsAAAA=",
+  "phone": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoMABoAPu1mqk4ppaOiMAgBMB2JZACdAYv2tW68w8eCFi/wAAD+9jJLKMVTyAWQBPUYa8kzj55HGJRahln7TinrSH/Vq8h9BM8Ef6238L46oi2iEuKJhqxpODeR5pbNl+i0SUd+cSN9FKeCQoMHPV+Wl3sseelLxhhsztsGdTnXUytfyjo1OYdw8yAAAA=="
  },
  "credit": {
   "desktop": "Nano Banana Pro 4K 5f652579 > edit e47abfe4, then local retouch (second camera out, roses, drapery end, fourth foot, hair; final round: the raised fist cleaned of the old camera rim, seam and flecks feathered): masters/apply/final_d2.png",
@@ -165,17 +165,17 @@
  "titleScrim": {
   "desktop": {
    "colour": "paper",
-   "worst10Bare": 12.7,
+   "worst10Bare": 14.53,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 5.5
+   "zoneLumaSd": 4.2
   },
   "phone": {
    "colour": "paper",
-   "worst10Bare": 9.49,
+   "worst10Bare": 11.41,
    "alphaForTitle3": 0.0,
    "alphaForDek4_5": 0.0,
-   "zoneLumaSd": 9.9
+   "zoneLumaSd": 8.5
   }
  },
  "masterpiece": "after Sandro Botticelli, The Birth of Venus (c. 1484-86)",
