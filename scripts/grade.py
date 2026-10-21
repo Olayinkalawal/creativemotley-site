@@ -30,8 +30,9 @@ CHAPTERS = ('storytellers', 'creators', 'brands', 'results', 'directors', 'apply
 # The recipe. Spatial sizes are for the 5504-px-wide masters and scale with the image width.
 RECIPE = {
     'crack_close_px': 7,          # grey-closing footprint (diameter) that bridges the cracks
-    'crack_min': 1.0,             # residual (L units) where crack filling starts...
-    'crack_full': 3.5,            # ...and is at full strength
+    'crack_preblur_px': 0.8,      # cracks are found on a lightly blurred L, so paint grain does not read as crack
+    'crack_min': 0.8,             # residual (L units, on the blurred L) where crack filling starts...
+    'crack_full': 2.6,            # ...and is at full strength
     'crack_bold': (14.0, 26.0),   # residual band where it fades out again (bold dark detail stays)
     'crack_texture': (2.5, 7.0),  # local std of L (closed) over which filling fades out (busy texture stays)
     'crack_strength': 0.8,
@@ -39,10 +40,11 @@ RECIPE = {
     'neutral_chroma': 28.0,       # the cast is read off the lights: L > 45, chroma under this, no blues...
     'neutral_top': 70,            # ...the brightest 30% of them (what should be white has yellowed most)
     'cast_target': (0.6, 4.0),    # a*, b* the lights are pulled towards (a faintly warm, paper white)
-    'cast_amount': 0.5,           # fraction of the measured cast removed
+    'cast_amount': 0.85,           # fraction of the measured cast removed
     'cast_axis_deg': 75.0,        # the varnish axis in a*b* (amber-yellow); only the cast along it is removed
-    'cast_max': 10.0,             # largest shift along that axis
-    'cast_keep_saturated': 0.55,  # saturated colour takes this fraction of the shift
+    'cast_max': 17.0,             # largest shift along that axis
+    'cast_tone_weight': (0.5, 1.2),   # share of the shift taken by the shadows (L* 12) and by the lights (L* 70+)
+    'cast_keep_saturated': 0.65,  # saturated colour takes this fraction of the shift
     'cast_keep_skin': 0.3,        # skin takes this fraction
     'cast_keep_blue': 0.3,        # intended blues (skies, robes) take this fraction, or they turn electric
     'tone': ((0.0, 0.0), (0.03, 0.034), (0.10, 0.136), (0.25, 0.322), (0.45, 0.532), (0.65, 0.716),
@@ -99,9 +101,10 @@ def skin_weight(a, b, C):
 
 
 # ---- the grade ---------------------------------------------------------------------------------------------------
-def grade(rgb8, r=RECIPE, log=None):
+def grade(rgb8, r=RECIPE, log=None, k=None):
+    """rgb8: HxWx3 uint8. k: spatial scale against the 5504-px masters (default: from the width)."""
     h, w = rgb8.shape[:2]
-    k = w / 5504.0
+    k = w / 5504.0 if k is None else k
     L, a, b = srgb_to_lab(rgb8)
     info = {}
 
@@ -110,12 +113,19 @@ def grade(rgb8, r=RECIPE, log=None):
     yy, xx = np.mgrid[-(size // 2):size // 2 + 1, -(size // 2):size // 2 + 1]
     disk = (xx * xx + yy * yy) <= (size / 2) ** 2
     closed = ndimage.grey_closing(L, footprint=disk)
-    res = closed - L
+    res = closed - L                                   # what filling adds
+    pb = r['crack_preblur_px'] * k
+    if pb >= 0.4:                                      # detection on a lightly blurred L (grain stays below threshold)
+        Lb = ndimage.gaussian_filter(L, pb)
+        det = ndimage.grey_closing(Lb, footprint=disk) - Lb
+        del Lb
+    else:
+        det = res
     sig = max(1.0, 6 * k)
     m1 = ndimage.gaussian_filter(closed, sig)
     sd = np.sqrt(np.maximum(ndimage.gaussian_filter(closed * closed, sig) - m1 * m1, 0))
     del m1
-    gate = (smoothstep(r['crack_min'], r['crack_full'], res) * (1 - smoothstep(*r['crack_bold'], res))
+    gate = (smoothstep(r['crack_min'], r['crack_full'], det) * (1 - smoothstep(*r['crack_bold'], res))
             * (1 - smoothstep(*r['crack_texture'], sd)))
     gate *= r['crack_strength'] * (1 - (1 - r['crack_skin']) * skin_weight(a, b, np.hypot(a, b)))
     L = L + res * gate
@@ -126,7 +136,7 @@ def grade(rgb8, r=RECIPE, log=None):
         ch += gate * (bg - ch)
         del bg
     info['crack_px'] = float((gate * res > 2).mean())
-    del closed, res, sd, gate, wgt
+    del closed, res, det, sd, gate, wgt
 
     # 2. varnish cast
     C = np.hypot(a, b)
@@ -146,7 +156,8 @@ def grade(rgb8, r=RECIPE, log=None):
     keep = 1 - (1 - r['cast_keep_saturated']) * smoothstep(16, 44, C)
     keep = keep * (1 - sk * (1 - r['cast_keep_skin']))
     keep = keep * (1 - (1 - r['cast_keep_blue']) * smoothstep(-1, -12, b))
-    lw = 0.6 + 0.4 * smoothstep(12, 70, L)          # varnish yellows the lights most; shadows take less
+    tw0, tw1 = r['cast_tone_weight']
+    lw = tw0 + (tw1 - tw0) * smoothstep(12, 70, L)  # varnish yellows the lights most; shadows take less
     a = a + da * keep * lw
     b = b + db * keep * lw
     del keep, lw
