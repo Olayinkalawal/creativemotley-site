@@ -351,8 +351,10 @@ export default function register(stage) {
       let tCam = null;
       if (ready && (!two || s < HERO.T.turn[0] || QA.bg)) {
         tCam = cam.renderTexture(renderer, 0, { id: false });
-        // (one more frame: the next update makes the drag region, even if nothing else moves)
-        if (tCam && two && s < HERO.T.turn[0] && !QA.bg) { heroLive.mode = '3d'; heroLive.ready = true; handed = true; requestAnimationFrame(() => stage.invalidate()); }
+        // (one more frame: the next update makes the drag region, even if nothing else moves; and the camera's running
+        // mean starts again there: a GLB that lands after the stage's idle cut-off drew only a few frames, and on phones
+        // the first of them kept a faint, larger copy of the camera in its fitted framing: phase 4 verify)
+        if (tCam && two && s < HERO.T.turn[0] && !QA.bg) { heroLive.mode = '3d'; heroLive.ready = true; handed = true; requestAnimationFrame(() => { cam?.invalidate?.(); stage.invalidate(); }); }
       }
       let story = false;
       if (tCam && m.blades > 0) {

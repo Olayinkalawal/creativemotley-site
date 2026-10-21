@@ -301,10 +301,12 @@ export function initHero() {
       for (const el of railParts) el.inert = !docked;
       lastDocked = docked;
     }
-    if (!desk) {   // phones and narrow windows: no rail; the mark and index fade with the veil
-      put(heroMark, 'mo', 'opacity', q(1 - out));
-      put(frame.querySelector('[data-flip-src="index"]'), 'io', 'opacity', q(1 - out));
-    }
+    // phones and narrow windows: no rail; the mark and index fade with the veil. On desktop the inline value is
+    // cleared, so .frame.is-docked hides them (a frame drawn before measureFlip had run, or a window widened past
+    // 1024, left an inline opacity of 1 that kept the frame's copies on screen beside the rail's: phase 4 verify)
+    const fadeTo = desk ? '' : q(1 - out);
+    put(heroMark, 'mo', 'opacity', fadeTo);
+    put(frame.querySelector('[data-flip-src="index"]'), 'io', 'opacity', fadeTo);
     const inert = out > 0.5 || (docked && desk);
     if (inert !== lastInert) { nav.inert = inert; if (inert) nav.setAttribute('aria-hidden', 'true'); else nav.removeAttribute('aria-hidden'); lastInert = inert; }
 

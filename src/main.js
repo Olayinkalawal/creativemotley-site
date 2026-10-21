@@ -44,10 +44,12 @@ const holders = (name) => (name === '_teardown' ? [...document.querySelectorAll(
 // own layout (a teardown's pinned copy, its title's line masks) is never seen moving
 // (with reduced motion the teardowns turn static at init, a different height: set up before the first frame too, so
 // nothing above the target changes under it)
-if (deep) {
+// (reduced motion without a deep link too: run after the first frame, the static switch moved the Kit's pinned still
+// across the whole viewport for the browser, a layout shift of 1.0 at 1440 in the phase 4 verify)
+if (deep || REDUCED) {
   for (const [path, m] of Object.entries(sections)) {
     const name = path.slice(11, -3);
-    if (typeof m.init !== 'function' || !(holders(name).some((el) => el === deep || el.contains(deep)) || (REDUCED && name === '_teardown'))) continue;
+    if (typeof m.init !== 'function' || !((deep && holders(name).some((el) => el === deep || el.contains(deep))) || (REDUCED && name === '_teardown'))) continue;
     done.add(path);
     try { m.init(); } catch (e) { console.warn('[section] init failed', path, e); }
   }
