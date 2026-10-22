@@ -41,8 +41,8 @@ export const HERO = {
    w, h (px); upx: world units per image px at the target's depth; t: the target (the body's centre) in image px;
    lens: the front element's centre in image px; bw: the camera's silhouette width at rest in px (cam-hero) */
 export const STILLS = {
-  hero: { src: '/assets/scenes/hero/cam-hero', w: 520, h: 520, upx: 0.00260127, t: [260, 260], lens: [399, 291.3], bw: 419.9 },
-  front: { src: '/assets/scenes/hero/cam-front', w: 520, h: 520, upx: 0.00260127, t: [260, 260], lens: [294.6, 279] },
+  hero: { src: '/assets/scenes/hero/cam-hero', w: 520, h: 520, upx: 0.00260675, t: [260, 260], lens: [398.9, 292.1], bw: 419.9 },
+  front: { src: '/assets/scenes/hero/cam-front', w: 520, h: 520, upx: 0.00260675, t: [260, 260], lens: [294.6, 279.9] },
   lens: { src: '/assets/scenes/hero/cam-lens', w: 1600, h: 1600, upx: 0.000286497, t: [800, 800] },
   fov: 14,                                                           // the stills' vertical field (degrees)
 };
@@ -243,7 +243,7 @@ export function initHero() {
     });
   }
   requestAnimationFrame(measureFlip);
-  document.fonts?.ready.then(measureFlip);
+  document.fonts?.ready.then(() => { measureFlip(); place(); });   // (place: the beats' line boxes in their web font)
   const play = (el, kf, i = 0) => {
     const an = el.animate(kf, { duration: 600, delay: i * 20, easing: EASE, fill: 'backwards' });
     anims.add(an); an.finished.then(() => anims.delete(an), () => anims.delete(an));

@@ -513,7 +513,10 @@ export default function register(stage) {
       renderer.setRenderTarget(target);
       renderer.render(scene, camera);
       // the section's stills go once this scene shows shot k (its device, or its own stand-in)
-      if (showsK && !live.ready) requestAnimationFrame(() => stage.invalidate());   // (one more frame: the next update makes the drag region)
+      // (one more frame: the next update makes the drag region; p5: and while the device turns in from its still's pose,
+      // whose clock only runs on drawn frames: a device that went live after the reader's 10 s of ambient life froze
+      // mid-turn, with no drag region and the markers on the still, until the next input)
+      if ((showsK && !live.ready) || live.turning) requestAnimationFrame(() => stage.invalidate());
       live.ready = showsK;
       // the occlusion test landed (the view settled): one more frame (ambient) so the markers take it
       if (A) { const v = A.idVersion; if (v !== idV) { idV = v; idPending = true; stage.invalidate(); } }

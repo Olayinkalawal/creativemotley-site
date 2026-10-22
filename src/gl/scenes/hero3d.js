@@ -44,9 +44,10 @@ const Q = new URLSearchParams(location.search);
    dark paint mirrors a bright day, not a black studio). create() options only. p5: the key warm (the figures' light),
    a warmer ground bounce on the lower faces, exposure 1.2 -> 1.55 and lift 0.94 -> 0.88: the body's mid-tones up
    (it read as a dark, cool cut-out on the bright painting: median L 34 -> ~43 in the lab, 3x at rest); the iris
-   (seen through the glass in the push) lit by its studio card, the direct key at 30% (it drew two white blades and the
-   shadow map's dotted edge across them). */
-const DAYLIGHT = { envSky: 0xa9c8e4, envGround: 0x5e5a46, env: 0.85, exposure: 1.55, lift: 0.88, key: 9, keyTint: 0xfff0dc, kick: 0.45, fill: 0.5, softbox: 1.9, rim: 3.0, metalDirect: 0.3 };
+   (seen through the glass in the push) lit by its studio card at 1.0 (Method 1.5), the direct key at 10% (it drew two
+   white blades and the shadow map's dotted edge across them: at 30% two still read as paper); the glass studio's key window and fill at 1.5 / 0.1 (Method: 1.9 / 0.14), a
+   darker glass for the push into the lens. */
+const DAYLIGHT = { envSky: 0xa9c8e4, envGround: 0x5e5a46, env: 0.85, exposure: 1.55, lift: 0.88, key: 9, keyTint: 0xfff0dc, kick: 0.45, fill: 0.5, softbox: 1.9, rim: 3.0, metalDirect: 0.1, freeMetalEnv: 1.0, win: 1.5, glassFill: 0.1 };
 const STORY_2D = 0.62;      // the 2D move: Storytellers under the DOM's lens still and blades from here
 const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
 /* the composite over the painting (premultiplied): the camera, then the iris: nine blades, as the model's (half-planes
