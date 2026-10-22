@@ -97,7 +97,9 @@ const MIC = {
     shock_mount: { ex: [0, 0, 30], t: [0.18, 0.52] },
     magnet: { ex: [0, 0, -3], t: [0.18, 0.52] },             // rides in the shock mount (nested, as in micB), a little proud
     xlr: { ex: [0, 0, -72], t: [0.30, 0.62] },
-    yoke: { ex: [62, -80, 4], rot: [-22, 0, -15], t: [0.44, 0.80] },   // drops below the body, its U turned to the view (micB)
+    // drops below the body, its U toward the view (micB); p5: turned 65 deg more about the mic's axis (rot z -15 -> 50), so
+    // the strap shows its broad black face instead of its edge (edge-on, its two edges read as a bent chrome rod)
+    yoke: { ex: [62, -80, 4], rot: [-22, 0, 50], t: [0.44, 0.80] },
     screws: { t: [0.50, 0.84] },
     pcb: { ex: [0, 0, -50], t: [0.52, 0.88], scale: 1.25 },
     contacts: { ex: [-4, -22, -44], t: [0.56, 0.90] },          // three loose gold contacts out of the insert (micB's sparkle)
@@ -113,7 +115,10 @@ const MIC = {
   nocast: /^(diaphragm|voice_coil|magnet|pcb|screws|contacts)$/,
   special: { mylar: 'mylar', cloth: 'cloth' },
   metalParts: /^(magnet|grille)$/,                         // the pole face and the grille's polished bands see their own studio card
-  metalCard: { pos: [-1.5, 1.5, 6.5], size: [16, 12], card: 0.9, strip: 1.2, key: 0.6 },   // (camera v5's bayonet / iris card, placed behind the view: a face turned to it mirrors it)
+  // (camera v5's bayonet / iris card, placed behind the view: a face turned to it mirrors it). p5: 10 x 6 at 0.7 (was 16 x
+  // 12 at 0.9, which flooded the pole face white): its soft edge now crosses the magnet's domed face (build_mic.py), a dark
+  // mirror with one gradient highlight, as micB
+  metalCard: { pos: [-1.5, 1.5, 6.5], size: [10, 6], card: 0.7, strip: 1.2, key: 0.6 },
   metalEnv: 1.25,
   shadowBox: 2.2,
   tileA: 'foam',
@@ -193,8 +198,9 @@ const PHONE = {
   root: 'phone', file: 'phone.glb', mobileFile: 'phone_mobile.glb', unitsMM: PU,
   keys: {
     wide: {
-      start: { az: 214, el: 8, fov: 16, fill: 0.85 },      // a rear three-quarter: the frosted glass, the plateau, the band
-      hero: { az: 24, el: 26, fov: 15, fill: 0.82 },       // phoneA3: lying back, the display, the button side, the bottom edge
+      // (p5: start 0.85 -> 0.74 and hero 0.82 -> 0.72, the family's fill; the column, the Kit's arrival, stays 0.80)
+      start: { az: 214, el: 8, fov: 16, fill: 0.74 },      // a rear three-quarter: the frosted glass, the plateau, the band
+      hero: { az: 24, el: 26, fov: 15, fill: 0.72 },       // phoneA3: lying back, the display, the button side, the bottom edge
       column: { az: 26, el: 26, fov: 15, fill: 0.80 },     // the Kit's arrival (the phone shot has no orbit)
       exploded: { az: 40, el: 10, fov: 16, fill: 0.88 },   // phoneB: five groups, overlapping, climbing to the right (4-5% margins after the settle)
     },
@@ -238,20 +244,22 @@ const PHONE = {
   // the board (its lids, chips and faces) sees its own studio at the hold: one broad soft card where its face, turned to
   // the exploded view, mirrors it (the camera v5's 'metal' studio): phoneB's bright champagne and nickel lids
   metalParts: /^(logic_board|battery)$/,                   // (the pouch too: a broad soft sheen its wrinkles and rolled edge catch)
-  metalCard: { pos: [-6.1, -1.2, -3.2], size: [9, 7], card: 0.6, strip: 1.2, key: 0.6 },
+  // (p5: a smaller, brighter card, 5 x 2.4 at 1.1, was 9 x 7 at 0.6: the lids mirror it with a falloff, not as a flat fill)
+  metalCard: { pos: [-6.1, -1.2, -3.2], size: [5, 2.4], card: 1.1, strip: 1.2, key: 0.6 },
   metalEnv: 1.0,
   shadowBox: 1.1,
   tileA: 'foam',                                           // the tile-A slot carries the foil wrinkle tile (code 0.66); no foam on the phone
   grainTileMM: 7, grainStr: 0.05, grainRough: 0.6, grainRoughMin: 0.34, grainSpecClamp: 0.25,
-  foilTileMM: 96, foilStr: 0.07, foilSheen: 0.35, perfMM: 0.85,
+  // (p5: the pouch's broad wrinkles at a 48 mm tile, was 96: about 5.3 px/mm, soft features that hold at 3x; build_phone.py)
+  foilTileMM: 48, foilStr: 0.06, foilSheen: 0.35, perfMM: 0.85,
   brushStr: 0.18, brushRough: 0.6,
   edgeSheen: 0.45,
   smoothSpec: 0.15,                                        // mirror-smooth metal: the softboxes in the env, not the point key
-  // the screen: off (a black glass panel) through the orbit and the hero, as phoneA3; a dim neutral glow on the loose
-  // panel in the hold, with a sub-pixel mesh (0.5 mm cells: the panel is 66.9 x 142.4 mm) that fades out below a pixel
+  // the screen (p5): lit through the orbit, the hero, the Kit's arrival and the hold. It shows one of our chapter paintings
+  // under a thin Creative Motley status line (build_phone.py screen_texture); round 3's switched-off panel read as a black
+  // void at every front view, and its 0.9 mm sub-pixel mesh as woven carbon fibre in the hold (screenMesh is gone)
   screen: 0.5, screenEnv: 0.06, screenRough: 0.16,
-  screenGlow: { orbit: 0, hold: 3.0, t0: 0.35, t1: 0.9 },
-  screenMesh: { mm: 0.9, str: 0.35 }, screenUV: [66.9 / 0.9, 142.4 / 0.9],
+  screenGlow: { orbit: 1.5, hold: 1.6, t0: 0.35, t1: 0.9 },
   // the cover glass: its strip env (phoneA3's band direction) and analytic softboxes; the printed border's inner edge
   // (model units) so the reflective layer is weaker over it and the border reads on every edge
   strip: { w: 4.2, l: 18, pos: [-3.8, 6.0, 4.0], along: [1, 0.2, -0.6], k: 6.0, wash: 0.2 },
@@ -259,9 +267,10 @@ const PHONE = {
   glassFade: [0.12, 0.5],
   glassKeyK: 0.6,
   glassBoxes: [
-    { when: 'pre', dir: [-0.10, 0.88, -0.48], dist: 2.4, w: 0.55, h: 5.0, rot: 100, k: 5.6, soft: 0.45, fall: 1.0 },   // the hero: phoneA3's band down the display's left side
-    { when: 'ex', rel: true, tall: false, dir: [0.27, 0.08, 1.0], dist: 2.4, w: 2.2, h: 6.0, rot: 35, k: 3.0, soft: 1.0, fall: 2.0 },   // the desktop hold: a broad soft gradient across the loose glass (phoneB)
-    { when: 'ex', rel: true, tall: true, dir: [0.27, 0.08, 1.0], dist: 2.4, w: 2.2, h: 6.0, rot: 35, k: 2.7, soft: 1.0, fall: 2.0 },
+    // (p5: k 5.6 -> 3.5, 3.0 -> 2.2 and 2.7 -> 2.0, so the lit image reads through the glass's reflection)
+    { when: 'pre', dir: [-0.10, 0.88, -0.48], dist: 2.4, w: 0.55, h: 5.0, rot: 100, k: 3.5, soft: 0.45, fall: 1.0 },   // the hero: phoneA3's band down the display's left side
+    { when: 'ex', rel: true, tall: false, dir: [0.27, 0.08, 1.0], dist: 2.4, w: 2.2, h: 6.0, rot: 35, k: 2.2, soft: 1.0, fall: 2.0 },   // the desktop hold: a broad soft gradient across the loose glass (phoneB)
+    { when: 'ex', rel: true, tall: true, dir: [0.27, 0.08, 1.0], dist: 2.4, w: 2.2, h: 6.0, rot: 35, k: 2.0, soft: 1.0, fall: 2.0 },
   ],
   // one phone-specific card (like the console's): broad, cool-neutral, below and behind the view, so the polished band's
   // side and the bottom face mirror lit metal (phoneA3) instead of the black studio
