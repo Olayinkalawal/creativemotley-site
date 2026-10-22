@@ -424,23 +424,17 @@ export function create(ctx = {}, opts = {}) {
     m.needsUpdate = true;
   }
   /* glass: reflections only from its own studio (no point glints from the direct lights).
-     kind 'front' (v6): the front element's body darkens what is behind it more at its centre than at its rim (a dark
-       radial falloff into the bore: the deeper rings and elements fade out, the window reflection stays on top).
      kind 'free' (v6): the free elements in the explode: a Fresnel rim, a faked refraction (the studio seen through the
        element: the refracted view ray samples the blurred environment, tinted by the glass) and a soft inner caustic
        ring near the rim, so they read as thick, lit glass (camB2), not dark tinted discs. */
   function patchGlass(m, kind = '') {
-    const U = { uFrontA: { value: opts.frontAlpha ?? [0.14, 0.14] },   // v7: no centre veil (v6 0.5 -> 0.15): the dark bore shows through
-      uGC: { value: new THREE.Vector3() }, uGA: { value: new THREE.Vector3(0, 0, 1) }, uGS: { value: new THREE.Vector4(0.03, 0.3, 0.3, 0.1) } };
+    const U = { uGC: { value: new THREE.Vector3() }, uGA: { value: new THREE.Vector3(0, 0, 1) }, uGS: { value: new THREE.Vector4(0.03, 0.3, 0.3, 0.1) } };
     m.userData.U = U;
     m.onBeforeCompile = (sh) => {
       Object.assign(sh.uniforms, U);
       let f = sh.fragmentShader.replace('#include <aomap_fragment>', '#include <aomap_fragment>\n\treflectedLight.directSpecular *= 0.0; reflectedLight.directDiffuse *= 0.0;');
       const uvx = '#ifdef USE_IRIDESCENCE_THICKNESSMAP\n\tfloat gR = vIridescenceThicknessMapUv.x;\n#else\n\tfloat gR = 0.5;\n#endif\n';
-      if (kind === 'front') {
-        f = f.replace('#include <common>', '#include <common>\nuniform vec2 uFrontA;')
-          .replace('#include <opaque_fragment>', uvx + '\tdiffuseColor.a = mix(uFrontA.x, uFrontA.y, smoothstep(0.15, 0.95, gR));\n#include <opaque_fragment>');
-      } else if (kind === 'free') {
+      if (kind === 'free') {
         // v7: plain thick glass: what is behind passes through, darkened (the material's own alpha); the coating only
         // on the outer ~15% of the radius (thin rim arcs); the only light is the studio strip's arcs. The shading normal
         // is the exact sphere normal of each face (centre and radii from the build, in view space; set per draw): the
@@ -476,7 +470,8 @@ export function create(ctx = {}, opts = {}) {
     const [{ MeshoptDecoder }, { parseGLB }] = await Promise.all([import('three/addons/libs/meshopt_decoder.module.js'), import('./glb.js')]);
     const url = base + file;
     const buf = opts.loadBuffer ? await opts.loadBuffer(url) : await (await fetch(url)).arrayBuffer();
-    const gltf = opts.parse ? await opts.parse(buf, MeshoptDecoder) : await parseGLB(buf, { meshoptDecoder: MeshoptDecoder });
+    let gltf = null;
+    if (!gltf) gltf = await parseGLB(buf, { meshoptDecoder: MeshoptDecoder });
     if (disposed) return;
     envs = { main: studioEnv('main'), glass: studioEnv('glass'), shiny: studioEnv('shiny'), free: studioEnv('free'), metal: studioEnv('metal') };
     scene.environment = envs.main.texture;
@@ -510,9 +505,9 @@ export function create(ctx = {}, opts = {}) {
         }
         Object.assign(mm, { transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.CustomBlending, blendSrc: THREE.OneFactor,
           blendDst: THREE.OneMinusSrcAlphaFactor, envMap: cover ? envs.shiny.texture : FREE.test(top.name) ? envs.free.texture : envs.glass.texture, envMapIntensity: (cover ? 0.35 : FREE.test(top.name) ? (opts.freeEnv ?? 1.0) : (front ? 0.9 : 1.2) * (opts.glassEnv ?? 2.0)) });
-        if (front) mm.opacity = 0.13;          // a little body: the dome darkens what is behind it (v6: more at its centre)
+        if (front) mm.opacity = 0.14;          // a little body: the dome darkens what is behind it (v7: uniform 0.14, no centre veil; p5: the material's own alpha, the 'front' shader kind that set it is gone)
         mm.specularColor.setRGB(1, 1, 1); mm.specularIntensity = 1;
-        patchGlass(mm, FREE.test(top.name) ? 'free' : front ? 'front' : '');
+        patchGlass(mm, FREE.test(top.name) ? 'free' : '');
         o.castShadow = false; o.renderOrder = 2;
         glassMats.push(mm);
       }
@@ -534,7 +529,7 @@ export function create(ctx = {}, opts = {}) {
     for (const [n, [a, b, f]] of Object.entries(COAT)) root.getObjectByName(n)?.traverse((o) => {
       if (o.isMesh && o.material.iridescence > 0) {
         if (!FREE.test(n)) {
-          o.material = o.material.clone(); patchGlass(o.material, n === 'lens_el_0' ? 'front' : ''); glassMats.push(o.material);
+          o.material = o.material.clone(); patchGlass(o.material); glassMats.push(o.material);
           if (n !== 'lens_el_0') o.material.envMapIntensity *= opts.innerEnv ?? 0.6;
         }
         // the free elements: a partial film (the coating tints the window's reflection at its edges and arcs; at full
