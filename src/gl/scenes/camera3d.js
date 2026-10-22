@@ -39,12 +39,14 @@ import { drag3d } from '../lib/drag3d.js';
    - the camera lands bigger in the column: 0.88 of the slot at the column key (the module's 0.76 read small in black;
      the hold keeps its own 0.92). method.html data-td-frame0 is the stand-in stills' size for the same key. */
 KEYS.wide.column.fill = 0.88;
-/* - phones: a tighter straight explode at the portrait hold (per part, on top of the module's PORTRAIT_SCALE: the lens
-     and the rear cards travel about a third less, the free glass and the iris with the lens so the gap stays open; the
-     covers and the battery less too), so the assembly is narrower and the fit draws the body larger (123 -> 133 px at
-     390; every anchor still shows on its own part) */
-const PORTRAIT = { lens: 0.76, lens_el_0: 0.76, lens_el_1: 0.76, lens_el_2: 0.76, lens_el_5: 0.76, lens_el_3: 0.7, lens_el_4: 0.7, aperture: 0.7,
-  lcd: 0.74, main_pcb: 0.74, ibis_frame: 0.74, sensor: 0.74, shutter: 0.74, top_cover: 0.62, evf_module: 0.62, battery: 0.66 };
+/* - phones: the portrait hold's travel per part (in place of the module's PORTRAIT_SCALE). p5: back toward the module's
+     own scales: phase 4's tighter explode (lens 0.76, glass and iris 0.7, cards 0.74) drew the body larger (133 px at
+     390) but jammed the two free elements and the iris into a figure-8 under the lens barrel and sat the shutter card
+     on the body. Now the lens runs 15% further than on desktop, the glass 5%, the iris 5% less, the cards 10% less:
+     outline overlap element/element 18% (was 21), iris/element 29% (45), lens over an element 0% (80), shutter on the
+     body 5% (39); the body 119 px wide at 390 (133). */
+const PORTRAIT = { lens: 1.15, lens_el_0: 1.15, lens_el_1: 1.15, lens_el_2: 1.15, lens_el_5: 1.15, lens_el_3: 1.05, lens_el_4: 1.05, aperture: 0.95,
+  lcd: 0.9, main_pcb: 0.9, ibis_frame: 0.9, sensor: 0.9, shutter: 0.9, top_cover: 0.66, evf_module: 0.66, battery: 0.7 };
 // the intro turn, the id passes' schedule, the stand-in's wait, the phone give-up and the pointer steps are tdcore's
 // (shared with the Kit's devices, gl/scenes/kit3d.js)
 const smooth = (x) => x * x * (3 - 2 * x);
@@ -80,7 +82,7 @@ export default function register(stage) {
       // (strength 0.05 over threshold 4: invisible, and 2.7 KB of lazy JS and a full-screen pass per sample)
       const phone = !!ctx.still, hi = phone && ctx.quality === 'high';
       cam = create(ctx, { base: '/assets/models/camera/', tier: ctx.tier, reduced: ctx.reduced, mobile: phone, bloom: false, loadBuffer: fetchGLB,
-        ...(phone ? { portraitScale: PORTRAIT, exposure: 1.07, ...(hi ? { paintGrain: true, acc: 6 } : {}) } : {}) });
+        ...(phone ? { portraitScale: PORTRAIT, exposure: 1.07, freeMetalEnv: 1.05, metalDirect: 0.6, ...(hi ? { paintGrain: true, acc: 6 } : {}) } : {}) });
       cam.resize(ctx.w, ctx.h, ctx.dpr);
       await cam.load();
       first = true;

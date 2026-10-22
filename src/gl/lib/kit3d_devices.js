@@ -52,8 +52,7 @@ const MIXER = {
   envExtra: [                                              // (look: the default, the origin)
     { w: 3.0, l: 3.6, pos: [6.6, -1.9, 0.7], along: [0, 1, 0], k: 9.0, tint: 0xc9d8e8 },
     { w: 2.2, l: 2.4, pos: [6.95, -0.6, 0.45], along: [0, 1, 0], k: 7.5, tint: 0xd6e2ee },
-    { w: 4.0, l: 2.5, pos: [3.53, 3.75, -6.12], along: [1, 0, 0], k: 3.4 },   // p5: a soft card behind, the plate's back-left lifts
-  ],
+  ],   // (p5: no card behind: it barely lifted the plate at the hero, and at the hold the board's mask mirrored it as a grey haze)
   // p5: a dim ring round the horizon, below it: the walls mirror it at every azimuth, so the wedge reads off the black
   // stage through the orbit (r4: the orbit's walls 33/255, the front band 10); the chassis' AO ramps the foot down
   envBand: [{ y0: -6.3, y1: -1.6, k: 2.0, top: 1, bot: 0.4 }],
