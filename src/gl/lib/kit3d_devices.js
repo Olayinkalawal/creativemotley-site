@@ -86,7 +86,6 @@ const MIC = {
   tiltEx: { wide: 24, tall: 20 },                          // the exploded line eases to a steeper diagonal: it fills the near-square column (phones: ~40 degrees across the width)
   tiltExWideSlot: 11,                                      // ... but a 16:9 slot (a full-frame explode) keeps the long micB diagonal
   roll: { wide: -40, tall: -40 },                          // the yoke plane rolled: the far arm shows above the body (micA)
-  yaw: { wide: 0, tall: 0 },
   // the choreography (mm, along the mic's own axes; micB's order: windscreen, grille, diaphragm, voice coil; then the XLR
   // insert slides out rearward through the yoke's eyelet, then the yoke drops and turns its U to the view)
   explode: {
@@ -108,7 +107,6 @@ const MIC = {
   faceView: { shock_mount: 38, diaphragm: 25, voice_coil: 25 },   // the internals turn their faces to the exploded view
   portraitEx: { diaphragm: [0, 0, 72], voice_coil: [0, 0, 42] },   // phones: the coil further from the diaphragm (their markers 28 px apart)
   portraitScale: 0.9,
-  portraitNoRot: [],
   reveal: { body_tube: null, yoke_mount: 'yoke', xlr_connector: 'xlr' },
   leads: { windscreen: 'nw', capsule_grille: 'n', diaphragm: 'ne', voice_coil: 'sw', yoke_mount: 'sw', xlr_connector: 'n' },
   leadsTall: { voice_coil: 'w' },
@@ -117,10 +115,10 @@ const MIC = {
   metalParts: /^(magnet|grille)$/,                         // the pole face and the grille's polished bands see their own studio card
   // (camera v5's bayonet / iris card, placed behind the view: a face turned to it mirrors it). p5: 10 x 6 at 0.7 (was 16 x
   // 12 at 0.9, which flooded the pole face white): its soft edge now crosses the magnet's domed face (build_mic.py), a dark
-  // mirror with one gradient highlight, as micB
+  // mirror with one gradient highlight, as micB. (p5 fix, in the GLB, not here: the dome is 1.0 mm with 10-bit normals and the
+  // face's roughness 0.27, so the card's lobe still reaches it when the hold is dragged el +15 / +18: it read as a black void)
   metalCard: { pos: [-1.5, 1.5, 6.5], size: [10, 6], card: 0.7, strip: 1.2, key: 0.6 },
   metalEnv: 1.25,
-  shadowBox: 2.2,
   tileA: 'foam',
   knurlMM: 1.1, foamTileMM: 7, foamSkinMM: 0.12, foamSkinRimMM: 0.45, foamSheen: 0.07, foamSpec: 0.3, foamCav: [0.42, 1.38], foamRoughMin: 0.55,
   brushStr: 0.09, brushRough: 0.3, brushEnv: 1.6,
@@ -210,10 +208,8 @@ const PHONE = {
       exploded: { az: 40, el: 20, fov: 18, fill: 0.86 },
     },
   },
-  fillMax: 0.92,
   tilt: { wide: 64, tall: 64 },
   roll: { wide: -12, tall: -12 },
-  yaw: { wide: 0, tall: 0 },
   poseStart: { wide: { tilt: 10, roll: -22 }, tall: { tilt: 10, roll: -10 } },   // upright from behind
   poseEx: { wide: { tilt: 0, roll: -28, t0: 0.0, t1: 0.75 }, tall: { tilt: 0, roll: -8, t0: 0.0, t1: 0.75 } },   // it stands up as it comes apart
   // the choreography (overrides the GLB's extras: mm, post-mirror). Rear parts leave back to front (the rear glass
@@ -228,8 +224,6 @@ const PHONE = {
     camera_module: { ex: DESK.camera_module, rot: [0, 180, 0], rotT: [0.25, 1.0], t: [0.06, 0.66], scale: 1.22 },
   },
   portraitEx: Object.fromEntries(Object.entries(TALL).map(([k, v]) => [k, v.map((x) => x)])),
-  portraitScale: null,
-  portraitNoRot: [],
   reveal: { frame: null },
   leads: { display: 'nw', logic_board: 'ne', battery: 'sw', charging_coil: 's', camera_module: 'ne', rear_glass: 'se', frame: 'e', cover_glass: 'n' },
   leadsTall: { logic_board: 'n', battery: 's' },
@@ -245,14 +239,17 @@ const PHONE = {
   // the board (its lids, chips and faces) sees its own studio at the hold: one broad soft card where its face, turned to
   // the exploded view, mirrors it (the camera v5's 'metal' studio): phoneB's bright champagne and nickel lids
   metalParts: /^(logic_board|battery)$/,                   // (the pouch too: a broad soft sheen its wrinkles and rolled edge catch)
-  // (p5: a smaller, brighter card, 5 x 2.4 at 1.1, was 9 x 7 at 0.6: the lids mirror it with a falloff, not as a flat fill)
-  metalCard: { pos: [-6.1, -1.2, -3.2], size: [5, 2.4], card: 1.1, strip: 1.2, key: 0.6 },
+  // (p5 fix: a wide low band, 30 x 5.5 at 0.75; the 5 x 2.4 card at 1.1 left the lids near-black off the exact hold: at
+  // mid-explode and dragged el +15 / +18. The band holds their champagne through el -12 … +18 and az ±30)
+  metalCard: { pos: [-6.1, -1.2, -3.2], size: [30, 5.5], card: 0.75, strip: 1.2, key: 0.6 },
   metalEnv: 1.0,
   shadowBox: 1.1,
   tileA: 'foam',                                           // the tile-A slot carries the foil wrinkle tile (code 0.66); no foam on the phone
   grainTileMM: 7, grainStr: 0.05, grainRough: 0.6, grainRoughMin: 0.34, grainSpecClamp: 0.25,
   // (p5: the pouch's broad wrinkles at a 48 mm tile, was 96, a little flatter: soft features that hold at 3x; build_phone.py)
-  foilTileMM: 48, foilStr: 0.05, foilSheen: 0.35, perfMM: 0.85,
+  // (p5 fix: foilSheen 0.35 -> 1.4, foilStr 0.05 -> 0.035, the pouch's roughness 0.18 in the GLB: a soft broad sheen over the
+  // laminate that follows its wrinkles; it read as a matte smudgy grey slab at 3x)
+  foilTileMM: 48, foilStr: 0.035, foilSheen: 1.4, perfMM: 0.85,
   brushStr: 0.18, brushRough: 0.6,
   edgeSheen: 0.45,
   smoothSpec: 0.15,                                        // mirror-smooth metal: the softboxes in the env, not the point key
