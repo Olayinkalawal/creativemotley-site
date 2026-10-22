@@ -44,7 +44,7 @@ KEYS.wide.column.fill = 0.88;
      390) but jammed the two free elements and the iris into a figure-8 under the lens barrel and sat the shutter card
      on the body. Now the lens runs 15% further than on desktop, the glass 5%, the iris 5% less, the cards 10% less:
      outline overlap element/element 18% (was 21), iris/element 29% (45), lens over an element 0% (80), shutter on the
-     body 5% (39); the body 119 px wide at 390 (133). */
+     body 5% (39); the body 120 px wide at 390 (137 by the same outline measure): smaller, the price of a clean line. */
 const PORTRAIT = { lens: 1.15, lens_el_0: 1.15, lens_el_1: 1.15, lens_el_2: 1.15, lens_el_5: 1.15, lens_el_3: 1.05, lens_el_4: 1.05, aperture: 0.95,
   lcd: 0.9, main_pcb: 0.9, ibis_frame: 0.9, sensor: 0.9, shutter: 0.9, top_cover: 0.66, evf_module: 0.66, battery: 0.7 };
 // the intro turn, the id passes' schedule, the stand-in's wait, the phone give-up and the pointer steps are tdcore's
