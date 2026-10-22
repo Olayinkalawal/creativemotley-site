@@ -933,7 +933,9 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
         if (m.emissiveMap) m.emissiveMap.anisotropy = 8;
         o.receiveShadow = false;
       } else if (sp === 'board') {
-        m.envMapIntensity = C.boardEnv ?? 0.9; m.roughness = C.boardRough ?? 0.35;
+        // (p5 fix) the solder mask satin, 0.5: at 0.35 the traces' bumps sparkled at 1 sample (the hold's board region 2.52%
+        // of pixels off the settled frame; 2.14 at 0.5, r4 2.11)
+        m.envMapIntensity = C.boardEnv ?? 0.9; m.roughness = C.boardRough ?? 0.5;
         for (const t of [m.map, m.normalMap]) if (t) t.anisotropy = 8;
       }
       // (phone) the glass layers, the screen, the board faces

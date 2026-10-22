@@ -3,14 +3,12 @@
    const cam = create(ctx, { base: '/assets/models/camera/' })   ctx: the stage's ctx (renderer, tier, reduced, still)
    await cam.load()                       dynamic-imports the GLB reader (./glb.js) + the meshopt decoder, fetches camera.glb
                                           (camera_mobile.glb on the phone/still path), builds the studio, compiles every
-                                          program (scene, shadow depth, bloom, post quads) and uploads every texture, so
-                                          the first visible frame compiles nothing
-   cam.setProgress(p)                     one scalar timeline, p in [0, 1]:
-                                            orbit    [0.00, 0.40]  the view travels round the camera (az -150 -> -38), full screen
-                                            hand-off [0.40, 0.52]  it glides into the column rect, turning to the column key
-                                            explode  [0.52, 0.90]  it comes apart (outside in), parts in camB2's order
-                                            hold     [0.90, 1.00]  settled; a slow push
-   cam.setPhases({ orbit, hand, explode, settle })   the same, from the site's clock (tdcore tdShotPhases: each 0 … 1).
+                                          program (scene, shadow depth, post quads) and uploads every texture, so the
+                                          first visible frame compiles nothing
+   cam.setPhases({ orbit, hand, explode, settle })   the timeline, from the site's clock (tdcore tdShotPhases: each 0 … 1):
+                                          orbit (the view travels round the camera, az -150 -> -38, full screen), hand-off
+                                          (it glides into the column rect, turning to the column key), explode (it comes
+                                          apart, outside in, parts in camB2's order), settle (the hold: a slow push).
                                           tdcore already re-times the orbit (0.72·o + 0.28·easeSine(o)); setPhases inverts
                                           that before applying this module's own pace curve, so the orbit is eased once
    cam.setLayout({ x, y, w, h }, vw, vh)  the slot rect (CSS px, viewport) the device is framed in
@@ -43,13 +41,14 @@
    Daylight (create() options, all off by default): envSky / envGround (hex): the main studio's dome is a sky over a
    ground instead of black, so the body's dark paint mirrors a bright day (the hero, over its painting), not a black studio.
 
-   Tiers: opts.tier 2 = desktop (PCF shadows 2048, MSAA 4 at dpr < 1.5 else 2, subtle bloom, 12 idle samples); 1 = light
-   (shadows 1024, no bloom, 6 samples); opts.mobile = the phone/still path (camera_mobile.glb, no shadows, MSAA 2,
+   Tiers: opts.tier 2 = desktop (PCF shadows 2048, MSAA 4 at dpr < 1.5 else 2, 12 idle samples); 1 = light
+   (shadows 1024, 6 samples); opts.mobile = the phone/still path (camera_mobile.glb, no shadows, MSAA 2,
    internal scale min(0.8, 1.6/dpr), 4 samples).
    Look: procedural studio (PMREM: big upper-left key softbox, overhead strip, rim strip, a warm kicker low on camera-right,
    one broad low frontal fill), ACES, turntable lighting (the rig turns with the view so every key keeps the hero's light).
-   The front element sees its own studio (black, one soft window up-left, a dim fill): a dark green bore with nested ring
-   lips, the window on its upper-left third. The free elements (v7) hang square to the lens axis and see a studio fixed
+   The front element sees its own studio (black, softboxes with a defined edge, a dim fill): a dark green bore with nested
+   ring lips; the inner elements see a softer copy of it (radial glows, blurred more: 'glassIn'), so their nested
+   reflections melt into one glow instead of stacking up as sharp copies. The free elements (v7) hang square to the lens axis and see a studio fixed
    in their own frame: two thin ring lights that every face mirrors as arcs concentric with its rim; exact sphere
    normals; no veil. */
 import * as THREE from 'three';
@@ -135,7 +134,6 @@ export function create(ctx = {}, opts = {}) {
   const Q = {
     shadows: mobile ? 0 : tier >= 2 ? 2048 : 1024,
     msaa: opts.msaa ?? (mobile ? 2 : 4),           // 2 as well when dpr >= 1.5 (setSize): the idle accumulation finishes the AA
-    bloom: !mobile && tier >= 2 && opts.bloom !== false,
     acc: opts.acc ?? (mobile ? 4 : tier >= 2 ? 12 : 6),
     scale: 1,                          // phones: min(0.8, 1.6 / dpr), set in setSize
     paintGrain: opts.paintGrain ?? (!mobile && tier >= 2),
@@ -149,12 +147,13 @@ export function create(ctx = {}, opts = {}) {
   let W = 16, H = 16, vw = innerWidth, vh = innerHeight, dpr = 1;
   let model = null, loaded = false, disposed = false;
   const parts = [], screws = [], anchorDefs = [], samples = [], glassMats = [], meshes = [], pairs = [], frontMats = [], innerMats = [];
-  let warmAll = false, glassK = 1, glassKi = 1;    // prewarm: both looks of the free elements drawn; setGlassEnv: the front element's and the inner elements' reflections
+  let warmAll = false, glassSig = '', glassKi = 1;    // prewarm: both looks of the free elements drawn; setGlassEnv: its last call, the inner elements' factor
+  const metalMats = [];               // the iris's and the bayonet's material (setGlassEnv's km)
   let ph = { orbit: 0, hand: 0, explode: 0, settle: 0 };
   let rect = null;                    // slot rect, CSS px
   const ptr = new THREE.Vector2(), ptrS = new THREE.Vector2();
   let dirty = true, accN = 0, lastSig = '', posedSig = '';
-  let rtHDR = null, rtLDR = null, accRT = null, idRT = null, Bloom = null, bloom = null, envs = null, lastInfo = null, tiles = null;
+  let rtHDR = null, rtLDR = null, accRT = null, idRT = null, envs = null, lastInfo = null, tiles = null;
   let scaleNow = Q.scale, msaaNow = Q.msaa;
   const off = { az: 0, el: 0 };
   const zm = { k: 1, x: 0, y: 0 };    // setZoom: the framed rect scaled by k, then moved by (x, y) css px (drag3d's zoom)
@@ -234,7 +233,7 @@ export function create(ctx = {}, opts = {}) {
       panel(9.0, 0.35, [4.4, 0.25, 4.6], [0, 0, 0], [0, 1, 0], 1.6, 0xffffff, 'box');
       panel(0.45, 10.0, [-0.6, 7.0, 1.2], [0, 0, 0.3], [0, 0, 1], 1.4, 0xffffff);
       panel(3.0, 2.0, [-4.6, 5.0, 3.6], [0, 0, 0], [1, 0, 0], 0.8, 0xfbfcff);
-      if ((0.3) > 0) panel(8.0, 6.0, [-5.4, 1.6, 6.9], [0, 0, 0], [0, 1, 0], 0.3, 0xece6dc, 'box');
+      panel(8.0, 6.0, [-5.4, 1.6, 6.9], [0, 0, 0], [0, 1, 0], 0.3, 0xece6dc, 'box');
     } else if (kind === 'free') {
       // v7: the free elements hang square to the lens axis, and their studio is fixed in their own frame (the model's;
       // it does not turn with the view), so a drag in the viewer only slides the arcs. Black, and two narrow hard
@@ -264,8 +263,8 @@ export function create(ctx = {}, opts = {}) {
       ribbon(19, 0.06, 170, 0, 5.5, 0xeadfff);        // violet-white: the coated rim arc
       ribbon(10, (0.06) * 0.8, 130, 180, (5.5) * 0.6, 0xcdffd8);   // green-white: the inner arc
       // a broad, very dim soft card: the faces carry a faint grey body (camB2), not a veil
-      if ((0.4) > 0) panel(14, 14, R0.clone().multiplyScalar(9.5).toArray(), [0, 0, 0], uv.toArray(), 0.4, 0xe8eeeb, true);
-    } else if (kind === 'glass') {
+      panel(14, 14, R0.clone().multiplyScalar(9.5).toArray(), [0, 0, 0], uv.toArray(), 0.4, 0xe8eeeb, true);
+    } else if (kind === 'glass' || kind === 'glassIn') {
       // p5: softboxes, not one radial window. The glass studio turns with the view at a quarter of its rate (turnLights:
       // envMapRotation = glassTurn x the turn, 0.25; v7 turned it fully, so its one window sat on the element only at the
       // hero key: a black disc 20 deg either side), so the shapes slide across the front element as the camera turns (a
@@ -277,17 +276,21 @@ export function create(ctx = {}, opts = {}) {
       //          carry fainter nested copies); off the element at every Method key
       //   strip  a thin vertical strip: the hero key 0.75 at 30 deg (upper right), az -58 0.31
       //   bounce faint, low: the hero key 0.72 at -112 deg
+      // 'glassIn' (p5 fix): the inner elements' copy of the same studio: every window a radial soft glow (no defined
+      // edge), blurred more (PMREM below). With the defined-edge boxes each nested surface drew its own sharp copy, and
+      // the copies stacked into a staircase of blocky rectangles (Method dragged off the hero key, the homepage's push)
       const dir = (az, el, d = 9) => [Math.sin(az * D) * Math.cos(el * D) * d, Math.sin(el * D) * d, Math.cos(az * D) * Math.cos(el * D) * d];
-      panel(3.8, 3.2, dir(30, 3), [0, 0, 0], [0, 1, 0], opts.win ?? 1.9, 0xd8e6de, 'box');
-      if ((0.5) > 0) panel(3.0, 2.6, dir(-25, 14), [0, 0, 0], [0, 1, 0], 0.5, 0xd8e6de, 'box');
-      if ((0.9) > 0) panel(0.32, 5.5, dir(64, -4), [0, 0, 0], [0, 1, 0], 0.9, 0xe2ebe6, 'box');
-      if ((0.16) > 0) panel(7.5, 1.8, dir(30, -30), [0, 0, 0], [0, 1, 0], 0.16, 0xd9d4c8, 'box');
+      const bx = kind === 'glass' ? 'box' : true;
+      panel(3.8, 3.2, dir(30, 3), [0, 0, 0], [0, 1, 0], opts.win ?? 1.9, 0xd8e6de, bx);
+      panel(3.0, 2.6, dir(-25, 14), [0, 0, 0], [0, 1, 0], 0.5, 0xd8e6de, bx);
+      panel(0.32, 5.5, dir(64, -4), [0, 0, 0], [0, 1, 0], 0.9, 0xe2ebe6, bx);
+      panel(7.5, 1.8, dir(30, -30), [0, 0, 0], [0, 1, 0], 0.16, 0xd9d4c8, bx);
       const Kh = KEYS.wide.hero, ha = Kh.az * D, he = Kh.el * D;
       const hv = new THREE.Vector3(Math.sin(ha) * Math.cos(he), Math.sin(he), Math.cos(ha) * Math.cos(he));
       // p5: win 1.9, fill 0.14 (Method: the front element's median at az -58 / -38 / -18 = 38 / 44 / 45 with 1.9 / 0.13, measured;
       // the survey's 22 / 49 / 39); the homepage passes its own (win 1.5, fill 0.1: a darker glass for the push)
       if ((opts.glassFill ?? 0.14) > 0) panel(26, 22, new THREE.Vector3(-hv.x, -hv.y, hv.z).multiplyScalar(11).toArray(), [0, 0, 0], [0, 1, 0], opts.glassFill ?? 0.14, 0xc8dcd2, true);
-      panel(0.45, 10.0, [-0.6, 7.0, 1.2], [0, 0, 0.3], [0, 0, 1], 0.5, 0xffffff);  // the overhead strip, faint
+      panel(0.45, 10.0, [-0.6, 7.0, 1.2], [0, 0, 0.3], [0, 0, 1], 0.5, 0xffffff, kind === 'glassIn');  // the overhead strip, faint
     } else {
       panel(7.0, 4.6, [-3.6, 7.0, 3.4], [0, 0, 0], [1, 0, 0], (opts.softbox ?? 1.6) * (kind === 'shiny' ? 0.6 : 1), 0xfdfcfa);   // large high key softbox, front-left
       panel(0.5, 13, [-0.5, 6.5, 0.4], [0, 0, 0.2], [0, 0, 1], 4.5, 0xffffff);       // overhead strip along the lens axis
@@ -300,7 +303,9 @@ export function create(ctx = {}, opts = {}) {
       if (kind === 'main' && opts.envSky == null && (1.1) > 0) panel(11.0, 0.5, [1.2, -3.2, -5.6], [0, 0.2, 0], [1, 0, 0], 1.1, 0xe8eef8);
     }
     const pm = new THREE.PMREMGenerator(renderer);
-    const rt = pm.fromScene(env, kind === 'main' ? 0.02 : kind === 'shiny' ? 0.006 : kind === 'free' ? 0.006 : 0.02, 0.1, 100, { size: 256 });   // glass: soft-edged windows; 256: ~6 MB each
+    // glass: soft-edged windows; 256: ~6 MB each. glassIn: 128 px (a quarter of the memory) blurred 2.5x (at 128 px the
+    // blur stays within PMREM's sample limit: no console warning)
+    const gi = kind === 'glassIn', rt = pm.fromScene(env, gi ? 0.05 : kind === 'shiny' || kind === 'free' ? 0.006 : 0.02, 0.1, 100, { size: gi ? 128 : 256 });
     pm.dispose();
     env.traverse((o) => { o.geometry?.dispose(); o.material?.dispose(); });
     softTex?.dispose(); boxTex?.dispose();
@@ -308,7 +313,7 @@ export function create(ctx = {}, opts = {}) {
   }
   function buildLights() {
     const key = new THREE.DirectionalLight(opts.keyTint ?? 0xffffff, opts.key ?? 10);   // p5: keyTint (the hero: warm, the painting's light)
-    key.position.set(...([-4, 3.2, 5]));
+    key.position.set(-4, 3.2, 5);
     if (Q.shadows) {
       key.castShadow = true;
       key.shadow.mapSize.set(Q.shadows, Q.shadows);
@@ -472,10 +477,10 @@ export function create(ctx = {}, opts = {}) {
     const [{ MeshoptDecoder }, { parseGLB }] = await Promise.all([import('three/addons/libs/meshopt_decoder.module.js'), import('./glb.js')]);
     const url = base + file;
     const buf = opts.loadBuffer ? await opts.loadBuffer(url) : await (await fetch(url)).arrayBuffer();
-    let gltf = null;
-    if (!gltf) gltf = await parseGLB(buf, { meshoptDecoder: MeshoptDecoder });
+    const gltf = await (
+      parseGLB(buf, { meshoptDecoder: MeshoptDecoder }));
     if (disposed) return;
-    envs = { main: studioEnv('main'), glass: studioEnv('glass'), shiny: studioEnv('shiny'), free: studioEnv('free'), metal: studioEnv('metal') };
+    envs = { main: studioEnv('main'), glass: studioEnv('glass'), glassIn: studioEnv('glassIn'), shiny: studioEnv('shiny'), free: studioEnv('free'), metal: studioEnv('metal') };
     scene.environment = envs.main.texture;
     scene.environmentIntensity = opts.env ?? 0.5;
     buildLights();
@@ -516,7 +521,7 @@ export function create(ctx = {}, opts = {}) {
       // the mount's bayonet, its contacts and the iris blades see their own studio (a broad card where they mirror the
       // exploded view): in the main studio their polished faces mirrored black and the steel read dark (camB2: bright)
       if (o.material.userData.patched && /^(body_mount|aperture)$/.test(top.name)) {
-        if (!freeMetal) { freeMetal = m.clone(); patchUber(freeMetal, opts.metalDirect ?? 1); freeMetal.envMap = envs.metal.texture; freeMetal.envMapIntensity = opts.freeMetalEnv ?? 1.5; glassMats.push(freeMetal); }
+        if (!freeMetal) { freeMetal = m.clone(); patchUber(freeMetal, opts.metalDirect ?? 1); freeMetal.envMap = envs.metal.texture; freeMetal.envMapIntensity = freeMetal.userData.baseEnv = opts.freeMetalEnv ?? 1.5; glassMats.push(freeMetal); metalMats.push(freeMetal); }
         o.material = freeMetal;
       }
       if (m.name === 'sensor_die' || m.name === 'lcd_glass') { m.envMap = envs.shiny.texture; m.envMapIntensity = m.name === 'sensor_die' ? 1.2 : 0.8; glassMats.push(m); }
@@ -525,14 +530,15 @@ export function create(ctx = {}, opts = {}) {
     // 480 magenta; seen obliquely a film reads ~15% thinner, so the elements seen side-on get thicker films), each its own range
     // v6: the front element runs from a neutral green at its centre (425 nm) to a magenta-violet rim (505 nm) at 38%
     // strength (three's thin film, evaluated: 365-380 nm reads teal, v5's 395-440 at full strength gave the teal blur),
-    // so the window's reflection stays grey-green (camA2); the two inner elements are fainter and see the glass studio
-    // at 60% (they drew stacked copies of the window: the 'tunnel'); the free elements: green faces, magenta rims (camB2)
-    const COAT = { lens_el_0: [...([425, 505]), 0.38], lens_el_1: [360, 385, 0.4], lens_el_2: [395, 420, 0.4], lens_el_3: [405, 520, 1.0], lens_el_4: [395, 510, 1.0], lens_el_5: [395, 420, 0.4] };   // v7: lens_el_5 rides in the lens (an inner element)
+    // so the window's reflection stays grey-green (camA2); the inner elements are fainter and see the glass studio at 60%
+    // (they drew stacked copies of the window: the 'tunnel'; p5 fix: its soft copy, 'glassIn', at 30%); the free
+    // elements: green faces, magenta rims (camB2)
+    const COAT = { lens_el_0: [425, 505, 0.38], lens_el_1: [360, 385, 0.4], lens_el_2: [395, 420, 0.4], lens_el_3: [405, 520, 1.0], lens_el_4: [395, 510, 1.0], lens_el_5: [395, 420, 0.4] };   // v7: lens_el_5 rides in the lens (an inner element)
     for (const [n, [a, b, f]] of Object.entries(COAT)) root.getObjectByName(n)?.traverse((o) => {
       if (o.isMesh && o.material.iridescence > 0) {
         if (!FREE.test(n)) {
           o.material = o.material.clone(); patchGlass(o.material); glassMats.push(o.material);
-          if (n !== 'lens_el_0') o.material.envMapIntensity *= 0.6;
+          if (n !== 'lens_el_0') { o.material.envMapIntensity *= 0.3; o.material.envMap = envs.glassIn.texture; }   // p5 fix: their own soft studio, at 0.3 (was 0.6)
         }
         // the free elements: a partial film (the coating tints the window's reflection at its edges and arcs; at full
         // strength the whole face turned one rainbow sweep, like a disc, not glass)
@@ -548,7 +554,7 @@ export function create(ctx = {}, opts = {}) {
     for (const o of frees) {
       const tm = glassSrc.clone();
       Object.assign(tm, { transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor,
-        envMap: envs.glass.texture, envMapIntensity: 1.2 * (2.0) * (0.6) });
+        envMap: envs.glassIn.texture, envMapIntensity: 1.2 * (2.0) * (0.3) });
       tm.specularColor.setRGB(1, 1, 1); tm.specularIntensity = 1;
       tm.iridescenceThicknessRange = [395, 420]; tm.iridescence = 0.4;
       patchGlass(tm, ''); glassMats.push(tm);
@@ -558,7 +564,7 @@ export function create(ctx = {}, opts = {}) {
       o.parent.add(t); meshes.push(t);
       pairs.push({ free: o, twin: t, fm: o.material, tm, fEnv: o.material.envMapIntensity, fA: o.material.opacity, tEnv: tm.envMapIntensity, tA: tm.opacity });
     }
-    for (const m of glassMats) if (m.envMap === envs.glass.texture) m.userData.glassEnv = true;   // turnLights: these turn at glassTurn
+    for (const m of glassMats) if (m.envMap === envs.glass.texture || m.envMap === envs.glassIn.texture) m.userData.glassEnv = true;   // turnLights: these turn at glassTurn
     root.getObjectByName('lens_el_0')?.traverse((o) => { if (o.isMesh && o.material.userData.glassEnv) { o.material.userData.baseEnv = o.material.envMapIntensity; frontMats.push(o.material); } });
     for (const m of glassMats) if (m.userData.glassEnv && !frontMats.includes(m) && !pairs.some((q) => q.tm === m)) { m.userData.baseEnv = m.envMapIntensity; innerMats.push(m); }
     // every part rides in a group at its pivot (mesh quantisation moves node origins; rotations need the real pivot)
@@ -841,7 +847,7 @@ export function create(ctx = {}, opts = {}) {
     const n = samplesNow || (accN < Q.acc ? 1 : 0);
     for (let i = 0; i < n && accN < Math.max(Q.acc, samplesNow); i++) sample(r);
     // the view has settled (or a still was asked for): test what covers each anchor, once per pose
-    if (idOK && (accN >= Q.acc || (samplesNow && opts.idOnSamples !== false)) && idSig !== s) idPass(r);
+    if (idOK && (accN >= Q.acc || (samplesNow && (opts.idOnSamples ?? true))) && idSig !== s) idPass(r);
   }
   function render(r = renderer, target = null, samplesNow = 0) {
     renderer = r || renderer;
@@ -979,9 +985,8 @@ export function create(ctx = {}, opts = {}) {
       m.dispose();
     });
     tiles?.leather.dispose(); tiles?.grain.dispose();
-    envs?.main.dispose(); envs?.glass.dispose(); envs?.shiny.dispose(); envs?.free.dispose(); envs?.metal.dispose();   // the PMREM render targets
-    lights.key?.dispose(); lights.rim?.dispose(); lights.kick?.dispose(); lights.xfill?.dispose();   // the key's shadow map
-    rtHDR?.dispose(); rtLDR?.dispose(); accRT?.dispose(); idRT?.dispose(); bloom?.dispose?.();
+    if (envs) for (const k in envs) envs[k].dispose();   // the PMREM render targets
+    for (const o of [lights.key, lights.rim, lights.kick, lights.xfill, rtHDR, rtLDR, accRT, idRT]) o?.dispose();   // the key's shadow map, the targets
     for (const q of [outQ, blendQ, copyQ]) { q.m.dispose(); q.sc.children[0].geometry.dispose(); }
     idMat.dispose();
     scene.clear();
@@ -1006,13 +1011,13 @@ export function create(ctx = {}, opts = {}) {
     setFade(f) { copyQ.m.uniforms.fade.value = Math.min(1, Math.max(0, f)); },
     // p5: the lens glass's studio reflections (0 … 1): k the front element's, ki the inner elements' (the homepage fades
     // the front as the view passes through it, then dims the inner ones: seen from inside the barrel their windows
-    // spread into large soft blobs)
-    setGlassEnv(k = 1, ki = 1) {
-      k = Math.round(clamp01(k) * 1000) / 1000; ki = Math.round(clamp01(ki) * 1000) / 1000;
-      if (k === glassK && ki === glassKi) return;
-      glassK = k; glassKi = ki;
-      for (const m of frontMats) m.envMapIntensity = m.userData.baseEnv * k;
-      for (const m of innerMats) m.envMapIntensity = m.userData.baseEnv * ki;
+    // spread into large soft blobs); km the iris's and the bayonet's studio card (the homepage dims the model's iris as
+    // its composite blades come up: the lit model blades ghosted through them)
+    setGlassEnv(k = 1, ki = 1, km = 1) {
+      const g = [k, ki, km].map((x) => Math.round(clamp01(x) * 1000) / 1000);
+      if (g.join() === glassSig) return;
+      glassSig = g.join(); glassKi = g[1];
+      [frontMats, innerMats, metalMats].forEach((a, i) => { for (const m of a) m.envMapIntensity = m.userData.baseEnv * g[i]; });
       dirty = true;
     },
     setView(v) { view = v || null; dirty = true; },

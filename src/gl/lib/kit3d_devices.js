@@ -28,7 +28,7 @@ const MIXER = {
   },
   settlePush: 0.035, fillMax: 1,                           // (the fork's push, unclamped: 0.89 x 1.035)
   fitInstancedMax: Infinity,                               // its screws and leads join the fit (the fork's)
-  nocast: /^(screws)$/,
+  nocast: /^screws$/,
   shadowBox: 2.0,
   // the internals' shadows on the tray fade as they lift away (an open tray reads as a lit satin tub, mixerB)
   shadowFade: { parts: /^(display|pad_matrix|fader_bank|main_board)$/, t: [0.55, 0.9], k: 0.7, castUntil: 0.6 },
@@ -171,7 +171,6 @@ const HEADPHONES = {
   metalCard: { pos: [-10.0, -0.8, -8.4], card: 0.7, strip: 1.2, key: 0.6 },   // (studio frame: the mirror of the column / hero view off a +Z face)
   metalEnv: 1.0,
   shadowBox: 2.1,
-  tileA: 'foam',
   // p5: protein leather, not vinyl: the pebble grain at ~0.5 mm (a 14 mm tile; the 3 mm one never resolved, even at 3x),
   // a softer, wider specular (0.8 drew a hard band), a little more roughness; geometric specular AA on every face
   foamTileMM: 14, foamStr: 0.45, foamSheen: 0.08, foamSpec: 0.6, foamRoughMin: 0.5,   // (no skin; foamCav the default [0.18, 1.65])

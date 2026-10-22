@@ -147,10 +147,10 @@ export default function register(stage) {
     model = { pts: new Float32Array(pts), body, lens };
   }
   /* the silhouette's box in NDC for a view (camera3d's view mode: from target + dir(az, el)·dist, looking at target) */
-  function boxNDC(az, el, fov, aspect, T, dist, shift = [0, 0]) {
+  function boxNDC(az, el, fov, aspect, T, dist, shift = [0, 0], P = model.pts) {   // (P: world points, xyz…; project() passes one)
     const a = az * DEG, b = el * DEG, sa = Math.sin(a), ca = Math.cos(a), sb = Math.sin(b), cb = Math.cos(b);
     const d = [sa * cb, sb, ca * cb], r = [ca, 0, -sa], u = [-sb * sa, cb, -sb * ca];
-    const tv = Math.tan(fov * DEG / 2), th = tv * aspect, P = model.pts;
+    const tv = Math.tan(fov * DEG / 2), th = tv * aspect;
     let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9;
     for (let i = 0; i < P.length; i += 3) {
       const qx = P[i] - T[0], qy = P[i + 1] - T[1], qz = P[i + 2] - T[2];
@@ -346,10 +346,8 @@ export default function register(stage) {
       // dark as the composite's blades come up (its lit blades ghosted through them, at another angle)
       cam.setGlassEnv(1 - smooth(seg(m.push, 0.55, 0.8)), 1 - 0.7 * smooth(seg(m.push, 0.45, 0.93)), 1 - smooth(seg(m.blades, 0, 0.6)));
       pose = { az: az + drag.az, el: el + drag.el, fov: f.fov || K.fov, aspect: cal.aspect, T, dist, shift, vw: ctx.vw, vh: ctx.vh };   // (turned as dragged)
-      heroLive.box = (() => {   // the silhouette's box (css px), for the DOM (the lines' hole, the beats)
-        const b = boxNDC(pose.az, pose.el, pose.fov, cal.aspect, T, dist, shift);
-        return { x0: (b.x0 + 1) / 2 * ctx.vw, x1: (b.x1 + 1) / 2 * ctx.vw, y0: (1 - b.y1) / 2 * ctx.vh, y1: (1 - b.y0) / 2 * ctx.vh };
-      })();
+      const b = boxNDC(pose.az, pose.el, pose.fov, cal.aspect, T, dist, shift);   // the silhouette's box (css px), for the DOM (the lines' hole, the beats)
+      heroLive.box = { x0: (b.x0 + 1) / 2 * ctx.vw, x1: (b.x1 + 1) / 2 * ctx.vw, y0: (1 - b.y1) / 2 * ctx.vh, y1: (1 - b.y0) / 2 * ctx.vh };
       // the hit region over the camera's silhouette (in the pin: at rest its top is the viewport's); the hint once it rests
       if (dg) dg.step(ctx, heroLive.box, sg.top - ctx.scrollY + clamp(ctx.scrollY - sg.top, 0, Math.max(0, sg.height - ctx.vh)),
         heroLive.mode === '3d' && s < 0.06 && !QA.force, s < 0.02);
@@ -400,12 +398,8 @@ export default function register(stage) {
     /* a world point → css px in the current view (scripts/hero-cam-stills.mjs: where the front element lands) */
     project(P) {
       if (!pose) return null;
-      const a = pose.az * DEG, b = pose.el * DEG, sa = Math.sin(a), ca = Math.cos(a), sb = Math.sin(b), cb = Math.cos(b);
-      const d = [sa * cb, sb, ca * cb], r = [ca, 0, -sa], u = [-sb * sa, cb, -sb * ca];
-      const q = [P[0] - pose.T[0], P[1] - pose.T[1], P[2] - pose.T[2]], tv = Math.tan(pose.fov * DEG / 2);
-      const z = pose.dist - (q[0] * d[0] + q[1] * d[1] + q[2] * d[2]);
-      const x = (q[0] * r[0] + q[2] * r[2]) / (z * tv * pose.aspect) + pose.shift[0], y = (q[0] * u[0] + q[1] * u[1] + q[2] * u[2]) / (z * tv) + pose.shift[1];
-      return [(x + 1) / 2 * pose.vw, (1 - y) / 2 * pose.vh];
+      const b = boxNDC(pose.az, pose.el, pose.fov, pose.aspect, pose.T, pose.dist, pose.shift, P);
+      return [(b.x0 + 1) / 2 * pose.vw, (1 - b.y0) / 2 * pose.vh];
     },
     get pose() { return pose; },
     post,
