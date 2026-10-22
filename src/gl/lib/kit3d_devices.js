@@ -240,7 +240,9 @@ const PHONE = {
   hideAssembled: /^(logic_board|battery|charging_coil)$/,   // sealed inside while closed: not drawn (performance; the prewarm poses exploded)
   special: { cover_glass: 'glass', sapphire: 'sapphire', screen: 'screen', pcb: 'pcb', lens_coat: 'mylar', lens_violet: 'mylar' },
   mylarEnv: 1.4, sapphireEnv: 1.6, glassEnv: 1.0, pcbEnv: 0.9,
-  studios: ['coat'], mylarEnvMap: 'coat', coatDome: 0x3c3c4a,   // the coated elements (lens_coat, lens_violet) see a dim dome: their thin film always shows
+  // the coated elements (lens_coat, lens_violet) see a dim dome: their thin film always shows (p5: 0x3c3c4a -> 0x707090, so
+  // the rear covers read as deep blue coated glass at a 3x zoom, not as black voids)
+  studios: ['coat'], mylarEnvMap: 'coat', coatDome: 0x707090,
   // the board (its lids, chips and faces) sees its own studio at the hold: one broad soft card where its face, turned to
   // the exploded view, mirrors it (the camera v5's 'metal' studio): phoneB's bright champagne and nickel lids
   metalParts: /^(logic_board|battery)$/,                   // (the pouch too: a broad soft sheen its wrinkles and rolled edge catch)
@@ -250,8 +252,8 @@ const PHONE = {
   shadowBox: 1.1,
   tileA: 'foam',                                           // the tile-A slot carries the foil wrinkle tile (code 0.66); no foam on the phone
   grainTileMM: 7, grainStr: 0.05, grainRough: 0.6, grainRoughMin: 0.34, grainSpecClamp: 0.25,
-  // (p5: the pouch's broad wrinkles at a 48 mm tile, was 96: about 5.3 px/mm, soft features that hold at 3x; build_phone.py)
-  foilTileMM: 48, foilStr: 0.06, foilSheen: 0.35, perfMM: 0.85,
+  // (p5: the pouch's broad wrinkles at a 48 mm tile, was 96, a little flatter: soft features that hold at 3x; build_phone.py)
+  foilTileMM: 48, foilStr: 0.05, foilSheen: 0.35, perfMM: 0.85,
   brushStr: 0.18, brushRough: 0.6,
   edgeSheen: 0.45,
   smoothSpec: 0.15,                                        // mirror-smooth metal: the softboxes in the env, not the point key
