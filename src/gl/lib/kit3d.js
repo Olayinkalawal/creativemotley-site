@@ -270,13 +270,17 @@ export function create(ctx = {}, opts = {}) {
       if (kind === 'main') for (const x of C.envExtra ?? []) panel(x.w, x.l, x.pos, x.look ?? [0, 0, 0], x.along ?? [1, 0, 0], x.k, x.tint ?? 0xffffff);   // (phone) extra cards
       // (p5, console) envBand: a dim ring round the horizon, below it (y0 … y1 at radius r, intensity k × a top / bottom
       // ramp): every vertical satin wall mirrors it at any azimuth (the orbit's walls read off the black stage), the plate
-      // (it mirrors the sky) never does
+      // (it mirrors the sky) never does. (An open 64-sided tube built here, the same vertices and triangles as
+      // CylinderGeometry(9, 9, h, 64, 1, true): that class alone added 0.55 KB gzip to three.core)
       if (kind === 'main') for (const b of C.envBand ?? []) {
-        const h = b.y1 - b.y0, g = new THREE.CylinderGeometry(9, 9, h, 64, 1, true), pa = g.attributes.position, cols = [];
-        for (let i = 0; i < pa.count; i++) cols.push(...Array(3).fill(lerp(b.bot, b.top, pa.getY(i) / h + 0.5)));
+        const g = new THREE.BufferGeometry(), pos = [], cols = [];
+        for (let i = 0; i < 64; i++) for (const [k, t] of [[i, 1], [i, 0], [i + 1, 1], [i, 0], [i + 1, 0], [i + 1, 1]]) {
+          const a = k * Math.PI / 32;
+          pos.push(9 * Math.sin(a), t ? b.y1 : b.y0, 9 * Math.cos(a)); cols.push(...Array(3).fill(t ? b.top : b.bot));
+        }
+        g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
         g.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
-        const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: new THREE.Color(0xffffff).multiplyScalar(b.k), vertexColors: true, side: THREE.DoubleSide }));
-        m.position.y = b.y0 + h / 2; env.add(m);
+        env.add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: new THREE.Color(0xffffff).multiplyScalar(b.k), vertexColors: true, side: THREE.DoubleSide })));
       }
     }
     const pm = new THREE.PMREMGenerator(renderer);
