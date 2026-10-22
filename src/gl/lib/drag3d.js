@@ -22,11 +22,12 @@
    turns it (touch-action pan-y: a vertical swipe scrolls the page natively). Zoom (1× … 3×, about the pointer; out about
    its own centre): ctrl/cmd + wheel (a trackpad pinch; a plain wheel still scrolls the page), Safari's gesture events, a
    two-finger pinch, a double-click / double-tap (2× there, or back), the + / − / reset buttons beside the device (shown
-   while it is hovered, focused or zoomed: _teardown.css), the + and − keys; back to 1× over 0.8 s once the reader
-   scrolls on or after 4 s idle. The page itself is never zoomed: only the region blocks the browser's pinch. Past 1.15×
-   the section gets .d3-zoomed (its copy steps back). Keyboard: the region is focusable (role img; its label names the
-   device and the keys): arrows turn it (±15° / ±8°, eased 0.35 s), 0 or Escape resets. A one-time hint (per visit:
-   sessionStorage) fades in beside the device the first time one rests on screen, for 3 s, and never after a drag.
+   while it is hovered, focused or zoomed: _teardown.css; where they go: place(), below, never over the device), the
+   + and − keys; back to 1× over 0.8 s once the reader scrolls on or after 4 s idle. The page itself is never zoomed:
+   only the region blocks the browser's pinch. Past 1.15× the section gets .d3-zoomed (its copy steps back). Keyboard:
+   the region is focusable (role img; its label names the device and the keys): arrows turn it (±15° / ±8°, eased
+   0.35 s), 0 or Escape resets. A one-time hint (per visit: sessionStorage) fades in beside the device the first time
+   one rests on screen, for 3 s, and never after a drag (left of the zoom buttons where it would meet them).
    Reduced motion (if the stage ever ran under it): no glide, no eases. Every change asks the stage for a frame
    (stage.invalidate), so the stage's idle-stop re-arms only while something moves. */
 import { onFrame, input } from '../../core/scroll.js';
@@ -36,6 +37,8 @@ const KEY = 'cm-d3-hint';
 let seen = false;
 try { seen = !!sessionStorage.getItem(KEY); } catch { /* storage off: once per page view */ }
 const cl = (v, a, b) => Math.min(b, Math.max(a, v));
+// two rects [x0, y0, x1, y1] closer than m px
+const hit = (a, q, m = 6) => a[0] < q[2] + m && q[0] < a[2] + m && a[1] < q[3] + m && q[1] < a[3] + m;
 const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 // the zoom buttons (docs/ui-strings.json; their icons are _teardown.css's): label, factor (0: reset)
 const BTN = [['Zoom in', 1.5], ['Zoom out', 1 / 1.5], ['Reset view', 0]];
@@ -44,17 +47,34 @@ export function drag3d(stage, host, name, hintAt) {
   host.insertAdjacentHTML('beforeend', `<div class="d3w"><div class="d3" tabindex="0" role="img"></div><div class="d3__hint" aria-hidden="true"></div><div class="d3__btns">${
     BTN.map(([t]) => `<button type="button" class="d3__b" aria-label="${t}"></button>`).join('')}</div></div>`);
   const lay = host.lastElementChild, [reg, hint, bar] = lay.children, sec = host.closest('section');
-  // the host's size, observed (reading it in the frame after the class and style writes forced a layout each frame)
-  let W = host.clientWidth, H = host.clientHeight;
-  const ro = new ResizeObserver(([e]) => { W = e.contentRect.width; H = e.contentRect.height; });
+  // the host's size, observed (reading it in the frame after the class and style writes forced a layout each frame);
+  // and what the zoom buttons keep clear of (avoid, host px): the rail (mark, index, the legal line; fixed: viewport
+  // px stand for host px, as the host is pinned at the top while a device is live), the copy's label, head and rows,
+  // the chapter's title, the hero frame's mark, dek and index; laid out (offsets: no transforms, so a frame in flight
+  // or a line reveal measures where it rests; as wide as their content: a short label leaves the room beside it) as
+  // the host resizes. place() counts those on screen now (the section's .is-in; the rail's and the hero frame's
+  // always; a title under an .is-out has gone), so copy that is not up yet (an orbit) or gone (another shot's) frees
+  // its room
+  let W = host.clientWidth, H = host.clientHeight, avoid = [];
+  const rg = document.createRange();
+  const ro = new ResizeObserver(([e]) => {
+    W = e.contentRect.width; H = e.contentRect.height;
+    avoid = [...document.querySelectorAll('.rail>*'), ...host.querySelectorAll('.td__label,.td__head,.td__spec,.td__giant,.mark,.frame__dek,.index')].map((e) => {
+      let x = 0, y = 0;
+      for (let n = e; n && n !== host; n = n.offsetParent) x += n.offsetLeft, y += n.offsetTop;
+      rg.selectNodeContents(e);
+      return [x, y, x + rg.getBoundingClientRect().width, y + e.offsetHeight, e];
+    });
+  });
   ro.observe(host);
   const st = (e, k, v) => { if (e['_' + k] !== v) { e['_' + k] = v; e.style.setProperty(k, v); } };
   const cls = (e, c, v) => { if (e['_' + c] !== v) { e['_' + c] = v; e.classList.toggle(c, v); } };
+  const at = (e, x, y) => st(e, 'transform', `translate(${x.toFixed(0)}px,${y.toFixed(0)}px)`);
 
   const d = { az: 0, el: 0, k: 1, x: 0, y: 0, cx: 0, cy: 0 };
   let on = false, box = null, dy0 = 0, reduced = false, y0 = NaN, sy = 0, lastY = NaN, last = performance.now();
   let drag = null, vA = 0, vE = 0, glide = false, tw = null, zt = null, pinch = null, tap = null, moved = 0, type = '';
-  let occ = { az: 0, el: 0, k: 1, t: 0 }, occNow = false, hintOn = 0, hintY = 0, hintT = 0, restAt = 0, retT = 0, zoomT = 0, frozen = null;
+  let occ = { az: 0, el: 0, k: 1, t: 0 }, occNow = false, hintOn = 0, hintY = 0, hintT = 0, restAt = 0, retT = 0, zoomT = 0, frozen = null, P, pY = NaN;
   const pts = new Map();
   const now = () => performance.now();
   const kick = () => stage.invalidate();
@@ -81,7 +101,9 @@ export function drag3d(stage, host, name, hintAt) {
     kick(); idle();
   };
   const zoomBy = (f, px, py, ms = 220) => zoomTo((zt ? zt.k1 : d.k) * f, px, py, ms);
-  const mid = () => (box ? [(box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2] : [innerWidth / 2, innerHeight / 2]);
+  // where the keys and the buttons zoom: about the zoom's own centre, or at 1× the device's (the keys and the buttons
+  // only reach a live region, so a box is in)
+  const mid = () => (d.k > 1.0001 ? centre() : [(box.x0 + box.x1) / 2, (box.y0 + box.y1) / 2]);
   const unzoom = (ms = 800) => { clearTimeout(zoomT); if (d.k > 1.0001 || zt) zoomTo(1, 0, 0, ms); };
   // after an interaction: back after 2.5 s (the zoom after 4 s) without another, or once the reader scrolls on
   const idle = () => {
@@ -165,7 +187,7 @@ export function drag3d(stage, host, name, hintAt) {
   on2(reg, 'gesturechange', (e) => { e.preventDefault(); if (on && !pts.size) zoomTo(g0 * e.scale, e.clientX, e.clientY, 0); });
   on2(reg, 'gestureend', (e) => { e.preventDefault(); ended(); });
   on2(reg, 'keydown', (e) => {
-    const K = e.key, c = d.k > 1.0001 ? centre() : mid(), t = { ArrowLeft: [15, 0], ArrowRight: [-15, 0], ArrowUp: [0, -8], ArrowDown: [0, 8] }[K];
+    const K = e.key, c = mid(), t = { ArrowLeft: [15, 0], ArrowRight: [-15, 0], ArrowUp: [0, -8], ArrowDown: [0, 8] }[K];
     if (!on) return;
     if (t) { tween((tw ? tw.a1 : d.az) + t[0], cl((tw ? tw.e1 : d.el) + t[1], -12, 18), 350); ended(); }
     else if (K === '0' || K === 'Escape') { tween(0, 0, 350); unzoom(350); }
@@ -176,7 +198,7 @@ export function drag3d(stage, host, name, hintAt) {
   });
   [...bar.children].forEach((b, i) => on2(b, 'click', () => {
     const f = BTN[i][1];
-    if (f) zoomBy(f, ...(d.k > 1.0001 ? centre() : mid()), 260); else { tween(0, 0, 500); unzoom(500); }
+    if (f) zoomBy(f, ...mid(), 260); else { tween(0, 0, 500); unzoom(500); }
   }));
   const stopTick = onFrame(() => { if (busy()) kick(); });
 
@@ -185,11 +207,30 @@ export function drag3d(stage, host, name, hintAt) {
   const showHint = () => {
     if (seen || !on || busy() || Math.abs(scrollY - lastY) > 2) return;
     seenNow(); hintOn = 1; hintY = sy;
-    hint.textContent = !FINE || input.trackpad || /Mac/.test(navigator.platform) ? 'Drag to turn · pinch to zoom' : 'Drag to turn · double-click to zoom';
-    const [x, y] = hintAt ? hintAt(box) : [(box.x0 + box.x1) / 2, box.y1 + 14];
-    st(hint, 'transform', `translate(${cl(x, 120, W - 120).toFixed(0)}px,${cl(y - dy0, 12, H - 44).toFixed(0)}px)`);
+    hint.textContent = `Drag to turn · ${!FINE || input.trackpad || /Mac/.test(navigator.platform) ? 'pinch' : 'double-click'} to zoom`;
+    const [x, y] = hintAt ? hintAt(box) : [(box.x0 + box.x1) / 2, box.y1 + 14], w = hint.offsetWidth / 2, Y = cl(y - dy0, 12, H - 44);
+    let X = cl(x, 120, W - 120);
+    if (hit([X - w, Y, X + w, Y + 30], P[3])) X = P[3][0] - w - 6;   // clear of the buttons: to their left (they sit at the device's right end)
+    at(hint, X, Y);
     st(hint, 'opacity', '1');
     hintT = setTimeout(hideHint, 3000);
+  };
+
+  /* ── where the zoom buttons go (host px: [x, y, row, rect]) ───────────────────────────────────────────────
+     From the device's box at 1× (the zoom taken out: css x' = k·x + d.x; the box is the drawn device's bounds to a few
+     px), the first of these, each kept inside the host (8 px in from its sides, 6 px from its foot, 64 px from its top:
+     under the header bar), that is 12 px clear of the box and 6 px of the copy on screen (avoid), 14 px out from the
+     box (so one pushed back inside the host, nearer the device, is passed over: the box can miss a part's tip by a few
+     px): a column to the box's right, its foot on the box's foot; a row under the box, its right end on the box's; a
+     row over it; a column to its left; then the section's free corners beside the device's left edge, a row at the
+     foot (under the copy), then at the top (a phone held sideways: the device fills its column, the copy's leaves
+     room). With none of those: a column inside the box at its lower right (the old place; no state measured needs it). */
+  const place = (b, dy) => {
+    const s = FINE ? 34 : 40, l = s * 3 + 12, B = [b.x0, b.y0, b.x1, b.y1].map((v, i) => (v - (i & 1 ? d.y : d.x)) / d.k - (i & 1) * dy);
+    for (const [x, y, w, h, f] of [[B[2] + 14, B[3] - l, s, l], [B[2] - l, B[3] + 14, l, s], [B[2] - l, B[1] - 14 - s, l, s], [B[0] - 14 - s, B[3] - l, s, l], [B[0] - 14 - l, H, l, s], [B[0] - 14 - l, 0, l, s], [B[2] - s - 14, B[3] - l, s, l, 1]]) {
+      const X = cl(x, 8, W - 8 - w), Y = cl(y, 64, H - 6 - h), r = [X, Y, X + w, Y + h];
+      if (f || !(hit(r, B, 12) || avoid.some((q) => hit(r, q) && q[4].matches('.is-in:not(.is-out *),.frame *,.rail *')))) return [X, Y, w > s, r];
+    }
   };
 
   /* ── per frame ───────────────────────────────────────────────────────────────────────────────────────── */
@@ -199,6 +240,10 @@ export function drag3d(stage, host, name, hintAt) {
     if (!(y0 === y0)) y0 = sy;
     on = !!(allow && b);
     if (b) box = b, dy0 = dy;
+    // the buttons (place(), above): placed at the scroll's pose and 1×, then held through a zoom, a turn and their eases
+    // back, so a second click lands on the button the first did; placed again once the page scrolls. (Here, before this
+    // frame's eases move the zoom: the box came posed with the last frame's, so the ease's last step is still held.)
+    if (on && (sy !== pY || !(busy() || d.k > 1.0001 || d.az || d.el))) P = place(b, dy), pY = sy;
     if (was && !on) { if (drag) endDrag(false); pts.clear(); pinch = null; hideHint(); back(500); unzoom(500); }
     // the glide, the tweens, the zoom's ease
     if (glide) {
@@ -223,12 +268,10 @@ export function drag3d(stage, host, name, hintAt) {
     cls(lay, 'is-z', on && d.k > 1.02);
     cls(sec, 'd3-zoomed', d.k > 1.15);
     if (on) {
-      const bw = FINE ? 34 : 40, bh = bw * 3 + 12;
       const x0 = cl(b.x0 - 10, 0, W), x1 = cl(b.x1 + 10, 0, W), y1 = cl(b.y0 - 10 - dy, 0, H), y2 = cl(b.y1 + 10 - dy, 0, H);
-      st(reg, 'transform', `translate(${x0.toFixed(0)}px,${y1.toFixed(0)}px)`);
+      at(reg, x0, y1);
       st(reg, 'width', `${Math.max(48, Math.round((x1 - x0) / 4) * 4)}px`); st(reg, 'height', `${Math.max(48, Math.round((y2 - y1) / 4) * 4)}px`);
-      const bx = b.x1 + 14 + bw > W - 12 ? Math.min(b.x1, W) - bw - 12 : b.x1 + 14;
-      st(bar, 'transform', `translate(${cl(bx, 12, W - bw - 12).toFixed(0)}px,${cl(Math.min(b.y1 - dy, H) - bh, 12, H - bh - 12).toFixed(0)}px)`);
+      at(bar, P[0], P[1]); st(bar, 'flex-direction', P[2] ? 'row' : 'column');
     }
     // the hint: once, the first time a device rests on screen (where the scene says it may; not scrolled for 0.75 s)
     if (!seen && on && rest && !busy()) {

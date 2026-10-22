@@ -323,7 +323,9 @@ html.js .td.td--mk:not(:has(.td__mk--name))[data-td-ready]:not(.td-static) .td__
    real-time 3D device (the hero camera, Method's camera, the Kit's devices; made by the scene once its device draws, so
    never at tier 0, on the stills or under reduced motion): the hit region (.d3), the one-time hint and the zoom buttons.
    touch-action pan-y: a vertical swipe scrolls the page, and the browser's pinch zooms nothing here (drag3d zooms the
-   device instead). The buttons show while the device is hovered or focused, or zoomed (.is-z), and linger 0.5 s ── */
+   device instead). The buttons show while the device is hovered or focused, or zoomed (.is-z), and linger 0.5 s; they
+   sit beside the device, never over it: a column, or a row under or over it (drag3d.js place() sets the flex
+   direction inline, from these sizes) ── */
 .d3w { display: none; position: absolute; inset: 0; z-index: 3; pointer-events: none; contain: strict; }   /* (its writes stay inside it) */
 .d3w.is-on { display: block; }
 .d3 {
@@ -354,7 +356,7 @@ html.js .td.td--mk:not(:has(.td__mk--name))[data-td-ready]:not(.td-static) .td__
 .d3__b:last-child::after { width: 0; height: 0; margin: -7.5px 0 0 -6px; border: 3px solid transparent; border-bottom: 4px solid; border-radius: 0; background: none; transform: rotate(-60deg); }
 .d3__b:hover { background: var(--gold); color: var(--ink); }
 .d3__b:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-@media (pointer: coarse) { .d3__b { width: 40px; height: 40px; } }   /* (drag3d.js places the column by these sizes) */
+@media (pointer: coarse) { .d3__b { width: 40px; height: 40px; } }   /* (drag3d.js places the column or row by these sizes) */
 /* over the hero's bright painting: cream pills, ink type */
 .hero :is(.d3__hint, .d3__b) { color: var(--paper-ink); background: rgba(244, 237, 223, 0.8); }
 .hero .d3__b { border-color: rgba(169, 127, 66, 0.5); }
