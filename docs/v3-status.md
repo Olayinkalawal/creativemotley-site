@@ -965,3 +965,146 @@ cam-lens 53.9 KB.
   figures as the fallback); the poster small print; DC91 or the credits row; "MultiChoice"; "Monetise"; Process F94 /
   F95; the four channel-probable YouTube ids; 16:9 key frames for the seven video cards; the applicant email; the 47
   drafted lines.
+
+# Phase 5: 3D polish (verified 2026-10-22)
+The client: "the 3d camera is amazeballs". This round kept every device's silhouette, choreography, framing keys and
+character and made the five real-time devices hold up as product renders at 1x and at the 3x zoom (drag3d). Three
+tracks, each with a critic and a fix pass: CAM (the camera in Method and on the homepage), KIT-A (console, headphones),
+KIT-B (microphone, phone). Then this verification on a production build served locally, SwiftShader WebGL (no real-GPU
+frame rates are claimed). Evidence: `/tmp/claude-0/-home-user-creativemotley-site/f5fb006b-f00a-5174-8cc3-2633425655d9/scratchpad/p5/verify/`
+(perf runs in `perf/`, `perf_phone3d/`, `perf_smooth/`; walks in `walk/`; drag and zoom in `dz/`; the homepage push in
+`hero/`; the viewer in `viewer/`); the tracks' own before/after frames under `scratchpad/p5/{cam,p5-cam,kitA,p5-kitA,kitB,p5-kitB}`.
+
+## P5.1 Numbers: phase 4 (ac776e6) → now
+| | Phase 4 | **Now** | Target |
+|---|---|---|---|
+| First load, desktop @1× / @2× · phone @2× | 0.75 / 0.89 · 0.49 MB | **0.75 / 0.89 · 0.49 MB** (29 / 29 / 26 req); no GLB before the first input (every `.glb.gz` in the scroll phase) | ≤ 1.5 · ≤ 1.0 MB |
+| Full read, desktop @1× | 7.74 MB | **8.33 MB / 111 req** (this run loaded the camera, console, phone and mic GLBs; which Kit GLBs a SwiftShader read reaches varies: 8.31–9.00 MB across the round) | ≤ 18 MB |
+| Full read, phone @2× · phone with 3D (`?cam3d=1`) | 3.88 MB · — | **3.89 MB / 85 req · 4.91 MB / 93 req** | ≤ 6 MB |
+| Lazy JS (gzip -9, every lazy chunk but `scroll`; both builds counted the same way) | 215.47 KB | **215.28 KB** (−0.19: camera3d −0.23, kit3d −0.05, hero3d +0.07; three.core back to phase 4's bytes, P5.3) | must not grow |
+| Entry JS · CSS (gzip -9) | 29.58 · 24.25 KB | **29.70 · 24.25 KB** (+0.12: `src/ui/hero.js`'s stills and beats, CAM) | ≤ 60 KB JS |
+| LCP unthrottled, desktop / phone (median of 3) | 0.39 / 0.32 s | **0.42 / 0.32 s** (the dek) | ≤ 1.0 s |
+| CLS while scrolling (5 windows, WebGL off and on) · walks at 8 sizes | 0 · 0 | **0 · 0** | < 0.01 |
+| CLS on deep links `#method` `#kit` `#results` `#apply` (1440 and 390, two runs each) | desktop 0–0.12, phone up to 0.47 (`#method`) | **0 in all 16 runs** | < 0.01 |
+| Steady wheel, WebGL off (min / median fps) | 58.6 / 59.4 | **56.8 / 59.8** | ≥ 50 |
+| Horizontal overflow · console errors | 0 · none | **0 at 1440, 1280, 1024, 1920, 390, 360, 820, 844×390, tier 0 and reduced motion · none** | 0 · none |
+
+GLBs (gzip -9 of the file in `public/`, phase 4 → now; the limit is +10%): camera 1,469,744 → 1,444,076 (−1.7%),
+camera phone 973,937 → 946,670 (−2.8%); console 629,190 → 634,392 (+0.8%), phone model 374,941 → 379,543 (+1.2%);
+microphone 404,296 → 417,842 (+3.4%), phone model 302,811 → 318,667 (+5.2%); headphones 636,573 → 647,636 (+1.7%),
+phone model 383,255 → 387,869 (+1.2%); phone 432,237 → 451,771 (+4.5%: the lit screen's 512 × 1088 painting), phone
+model 259,592 → 260,153 (+0.2%). The lab GLBs are byte-identical to `public/`, and every lab rebuilds its GLBs byte for byte.
+
+## P5.2 What changed, per device (before → after at the same pose; each track's sheet has the pairs)
+- **Camera (Method and the homepage), CAM.** The glass: the violet ring-light arcs inside the front element are gone
+  (share of bright pixels at the push's s 0.48 / 0.55 / 0.62, 1440: 0.5 / 14.9 / 25.6% → 0 / 0 / 0; 390: 2.9 / 10.1 /
+  12.9% → 0); the glass sees a softbox studio, the inner elements a softer, blurred copy of it at half strength, so their
+  nested reflections blend into one glow instead of a staircase of boxes (the critic's regression, fixed); the lens
+  interior is lit (centre median at s 0.55: 1 → 10). The front element at the hero key reads mid-grey (median 20–48 →
+  39–46 across az −58 … −18). The knurled dial lost its bronze facets (warm pixels at 3x 438 → 102); the zoom ring's crests
+  no longer sparkle at the silhouette (0 pixels above L 150 at 3x); the iris blades are satin steel with brighter cut
+  edges; the homepage fades the model's own iris as the drawn blades close, so one iris reads at s 0.66–0.74. The hero at
+  rest is lighter (median 35 → 46). The second beat never sits in ink over the camera; the phone's hold is one clean
+  line. Shader programs 18 → 20 (desktop), 17 → 19 (phones), all compiled during load. Stills: `cam-lens` (CAM),
+  `cam-hero` and `cam-front` (this verification, P5.3).
+- **Console, KIT-A.** The plate's glare is gone (hero median 98 → 47); satin side walls with a crisp chamfer; fine
+  brass fader caps (no wood grain), no glowing bars under the plate, dark jack bores, bead-blast slider blocks; the
+  board's solder mask is satin (roughness 0.35 → 0.5). Moving-frame aliasing (1 sample against 12): knobs 7.3 → 3.8% at
+  the hero, 14.5 → 4.2% at the hold; board 2.1 → 2.1%.
+- **Headphones, KIT-A.** Grained leather, a real driver (pleated film, copper coil, vented basket, a satin dust cap),
+  neutral caps, clean band ends and yokes; the one cap screw that crossed the bronze ring now clears it at every key. The
+  exploded still matches the live device at the hold within 0.6 px (`kit.html`, commit 6cd6c45; it was 6.6% smaller).
+- **Microphone, KIT-B.** Darker internals (median 123 → 110, grille 164 → 125), the yoke turned 65° so its black strap
+  faces the view (choreography change, for the director's sign-off), a legible CM inlay, a transformer with leads; the
+  magnet face is a 1.0 mm dome with 10-bit normals (no facets at 3x) at roughness 0.27, so it stays lit when the hold is
+  dragged up 15–18° (face median 12 → 81). Grille sparkle in moving frames 11.5 → 9.4.
+- **Phone, KIT-B.** The screen is lit with our Creators painting under a Creative Motley status line (display median
+  17 → 81); no carbon-fibre moiré on the panel; the board's lids keep their champagne at every drag angle (a wide low
+  card: mid-explode lid median 71 → 168, dragged up 15° 108 → 193); board glitter at 3x 3.1 → 1.4; a satin sheen on the
+  battery pouch; dark blue glass over the lenses; the hero fills 0.72 of its slot (was 0.82), as the family.
+
+## P5.3 What this verification changed
+- **Lazy JS back under phase 4.** `src/gl/lib/kit3d.js`: the console's horizon band (`envBand`, KIT-A) used
+  `THREE.CylinderGeometry`, which alone added 0.55 KB gzip to `three.core`; it is now an open 64-sided tube built in place
+  (the same vertices and triangles). Console frames at the orbit (p 0.30) and the hold (p 1.0), 4 samples, before and
+  after: pixel-identical (`verify/cyl/`). Lazy JS 215.77 → 215.28 KB (phase 4: 215.47).
+- **The microphone's still framing** (`src/partials/kit.html`, KIT-B's diff): `data-td-frame` 1.682 → 1.649,
+  `-tall` 1.636 → 1.606, `data-td-pbox` 0.232 / 0.768 → 0.227 / 0.773, to the re-rendered exploded still. Tier 0: the
+  six markers land on their parts.
+- **The homepage's camera stills** `cam-hero` and `cam-front` (.webp and .avif, `public/assets/scenes/hero/`, and
+  `cam-stills.json`): CAM's drop-ins (same pose, size and placement metadata; only the lens glass differs), so tier 0,
+  reduced motion and the first paint show the new glass.
+- **Labs (no shared file changed).** `.lab/kit3d/kit3d.js` and `.lab/kit3d/kit3d_devices.js` copied from the site;
+  `.lab/kit3d/{mic,phone}/kit3d.js` rebuilt (`syncrt.sh`); `.lab/kit3d/INTEGRATION.md` "Known limits" brought up to date.
+- **Not merged** (both measured): the microphone's `weaveLOD` runtime proposal (moving-frame grille sparkle 9.3 → 4.8,
+  phones 6.0 → 3.2) costs 1.5 KB gzip of lazy JS and turns the settled 1x grille into a flat pale sleeve, the woven mesh
+  no longer visible (`verify/weave/grille_crop_2x.jpg`); the phone's `coatCard` / `screenEnvMap` proposals cost 0.16 KB
+  and change nothing with the site's config. The director's call on the weave; the code is in `.lab/kit3d/mic/kit3d.js`.
+
+## P5.4 Checks
+- **Fact check:** desktop and mobile 485 strings, `--drafts 0` 392: pass. 47 drafted lines await the client (unchanged).
+- **Drag and zoom** (production build, drag3d's real input, its idle returns held while reading): every scene turns
+  and zooms with the page's own scale at 1 and no console error.
+
+| Scene, 1440 | Turn (mouse) | ctrl+wheel | Double-click | + + / − / reset | Markers on their anchors |
+|---|---|---|---|---|---|
+| Hero camera | −50° | 3.0× | 2.0× | 2.25 / 1.5 / 1× | (none on the hero) |
+| Method | anchors 63 px | 3.0× | 2.0× | 2.25 / 1.5 / 1× | 12 at rest, ≤ 0.1 px at every step |
+| Console · mic · headphones · phone | anchors 82 · 103 · 116 · 89 px | 3.0× each | 2.0× each | 2.25 / 1.5 / 1× each | 6 each at rest, ≤ 0.1 px at every step |
+
+  At 390 (`?cam3d=1`): a horizontal swipe turns the hero (−41°), Method and the four Kit devices (anchors 37–48 px); a
+  two-finger pinch gives 3.0× on all six; the buttons 2.25 / 1.5 / 1×; double-tap 2× (two CDP taps sent back to back
+  landed 272 ms apart; a synthetic pair 60 ms apart too). The first run's taps, spaced by a wait plus SwiftShader's slow
+  frames, landed over drag3d's 300 ms window and did not zoom, as designed.
+  Phones show the lit row's one marker, on its anchor (0 px). At 3× the markers whose parts leave the viewport hide.
+- **The homepage push** at 1440 and 390, forced to s 0 / 0.17 / 0.30 / 0.45 / 0.55 / 0.62 / 0.70 / 0.80 with the real
+  DOM beats: no purple arcs (violet share 0% from 0.45 to 0.70 at both widths; the 10% at 0.80 at 1440 is the School of
+  Athens' robes through the iris, as before); the three beats are legible: ink over the sky (0.17, 0.45), cream over the
+  dark glass (0.62, 0.70); the iris opens onto the painting at 0.80 (`verify/hero/strip_1440.jpg`, `strip_390.jpg`).
+- **Tier 0 and reduced motion** (1440, 390): the stills show the new looks (the lit phone screen, the turned yoke, the
+  clear screws, the new lens glass), no GLB is fetched, no overflow, no error. Reduced motion walks: CLS 0.
+- **GitHub Pages build** (`scripts/build-pages.mjs`, served under `/creativemotley-site/`; 252 root paths rewritten,
+  `noindex` on the page): a full desktop read (106 responses) and a full 3D phone read (`?cam3d=1`, 81 responses), no
+  failed request, no error; the phone read logs only the stage governor's "the stage is at its floor" warnings, as in
+  phase 4.
+
+## P5.5 Remaining, ranked
+1. **The microphone's grille sparkles while it moves** (moving-frame difference 9.4 at the Kit's hold against < 2).
+   The `weaveLOD` proposal halves it at a visible cost (P5.3); the alternative is a finer weave texture in the GLB.
+2. **The camera's iris at 3x** reaches p90 85 against the ≥ 110 asked: the critic rejected the pale blade faces that met
+   it; the bright cut edges are too thin to lift the 90th percentile.
+3. **Tier 0 only: a jump straight into Method** (a deep link, or a programmatic scroll) shifts Method's copy once when
+   its teardown initialises (CLS 0.11 at 1440 for `#method` and for a jump; 0.67 at 390 for a jump, 0 for `#method`).
+   It is P4.6 item 2 in the still path; scrolling there gives 0, and at the default tier every deep link measured 0.
+   `_teardown` is shared.
+4. **The exploded line shrinks toward the column edge when a Kit hold is dragged to large azimuths** (the phone's box
+   narrows 335 → 252 px at 390): `kit3d.js`'s fit under `setOffset`.
+5. **Smaller:** the console's knob outlines in moving frames (3.8–4.2% against 3%) and its pads (1.2% against 0.9%
+   before the glare fix); the headphone driver's residual edge aliasing (2.2% against 1.8%); the microphone's internals
+   (median 110 against 70–90) and its magnet's moving-frame sparkle (4.3 against 3.9 before the dome); the console plate's
+   back-to-front gradient; PCB texture, bead-blast grain and pad micro-texture at 3x; the console's portrait stills
+   (parked in `.lab/kit3d/mixer/stills_tall_p5/`); the camera's lens interior is near-black at s 0.62 (by design, the
+   blades still read); on the Kit's holds the zoom buttons sit over the device's lower right end (they show only while it
+   is hovered, focused or zoomed).
+6. **For the director:** sign off the microphone's yoke turn (choreography); P4.6's open items (deep-link layout before
+   the teardown's init, the init's long task, landscape phones, the phone menu trap, the retired film files) stand.
+
+## P5.6 Lab, viewer, sheets
+- **Lab drift: none.** `node .lab/cam3d/tosite.mjs` reproduces `src/gl/lib/camera3d.js` byte for byte (69 lab-only
+  defaults inlined, 7 leftovers folded); `.lab/kit3d/kit3d.js` and `kit3d_devices.js` equal the site's; the mic and phone
+  labs draw with the site's own files (`?rt=lab`: the copies with their proposals, `syncrt.sh --check` passes); all ten
+  lab GLBs equal `public/`.
+- **The client viewer** is rebuilt into `scratchpad/viewer-kit/out/` (the phase 4 copy kept in `out_p4/`) from a new
+  stage, `viewer-kit/stage_p5/`: the camera from `.lab/cam3d`, and the four Kit devices from the site's own
+  `kit3d.js` + `kit3d_devices.js` (the old stage ran the lab's older per-device runtimes, so the viewer did not show this
+  round's looks), with the ten current GLBs. `viewer.js` 778 → 715 KB (one Kit runtime instead of three); 13.6 MB in all. Not
+  published. Smoke test (served locally, 1280 × 800 and 390 × 844 touch): each of the five devices loads and fetches
+  only its own GLB (phones the `_mobile` ones); at the hold the part markers show (camera 12, console 6, microphone 10,
+  headphones 6, phone 8); a drag turns it (−36°, touch −42°) and the markers follow; ctrl+wheel and a two-finger pinch
+  reach 3×; Zoom in, in, out, reset give 1.5 / 2.25 / 1.5 / 1×; Reset view clears the turn; the page's own scale stays 1;
+  switching eight times leaves `renderer.info.memory` at the same floor each time (0 geometries, 1 texture, 2 programs);
+  no request leaves the page but Google Fonts; the only console error is the local server's missing favicon. Evidence:
+  `verify/viewer/`, `verify/memcycle_desk.log`, `verify/vbtn.log`.
+- **Sheets:** `qa/shots/v3p5_best.jpg` (the five devices at their best key and at 3x, and the homepage inside the glass);
+  the tracks' before/after sheets `qa/shots/v3p5_cam_before_after.jpg`, `v3p5_kitA_before_after.jpg`,
+  `v3p5_kitA_fixes.jpg`, `v3p5_kitB_before_after.jpg`.
