@@ -220,7 +220,6 @@ export default function register(stage) {
   let lastS = NaN, up = false;     // the reader's last direction (s falling: on the way back up)
   let run = null, pinH = 0, heroR = null, colR = null, fl = null, timeline = null, TL = -1, vw = 0, vh = 0, tall = false;
   let A = null, N = null, lastA = null, idV = -1, idPending = false, moving = false, dg = null, dgA = null;
-  const NAME = { mixer3d: 'console', mic3d: 'microphone', headphones3d: 'headphones', phone3d: 'phone' };   // drag3d's aria-labels
   const ST = { ph: {}, phN: {} }, S = {}, VS = {}, VN = {}, PA = {}, PN = {}, PV = {};
   const RPH = { orbit: 1, hand: 1, explode: 1, settle: 1, handLin: 1, mix: 1, explodeLin: 1 };   // reduced: the exploded hold
 
@@ -269,6 +268,7 @@ export default function register(stage) {
       throw e;
     }).finally(() => { if (loading === x) loading = null; });
   };
+  const warnFail = (x) => (e) => console.warn('[kit3d] device failed', x.dev, e);
   const dropDevice = (x) => {
     x.tok = null;
     if (x.d) { if (live3[x.dev] === x.d) delete live3[x.dev]; x.d.dispose(); x.d = null; }
@@ -292,7 +292,7 @@ export default function register(stage) {
     const go = () => {
       if (queued !== x) return;
       queued = null;
-      if (!disposed && !loading && shots.includes(x)) loadDevice(x).catch((e) => console.warn('[kit3d] device failed', x.dev, e));
+      if (!disposed && !loading && shots.includes(x)) loadDevice(x).catch(warnFail(x));
     };
     if (window.requestIdleCallback) requestIdleCallback(go, { timeout: 300 }); else setTimeout(go, 60);
   };
@@ -320,7 +320,7 @@ export default function register(stage) {
       if (up && pv && Tk.cut && s < Tk.cut[1] + PF * 0.6) order.push(pv);
       const x = order.find((q) => !q.d && !q.tok && !q.failed);
       if (x && phone && x !== sh) loadIdle(x);
-      else if (x) loadDevice(x).catch((e) => console.warn('[kit3d] device failed', x.dev, e));
+      else if (x) loadDevice(x).catch(warnFail(x));
     }
     // a device that is not ready when its shot shows stands in with its stills: both at once (the dip to the exploded
     // one must not land on a bare key)
@@ -430,7 +430,7 @@ export default function register(stage) {
       const la = A ? fadeK(sh, dt) : 0;
       u.liveA.value = la;
       let turning = false;
-      if (dg && A !== dgA) { dg.reset(); dgA?.setOffset(0, 0); dgA?.setZoom(); dgA = A; dg.name(NAME[sh.dev]); }
+      if (dg && A !== dgA) { dg.reset(); dgA?.setOffset(0, 0); dgA?.setZoom(); dgA = A; dg.name(sh.D.label.toLowerCase()); }   // drag3d's aria-label: the device's label (kit3d_devices.js)
       if (A) {
         const P = posed(sh, ph, PA, dt); turning = P !== ph;
         A.setPhases(P); A.setLayout(lay, ctx.vw, ctx.vh); A.setPointer(px, py, 1);

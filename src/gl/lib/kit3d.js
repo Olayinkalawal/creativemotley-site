@@ -30,7 +30,8 @@
                                           posed for this frame first; visible = revealed × facing × not occluded (id pass)
    dev.occlusion(), dev.idVersion         the id pass now; bumps when an id pass lands
    dev.setOffset(az, el)                  degrees added to the view (drag to turn: gl/lib/drag3d.js; el clamped to the device's range)
-   dev.setZoom(k, x, y)                   the fitted picture scaled by k about a point (css x' = k·x + x): a product-viewer zoom
+   dev.setZoom(k, x, y)                   the fitted picture scaled by k about a point (css x' = k·x + x): a product-viewer zoom,
+                                          optical (the same pose and camera distance; the projection scales the picture)
    dev.screenBox()                        the device's screen box now ({ x0, y0, x1, y1 }, css px): drag3d's hit region
    dev.setFade(f), dev.setKey(c, e, o)    the copy pass only (render()): fade, colour key ('#rrggbb', the Kit's data-td-key)
    dev.dispose()                          frees every GPU resource it made (a pool's shared targets are the pool's)
@@ -56,13 +57,16 @@
      special { material: kind }: 'mylar', 'cloth', 'glass', 'sapphire', 'screen', 'pcb' (the phone's and the mic's) and the
        console's 'glow', 'sheenGlass', 'lcd', 'board' (below)
      metalParts (RegExp) + metalCard { pos, size, card, strip, key }: those parts see the 'metal' studio (one broad soft card)
-     studios ['coat' | 'glass' | 'free']: extra studios; envExtra [{ w, l, pos, look, along, k, tint }]: extra cards in the
-       main studio (the phone's band cards, the console's side panels)
+     studios ['coat']: extra studios; envExtra [{ w, l, pos, look, along, k, tint }]: extra cards in the
+       main studio (the phone's band cards, the console's side panels); envBand [{ y0, y1, k, top, bot }]: a ring (radius 9)
+       round the horizon in the main studio (the console's walls)
      shadowBox, shadowFade { parts (RegExp), t: [a, b], k, castUntil }: the internals' shadows fade as they lift away
-     tileA ('foam' | 'leather'), foam*, leather*, grain*, knurl*, brush*, foil*, perfMM, edgeSheen, specClamp, smoothSpec
+     tileA ('foam' | 'leather'), foam*, leather*, grain*, knurl*, brush*, foil*, perfMM, edgeSheen, specClamp, smoothSpec,
+       specAA (p5: geometric specular anti-aliasing, 0 = off; the console's is console.specAA)
      light: { key, rim, kick, xfill, env, envRamp, softbox, softboxTint, softboxPos, fill, fillTint, sideStrip, overhead,
-       rimStrip, kickPanel, exposure, expRamp, albedo, lift, bloomStrength, bloomThreshold } (camera v5 defaults)
-     camera-only (off unless set): keyLift / keyLiftAz, keyDip / keyDipAz / keyDipW, envDip / envDipAz
+       rimStrip, kickPanel, exposure, expRamp, albedo, lift, bloomStrength, bloomThreshold } (camera v5 defaults);
+       rimPos (studio frame; default the camera's [0.8, 4.4, -6.0]): a device's own rim light placement
+     (p5: the camera-only keyLift / keyDip / envDip are gone: no Kit device set them; .lab/cam3d has them)
    Uber material (the camera's; COLOR_0 = linear albedo + surface code in A, _PBR = roughness, metalness, AO, edge sheen
    allowed). Codes: 0 smooth · 0.25 brushed round the part's Z · 0.5 paint grain (triplanar) · 0.58 perforation · 0.66 foil
    · 0.75 / 0.85 diamond knurl round Z / X · 1 tile A (open-cell foam or pebbled leather). Grain is sampled in part space
@@ -139,6 +143,12 @@ float vnoise(vec3 x){
   return mix(mix(mix(h31(i), h31(i + vec3(1, 0, 0)), f.x), mix(h31(i + vec3(0, 1, 0)), h31(i + vec3(1, 1, 0)), f.x), f.y),
              mix(mix(h31(i + vec3(0, 0, 1)), h31(i + vec3(1, 0, 1)), f.x), mix(h31(i + vec3(0, 1, 1)), h31(i + vec3(1, 1, 1)), f.x), f.y), f.z) * 2.0 - 1.0;
 }`;
+// (p5) geometric specular AA (config specAA / console.specAA): the shading normal's spread over the pixel widens the lobe
+const SPEC_AA = /* glsl */`
+if (uSpecAA > 0.0) {
+  vec3 dnx = dFdx(normal), dny = dFdy(normal);
+  roughnessFactor = sqrt(min(1.0, roughnessFactor * roughnessFactor + min(0.5 * (dot(dnx, dnx) + dot(dny, dny)) * uSpecAA, 0.18)));
+}`;
 const hexRGB = (h) => { const m = String(h).replace('#', ''); return [0, 2, 4].map((i) => parseInt(m.slice(i, i + 2), 16) / 255); };
 const warmedReadback = new WeakSet();   // renderers whose read-back path is built (once per page, not once per device)
 // (console) light-only additive cards: the backlit keys' and the LEDs' spill (coverage alpha untouched)
@@ -208,7 +218,9 @@ export function create(ctx = {}, opts = {}) {
   const key = { on: 0, c: [0, 0, 0], e: [0, 0, 0], hand: false };
   const pool = opts.pool || null;     // shared HDR / LDR / bloom targets (createPool): the host's; this device's own running mean
   // (console) its dialect: the uber shader of its GLB (emission in _PBR.w, _KUV frames), glow cards, the sheen glass, the LCD
-  const CON = C.dialect === 'console' ? { grainScale: 0.055, grainStr: 0.022, turn: 0.12, turnSlope: 0.32, brush: 1.0, emit: 2.0, glow: 0.34, screen: 1.25, ...(C.console || {}), ...(opts.console || {}) } : null;
+  const CON = C.dialect === 'console' ? { grainScale: 0.055, grainStr: 0.022, turn: 0.12, turnSlope: 0.32, brush: 1.0, emit: 2.0, glow: 0.34, screen: 1.25,
+    brushLines: [0.06, 0.22, 0.8], brushRough: 0.22, brushAlbedo: 0.22, brushNormal: 0.12, brushSlope: 0.10, knurlMM: 2, knurlPx: [3.5, 8], knurlRough: 0.12,
+    specAA: 2, ...(C.console || {}), ...(opts.console || {}) } : null;
   const uberShaders = [], glows = [];
   let lcdMat = null;
   const envRot = new THREE.Matrix3(), _m4 = new THREE.Matrix4();
@@ -230,7 +242,7 @@ export function create(ctx = {}, opts = {}) {
   // ---------------------------------------------------------------- studio (the camera's v5)
   /* kind: 'main' (the opaque parts), 'shiny' (polished films: the main studio, sharper, softbox at 0.6), 'metal' (one broad
      soft card low and front-right where a face turned to the exploded view mirrors it, the overhead strip, a small key);
-     camera-only: 'glass', 'free' */
+     (p5: the camera-only 'glass' and 'free' studios are gone: no Kit device used them; .lab/cam3d has them) */
   function studioEnv(kind) {
     const env = new THREE.Scene();
     // (phone) 'coat': the shiny studio inside a dim dome, so a coated element always has something to tint (a thin film
@@ -248,16 +260,6 @@ export function create(ctx = {}, opts = {}) {
       panel(...(mc.size ?? [9.0, 6.0]), mc.pos ?? [5.0, -2.8, 4.4], [0, 0, 0], [0, 1, 0], mc.card ?? 0.55, 0xf4f6fa);
       panel(0.45, 10.0, [-0.6, 7.0, 1.2], [0, 0, 0.3], [0, 0, 1], mc.strip ?? 1.4, 0xffffff);
       panel(3.0, 2.0, [-4.6, 5.0, 3.6], [0, 0, 0], [1, 0, 0], mc.key ?? 0.8, 0xfbfcff);
-    } else if (kind === 'free') {
-      panel(1.1, 4.2, [5.2, -0.6, 4.8], [0, 0.2, 0], [0, 1, 0], 1.6, 0xf6fbff);
-      panel(4.4, 0.9, [-4.2, 5.6, 4.6], [0, 0, 0], [1, 0, 0], 1.1, 0xfbfcff);
-      panel(12.0, 9.0, [2.5, 1.0, 7.5], [0, 0, 0], [0, 1, 0], L.freeVeil ?? 0.18, 0xe6f2ea);
-      panel(0.45, 10.0, [-0.6, 7.0, 1.2], [0, 0, 0.3], [0, 0, 1], 1.6, 0xffffff);
-    } else if (kind === 'glass') {
-      panel(6.0, 5.0, [3.4, 0.6, 7.2], [0, 0, 0], [0, 1, 0], 0.8, 0xfbfcff);
-      panel(3.0, 2.0, [-4.6, 5.0, 3.6], [0, 0, 0], [1, 0, 0], 0.6, 0xfbfcff);
-      panel(0.45, 10.0, [-0.6, 7.0, 1.2], [0, 0, 0.3], [0, 0, 1], 2.4, 0xffffff);
-      panel(2.6, 1.8, [4.6, 0.6, 5.0], [0, 0.1, 0], [0, 1, 0], 0.30, 0xf2f6ff);
     } else {
       panel(7.0, 4.6, L.softboxPos ?? [-3.6, 7.0, 3.4], [0, 0, 0], [1, 0, 0], L.softbox * (kind === 'shiny' || kind === 'coat' ? 0.6 : 1), L.softboxTint ?? 0xfdfcfa);   // large high key softbox, front-left
       panel(0.5, 13, [-0.5, 6.5, 0.4], [0, 0, 0.2], [0, 0, 1], L.overhead ?? 4.5, 0xffffff);       // overhead strip along the view's depth axis
@@ -266,6 +268,16 @@ export function create(ctx = {}, opts = {}) {
       panel(0.25, 9.0, [-6.5, 2.4, -1.5], [0, 0.3, 0], [0, 1, 0.1], L.sideStrip, 0xf4f6ff);  // thin side strip: edge lines
       panel(9.0, 5.5, [-4.3, 1.4, 6.6], [0, 0.2, 0], [0, 1, 0], L.fill, L.fillTint ?? 0xf6f4f0);           // broad, low frontal fill (mid-tones)
       if (kind === 'main') for (const x of C.envExtra ?? []) panel(x.w, x.l, x.pos, x.look ?? [0, 0, 0], x.along ?? [1, 0, 0], x.k, x.tint ?? 0xffffff);   // (phone) extra cards
+      // (p5, console) envBand: a dim ring round the horizon, below it (y0 … y1 at radius r, intensity k × a top / bottom
+      // ramp): every vertical satin wall mirrors it at any azimuth (the orbit's walls read off the black stage), the plate
+      // (it mirrors the sky) never does
+      if (kind === 'main') for (const b of C.envBand ?? []) {
+        const h = b.y1 - b.y0, g = new THREE.CylinderGeometry(9, 9, h, 64, 1, true), pa = g.attributes.position, cols = [];
+        for (let i = 0; i < pa.count; i++) cols.push(...Array(3).fill(lerp(b.bot, b.top, pa.getY(i) / h + 0.5)));
+        g.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+        const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: new THREE.Color(0xffffff).multiplyScalar(b.k), vertexColors: true, side: THREE.DoubleSide }));
+        m.position.y = b.y0 + h / 2; env.add(m);
+      }
     }
     const pm = new THREE.PMREMGenerator(renderer);
     const rt = pm.fromScene(env, kind === 'main' ? 0.02 : kind === 'shiny' || kind === 'coat' ? 0.006 : 0.03, 0.1, 100, { size: 256 });   // 256: ~6 MB each
@@ -438,7 +450,7 @@ export function create(ctx = {}, opts = {}) {
       Object.assign(k.shadow.camera, { left: -sb, right: sb, top: sb, bottom: -sb, near: 1, far: 16 });
       k.shadow.bias = -0.0003; k.shadow.normalBias = 0.008;
     }
-    const rim = new THREE.DirectionalLight(0xe6eeff, L.rim); rim.position.set(0.8, 4.4, -6.0);
+    const rim = new THREE.DirectionalLight(0xe6eeff, L.rim); rim.position.set(...(L.rimPos ?? [0.8, 4.4, -6.0]));   // (p5) rimPos: per device
     const kick = new THREE.DirectionalLight(0xffc89a, L.kick); kick.position.set(4.2, -2.4, 0.2);   // low, camera-right: undersides, inner faces
     const xfill = new THREE.DirectionalLight(0xfff8f0, 0); xfill.position.set(-1.0, 5.0, 4.0);       // explode only: top-front fill for the internals
     scene.add(k, k.target, rim, kick, xfill);
@@ -452,15 +464,8 @@ export function create(ctx = {}, opts = {}) {
   function turnLights(az) {
     const a = (az - LIGHT_REF_AZ) * D;
     for (const { l, p } of lights.base) l.position.copy(p).applyAxisAngle(_yAxis, a);
-    // camera-only (config): lift the key towards the zenith round one azimuth (the camera's EVF facet), dip it, dip the env
-    const lift = (C.keyLift ?? 0) * D * Math.exp(-(((az - (C.keyLiftAz ?? -94)) / 26) ** 2));
-    if (lift > 1e-4) {
-      const k = lights.key.position, r = k.length(), h = Math.hypot(k.x, k.z), el0 = Math.atan2(k.y, h), el = Math.min(Math.PI / 2 - 0.05, el0 + lift);
-      k.set(k.x / h * r * Math.cos(el), r * Math.sin(el), k.z / h * r * Math.cos(el));
-    }
     scene.environmentRotation.set(0, a, 0);
     for (const m of envMats) m.envMapRotation.set(0, a, 0);
-    lights.key.intensity = lights.keyI * (1 - (C.keyDip ?? 0) * Math.exp(-(((az - (C.keyDipAz ?? -90)) / (C.keyDipW ?? 22)) ** 2)));
     lights.xfill.intensity = L.xfill * smooth(ph.explode);
     if (lights.local) {
       const LL = C.localLight;
@@ -473,7 +478,7 @@ export function create(ctx = {}, opts = {}) {
       lights.local.position.applyAxisAngle(_yAxis, a).add(fitC);
     }
     lights.kick.intensity = lights.kickI * (1 - (C.kickFade ?? 0.75) * smooth(ph.explode));
-    scene.environmentIntensity = L.env * (1 + L.envRamp * ph.explode) * (1 - (C.envDip ?? 0) * Math.exp(-(((az - (C.envDipAz ?? -95)) / 20) ** 2)));
+    scene.environmentIntensity = L.env * (1 + L.envRamp * ph.explode);
     envRot.setFromMatrix4(_m4.makeRotationY(-a));          // world -> studio frame (the PMREM's convention): the console's analytic sheen
     if (C.shadowFade && lights.key.castShadow) {
       // (console) the internals' shadows on the tray fade as they lift away (an open tray reads as a lit satin tub, mixerB)
@@ -519,6 +524,7 @@ export function create(ctx = {}, opts = {}) {
         // (phone) foil (0.66) and perforation (0.58) codes, the grain's roughness floor and its specular clamp, smoothSpec
         uFoilScale: { value: (C.foilTileMM ?? 24) / U }, uFoilStr: { value: opts.foilStr ?? C.foilStr ?? 1.0 }, uFoilSheen: { value: C.foilSheen ?? 0.0 }, uPerf: { value: (C.perfMM ?? 0.9) / U },
         uGRMin: { value: C.grainRoughMin ?? 0.05 }, uGClamp: { value: C.grainSpecClamp ?? (C.specClamp ?? 2.5) }, uSmoothSpec: { value: opts.smoothSpec ?? C.smoothSpec ?? 1.0 },
+        uSpecAA: { value: C.specAA ?? 0 },
       }, localU);
       sh.vertexShader = sh.vertexShader
         .replace('#include <common>', '#include <common>\nattribute vec4 _pbr; varying vec4 vPbr; varying vec3 vObjPos; varying vec3 vObjN; uniform float uSkin; uniform float uSkinRim; uniform float uSkinF; uniform vec4 uQ;\n' + NOISE_GLSL)
@@ -543,7 +549,7 @@ export function create(ctx = {}, opts = {}) {
           uniform float uSheen; uniform float uFoamSpec; uniform float uFRMin; uniform vec2 uFCav; uniform float uLRough; uniform float uLSpec; uniform float uLF90;
           uniform float uEdge; uniform float uSpecClamp; uniform float uPaintMob; uniform float uPaintMobEnv;
           uniform float uFoilScale; uniform float uFoilStr; uniform float uFoilSheen; uniform float uPerf; uniform float uGRMin; uniform float uGClamp; uniform float uSmoothSpec;
-          uniform vec3 uLLPos; uniform float uLLK; uniform vec3 uLLC;
+          uniform vec3 uLLPos; uniform float uLLK; uniform vec3 uLLC; uniform float uSpecAA;
           uniform mat3 normalMatrix;
           varying vec4 vPbr; varying vec3 vObjPos; varying vec3 vObjN;
           float knurlTri(float x){ return 1.0 - 2.0 * abs(fract(x) - 0.5); }`)
@@ -656,15 +662,16 @@ export function create(ctx = {}, opts = {}) {
           }
           diffuseColor.rgb *= cavity;
         }`)
+        .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n' + SPEC_AA)
+        // r186 takes the direct F0 from specularColorBlended: scale both (the camera's v5 finding); open-cell foam traps the reflection
         .replace('#include <lights_physical_fragment>', `#include <lights_physical_fragment>
-          // r186 takes the direct F0 from specularColorBlended: scale both (the camera's v5 finding)
-          if (grain > 0.95) {
-            #ifdef TILE_LEATHER
-            material.specularColor *= uLSpec; material.specularColorBlended *= uLSpec; material.specularF90 *= uLF90;
-            #else
-            material.specularColor *= uFoamSpec * cavity; material.specularColorBlended *= uFoamSpec * cavity; material.specularF90 *= uFoamSpec;   // open-cell foam traps the reflection
-            #endif
-          }`)
+if (grain > 0.95) {
+#ifdef TILE_LEATHER
+material.specularColor *= uLSpec; material.specularColorBlended *= uLSpec; material.specularF90 *= uLF90;
+#else
+material.specularColor *= uFoamSpec * cavity; material.specularColorBlended *= uFoamSpec * cavity; material.specularF90 *= uFoamSpec;
+#endif
+}`)
         .replace('#include <opaque_fragment>', `
           #ifndef TILE_LEATHER
           if (grain > 0.95) {               // foam: fibre fuzz at grazing angles (a soft sheen rim)
@@ -715,7 +722,10 @@ export function create(ctx = {}, opts = {}) {
     m.defines = { ...(m.defines || {}), ...(Q.paintGrain ? { PAINT_GRAIN: '' } : {}) };
     m.onBeforeCompile = (sh) => {
       Object.assign(sh.uniforms, { tGrain: { value: tiles.grain }, uAlbedo: { value: L.albedo }, uGScale: { value: CON.grainScale }, uGStr: { value: CON.grainStr },
-        uEmit: { value: CON.emit }, uEmitK: { value: 1 }, uTurn: { value: CON.turn }, uTurnSlope: { value: CON.turnSlope }, uBrush: { value: CON.brush } });
+        uEmit: { value: CON.emit }, uEmitK: { value: 1 }, uTurn: { value: CON.turn }, uTurnSlope: { value: CON.turnSlope }, uBrush: { value: CON.brush },
+        uBL: { value: new THREE.Vector3(...CON.brushLines) }, uBrushK: { value: new THREE.Vector4(CON.brushRough, CON.brushAlbedo, CON.brushNormal, CON.brushSlope) },
+        uKnurl: { value: new THREE.Vector4(CON.knurlMM / U, CON.knurlPx[0], CON.knurlPx[1], CON.knurlRough) },
+        uSpecAA: { value: CON.specAA } });
       uberShaders.push(sh);
       sh.vertexShader = sh.vertexShader
         .replace('#include <common>', '#include <common>\nattribute vec4 _pbr; attribute vec2 _kuv; varying vec4 vPbr; varying vec2 vKuv; varying vec3 vObjPos; varying vec3 vObjN;')
@@ -723,6 +733,7 @@ export function create(ctx = {}, opts = {}) {
       sh.fragmentShader = sh.fragmentShader
         .replace('#include <common>', `#include <common>
 uniform sampler2D tGrain; uniform float uAlbedo; uniform float uGScale; uniform float uGStr; uniform float uEmit; uniform float uEmitK; uniform float uTurn; uniform float uTurnSlope; uniform float uBrush;
+uniform vec3 uBL; uniform vec4 uBrushK; uniform vec4 uKnurl; uniform float uSpecAA;
 uniform mat3 normalMatrix;
 varying vec4 vPbr; varying vec2 vKuv; varying vec3 vObjPos; varying vec3 vObjN;
 float h21(vec2 p){ p = fract(p * vec2(234.34, 435.345)); p += dot(p, p + 34.23); return fract(p.x * p.y); }
@@ -755,19 +766,28 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
         .replace('#include <metalnessmap_fragment>', 'float metalnessFactor = metalness * vPbr.y;')
         .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>
         if (code > 0.2 && code < 0.3) {
-          // real knurl (pyramids in the mesh, shared vertices): faceted, normals from the derivatives
-          normal = normalize(cross(dFdx(vViewPosition), dFdy(vViewPosition)));
+          // real knurl (pyramids in the mesh, shared vertices): faceted, normals from the derivatives; (knurlMM) once a
+          // pyramid is only a few px across, its facets blend into the smooth (radial) normal and their spread becomes
+          // roughness: no facet sparkle in motion or at the hold, full facets when it is large (a close view, a zoom)
+          vec3 nF = normalize(cross(dFdx(vViewPosition), dFdy(vViewPosition)));
+          if (uKnurl.x > 0.0) {
+            float pu = max(length(dFdx(vViewPosition)), length(dFdy(vViewPosition)));
+            float kF = smoothstep(uKnurl.y, uKnurl.z, uKnurl.x / max(pu, 1e-7));
+            normal = normalize(mix(normal, nF, kF));
+            roughnessFactor = sqrt(roughnessFactor * roughnessFactor + (1.0 - kF) * uKnurl.w);
+          } else normal = nF;
         } else if (code > 0.33 && code < 0.42) {
-          // brushed: lines along _KUV.x (mm), each line its own height and gloss; the highlight stretches across them
+          // brushed: lines along _KUV.x (mm, spacings uBL), each line its own gloss (uBrushK: roughness, albedo, height,
+          // the highlight's stretch across them); each octave fades out before it gets finer than a pixel
           vec3 T, B; kuvFrame(normal, T, B);
           float y = vKuv.y, x = vKuv.x, fw = max(fwidth(y), 1e-4);
-          float a1 = 1.0 - smoothstep(0.4, 1.2, fw / 0.06), a2 = 1.0 - smoothstep(0.4, 1.2, fw / 0.22), a3 = 1.0 - smoothstep(0.4, 1.2, fw / 0.8);
-          float g = (vnoise(vec2(y / 0.06, x / 9.0)) - 0.5) * a1 * 0.45 + (vnoise(vec2(y / 0.22 + 17.0, x / 25.0)) - 0.5) * a2 * 0.35 + (vnoise(vec2(y / 0.8 + 5.0, x / 60.0)) - 0.5) * a3 * 0.3;
-          roughnessFactor = clamp(roughnessFactor + g * 0.22 * uBrush, 0.05, 1.0);
-          diffuseColor.rgb *= 1.0 + g * 0.22 * uBrush;
+          float a1 = 1.0 - smoothstep(0.4, 1.2, fw / uBL.x), a2 = 1.0 - smoothstep(0.4, 1.2, fw / uBL.y), a3 = 1.0 - smoothstep(0.4, 1.2, fw / uBL.z);
+          float g = (vnoise(vec2(y / uBL.x, x / (150.0 * uBL.x))) - 0.5) * a1 * 0.45 + (vnoise(vec2(y / uBL.y + 17.0, x / (113.636 * uBL.y))) - 0.5) * a2 * 0.35 + (vnoise(vec2(y / uBL.z + 5.0, x / (75.0 * uBL.z))) - 0.5) * a3 * 0.3;
+          roughnessFactor = clamp(roughnessFactor + g * uBrushK.x * uBrush, 0.05, 1.0);
+          diffuseColor.rgb *= 1.0 + g * uBrushK.y * uBrush;
           vec3 bd = normalize(B + 1e-6);
-          normal = normalize(normal + bd * g * 0.12 * uBrush);
-          normal = grooveTilt(normal, bd, 0.10 * uBrush);
+          normal = normalize(normal + bd * g * uBrushK.z * uBrush);
+          normal = grooveTilt(normal, bd, uBrushK.w * uBrush);
         } else if (code > 0.7 && code < 0.8) {
           // turned top: concentric tool marks (_KUV = planar mm about the axis) where resolved; unresolved, the radial
           // streak the marks make (mixerA3's tops)
@@ -802,7 +822,7 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
           }
           #endif
         }`)
-        .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n\ttotalEmissiveRadiance += vColor.rgb * vPbr.w * uEmit * uEmitK;\n\tdiffuseColor.rgb *= mix(1.0, 0.28, step(0.01, vPbr.w));')
+        .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance += vColor.rgb * vPbr.w * uEmit * uEmitK;\ndiffuseColor.rgb *= mix(1.0, 0.28, step(0.01, vPbr.w));' + SPEC_AA)
         .replace('#include <aomap_fragment>', `{
           float ambientOcclusion = vPbr.z;
           reflectedLight.indirectDiffuse *= ambientOcclusion;
@@ -1211,13 +1231,10 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
     }
     return out;
   }
-  /* the zoom on the rect the fit uses (bleed and inset included, so a zoom is a pure scale of the picture about a point):
-     css x' = k x + zm.x, y' = k y + zm.y, in NDC */
-  const zoomNDC = (R) => R.map((v, i) => v * zm.k + (i < 2 ? zm.k - 1 + 2 * zm.x / vw : 1 - zm.k - 2 * zm.y / vh));
-  function rectNDC() {
+  function rectNDC() {                 // the slot rect in NDC (unzoomed: the fit never sees the zoom)
     if (!rect) return [-1, 1, -1, 1];
     const top = portrait() ? (C.insetTop ?? 16) * ph.hand : 0;   // phones: clear of the header bar as it lands in the column
-    return zoomNDC([rect.x / vw * 2 - 1, (rect.x + rect.w) / vw * 2 - 1, 1 - (rect.y + rect.h) / vh * 2, 1 - (rect.y + top) / vh * 2]);
+    return [rect.x / vw * 2 - 1, (rect.x + rect.w) / vw * 2 - 1, 1 - (rect.y + rect.h) / vh * 2, 1 - (rect.y + top) / vh * 2];
   }
   let jitter = [0, 0], fitInfo = null;
   let view = null;            // debug / art-direction override: { az, el, fov, target: [x, y, z], dist }
@@ -1277,15 +1294,20 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
     }
     camera.updateProjectionMatrix();
     const w = rtHDR ? rtHDR.width : W, h = rtHDR ? rtHDR.height : H;
-    const sx = (R[0] + R[1]) / 2 + jitter[0] * 2 / w, sy = (R[2] + R[3]) / 2 + jitter[1] * 2 / h;
-    camera.projectionMatrix.elements[8] = -sx; camera.projectionMatrix.elements[9] = -sy;
+    /* the zoom (setZoom: css x' = k x + zm.x, y' = k y + zm.y) is optical: the fit above ran on the unzoomed rect (the
+       same pose, the same camera distance), and the projection scales the picture by k about the fit's centre and moves
+       it (NDC X' = k X + k - 1 + 2 zm.x / vw, Y' = k Y + 1 - k - 2 zm.y / vh); the jitter stays one sub-pixel offset */
+    const P = camera.projectionMatrix.elements, k = zm.k, bx = (R[0] + R[1]) / 2, by = (R[2] + R[3]) / 2;
+    const sx = k * bx + k - 1 + 2 * zm.x / vw, sy = k * by + 1 - k - 2 * zm.y / vh;
+    P[0] *= k; P[5] *= k;
+    P[8] = -sx - jitter[0] * 2 / w; P[9] = -sy - jitter[1] * 2 / h;
     camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
     // the view matrix now, not at the next render: anchors() projects right after pose() (a stale matrixWorldInverse put
     // the first frame's markers one pose behind: 80 px on the scratch site, found by sitetest_kit.mjs)
     camera.updateMatrixWorld();
-    // the device's screen box (css px; the fit centres it on the rect): drag3d's hit region
-    const bx = (R[0] + R[1]) / 2, by = (R[2] + R[3]) / 2;
-    fitInfo = { target: _c.toArray(), dist, rig, box: { x0: (bx - bw + 1) / 2 * vw, x1: (bx + bw + 1) / 2 * vw, y0: (1 - by - bh) / 2 * vh, y1: (1 - by + bh) / 2 * vh } };
+    // the device's screen box (css px; the fit centres it on the rect, then the zoom maps it): drag3d's hit region
+    const zx = (x) => k * x + zm.x, zy = (y) => k * y + zm.y;
+    fitInfo = { target: _c.toArray(), dist, rig, box: { x0: zx((bx - bw + 1) / 2 * vw), x1: zx((bx + bw + 1) / 2 * vw), y0: zy((1 - by - bh) / 2 * vh), y1: zy((1 - by + bh) / 2 * vh) } };
     fitC.copy(_c); updateBoxes(rig.az); applyScreen();
     if (lights.local) { localU.uLLK.value = lights.local.intensity; localU.uLLPos.value.copy(lights.local.position).applyMatrix4(camera.matrixWorldInverse); }
   }
@@ -1511,7 +1533,6 @@ vec3 grooveTilt(vec3 n, vec3 dir, float slope){
     setView(v) { view = v || null; dirty = true; },
     setExplode(o) { exOverride = o || null; dirty = true; },
     setPose(p) { poseOv = p || null; poseFor = null; dirty = true; },     // (phone) lab: the model's pose { tilt, roll, yaw }
-    _parts: parts,
     partBoxes() {                    // screen bbox (CSS px) of every part's sampled points, after pose()
       pose(); const out = {}; const v = new THREE.Vector3();
       for (const s of samples) {

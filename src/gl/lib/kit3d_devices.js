@@ -37,20 +37,33 @@ const MIXER = {
   glowSep: { part: 'pad_matrix', a: 'faceplate', b: 'pad_matrix', mm: 8 },   // the LEDs' halo on the board shows as the plate lifts off them
   // the console's uber dialect: satin grain, turned tops' radial streak, brushing; the backlit keys' HDR radiance (vertex
   // colour x emission x emit), the additive spill round the lit keys and the LEDs (glow), the LCD's UI (screen)
-  console: { grainScale: 0.055, grainStr: 0.022, turn: 0.12, turnSlope: 0.32, brush: 1.0, emit: 2.0, glow: 0.34, screen: 1.25 },
+  // (the runtime's defaults: grainScale 0.055, grainStr 0.022, turn 0.12, turnSlope 0.32, brush 1, emit 2, glow 0.34, screen 1.25)
+  console: {
+    // p5 (it holds up at a 3x zoom): the fader caps' brushing 3-4x finer, gloss only (r4's coarse, per-line albedo and
+    // height read as wood veneer); the knurl's facets blend into its smooth normal + roughness once a pyramid is under
+    // ~3.5-8 px (no sparkle in motion or at the hold, full facets close up); geometric specular AA
+    brushLines: [0.015, 0.05, 0.16], brushRough: 0.2, brushAlbedo: 0.0, brushNormal: 0.045,   // (brushSlope: the default 0.10)
+  },   // (knurl AA from a 2 mm pitch over 3.5-8 px, roughness 0.12; specAA 2: the console dialect's defaults)
   // the cover glass's sheen: one long softbox (studio frame), analytic so its edge stays crisp; at the hero its edge crosses
   // the glass diagonally (from the back edge, 45% across, to the front edge, 70% across), as in mixerA3
   sheen: { dir: [0.3894, 0.5706, -0.723], u: [-0.6999, 0.6936, 0.1705], len: 0.5, wid: 0.075, soft: 0.003, i: 2.1 },
   // one tall strip box at view az ~+100 (studio frame), where the wedge's right wall mirrors the hero's view (el about
   // -20): its reflection gives the wall mixerA3's cool satin gradient, brighter at the top (two stacked cards)
-  envExtra: [
-    { w: 3.0, l: 3.6, pos: [6.6, -1.9, 0.7], look: [0, 0, 0], along: [0, 1, 0], k: 9.0, tint: 0xc9d8e8 },
-    { w: 2.2, l: 2.4, pos: [6.95, -0.6, 0.45], look: [0, 0, 0], along: [0, 1, 0], k: 7.5, tint: 0xd6e2ee },
+  envExtra: [                                              // (look: the default, the origin)
+    { w: 3.0, l: 3.6, pos: [6.6, -1.9, 0.7], along: [0, 1, 0], k: 9.0, tint: 0xc9d8e8 },
+    { w: 2.2, l: 2.4, pos: [6.95, -0.6, 0.45], along: [0, 1, 0], k: 7.5, tint: 0xd6e2ee },
+    { w: 4.0, l: 2.5, pos: [3.53, 3.75, -6.12], along: [1, 0, 0], k: 3.4 },   // p5: a soft card behind, the plate's back-left lifts
   ],
+  // p5: a dim ring round the horizon, below it: the walls mirror it at every azimuth, so the wedge reads off the black
+  // stage through the orbit (r4: the orbit's walls 33/255, the front band 10); the chassis' AO ramps the foot down
+  envBand: [{ y0: -6.3, y1: -1.6, k: 2.0, top: 1, bot: 0.4 }],
   // the camera v5 studio with the console's deltas: full albedo (its satin anodising is lighter than the camera's
   // leatherette), a softer key (on the broad dark plate the camera's 10 read as a silver flood), no warm kicker and no warm
   // kicker card (they turned the wedge's right wall orange: mixerA3's is cool satin)
-  light: { albedo: 1.0, key: 7.5, kick: 0.0, kickPanel: 0.0 },
+  // p5: the rim light low and to the left (studio frame; the camera's [0.8, 4.4, -6.0]): at the hero (el 21) the satin
+  // plate mirrored it as a cool silver flood over its front-left (196/255, B 10 over R; the hero's median 98 against the
+  // family's 33)
+  light: { albedo: 1.0, key: 7.5, kick: 0.0, kickPanel: 0.0, rimPos: [-2.5, 2.4, -6.2] },
 };
 
 // The microphone (.lab/kit3d/mic/mic3d.js)
@@ -131,33 +144,23 @@ const HEADPHONES = {
     },
   },
   fillMax: 0.96,
-  tilt: { wide: 0, tall: 0 }, roll: { wide: 0, tall: 0 }, yaw: { wide: 0, tall: 0 },
-  // the choreography (mm along cup A's own axes; the same numbers sit in the GLB's extras). Outside in: the outer cap, its
-  // bronze bezel, the ear cup, the driver (it turns 118 deg so its diaphragm squares to the exploded view),
-  // the baffle; the cushion stays seated on the yoke's base ring and eases 8 mm off it; then the leather headband lifts
-  explode: {
-    outer_cap: { ex: [0, 0, 168], t: [0.00, 0.40] },
-    bezel: { ex: [0, 0, 150], t: [0.05, 0.44] },
-    ear_cup: { ex: [0, 0, 127], t: [0.10, 0.50] },
-    driver: { ex: [0, 0, 80], rot: [0, -118, 0], t: [0.20, 0.62] },
-    baffle: { ex: [0, 0, 52], t: [0.28, 0.68] },
-    cushion: { ex: [0, 0, -8], t: [0.36, 0.72] },
-    headband: { ex: [0, 30, 0], t: [0.48, 0.88] },
-  },
+  // the choreography (mm along cup A's own axes) is the GLB's extras (build_hp.py, E): outside in, the outer cap, its
+  // bronze bezel, the ear cup, the driver (it turns 118 deg so its diaphragm squares to the exploded view), the baffle;
+  // the cushion stays seated on the yoke's base ring and eases 8 mm off it; then the leather headband lifts. (p5: the
+  // config's copy of those numbers, and the default tilt / roll / yaw, portraitNoRot and reveal, are gone: the lazy JS)
   // phones: the parts step down a diagonal under cup A (the screws follow the cap: node offset = the cap's - their own share)
+  // (p5: the steps 15% wider, so each part shows at least ~3/4 of itself; the screws ride just out of the cap)
   portraitEx: {
-    outer_cap: [0, -196, 116], bezel: [0, -178, 104], ear_cup: [0, -158, 92], driver: [0, -110, 64],
-    baffle: [0, -70, 42], cushion: [0, 0, -8], headband: [0, 24, 0], screws: [0, -196, -10],
+    outer_cap: [0, -225, 133], bezel: [0, -205, 120], ear_cup: [0, -182, 106], driver: [0, -127, 74],
+    baffle: [0, -81, 48], cushion: [0, 0, -8], headband: [0, 24, 0], screws: [0, -225, 24],
   },
   portraitScale: 0.65,
   portraitRot: { driver: [0, -122, 0] },
-  portraitNoRot: [],
-  reveal: {},
   leads: { outer_cap: 'nw', ear_cup: 'n', driver: 's', baffle: 'n', cushion: 's', headband: 'ne' },   // alternating round the line
   leadsTall: { driver: 'e', ear_cup: 'w' },
   nocast: /^(screws|driver|baffle)$/,
   special: { mylar: 'mylar' },
-  mylarEnv: 1.0,
+  mylarEnv: 0.45,                                          // p5: an opaque satin metallised film now (it was the brightest thing at the hold)
   // the sliders and blocks (satin aluminium, brushed steel) see the 'metal' studio: one broad soft card where a face along
   // the cup axis mirrors it from the hero / column view (hpA's bright left slider)
   metalParts: /^sliders$/,
@@ -165,8 +168,10 @@ const HEADPHONES = {
   metalEnv: 1.0,
   shadowBox: 2.1,
   tileA: 'foam',
-  foamTileMM: 3, foamStr: 0.35, foamSkinMM: 0, foamSkinRimMM: 0, foamSheen: 0.06, foamSpec: 0.8, foamCav: [0.18, 1.65], foamRoughMin: 0.42,
-  grainTileMM: 9, grainStr: 0.06,
+  // p5: protein leather, not vinyl: the pebble grain at ~0.5 mm (a 14 mm tile; the 3 mm one never resolved, even at 3x),
+  // a softer, wider specular (0.8 drew a hard band), a little more roughness; geometric specular AA on every face
+  foamTileMM: 14, foamStr: 0.45, foamSheen: 0.08, foamSpec: 0.6, foamRoughMin: 0.5,   // (no skin; foamCav the default [0.18, 1.65])
+  specAA: 1.0,
   // the camera v5 studio, tuned for the headphones against hpA at the Kit's arrival (column key; tone.py: median 49 vs
   // hpA 51, p75 69 vs 74): full albedo, +14% exposure, more environment and a larger, brighter key softbox and overhead
   // strip (the leather's broad sheen, the bronze's lower half)
