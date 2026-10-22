@@ -474,3 +474,11 @@ desktop and phone. **No credits spent.**
   turns dappled at master 1:1 and reads as painterly brushwork at encode size.
 - **Sheets:** `qa/shots/v3-masters-sheet.jpg` (encodes, all chapters), `qa/shots/v3-grade-applied.jpg` (the six openers at
   rest, desktop 1440 and phone 390, before and after).
+
+## Phase 5: 3D polish (2026-10-22, no paintings changed)
+No painting, plate or encode changed this round; the work was the five real-time devices (docs/v3-status.md, Phase 5).
+Two painted things show through the 3D and were checked: the homepage push still opens the iris onto the School of
+Athens (its purple robes are the only violet left in the push, 10% of bright pixels at s 0.80, as before), and the
+phone's lit screen now carries the Creators painting (`public/assets/scenes/creators/phone-828.webp`, centre-cropped,
+under a Creative Motley status line; no third-party marks). The homepage camera stills (`cam-hero`, `cam-front`,
+`cam-lens`) were re-rendered for the new lens glass at the same pose, size and placement.
