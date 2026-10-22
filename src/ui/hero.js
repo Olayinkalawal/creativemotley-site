@@ -14,7 +14,7 @@
            above core/env.js CAM3D); the DOM still below steps aside once the live camera has drawn at rest;
      '2d'  everywhere else (phones below the gate, ?tier=0, the moments before the GLB is in, a failed load): the
            fixed .hero__fly layer plays the same move with stills (transforms and opacity only): the camera at rest
-           (cam-hero), turning lens-on (cam-front), the lens close-up (cam-lens), seven iris blades, and (without the
+           (cam-hero), turning lens-on (cam-front), the lens close-up (cam-lens), nine iris blades, and (without the
            stage) a Storytellers layer framed as the CSS plate it hands over to;
      reduced motion: the still at rest; no push and no iris (the stage's CSS plates cut to Storytellers).
    Per frame only diffed, quantised writes (nothing at rest). */
@@ -131,7 +131,7 @@ export function initHero() {
   const storyPlate = document.querySelector('.plates [data-plate="storytellers"]');
 
   /* ── geometry: the slot, the stills' boxes, the lines' masks (on resize) ─────────────────────────────────────── */
-  let slot = heroSlot(innerWidth, innerHeight), fovR = STILLS.fov, dRest = 1, ppu0 = 1;
+  let slot = heroSlot(innerWidth, innerHeight), fovR = STILLS.fov, dRest = 1, ppu0 = 1, beatBox = [];
   const place = () => {
     const vw = innerWidth, vh = innerHeight;
     slot = heroSlot(vw, vh);
@@ -146,6 +146,9 @@ export function initHero() {
     holes.push([slot.x, slot.y, slot.w * 0.9, slot.w * 0.75]);
     const m = holes.map(([x, y, rx, ry]) => `radial-gradient(${rx.toFixed(0)}px ${ry.toFixed(0)}px at ${x.toFixed(0)}px ${y.toFixed(0)}px, transparent 45%, #000 100%)`).join(', ');
     lines.style.setProperty('--holes', m);
+    // each beat's line box (css px, the pin's frame: it is pinned at the viewport's top while the beats play), before its
+    // fade's offset: the beats turn cream where the camera's dark body reaches them (below)
+    beatBox = beats.map((b) => ({ x0: b.offsetLeft - b.offsetWidth / 2, x1: b.offsetLeft + b.offsetWidth / 2, y0: b.offsetTop - b.offsetHeight / 2, y1: b.offsetTop + b.offsetHeight / 2 }));
     last.clear();
   };
 
@@ -311,13 +314,19 @@ export function initHero() {
     if (inert !== lastInert) { nav.inert = inert; if (inert) nav.setAttribute('aria-hidden', 'true'); else nav.removeAttribute('aria-hidden'); lastInert = inert; }
 
     // the beats: ink with a cream halo over the bright painting; cream with an ink halo once the camera's dark body
-    // and glass are behind them (a class; their colour eases over 0.3 s)
+    // and glass are behind them (a class; their colour eases over 0.3 s). p5: by geometry, not at a fixed s: the
+    // camera's top crossed beat 2 at s 0.433 (1440) / 0.446 (390), and the switch came at 0.47 (ink over the dark
+    // camera between). In 3D: once the camera's silhouette box (heroLive.box) reaches the showing line above its
+    // descent (the lowest fifth of the line box: no glyph ink there) and spans it; in 2D: from s 0.43
     const mode = heroLive.mode;
+    const ib = beatWin.findIndex(([a0, z]) => s >= a0 && s < z), L = beatBox[ib], bx = heroLive.box;
+    const over = ib >= 0 && (mode === '3d' && bx && L ? bx.y0 < L.y1 - 0.2 * (L.y1 - L.y0) && bx.x0 < L.x1 && bx.x1 > L.x0 : s > 0.43);
     // (reduced motion: no push, the painting stays behind them until Storytellers; past the hero, Storytellers' own theme)
-    const dark = REDUCED ? s > T.end : s > T.dark;
+    const dark = REDUCED ? s > T.end : s > T.dark || over;
     if (dark !== lastDark) { beatsBox.classList.toggle('is-dark', dark); lastDark = dark; }
-    // the chrome reads the hero's theme (core/chapters.js): light over the painting, dark over the dark glass
-    const theme = dark ? 'dark' : 'light';
+    // the chrome reads the hero's theme (core/chapters.js): light over the painting, dark over the dark glass (its own
+    // test: the header is still over the sky when the camera reaches beat 2)
+    const theme = (REDUCED ? s > T.end : s > T.dark) ? 'dark' : 'light';
     if (theme !== lastTheme) { hero.dataset.theme = theme; lastTheme = theme; }
     beats.forEach((b, i) => {
       const [a0, z] = beatWin[i];
@@ -374,12 +383,13 @@ export function initHero() {
         put(lensEl, 'lt', 'transform', `translate(${px(cx - L.t[0] * k)}, ${px(cy - L.t[1] * k)}) scale(${k.toFixed(5)})`);
       }
     }
-    // the iris: seven blades (half-planes), each pushed out to the aperture's inradius, turning 30° as it opens
+    // the iris: nine blades (half-planes, as the model's), each pushed out to the aperture's inradius, turning 30° as it
+    // opens
     const irisOn = two && m.blades > 0;
     put(irisEl, 'io2', 'opacity', q(irisOn ? m.blades : 0));
     if (irisOn) {
       const D = Math.hypot(vw, vh) / 2, R = m.iris * D * 1.04, rot = 30 * m.iris;
-      blades.forEach((b, i) => put(b, `bl${i}`, 'transform', `rotate(${(rot + i * 360 / 7).toFixed(2)}deg) translate(-50%, ${px(R)})`));
+      blades.forEach((b, i) => put(b, `bl${i}`, 'transform', `rotate(${(rot + i * 40).toFixed(2)}deg) translate(-50%, ${px(R)})`));
     }
     // Storytellers under the iris: without the stage only (the stage draws it under the blades itself)
     if (storyEl) put(storyEl, 'so', 'opacity', two && cssStage() && m.iris > 0 ? '1' : '0');

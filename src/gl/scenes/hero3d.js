@@ -14,7 +14,7 @@
      Bytes: the GLB is never fetched before an input (pointermove, wheel, touchstart, keydown, scroll); until then, and
      until it has drawn once at rest, the DOM still (cam-hero) stands in at the same pose, size and place.
    - The move (heroMove): the turn lens-on and the drift to the centre (×2.5), the push along the lens axis (the target
-     moves from the body's centre to the front element's, the distance falls exponentially to 0.14), then the iris: seven
+     moves from the body's centre to the front element's, the distance falls exponentially to 0.14), then the iris: nine
      blades in this scene's composite pass, coming up out of the dark glass and opening from the centre onto I
      Storytellers, drawn here by the stage's own plate:storytellers scene (its update + render into a target), so the
      last hero frame is the first Storytellers frame (the same texture, cover fit, keys and finish).
@@ -41,41 +41,51 @@ import { clamp, lerp, smooth, seg } from '../../core/scroll.js';
 const DEG = Math.PI / 180;
 const Q = new URLSearchParams(location.search);
 /* daylight: the camera sits in the painting's light (a warm key from the upper left, like the figures; a sky fill; its
-   dark paint mirrors a bright day, not a black studio). create() options only. */
-const DAYLIGHT = { envSky: 0xa9c8e4, envGround: 0x55583f, env: 0.85, exposure: 1.2, lift: 0.94, key: 9, kick: 0.45, fill: 0.5, softbox: 1.9, rim: 3.0 };
+   dark paint mirrors a bright day, not a black studio). create() options only. p5: the key warm (the figures' light),
+   a warmer ground bounce on the lower faces, exposure 1.2 -> 1.55 and lift 0.94 -> 0.88: the body's mid-tones up
+   (it read as a dark, cool cut-out on the bright painting: median L 34 -> ~43 in the lab, 3x at rest); the iris
+   (seen through the glass in the push) lit by its studio card, the direct key at 30% (it drew two white blades and the
+   shadow map's dotted edge across them). */
+const DAYLIGHT = { envSky: 0xa9c8e4, envGround: 0x5e5a46, env: 0.85, exposure: 1.55, lift: 0.88, key: 9, keyTint: 0xfff0dc, kick: 0.45, fill: 0.5, softbox: 1.9, rim: 3.0, metalDirect: 0.3 };
 const STORY_2D = 0.62;      // the 2D move: Storytellers under the DOM's lens still and blades from here
 const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
-/* the composite over the painting (premultiplied): the camera, then the iris: seven blades (half-planes pushed out to
-   the aperture's inradius R, so the hole is a heptagon, rounded a little toward a circle), a 1.5 px anti-aliased edge, a
-   faint warm rim, a hairline along each blade's edge where it lies over the next; inside the aperture, Storytellers */
+/* the composite over the painting (premultiplied): the camera, then the iris: nine blades, as the model's (half-planes
+   pushed out to the aperture's inradius R, so the hole is a nonagon, rounded a little toward a circle), a 1.5 px
+   anti-aliased edge. p5: satin steel, not flat black: each blade a soft band of sheen along it (its strength and place
+   its own, as a softbox catches blades shingled at slightly different tilts), a bright leading edge on the aperture, a
+   hairline where a blade lies over the next and a soft contact shadow under it (each blade lies over the next: the one on
+   top at a pixel is the covering blade whose predecessor does not cover it); inside the aperture, Storytellers. (Written
+   compact: the string ships as it is.) */
 const COMP_FRAG = /* glsl */`
 precision highp float;
-uniform sampler2D tCam; uniform sampler2D tStory;
-uniform float camOn; uniform float blades; uniform float iris; uniform float rot; uniform float storyOn; uniform vec2 res;
+uniform sampler2D tCam;uniform sampler2D tStory;
+uniform float camOn;uniform float blades;uniform float iris;uniform float rot;uniform float storyOn;uniform vec2 res;
 varying vec2 vUv;
 void main(){
-  vec4 cam = camOn > 0.5 ? texture2D(tCam, vUv) : vec4(0.0);
-  if (blades <= 0.0) { gl_FragColor = cam; return; }
-  vec2 p = (vUv - 0.5) * res;
-  float D = 0.5 * length(res);
-  float R = iris * D * 1.04;
-  float best = -1e9, k0 = 0.0, seam = 0.0;
-  for (int i = 0; i < 7; i++) {
-    float th = rot + float(i) * 0.8975979;
-    float d = dot(p, vec2(cos(th), sin(th))) - R;
-    if (d > best) { best = d; k0 = float(i); }
-    float d2 = dot(p, vec2(cos(th + 0.8975979), sin(th + 0.8975979))) - R;
-    seam = max(seam, (1.0 - smoothstep(0.0, 1.6, abs(d))) * step(0.0, d2));
-  }
-  float dist = mix(best, length(p) - R * 1.04, 0.3);
-  float inside = (1.0 - smoothstep(-0.75, 0.75, dist)) * step(0.0005, iris);
-  vec2 q = p / D;
-  float sheen = 0.5 + 0.5 * sin(k0 * 2.3 + 1.7 + q.x * 1.3 - q.y * 0.9);
-  vec3 steel = vec3(0.028, 0.029, 0.033) + vec3(0.03, 0.031, 0.036) * sheen * (1.0 - 0.6 * min(1.0, length(q)));
-  steel += vec3(0.15, 0.145, 0.14) * seam * 0.55;
-  steel += vec3(0.85, 0.66, 0.38) * (1.0 - smoothstep(0.0, 3.0, abs(dist))) * 0.3 * step(0.0005, iris);
-  vec4 outside = vec4(steel * blades + cam.rgb * (1.0 - blades), max(cam.a, blades));
-  gl_FragColor = mix(outside, vec4(texture2D(tStory, vUv).rgb, 1.0), inside * storyOn);
+vec4 cam=camOn>0.5?texture2D(tCam,vUv):vec4(0.0);
+if(blades<=0.0){gl_FragColor=cam;return;}
+vec2 p=(vUv-0.5)*res,n0=vec2(1.0,0.0);
+float D=0.5*length(res),R=iris*D*1.04,best=-1e9,top=-1e9,k0=0.0,seam=0.0,shade=0.0;
+for(int i=0;i<9;i++){
+float th=rot+float(i)*0.6981317;
+vec2 n=vec2(cos(th),sin(th));
+float d=dot(p,n)-R,d2=dot(p,vec2(cos(th+0.6981317),sin(th+0.6981317)))-R,d0=dot(p,vec2(cos(th-0.6981317),sin(th-0.6981317)))-R;
+best=max(best,d);
+if(d>=0.0&&d0<0.0&&d>top){top=d;k0=float(i);n0=n;}
+seam=max(seam,(1.0-smoothstep(0.0,1.6,abs(d)))*step(0.0,d2));
+shade=max(shade,(1.0-smoothstep(0.0,0.02*D,-d))*step(d,0.0)*step(0.0,d2));
+}
+if(top<-1e8)top=best;
+float dist=mix(best,length(p)-R*1.04,0.3),on=step(0.0005,iris);
+float inside=(1.0-smoothstep(-0.75,0.75,dist))*on;
+float h=fract(sin(k0*12.9898+4.1)*43758.5453),along=dot(p,vec2(-n0.y,n0.x))/D-(h-0.5)*0.7;
+float band=exp(-along*along*3.0)*exp(-max(top,0.0)/D*1.6);
+vec3 steel=vec3(0.03,0.031,0.035)+vec3(0.07,0.072,0.08)*(0.45+0.55*h)*band;
+steel*=1.0-0.45*shade;
+steel+=vec3(0.16,0.155,0.15)*seam*0.55;
+steel+=vec3(0.42,0.4,0.37)*(1.0-smoothstep(0.0,2.2,abs(dist)))*(0.4+0.6*h)*on;
+vec4 outside=vec4(steel*blades+cam.rgb*(1.0-blades),max(cam.a,blades));
+gl_FragColor=mix(outside,vec4(texture2D(tStory,vUv).rgb,1.0),inside*storyOn);
 }`;
 const FLAT_FRAG = 'uniform vec3 col; void main(){ gl_FragColor = vec4(col, 1.0); }';
 
@@ -330,6 +340,9 @@ export default function register(stage) {
       const v = { target: T, dist, shift, near: Math.max(0.02, dist - 1.5), ...(f.fov ? { fov: f.fov } : {}) };
       const key = [...T, dist, ...shift, f.fov || 0].map((x) => x.toFixed(5)).join();
       if (key !== lastView) { cam.setView(v); lastView = key; }
+      // p5: the front element's reflection fades as the view passes through the glass, then the inner elements' dim
+      // (seen from inside the barrel their windows spread into large soft shapes)
+      cam.setGlassEnv(1 - smooth(seg(m.push, 0.55, 0.8)), 1 - 0.7 * smooth(seg(m.push, 0.7, 0.93)));
       pose = { az: az + drag.az, el: el + drag.el, fov: f.fov || K.fov, aspect: cal.aspect, T, dist, shift, vw: ctx.vw, vh: ctx.vh };   // (turned as dragged)
       heroLive.box = (() => {   // the silhouette's box (css px), for the DOM (the lines' hole, the beats)
         const b = boxNDC(pose.az, pose.el, pose.fov, cal.aspect, T, dist, shift);

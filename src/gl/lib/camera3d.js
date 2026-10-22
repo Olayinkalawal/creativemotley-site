@@ -148,7 +148,8 @@ export function create(ctx = {}, opts = {}) {
   let renderer = ctx.renderer || null;
   let W = 16, H = 16, vw = innerWidth, vh = innerHeight, dpr = 1;
   let model = null, loaded = false, disposed = false;
-  const parts = [], screws = [], anchorDefs = [], samples = [], glassMats = [], meshes = [];
+  const parts = [], screws = [], anchorDefs = [], samples = [], glassMats = [], meshes = [], pairs = [], frontMats = [], innerMats = [];
+  let warmAll = false, glassK = 1, glassKi = 1;    // prewarm: both looks of the free elements drawn; setGlassEnv: the front element's and the inner elements' reflections
   let ph = { orbit: 0, hand: 0, explode: 0, settle: 0 };
   let rect = null;                    // slot rect, CSS px
   const ptr = new THREE.Vector2(), ptrS = new THREE.Vector2();
@@ -158,7 +159,6 @@ export function create(ctx = {}, opts = {}) {
   const off = { az: 0, el: 0 };
   const zm = { k: 1, x: 0, y: 0 };    // setZoom: the framed rect scaled by k, then moved by (x, y) css px (drag3d's zoom)
   const lights = {};
-  let exOverride = null;              // art direction: { part: { ex: [mm…], rot: [deg…] } } (lab tuning only)
 
   // ---------------------------------------------------------------- post (fullscreen quads)
   const quad = (frag, uniforms, extra = {}) => {
@@ -202,8 +202,23 @@ export function create(ctx = {}, opts = {}) {
       softTex = new THREE.DataTexture(d, n, n); softTex.needsUpdate = true; softTex.magFilter = softTex.minFilter = THREE.LinearFilter;
       return softTex;
     };
+    // p5: a softbox: a rounded rectangle with a flat top (a gentle fall towards its lower edge) and a defined edge (9% of
+    // its size): a product-studio window, not a radial glow
+    let boxTex = null;
+    const boxT = () => {
+      if (boxTex) return boxTex;
+      const n = 64, d = new Uint8Array(n * n * 4);
+      for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+        const u = Math.abs((i + 0.5) / n - 0.5), v = (j + 0.5) / n - 0.5, rc = 0.16;
+        const qx = Math.max(u - (0.5 - 0.09 - rc), 0), qy = Math.max(Math.abs(v) - (0.5 - 0.09 - rc), 0);
+        const sd = Math.hypot(qx, qy) - rc, f = 1 - smooth(clamp01((sd + 0.09) / 0.09)), g = 0.72 + 0.28 * smooth(clamp01(v + 0.5));
+        d.set([255 * f * g, 255 * f * g, 255 * f * g, 255], (j * n + i) * 4);
+      }
+      boxTex = new THREE.DataTexture(d, n, n); boxTex.needsUpdate = true; boxTex.magFilter = boxTex.minFilter = THREE.LinearFilter;
+      return boxTex;
+    };
     const panel = (w, l, pos, look, along, intensity, tint = 0xffffff, isSoft = false) => {
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, l), new THREE.MeshBasicMaterial({ color: new THREE.Color(tint).multiplyScalar(intensity), side: THREE.DoubleSide, map: isSoft ? soft() : null }));
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(w, l), new THREE.MeshBasicMaterial({ color: new THREE.Color(tint).multiplyScalar(intensity), side: THREE.DoubleSide, map: isSoft === 'box' ? boxT() : isSoft ? soft() : null }));
       const p = new THREE.Vector3(...pos), n = new THREE.Vector3(...look).sub(p).normalize();
       const a = new THREE.Vector3(...along); a.addScaledVector(n, -a.dot(n)).normalize();
       const s = new THREE.Vector3().crossVectors(a, n);
@@ -211,9 +226,15 @@ export function create(ctx = {}, opts = {}) {
     };
     if (kind === 'metal') {          // the mount's bayonet and the iris at the exploded key: one broad soft card low and
       // front-right (where a face turned to the lens axis mirrors the exploded view), the overhead strip, a small key
-      panel(9.0, 6.0, [5.0, -2.8, 4.4], [0, 0, 0], [0, 1, 0], 0.55, 0xf4f6fa);
+      // p5: the card is a softbox (a defined edge, brighter at its top), so the iris's shingled blades, each tilted a
+      // little differently, catch different parts of it (v7's uniform card made one flat plate of them); a thin strip
+      // along its upper edge draws the blades' leading edges; and a broad dim card where a blade facing the lens axis
+      // mirrors the lens-on view (the homepage's push into the lens: the blades read inside the dark glass)
+      panel(9.0, 6.0, [5.0, -2.8, 4.4], [0, 0, 0], [0, 1, 0], opts.metalCard ?? 0.75, 0xf4f6fa, 'box');
+      panel(9.0, 0.35, [4.4, 0.25, 4.6], [0, 0, 0], [0, 1, 0], opts.metalEdge ?? 1.6, 0xffffff, 'box');
       panel(0.45, 10.0, [-0.6, 7.0, 1.2], [0, 0, 0.3], [0, 0, 1], 1.4, 0xffffff);
       panel(3.0, 2.0, [-4.6, 5.0, 3.6], [0, 0, 0], [1, 0, 0], 0.8, 0xfbfcff);
+      if ((opts.metalOn ?? 0.3) > 0) panel(8.0, 6.0, [-5.4, 1.6, 6.9], [0, 0, 0], [0, 1, 0], opts.metalOn ?? 0.3, 0xece6dc, 'box');
     } else if (kind === 'free') {
       // v7: the free elements hang square to the lens axis, and their studio is fixed in their own frame (the model's;
       // it does not turn with the view), so a drag in the viewer only slides the arcs. Black, and two narrow hard
@@ -245,20 +266,25 @@ export function create(ctx = {}, opts = {}) {
       // a broad, very dim soft card: the faces carry a faint grey body (camB2), not a veil
       if ((opts.freeBody ?? 0.4) > 0) panel(opts.freeBodyW ?? 14, opts.freeBodyW ?? 14, R0.clone().multiplyScalar(9.5).toArray(), [0, 0, 0], uv.toArray(), opts.freeBody ?? 0.4, 0xe8eeeb, true);
     } else if (kind === 'glass') {
-      // v6: one large soft window, placed so that on the dome it sits up-left of centre at the hero (the dome's centre
-      // mirrors (0.61, -0.17, 0.78); the window is that turned 0.2 rad towards the view's up and left): it lies across
-      // the front element as one shape that fades out towards the lower right, as in camA2. No strip arc, no corner key.
-      // v7: under half the area (9.5 x 8.5, v6 16 x 14) and further up-left (the dome's centre mirror direction moved 0.32
-      // towards the view's up and left): it lies on the upper-left third of the front element, the centre and lower right
-      // stay dark (measured at the hero: centre 47, lower right 46, glass median 48 vs camA2's 80)
+      // p5: softboxes, not one radial window. The glass studio turns with the view at a quarter of its rate (turnLights:
+      // envMapRotation = glassTurn x the turn, 0.25; v7 turned it fully, so its one window sat on the element only at the
+      // hero key: a black disc 20 deg either side), so the shapes slide across the front element as the camera turns (a
+      // product turntable). Directions are world at the hero key (az, el in degrees), placed by where each lands on the
+      // dome (the share of its rim, the angle on screen):
+      //   key    a rounded-rect softbox (flat top, a defined edge): az -58 0.96 rim at 144 deg (upper left), the hero key
+      //          0.46 at 112, az -18 0.60 at 43, lens-on off the rim
+      //   lens   a dim one for the homepage's lens-on view (az 0): 0.58 rim at 133 deg (upper left; the inner elements
+      //          carry fainter nested copies); off the element at every Method key
+      //   strip  a thin vertical strip: the hero key 0.75 at 30 deg (upper right), az -58 0.31
+      //   bounce faint, low: the hero key 0.72 at -112 deg
+      const dir = (az, el, d = 9) => [Math.sin(az * D) * Math.cos(el * D) * d, Math.sin(el * D) * d, Math.cos(az * D) * Math.cos(el * D) * d];
+      panel(opts.winW ?? 3.8, opts.winH ?? 3.2, dir(opts.winAz ?? 30, opts.winEl ?? 3), [0, 0, 0], [0, 1, 0], opts.win ?? 1.5, opts.winTint ?? 0xd8e6de, 'box');
+      if ((opts.winOn ?? 0.5) > 0) panel(3.0, 2.6, dir(opts.winOnAz ?? -25, opts.winOnEl ?? 14), [0, 0, 0], [0, 1, 0], opts.winOn ?? 0.5, 0xd8e6de, 'box');
+      if ((opts.gStrip ?? 0.9) > 0) panel(0.32, 5.5, dir(opts.gStripAz ?? 64, opts.gStripEl ?? -4), [0, 0, 0], [0, 1, 0], opts.gStrip ?? 0.9, 0xe2ebe6, 'box');
+      if ((opts.gBounce ?? 0.16) > 0) panel(7.5, 1.8, dir(30, -30), [0, 0, 0], [0, 1, 0], opts.gBounce ?? 0.16, 0xd9d4c8, 'box');
       const Kh = KEYS.wide.hero, ha = Kh.az * D, he = Kh.el * D;
       const hv = new THREE.Vector3(Math.sin(ha) * Math.cos(he), Math.sin(he), Math.cos(ha) * Math.cos(he));
-      const hr = new THREE.Vector3(Math.cos(ha), 0, -Math.sin(ha)), hu = new THREE.Vector3().crossVectors(hv, hr);
-      const M = new THREE.Vector3(-hv.x, -hv.y, hv.z).addScaledVector(hu.sub(hr), opts.winOff ?? 0.32).normalize().multiplyScalar(9);
-      panel(opts.winW ?? 9.5, opts.winH ?? 8.5, opts.winPos ?? M.toArray(), [0, 0, 0], [0, 1, 0], opts.win ?? 1.3, opts.winTint ?? 0xd6e4dc, true);
-      // and a broad, dim soft card round the dome's centre mirror direction: the centre and lower right of the element
-      // settle at a dark grey-green (camA2), not black
-      if ((opts.glassFill ?? 0.14) > 0) panel(26, 22, new THREE.Vector3(-hv.x, -hv.y, hv.z).multiplyScalar(11).toArray(), [0, 0, 0], [0, 1, 0], opts.glassFill ?? 0.14, 0xc8dcd2, true);
+      if ((opts.glassFill ?? 0.1) > 0) panel(26, 22, new THREE.Vector3(-hv.x, -hv.y, hv.z).multiplyScalar(11).toArray(), [0, 0, 0], [0, 1, 0], opts.glassFill ?? 0.1, 0xc8dcd2, true);
       panel(0.45, 10.0, [-0.6, 7.0, 1.2], [0, 0, 0.3], [0, 0, 1], 0.5, 0xffffff);  // the overhead strip, faint
     } else {
       panel(7.0, 4.6, opts.softboxPos ?? [-3.6, 7.0, 3.4], [0, 0, 0], [1, 0, 0], (opts.softbox ?? 1.6) * (kind === 'shiny' ? 0.6 : 1), 0xfdfcfa);   // large high key softbox, front-left
@@ -267,17 +293,20 @@ export function create(ctx = {}, opts = {}) {
       panel(5.0, 1.2, [4.4, -2.6, -0.2], [0, 0.3, 0], [0.3, 0, 1], 0.35, 0xffd6b0);   // warm kicker: low, camera-right, a little behind
       panel(0.25, 9.0, [-6.5, 2.4, -1.5], [0, 0.3, 0], [0, 1, 0.1], opts.sideStrip ?? 0.9, 0xf4f6ff);  // thin side strip: grip-side edge lines
       panel(9.0, 5.5, [-4.3, 1.4, 6.6], [0, 0.2, 0], [0, 1, 0], opts.fill ?? 0.16, 0xf6f4f0);           // broad, low frontal fill (mid-tones)
+      // p5: a faint low rim strip behind and below (Method's black studio only): the lower body and the grip keep a thin
+      // edge against the black instead of merging into it
+      if (kind === 'main' && opts.envSky == null && (opts.lowRim ?? 1.1) > 0) panel(11.0, 0.5, [1.2, -3.2, -5.6], [0, 0.2, 0], [1, 0, 0], opts.lowRim ?? 1.1, 0xe8eef8);
     }
     const pm = new THREE.PMREMGenerator(renderer);
     const rt = pm.fromScene(env, kind === 'main' ? 0.02 : kind === 'shiny' ? 0.006 : kind === 'free' ? 0.006 : 0.02, 0.1, 100, { size: 256 });   // glass: soft-edged windows; 256: ~6 MB each
     pm.dispose();
     env.traverse((o) => { o.geometry?.dispose(); o.material?.dispose(); });
-    softTex?.dispose();
+    softTex?.dispose(); boxTex?.dispose();
     return rt;                         // the render target: dispose() frees it (its .texture alone would leak)
   }
   function buildLights() {
-    const key = new THREE.DirectionalLight(0xffffff, opts.key ?? 10);
-    key.position.set(-4, 3.2, 5);
+    const key = new THREE.DirectionalLight(opts.keyTint ?? 0xffffff, opts.key ?? 10);   // p5: keyTint (the hero: warm, the painting's light)
+    key.position.set(...(opts.keyPos ?? [-4, 3.2, 5]));
     if (Q.shadows) {
       key.castShadow = true;
       key.shadow.mapSize.set(Q.shadows, Q.shadows);
@@ -303,7 +332,7 @@ export function create(ctx = {}, opts = {}) {
       k.set(k.x / h * r * Math.cos(el), r * Math.sin(el), k.z / h * r * Math.cos(el));
     }
     scene.environmentRotation.set(0, a, 0);
-    for (const m of glassMats) if (!m.userData.fixedEnv) m.envMapRotation.set(0, a, 0);   // v7: the free glass keeps its studio in its own frame
+    for (const m of glassMats) if (!m.userData.fixedEnv) m.envMapRotation.set(0, m.userData.glassEnv ? a * (opts.glassTurn ?? 0.25) : a, 0);   // v7: the free glass keeps its studio in its own frame; p5: the lens glass's studio turns at a quarter of the view's rate (the shapes slide across the element)
     // the turntable key floods the EVF's grip-side facets (tilted up) round az -90: ease it there
     lights.key.intensity = lights.keyI * (1 - (opts.keyDip ?? 0.3) * Math.exp(-(((az + (opts.keyDipAz ?? 90)) / (opts.keyDipW ?? 22)) ** 2)));
     lights.xfill.intensity = (opts.xfill ?? 2.4) * smooth(ph.explode);
@@ -314,19 +343,19 @@ export function create(ctx = {}, opts = {}) {
   }
 
   // ---------------------------------------------------------------- the uber material: per-vertex PBR + triplanar grain
-  function patchUber(m) {
+  function patchUber(m, dir = 1) {    // dir: the direct lights' specular (p5: the iris in the homepage's push, opts.metalDirect)
     m.vertexColors = true;
     m.normalMap = null; m.aoMap = null;     // the tiles live on in `tiles` (create() scope): dispose() frees them
     m.roughness = 1; m.metalness = 1;
     m.clearcoat = 0;                       // no clearcoat lobe on the opaque parts (it doubled the specular cost)
     m.defines = { ...(m.defines || {}), ...(Q.paintGrain ? { PAINT_GRAIN: '' } : {}) };
     m.onBeforeCompile = (sh) => {
-      Object.assign(sh.uniforms, { tLeather: { value: tiles.leather }, tGrain: { value: tiles.grain }, uAlbedo: { value: opts.albedo ?? 0.85 }, uLScale: { value: opts.leatherScale ?? 0.85 }, uLStr: { value: opts.leatherStr ?? 0.9 }, uLRough: { value: opts.leatherRough ?? 0.05 }, uGScale: { value: 0.16 }, uGStr: { value: opts.grainStr ?? 0.14 }, uMM: { value: 177.0 }, uLSpec: { value: opts.leatherSpec ?? 0.32 }, uLF90: { value: opts.leatherF90 ?? 0.75 }, uLCav: { value: opts.leatherCav ?? 0.5 }, uBSpec: { value: opts.barrelSpec ?? 0.55 }, uEdge: { value: opts.edge ?? [0.22, 0.75, 0.55] } });   // uMM: mm per model unit
+      Object.assign(sh.uniforms, { tLeather: { value: tiles.leather }, tGrain: { value: tiles.grain }, uAlbedo: { value: opts.albedo ?? 0.85 }, uLScale: { value: opts.leatherScale ?? 0.58 }, uLStr: { value: opts.leatherStr ?? 0.9 }, uLRough: { value: opts.leatherRough ?? 0.05 }, uGScale: { value: 0.16 }, uGStr: { value: opts.grainStr ?? 0.14 }, uMM: { value: 177.0 }, uLSpec: { value: opts.leatherSpec ?? 0.32 }, uLF90: { value: opts.leatherF90 ?? 0.75 }, uLCav: { value: opts.leatherCav ?? 0.5 }, uBSpec: { value: opts.barrelSpec ?? 0.55 }, uEdge: { value: opts.edge ?? [0.22, 0.75, 0.55] }, uDir: { value: dir } });   // uMM: mm per model unit
       sh.vertexShader = sh.vertexShader
         .replace('#include <common>', '#include <common>\nattribute vec4 _pbr; varying vec4 vPbr; varying vec3 vObjPos; varying vec3 vObjN;')
         .replace('#include <begin_vertex>', '#include <begin_vertex>\nvPbr = _pbr; vObjPos = position; vObjN = normal;');
       sh.fragmentShader = sh.fragmentShader
-        .replace('#include <common>', '#include <common>\nuniform sampler2D tLeather; uniform sampler2D tGrain; uniform float uAlbedo; uniform float uLScale; uniform float uLStr; uniform float uLRough; uniform float uGScale; uniform float uGStr; uniform float uMM; uniform float uLSpec; uniform float uLF90; uniform float uLCav; uniform float uBSpec; uniform vec3 uEdge;\nuniform mat3 normalMatrix;\nvarying vec4 vPbr; varying vec3 vObjPos; varying vec3 vObjN;')
+        .replace('#include <common>', '#include <common>\nuniform sampler2D tLeather; uniform sampler2D tGrain; uniform float uAlbedo; uniform float uLScale; uniform float uLStr; uniform float uLRough; uniform float uGScale; uniform float uGStr; uniform float uMM; uniform float uLSpec; uniform float uLF90; uniform float uLCav; uniform float uBSpec; uniform vec3 uEdge; uniform float uDir;\nuniform mat3 normalMatrix;\nvarying vec4 vPbr; varying vec3 vObjPos; varying vec3 vObjN;')
         .replace('#include <color_fragment>', '#include <color_fragment>\n\tfloat grain = vColor.a; diffuseColor.a = 1.0; diffuseColor.rgb *= uAlbedo;')
         .replace('#include <roughnessmap_fragment>', `float roughnessFactor = roughness * vPbr.x;
         float lCav = 1.0;              // leather: 1 on a pebble's crown, lower in the creases (darkens them, occludes their sheen)
@@ -344,11 +373,11 @@ export function create(ctx = {}, opts = {}) {
         {
           bool lea = grain > 0.75;
           bool bru = grain > 0.55 && !lea;   // v6: the top plate and EVF: the paint grain stretched 9x along x (a faint brushed satin)
-          float sc = lea ? uLScale : uGScale, st = lea ? uLStr : (bru ? uGStr * 0.4 : uGStr);
+          float sc = lea ? uLScale : uGScale, st = lea ? uLStr : (bru ? uGStr * 0.2 : uGStr);   // p5: the brushed grain at half its v6 amplitude
           vec3 n0 = normalize(vObjN);
           vec3 bw = pow(abs(n0), vec3(4.0)); bw /= (bw.x + bw.y + bw.z);
           vec3 p = vObjPos / sc;
-          if (bru) p.x *= 0.11;
+          if (bru) p.x *= 0.33;     // p5: stretched 3x (v6 9x read as scratches at 3x zoom)
           vec2 a = p.zy, b = p.xz, c = p.xy;
           vec2 dax = dFdx(a), day = dFdy(a), dbx = dFdx(b), dby = dFdy(b), dcx = dFdx(c), dcy = dFdy(c);
           #ifdef PAINT_GRAIN
@@ -368,11 +397,15 @@ export function create(ctx = {}, opts = {}) {
             float rr = tx.a * bw.x + ty.a * bw.y + tz.a * bw.z;
             // leather: each pebble's crown its own roughness (0.42-0.56), creases ~0.82, and the tile's cavity (B) darkens
             // the creases; paint: roughness +-0.08 speckle
-            roughnessFactor = lea ? clamp(roughnessFactor + (rr - 0.5) + uLRough, 0.3, 0.95) : clamp(roughnessFactor + (rr - 0.5) * (bru ? 0.35 : 0.8), 0.05, 1.0);
+            roughnessFactor = lea ? clamp(roughnessFactor + (rr - 0.5) + uLRough, 0.3, 0.95) : clamp(roughnessFactor + (rr - 0.5) * (bru ? 0.18 : 0.8), 0.05, 1.0);
             if (lea) { lCav = tx.b * bw.x + ty.b * bw.y + tz.b * bw.z; diffuseColor.rgb *= mix(1.0 - uLCav, 1.0, lCav); }
           }
         }`)
-        .replace('#include <lights_physical_fragment>', '#include <lights_physical_fragment>\n\tif (grain > 0.75) { material.specularColor *= uLSpec; material.specularColorBlended *= uLSpec; material.specularF90 *= uLF90; }   // leather: a soft, low sheen (camA2), not grey: r186 takes the direct F0 from specularColorBlended, so both are scaled (v4 scaled only specularColor: no effect)\n\telse if (grain > 0.40 && grain < 0.47) { material.specularColor *= uBSpec; material.specularColorBlended *= uBSpec; material.specularF90 *= uBSpec; }   // v7: the lens barrel paint and the rib flanks (grain 0.44): matte black, a low sheen (camA2)')
+        // leather (grain > 0.75): a soft, low sheen (camA2), not grey: r186 takes the direct F0 from specularColorBlended, so
+        // both are scaled (v4 scaled only specularColor: no effect). v7: the lens barrel paint and the rib flanks (grain
+        // 0.44; p5: 0.15, the flanks without the paint grain): matte black, a low sheen (camA2). (p5: these notes left the
+        // GLSL string: comments inside it shipped to every visitor)
+        .replace('#include <lights_physical_fragment>', '#include <lights_physical_fragment>\n\tif (grain > 0.75) { material.specularColor *= uLSpec; material.specularColorBlended *= uLSpec; material.specularF90 *= uLF90; }\n\telse if ((grain > 0.40 && grain < 0.47) || (grain > 0.12 && grain < 0.18)) { material.specularColor *= uBSpec; material.specularColorBlended *= uBSpec; material.specularF90 *= uBSpec; }')
         .replace('#include <aomap_fragment>', `{
           float ambientOcclusion = vPbr.z * mix(1.0 - uLCav * 0.6, 1.0, lCav);
           reflectedLight.indirectDiffuse *= ambientOcclusion;
@@ -384,10 +417,10 @@ export function create(ctx = {}, opts = {}) {
             reflectedLight.indirectSpecular *= computeSpecularOcclusion( dotNV, ambientOcclusion, material.roughness );
           #endif
           reflectedLight.directDiffuse *= mix(1.0, ambientOcclusion, 0.5);
-          reflectedLight.directSpecular = min(reflectedLight.directSpecular * mix(1.0, ambientOcclusion, 0.35), vec3(2.5));   // no star hotspots, no blown facets
+          reflectedLight.directSpecular = min(reflectedLight.directSpecular * mix(1.0, ambientOcclusion, 0.35), vec3(2.5)) * uDir;   // no star hotspots, no blown facets
         }`);
     };
-    m.customProgramCacheKey = () => 'cam3d-uber-9' + (Q.paintGrain ? 'g' : '');
+    m.customProgramCacheKey = () => 'cam3d-uber-10' + (Q.paintGrain ? 'g' : '');
     m.needsUpdate = true;
   }
   /* glass: reflections only from its own studio (no point glints from the direct lights).
@@ -441,7 +474,6 @@ export function create(ctx = {}, opts = {}) {
     // a minimal GLB reader (./glb.js) instead of GLTFLoader: GLTFLoader pulls three's animation system into the site's
     // shared three chunk for every visitor. opts.parse(buffer, meshoptDecoder) -> { scene } swaps the reader (A/B checks).
     const [{ MeshoptDecoder }, { parseGLB }] = await Promise.all([import('three/addons/libs/meshopt_decoder.module.js'), import('./glb.js')]);
-    if (Q.bloom) ({ UnrealBloomPass: Bloom } = await import('three/addons/postprocessing/UnrealBloomPass.js'));
     const url = base + file;
     const buf = opts.loadBuffer ? await opts.loadBuffer(url) : await (await fetch(url)).arrayBuffer();
     const gltf = opts.parse ? await opts.parse(buf, MeshoptDecoder) : await parseGLB(buf, { meshoptDecoder: MeshoptDecoder });
@@ -455,7 +487,7 @@ export function create(ctx = {}, opts = {}) {
     const root = model.getObjectByName('camera');
     const NOCAST = /^(lens_el_\d|aperture|screws|body_mount|sensor|shutter|lcd|evf_module)$/;     // small or enclosed parts: no shadow pass
     const FREE = /^lens_el_[34]$/;     // v7: two free elements (lens_el_5 rides in the lens)
-    let freeMetal = null;
+    let freeMetal = null, glassSrc = null;
     model.traverse((o) => {
       if (!o.isMesh) return;
       let top = o; while (top.parent && top.parent.name !== 'camera') top = top.parent;
@@ -467,6 +499,7 @@ export function create(ctx = {}, opts = {}) {
         if (!tiles) tiles = { leather: m.normalMap, grain: m.aoMap };
         if (!m.userData.patched) { tiles.leather.wrapS = tiles.leather.wrapT = tiles.grain.wrapS = tiles.grain.wrapT = THREE.RepeatWrapping; tiles.leather.anisotropy = tiles.grain.anisotropy = 4; patchUber(m); m.userData.patched = true; }
       }
+      if (m.name === 'lens_glass' && !glassSrc) glassSrc = m;
       if (m.name === 'lens_glass' || m.name === 'front_glass' || m.name === 'cover_glass') {
         const front = m.name === 'front_glass', cover = m.name === 'cover_glass';
         let mm = m;
@@ -486,7 +519,7 @@ export function create(ctx = {}, opts = {}) {
       // the mount's bayonet, its contacts and the iris blades see their own studio (a broad card where they mirror the
       // exploded view): in the main studio their polished faces mirrored black and the steel read dark (camB2: bright)
       if (o.material.userData.patched && /^(body_mount|aperture)$/.test(top.name)) {
-        if (!freeMetal) { freeMetal = m.clone(); patchUber(freeMetal); freeMetal.envMap = envs.metal.texture; freeMetal.envMapIntensity = opts.freeMetalEnv ?? 1.5; glassMats.push(freeMetal); }
+        if (!freeMetal) { freeMetal = m.clone(); patchUber(freeMetal, opts.metalDirect ?? 1); freeMetal.envMap = envs.metal.texture; freeMetal.envMapIntensity = opts.freeMetalEnv ?? 1.5; glassMats.push(freeMetal); }
         o.material = freeMetal;
       }
       if (m.name === 'sensor_die' || m.name === 'lcd_glass') { m.envMap = envs.shiny.texture; m.envMapIntensity = m.name === 'sensor_die' ? 1.2 : 0.8; glassMats.push(m); }
@@ -509,6 +542,28 @@ export function create(ctx = {}, opts = {}) {
         o.material.iridescenceThicknessRange = [a, b]; o.material.iridescence = FREE.test(n) ? (opts.freeIri ?? 0.4) : f;   // v7: free: <= 40%, rim only (shader)
       }
     });
+    // p5: the free elements' studio (two ring lights fixed in their own frame) is for the explode: assembled inside the
+    // lens it drew violet and green arcs (the homepage's push into the lens, Method dragged off the hero key). Each free
+    // element gets a twin with the inner elements' look (the glass studio at innerEnv, turning with it, a faint coating);
+    // the explode cross-fades from the twin to the free look (applyExplode), so the arcs show only once they hang free
+    const frees = [];
+    for (const n of ['lens_el_3', 'lens_el_4']) root.getObjectByName(n)?.traverse((o) => { if (o.isMesh && o.material.userData.fixedEnv) frees.push(o); });
+    for (const o of frees) {
+      const tm = glassSrc.clone();
+      Object.assign(tm, { transparent: true, depthWrite: false, side: THREE.DoubleSide, blending: THREE.CustomBlending, blendSrc: THREE.OneFactor, blendDst: THREE.OneMinusSrcAlphaFactor,
+        envMap: envs.glass.texture, envMapIntensity: 1.2 * (opts.glassEnv ?? 2.0) * (opts.innerEnv ?? 0.6) });
+      tm.specularColor.setRGB(1, 1, 1); tm.specularIntensity = 1;
+      tm.iridescenceThicknessRange = [395, 420]; tm.iridescence = 0.4;
+      patchGlass(tm, ''); glassMats.push(tm);
+      const t = new THREE.Mesh(o.geometry, tm);
+      t.name = o.name + '_twin'; t.position.copy(o.position); t.quaternion.copy(o.quaternion); t.scale.copy(o.scale);
+      t.renderOrder = 2; t.castShadow = false; t.receiveShadow = o.receiveShadow; t.userData.part = o.userData.part;
+      o.parent.add(t); meshes.push(t);
+      pairs.push({ free: o, twin: t, fm: o.material, tm, fEnv: o.material.envMapIntensity, fA: o.material.opacity, tEnv: tm.envMapIntensity, tA: tm.opacity });
+    }
+    for (const m of glassMats) if (m.envMap === envs.glass.texture) m.userData.glassEnv = true;   // turnLights: these turn at glassTurn
+    root.getObjectByName('lens_el_0')?.traverse((o) => { if (o.isMesh && o.material.userData.glassEnv) { o.material.userData.baseEnv = o.material.envMapIntensity; frontMats.push(o.material); } });
+    for (const m of glassMats) if (m.userData.glassEnv && !frontMats.includes(m) && !pairs.some((q) => q.tm === m)) { m.userData.baseEnv = m.envMapIntensity; innerMats.push(m); }
     // every part rides in a group at its pivot (mesh quantisation moves node origins; rotations need the real pivot)
     model.updateMatrixWorld(true);
     const groups = {};
@@ -563,7 +618,7 @@ export function create(ctx = {}, opts = {}) {
      the post quads and the id pass */
   async function prewarm() {
     const r = renderer;
-    applyPose();
+    warmAll = true; applyPose();
     const shWas = r.shadowMap.enabled, rtWas = r.getRenderTarget();
     r.shadowMap.enabled = !!Q.shadows; r.setRenderTarget(rtHDR);
     const par = r.compileAsync && r.extensions.has('KHR_parallel_shader_compile');
@@ -580,6 +635,7 @@ export function create(ctx = {}, opts = {}) {
     sample(r); accN = 0;
     copyQ.m.uniforms.t.value = accRT.texture; r.setRenderTarget(tiny); r.render(copyQ.sc, qcam);
     idPass(r, true);
+    warmAll = false;
     r.setRenderTarget(rtWas);
     tiny.dispose();
     W = w0; H = h0; scaleNow = s0; setTargets();
@@ -596,8 +652,6 @@ export function create(ctx = {}, opts = {}) {
       rtLDR = new THREE.WebGLRenderTarget(w, h, { type: THREE.UnsignedByteType, depthBuffer: false });      // tone-mapped sRGB: 8 bit
       accRT = new THREE.WebGLRenderTarget(w, h, { type: THREE.HalfFloatType, depthBuffer: false });         // running mean: keeps precision
     } else { rtLDR.setSize(w, h); accRT.setSize(w, h); }
-    if (Bloom && !bloom) bloom = new Bloom(new THREE.Vector2(w, h), opts.bloomStrength ?? 0.05, 0.25, opts.bloomThreshold ?? 4.0);
-    else if (bloom) bloom.setSize(w, h);
   }
   function setSize() {
     if (!renderer) return;
@@ -634,17 +688,21 @@ export function create(ctx = {}, opts = {}) {
       const [a, b] = p.t;
       const k = easeOut(clamp01((e - a) / Math.max(1e-4, b - a)));
       p.k = k;
-      const o = exOverride?.[p.name];
-      const ex = o?.ex ? _x.set(...o.ex).multiplyScalar(1 / 177) : p.ex;
+      let ex = p.ex, rot = p.rot;
       const s = pr ? (opts.portraitScale?.[p.name] ?? PORTRAIT_SCALE[p.name] ?? 0.8) : 1;
       p.node.position.copy(p.rest.pos).addScaledVector(ex, k * s);
       p.node.quaternion.copy(p.rest.quat);
-      const rot = o?.rot ? _e.set(...o.rot.map((d) => d * D)) : p.rot;
       if (rot) {
         const kr = smooth(clamp01((k - 0.2) / 0.8));
         _e.set(rot.x * kr, rot.y * kr, rot.z * kr);
         p.node.quaternion.multiply(_q.setFromEuler(_e));
       }
+    }
+    // p5: the free elements' cross-fade from the assembled look (the twin) to the free one, as they leave the lens
+    const kf = warmAll ? 0.5 : smooth(seg(e, 0.12, 0.40));
+    for (const q of pairs) {
+      q.free.visible = kf > 1e-3; q.twin.visible = kf < 0.999;
+      q.fm.envMapIntensity = q.fEnv * kf; q.fm.opacity = q.fA * kf; q.tm.envMapIntensity = q.tEnv * (1 - kf) * glassKi; q.tm.opacity = q.tA * (1 - kf);
     }
     for (const s of screws) {
       s.mesh.visible = !pr;
@@ -675,7 +733,7 @@ export function create(ctx = {}, opts = {}) {
     const top = portrait() ? (opts.insetTop ?? 16) * ph.hand : 0;
     // opts.bleedLeft (off by default): let the explode use some room left of the column. On the site the part list ends
     // ~32 px left of the column at 1440, so the device stays inside its column there.
-    const bl = portrait() ? 0 : (opts.bleedLeft ?? 0) * rect.w * smooth(ph.explode) * ph.hand;
+    let bl = 0;
     // as the parts spread, a slot that stops short of the viewport's right edge grows to it, and past it by
     // opts.bleedRight x the viewport (v7: default 0; v6's 0.03 let the lens's front ring touch the page edge, which
     // read as a layout bug: now the whole lens keeps the fit's 4% margin); never left into the copy
@@ -756,7 +814,7 @@ export function create(ctx = {}, opts = {}) {
   const _cc = new THREE.Color();
   const halton = (i, b) => { let f = 1, r = 0; while (i > 0) { f /= b; r += f * (i % b); i = Math.floor(i / b); } return r; };
   function signature() {
-    return [ph.orbit, ph.hand, ph.explode, ph.settle, ptrS.x, ptrS.y, off.az, off.el, zm.k, zm.x, zm.y, rect ? [rect.x, rect.y, rect.w, rect.h].join(',') : '', W, H, exOverride ? JSON.stringify(exOverride) : ''].map((v) => (typeof v === 'number' ? v.toFixed(5) : v)).join('|');
+    return [ph.orbit, ph.hand, ph.explode, ph.settle, ptrS.x, ptrS.y, off.az, off.el, zm.k, zm.x, zm.y, rect ? [rect.x, rect.y, rect.w, rect.h].join(',') : '', W, H].map((v) => (typeof v === 'number' ? v.toFixed(5) : v)).join('|');
   }
   function sample(r) {
     // one (jittered) frame -> HDR -> bloom -> tone map into rtLDR -> folded into the running mean
@@ -771,7 +829,6 @@ export function create(ctx = {}, opts = {}) {
     lastInfo = { calls: r.info.render.calls, triangles: r.info.render.triangles };
     r.info.autoReset = ar;
     r.setClearColor(_cc, caWas);
-    if (bloom) bloom.render(r, null, rtHDR, 0, false);
     outQ.m.uniforms.tHDR.value = rtHDR.texture;
     outQ.m.uniforms.exposure.value = (opts.exposure ?? 1.0) * (1 + (opts.expRamp ?? 0.15) * ph.explode);
     r.setRenderTarget(rtLDR); r.render(outQ.sc, qcam);
@@ -939,7 +996,6 @@ export function create(ctx = {}, opts = {}) {
     load,
     get loaded() { return loaded; },
     get idVersion() { return idVer; },
-    setProgress(p) { ph = phasesAt(clamp01(p)); },
     setPhases(x) { ph = { orbit: untime(x.orbit ?? 1), hand: x.hand ?? 1, explode: x.explode ?? 0, settle: x.settle ?? 0 }; },
     setLayout(r, w, h) { rect = r ? { x: r.x, y: r.y, w: r.w, h: r.h } : null; if (w) vw = w; if (h) vh = h; },
     setPointer(x, y, k = 0.12) { ptr.set(x, y); ptrS.lerp(ptr, k); if (ptrS.distanceToSquared(ptr) < 1e-6) ptrS.copy(ptr); },
@@ -951,31 +1007,18 @@ export function create(ctx = {}, opts = {}) {
     setZoom(k = 1, x = 0, y = 0) { zm.k = k; zm.x = x; zm.y = y; },
     screenBox() { pose(); return fitInfo?.box || null; },     // the device's screen box (css px, viewport), posed for now
     setFade(f) { copyQ.m.uniforms.fade.value = Math.min(1, Math.max(0, f)); },
-    setView(v) { view = v || null; dirty = true; },
-    setExplode(o) { exOverride = o || null; dirty = true; },
-    retune(o) {                      // art direction (lab only): merge create() options, rebuild the studios, re-apply the glass settings
-      Object.assign(opts, o);
-      if (!loaded) return;
-      const old = envs;
-      envs = Object.fromEntries(Object.keys(old).map((k) => [k, studioEnv(k)]));
-      const map = new Map(Object.keys(old).map((k) => [old[k].texture, envs[k].texture]));
-      scene.environment = envs.main.texture;
-      model.traverse((x) => { const m = x.material; if (!x.isMesh || !m) return; if (map.has(m.envMap)) m.envMap = map.get(m.envMap);
-        if (m.userData.fixedEnv) { m.opacity = opts.freeAlpha ?? m.opacity; m.envMapIntensity = opts.freeEnv ?? m.envMapIntensity; }
-        if (m.envMap === envs.metal.texture) m.envMapIntensity = opts.freeMetalEnv ?? m.envMapIntensity; });
-      for (const k of Object.keys(old)) old[k].dispose();
+    // p5: the lens glass's studio reflections (0 … 1): k the front element's, ki the inner elements' (the homepage fades
+    // the front as the view passes through it, then dims the inner ones: seen from inside the barrel their windows
+    // spread into large soft blobs)
+    setGlassEnv(k = 1, ki = 1) {
+      k = Math.round(clamp01(k) * 1000) / 1000; ki = Math.round(clamp01(ki) * 1000) / 1000;
+      if (k === glassK && ki === glassKi) return;
+      glassK = k; glassKi = ki;
+      for (const m of frontMats) m.envMapIntensity = m.userData.baseEnv * k;
+      for (const m of innerMats) m.envMapIntensity = m.userData.baseEnv * ki;
       dirty = true;
     },
-    partBoxes() {                    // screen bbox (CSS px) of every part's sampled points, after pose()
-      pose(); const out = {}; const v = new THREE.Vector3();
-      for (const s of samples) {
-        const name = s.obj.userData.part; const b = out[name] || (out[name] = [1e9, 1e9, -1e9, -1e9]);
-        const pts = []; if (s.inst) { if (!s.obj.visible) continue; for (let i = 0; i < s.obj.count; i++) { s.obj.getMatrixAt(i, _m); v.setFromMatrixPosition(_m).applyMatrix4(s.obj.matrixWorld); pts.push(v.clone()); } }
-        else for (let i = 0; i < s.pts.length; i += 3) pts.push(v.set(s.pts[i], s.pts[i + 1], s.pts[i + 2]).applyMatrix4(s.obj.matrixWorld).clone());
-        for (const q of pts) { q.project(camera); const x = (q.x * 0.5 + 0.5) * vw, y = (0.5 - q.y * 0.5) * vh; b[0] = Math.min(b[0], x); b[1] = Math.min(b[1], y); b[2] = Math.max(b[2], x); b[3] = Math.max(b[3], y); }
-      }
-      return out;
-    },
+    setView(v) { view = v || null; dirty = true; },
     stats() { return { drawCalls: lastInfo?.calls, triangles: lastInfo?.triangles, fit: fitInfo, acc: accN, scale: scaleNow, msaa: msaaNow }; },
   };
 }
