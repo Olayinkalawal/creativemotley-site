@@ -341,9 +341,10 @@ export default function register(stage) {
       const v = { target: T, dist, shift, near: Math.max(0.02, dist - 1.5), ...(f.fov ? { fov: f.fov } : {}) };
       const key = [...T, dist, ...shift, f.fov || 0].map((x) => x.toFixed(5)).join();
       if (key !== lastView) { cam.setView(v); lastView = key; }
-      // p5: the front element's reflection fades as the view passes through the glass, then the inner elements' dim
-      // (seen from inside the barrel their windows spread into large soft shapes)
-      cam.setGlassEnv(1 - smooth(seg(m.push, 0.55, 0.8)), 1 - 0.7 * smooth(seg(m.push, 0.7, 0.93)));
+      // p5: the front element's reflection fades as the view passes through the glass, the inner elements' dim from
+      // earlier (push 0.45: from s 0.48 they never stack up while the lens fills the screen), and the model's iris goes
+      // dark as the composite's blades come up (its lit blades ghosted through them, at another angle)
+      cam.setGlassEnv(1 - smooth(seg(m.push, 0.55, 0.8)), 1 - 0.7 * smooth(seg(m.push, 0.45, 0.93)), 1 - smooth(seg(m.blades, 0, 0.6)));
       pose = { az: az + drag.az, el: el + drag.el, fov: f.fov || K.fov, aspect: cal.aspect, T, dist, shift, vw: ctx.vw, vh: ctx.vh };   // (turned as dragged)
       heroLive.box = (() => {   // the silhouette's box (css px), for the DOM (the lines' hole, the beats)
         const b = boxNDC(pose.az, pose.el, pose.fov, cal.aspect, T, dist, shift);
