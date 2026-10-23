@@ -1,4 +1,4 @@
-/* VIII · Results: the opener in the oculus sky (The Oculus, after Mantegna), then four counters over the same painting
+/* VIII · Results: the opener in the oculus sky (The Oculus, after Mantegna), then three counters over the same painting
    under an ink veil.
    Opener: title and dek set near the top (the painting's open sky, its manifest's titleBox), a short region, so the
    first figure arrives at the foot of the first screen. Every width: dark ink on the sky (the oculus is mid cerulean
@@ -84,7 +84,8 @@
 @media (min-width: 900px) and (max-width: 1023px) {
   .rx-list { grid-template-columns: minmax(0, max-content); }
 }
-/* wide screens (phase 4): the four figures as a 2 × 2 ledger at the display size, set in the sky right of the left
+/* wide screens (phase 4): the figures as a two-column ledger at the display size (three since 2026-10-23: 2 + 1, the
+   13+ alone on the second row in the first column), set in the sky right of the left
    group of watchers (from about 0.32 of the screen), so no figure ever crosses a face (at the title size, 13+ and 16+
    sat on the turbaned and the headphones watchers at 1280 and 1440); the veil stays, centred on the ledger */
 @media (min-width: 1024px) {

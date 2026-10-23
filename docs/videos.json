@@ -64,6 +64,22 @@
       "poster": "public/assets/posters/omoni-oboli-tv.webp",
       "videos": [
         {
+          "id": "OQQaDqLCgKg",
+          "title": "LOVE IN EVERY WORD 2 - THE WEDDING",
+          "channel": "Omoni Oboli TV",
+          "url": "https://www.youtube.com/watch?v=OQQaDqLCgKg",
+          "duration": null,
+          "published": "2025-10-24 (press)",
+          "why": "The client's own pick: the earlier Content Motley site featured this video for Omoni Oboli TV (/home/user/olayinkalawal/contentmotley index.html:791, the FEATURED embed), so it is card 2 since 2026-10-23 (copy v4). The channel's best-known premiere (the sequel to Love in Every Word), a wedding story in which a returning ex tests the engagement. Widely covered in Nigerian press, so it is the safest single title if only one card is used.",
+          "verification": "channel-probable",
+          "evidence": "Search summary calls this the main listing, with the cast (Uzor Arukwe, BamBam, Patience Ozokwo, Chris Attoh…) in its description; an Omoni Oboli TV community post says to watch the film 'only on Omoni Oboli TV'. Several re-uploads exist on other channels (e.g. 9dTRJalYO_0, MgKfecE8FPE): do not use those.",
+          "sources": [
+            "https://www.youtube.com/post/UgkxJ31jwSl8qCrDVtibuqTlP62IHMm_jUkJ",
+            "https://www.pulse.ng/story/omoni-obolis-love-in-every-word-sequel-1-million-views-reaction-2025102511574512966",
+            "https://thewittyreview.medium.com/movie-review-love-in-every-word-the-wedding-56f5e0732de1"
+          ]
+        },
+        {
           "id": "H9qoC981BAU",
           "title": "LOVE WAS NOT INVITED - Nigerian Movies 2026 Latest Full Movies",
           "channel": "Omoni Oboli TV",
@@ -76,22 +92,6 @@
           "sources": [
             "https://www.zikoko.com/pop/omoni-oboli-youtube-romance-movies/",
             "https://filmflux.app/movie/cd17fd9f-59db-45d7-bcd4-d15feb24ff9a-love-was-not-invited"
-          ]
-        },
-        {
-          "id": "OQQaDqLCgKg",
-          "title": "LOVE IN EVERY WORD 2 - THE WEDDING",
-          "channel": "Omoni Oboli TV",
-          "url": "https://www.youtube.com/watch?v=OQQaDqLCgKg",
-          "duration": null,
-          "published": "2025-10-24 (press)",
-          "why": "The channel's best-known premiere (the sequel to Love in Every Word), a wedding story in which a returning ex tests the engagement. Widely covered in Nigerian press, so it is the safest single title if only one card is used.",
-          "verification": "channel-probable",
-          "evidence": "Search summary calls this the main listing, with the cast (Uzor Arukwe, BamBam, Patience Ozokwo, Chris Attoh…) in its description; an Omoni Oboli TV community post says to watch the film 'only on Omoni Oboli TV'. Several re-uploads exist on other channels (e.g. 9dTRJalYO_0, MgKfecE8FPE): do not use those.",
-          "sources": [
-            "https://www.youtube.com/post/UgkxJ31jwSl8qCrDVtibuqTlP62IHMm_jUkJ",
-            "https://www.pulse.ng/story/omoni-obolis-love-in-every-word-sequel-1-million-views-reaction-2025102511574512966",
-            "https://thewittyreview.medium.com/movie-review-love-in-every-word-the-wedding-56f5e0732de1"
           ]
         }
       ],

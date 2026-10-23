@@ -159,7 +159,8 @@
   "url": "https://creativemotley.com/",
   "location": "#film .beat.finale .finale-stats div:nth-child(4)",
   "kind": "stat",
-  "note": "<b>16+</b><span>Years in media</span>; static in the hero."
+  "note": "<b>16+</b><span>Years in media</span>; static in the hero.",
+  "retired": "2026-10-23: on the client's earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)) this is the career of the lead it named (index.html:1026: \"16+ years building content, streaming and creator businesses for Google/YouTube, Paramount, Multichoice and African Magic\"), whose bio the client asked us to leave out; no one on the new site holds it (docs/copy-v4.md). Was the hero finale counter (not on the rebuilt page); retired so it cannot return."
  },
  {
   "id": "F19",
@@ -405,12 +406,12 @@
  },
  {
   "id": "F46",
-  "claim": "Monetize your catalogue ↗",
+  "claim": "Monetise your catalogue ↗",
   "source_sentence": "Monetize your catalogue ↗",
   "url": "https://creativemotley.com/",
   "location": "#next .ed-row:nth-of-type(2) a.ed-link",
   "kind": "cta",
-  "note": "mailto subject 'Catalogue'. Mixed spelling (US 'Monetize', UK 'catalogue') — reproduce exactly."
+  "note": "mailto subject 'Catalogue'. The live site (and the earlier site, index.html:517 \"Monetize your catalogue →\") spell it with a z; since 2026-10-23 the rebuild sets it in British English, \"Monetise\", to match \"Monetisation\" in the services list and the rest of the page (claim = the page; source_sentence = the live site, verbatim)."
  },
  {
   "id": "F47",
@@ -482,7 +483,8 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-credits .ed-label",
   "kind": "credential",
-  "note": "Label for the five names below. Keep the label attached: these are where the leadership's experience comes from — NOT clients, partners or endorsements. Type only, no logos."
+  "note": "Label for the five names below. Keep the label attached: these are where the leadership's experience comes from — NOT clients, partners or endorsements. Type only, no logos.",
+  "retired": "2026-10-23: on the client's earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)) this is the career of the lead it named (index.html:1026: \"16+ years building content, streaming and creator businesses for Google/YouTube, Paramount, Multichoice and African Magic\"), whose bio the client asked us to leave out; no one on the new site holds it (docs/copy-v4.md). The credits row (F54–F59) is removed from IX Directors: next to the only two people the site names it would read as their experience, and as employers (not clients) it has no company-level rewording."
  },
  {
   "id": "F55",
@@ -491,7 +493,8 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-credits ul li:nth-child(1)",
   "kind": "credential",
-  "note": "Leadership-experience name 1 of 5; only valid under the 'Leadership experience from' label (F54)."
+  "note": "Leadership-experience name 1 of 5; only valid under the 'Leadership experience from' label (F54).",
+  "retired": "2026-10-23: removed with its label F54 (the credits row); see F54. \"YouTube\" still traces through F115 (the footer sticker)."
  },
  {
   "id": "F56",
@@ -500,7 +503,8 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-credits ul li:nth-child(2)",
   "kind": "credential",
-  "note": "Leadership-experience name 2 of 5; only valid under the 'Leadership experience from' label (F54)."
+  "note": "Leadership-experience name 2 of 5; only valid under the 'Leadership experience from' label (F54).",
+  "retired": "2026-10-23: removed with its label F54 (the credits row); see F54."
  },
  {
   "id": "F57",
@@ -509,7 +513,8 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-credits ul li:nth-child(3)",
   "kind": "credential",
-  "note": "Leadership-experience name 3 of 5; only valid under the 'Leadership experience from' label (F54). Site spells it 'Multichoice' — reproduce as written."
+  "note": "Leadership-experience name 3 of 5; only valid under the 'Leadership experience from' label (F54). Site spells it 'Multichoice' — reproduce as written.",
+  "retired": "2026-10-23: removed with its label F54 (the credits row); see F54."
  },
  {
   "id": "F58",
@@ -518,7 +523,8 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-credits ul li:nth-child(4)",
   "kind": "credential",
-  "note": "Leadership-experience name 4 of 5; only valid under the 'Leadership experience from' label (F54)."
+  "note": "Leadership-experience name 4 of 5; only valid under the 'Leadership experience from' label (F54).",
+  "retired": "2026-10-23: removed with its label F54 (the credits row); see F54."
  },
  {
   "id": "F59",
@@ -527,7 +533,8 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-credits ul li:nth-child(5)",
   "kind": "credential",
-  "note": "Leadership-experience name 5 of 5; only valid under the 'Leadership experience from' label (F54)."
+  "note": "Leadership-experience name 5 of 5; only valid under the 'Leadership experience from' label (F54).",
+  "retired": "2026-10-23: removed with its label F54 (the credits row); see F54."
  },
  {
   "id": "F60",
@@ -938,7 +945,8 @@
    "suffix": "+",
    "label": "years in media",
    "final_display": "16+"
-  }
+  },
+  "retired": "2026-10-23: on the client's earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)) this is the career of the lead it named (index.html:1026: \"16+ years building content, streaming and creator businesses for Google/YouTube, Paramount, Multichoice and African Magic\"), whose bio the client asked us to leave out; no one on the new site holds it (docs/copy-v4.md). Results shows three counters (F99–F101)."
  },
  {
   "id": "F103",
@@ -973,7 +981,7 @@
   "url": "https://creativemotley.com/",
   "location": "#directors #dirsTrack[data-text], #dirsFront[data-text]",
   "kind": "name",
-  "note": "Director name from the arcing marquee (markup 'Olayinka Lawal &#10022; Gbenga Sosanya &#10022; '; the ✦ glyphs render magenta at .62em). The site gives no title/role beyond 'Directors' — no 'Founder', 'CEO' etc. The site never says which portrait is which: confirm against the plate before captioning a face."
+  "note": "Director name from the arcing marquee (markup 'Olayinka Lawal &#10022; Gbenga Sosanya &#10022; '; the ✦ glyphs render magenta at .62em). The site gives no title/role beyond 'Directors' — no 'Founder', 'CEO' etc. Since 2026-10-23 the role line under each name is the client's own (F137, F138: client message 2026-10-23); nothing else (no bio, career or credential) is attached to either name. The site never says which portrait is which: confirm against the plate before captioning a face."
  },
  {
   "id": "F107",
@@ -1247,13 +1255,31 @@
   "retired": "2026-10-20: the Results painting is now the oculus (Mantegna, masters 2026-10-20), with no TV; the Results film no longer plays (scripts/factcheck.mjs leaves retired facts out of its corpus)"
  },
  {
+  "id": "F137",
+  "claim": "Co-founder and CTO, WealthMotley",
+  "source_sentence": "so I am the CTO/Co founder of wealthmotley, Gbenga is part of the board.",
+  "url": "client message 2026-10-23 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #directors .dr-person:nth-child(1) .dr-person__role (Olayinka Lawal)",
+  "kind": "role",
+  "note": "Olayinka Lawal's role line, in the client's own words (\"CTO/Co founder of wealthmotley\"); \"WealthMotley\" is the product's own styling (copy-drafts S4: Crunchbase lists a \"Creative Motley\" that makes the finance app WealthMotley). The client did not say CTO of Creative Motley, so the line names WealthMotley. No bio, career or credential was given: none is written. Replaces DC90 (\"Director\")."
+ },
+ {
+  "id": "F138",
+  "claim": "Board member",
+  "source_sentence": "so I am the CTO/Co founder of wealthmotley, Gbenga is part of the board.",
+  "url": "client message 2026-10-23 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #directors .dr-person:nth-child(2) .dr-person__role (Gbenga Sosanya)",
+  "kind": "role",
+  "note": "Gbenga Sosanya's role line: exactly what the client said (\"Gbenga is part of the board\"), no company named (the chapter title \"Directors\", F104, is the live site's). No bio, career or credential was given: none is written. Replaces DC90 (\"Director\")."
+ },
+ {
   "id": "DC01",
-  "claim": "Creative Motley is a creator service provider. We run YouTube channels as businesses for Africa’s creators, filmmakers and media owners: not a traditional network, but a team that takes on the strategy, the programming, the rights and the revenue, on clear terms, so the people making the work can keep making it.",
-  "source_sentence": "Creative Motley is a creator service provider. We run YouTube channels as businesses for Africa’s creators, filmmakers and media owners: not a traditional network, but a team that takes on the strategy, the programming, the rights and the revenue, on clear terms, so the people making the work can keep making it.",
-  "url": "docs/copy-drafts.md",
-  "location": "v3 #storytellers — Who we are (paragraph under the three ways in) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S1 F06, F111; S2. Paraphrase. F06 \"Africa’s creator service provider — helping creators, filmmakers and media brands turn views into long-term revenue\"; F111 \"We turn channels into media companies.\"; S2 \"a Creator Service Provider (CSP), not a traditional MCN. We offer hands-on strategy, management and monetization support with transparent terms\" and its service list \"strategy, SEO, thumbnails, programming, monetization, rights and reporting\". The last clause is reasoning, not a quote."
+  "claim": "Creative Motley is a creator service provider, not a traditional multi-channel network: hands-on strategy, management and monetisation for YouTube channels, on transparent terms. No channel is a line item.",
+  "source_sentence": "We're a Creator Service Provider (CSP), not a traditional MCN. We offer hands-on strategy, management and monetization support with transparent terms. We treat your channel like a media business, not just a line item in a network.",
+  "url": "/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)",
+  "location": "index.html:1232 (FAQ \"How is Content Motley different from an MCN?\"); \"YouTube\" per index.html:385 (\"A YouTube-first team…\") → rebuild #storytellers .who__lead",
+  "kind": "positioning",
+  "note": "Approved 2026-10-23: from the client's own earlier site, which the client asked us to use to finish the drafts (\"for the draft use this https://relaxed-crisp-6fca75.netlify.app/ … stick to the remaining draft\"). Source file: index.html (byte-identical to public/index.html; the Netlify deploy served this static page, not the unfinished Next.js app in src/). Brand translated: Content Motley → Creative Motley. Cut from the FAQ answer (37 words → 29). \"MCN\" spelt out as \"multi-channel network\", so it does not read against \"Our network spans…\" (DC03, right below), \"Join the network\" (F43) or \"a vetted network\" (DC34); \"for YouTube channels\" restores the YouTube the MCN implies (index.html:385); UK \"monetisation\"; \"We treat your channel like a media business, not just a line item in a network.\" cut to its contrast \"No channel is a line item.\" (the page already says \"media companies\": F08, F41, F111). Replaces the v3 draft of DC01 (a 55-word paraphrase) and absorbs DC02."
  },
  {
   "id": "DC02",
@@ -1261,17 +1287,18 @@
   "source_sentence": "A creator service provider, not a traditional network: hands-on strategy, management and monetisation, on transparent terms.",
   "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
   "location": "v3 #storytellers — Who we are (short alternative to DC01) (Track C draft, alt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Near-verbatim S2: \"Creator Service Provider (CSP), not a traditional MCN. We offer hands-on strategy, management and monetization support with transparent terms.\" Changes: MCN → network (plain English), UK spelling."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: from site. Source: S2. Near-verbatim S2: \"Creator Service Provider (CSP), not a traditional MCN. We offer hands-on strategy, management and monetization support with transparent terms.\" Changes: MCN → network (plain English), UK spelling.",
+  "retired": "2026-10-23: dropped in copy v4 — absorbed into DC01 (its words now live there)."
  },
  {
   "id": "DC03",
-  "claim": "We work with creators and content owners anywhere who make work for African audiences or the diaspora. Our network spans Africa, the UK, the US, Europe and beyond.",
-  "source_sentence": "We work with creators and content owners anywhere who make work for African audiences or the diaspora. Our network spans Africa, the UK, the US, Europe and beyond.",
-  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
-  "location": "v3 #storytellers — Reach (one line after DC01; or in Apply) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Near-verbatim S2 (FAQ, \"Is it only African creators?\"): \"We work with creators and content owners globally who create content for African audiences or the African diaspora. Our network spans Africa, UK, US, Europe and beyond.\""
+  "claim": "We work with creators and content owners anywhere who create for African audiences or the diaspora. Our network spans Africa, the UK, the US, Europe and beyond.",
+  "source_sentence": "No. We work with creators and content owners globally who create content for African audiences or the African diaspora. Our network spans Africa, UK, US, Europe and beyond.",
+  "url": "/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)",
+  "location": "index.html:1219 (FAQ \"Do I need to be based in Africa?\") → rebuild #storytellers .who__reach",
+  "kind": "positioning",
+  "note": "Approved 2026-10-23: from the client's own earlier site, which the client asked us to use to finish the drafts (\"for the draft use this https://relaxed-crisp-6fca75.netlify.app/ … stick to the remaining draft\"). Source file: index.html (byte-identical to public/index.html; the Netlify deploy served this static page, not the unfinished Next.js app in src/). Brand translated: Content Motley → Creative Motley. Near-verbatim: \"globally\" → \"anywhere\", \"create content\" → \"create\", \"the African diaspora\" → \"the diaspora\", articles added to the place list. index.html:764 (\"Africa, the UK, US, Europe and the wider diaspora\") says the same and is not used, so the idea appears once."
  },
  {
   "id": "DC10",
@@ -1284,12 +1311,12 @@
  },
  {
   "id": "DC11",
-  "claim": "Channel strategy — What the channel is for, and what it makes next.",
-  "source_sentence": "Channel strategy — What the channel is for, and what it makes next.",
+  "claim": "Channel strategy — A dedicated strategist: what the channel is for, and what it makes next.",
+  "source_sentence": "Channel strategy — A dedicated strategist: what the channel is for, and what it makes next.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 lists \"strategy\" first in its service list."
+  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:597 (\"Channel Strategy & Programming\"), :636 (\"Dedicated channel strategist\", the \"What You Get\" list), :755 (\"We handle strategy, SEO, …\"). v4 (2026-10-23) adds \"A dedicated strategist:\" (the earlier site's promise of a named person); \"what the channel is for, and what it makes next\" is ours. Row 01 of \"What we run\"."
  },
  {
   "id": "DC12",
@@ -1298,7 +1325,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 service list: \"programming\". Kept distinct from F83 (upload calendar), which stays in Process."
+  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:597 (\"Channel Strategy & Programming\"; its line \"Upload calendars, series design, and content planning\", :598, is not used: \"series design\" and \"upload calendar\" are already Process F82/F83), :755 (\"programming\"). \"Series, formats and the order they go out\" is ours. Row 02."
  },
  {
   "id": "DC13",
@@ -1306,8 +1333,9 @@
   "source_sentence": "SEO — Written so the right viewer finds the work.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 service list: \"SEO\"."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 service list: \"SEO\".",
+  "retired": "2026-10-23: dropped in copy v4 — cut for density (Creators was the one chapter over 40–60 words a screen); SEO, titles and tags are already on the page (F27, F32, Process F91, F92)."
  },
  {
   "id": "DC14",
@@ -1315,8 +1343,9 @@
   "source_sentence": "Thumbnails — Designed and tested: the click comes first.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 service list: \"thumbnails\"; F32 \"/thumbnail-test\", F27 (A/B chatter)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 service list: \"thumbnails\"; F32 \"/thumbnail-test\", F27 (A/B chatter).",
+  "retired": "2026-10-23: dropped in copy v4 — cut for density, with DC13; thumbnails already show in the fan (F27), the cloud (F32) and Process (F91, F92)."
  },
  {
   "id": "DC15",
@@ -1325,7 +1354,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2: \"ad optimisation and sponsorships\"; F07 \"Turn views into long-term revenue.\""
+  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:604–605 (\"Monetization & Brand Deals — Ad optimization, sponsorships, and revenue growth\"); UK spelling as the earlier site itself writes it at :590 (\"monetise\") and :746 (\"monetisation\"). \"set up so views pay\" is ours. Row 03."
  },
  {
   "id": "DC16",
@@ -1334,7 +1363,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2: \"Rights & Content ID — protect IP and monetise reuploads\"; F30, F37 (rights chatter)."
+  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:618–619 (\"Rights & Content ID — Protect your IP and monetize reuploads\"). \"Re-uploads found, claimed and earning for you\" is ours (close to the source). Row 04."
  },
  {
   "id": "DC17",
@@ -1343,7 +1372,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2: \"access to brand deal pipeline\"."
+  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:638 (\"Access to brand deal pipeline\"), :604 (\"Monetization & Brand Deals\"). \"the brand briefs that come to us\" is ours. Row 05."
  },
  {
   "id": "DC18",
@@ -1352,7 +1381,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, opt)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. Service name from site (S2); the line is drafted. S2 service list: \"reporting\". One search summary also listed \"monthly performance reviews\"; a second could not confirm it, so \"monthly\" needs the client’s yes."
+  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:637 (\"Monthly performance reviews\": this settles copy-drafts question 6, \"monthly\" is the earlier site's), :755 (\"… monetization, rights and reporting\"). \"of what moved and what changes\" is ours. Row 06 (on the page since 2026-10-23)."
  },
  {
   "id": "DC19",
@@ -1361,7 +1390,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Media Owners list item (under F44–F46) (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S1 F44, F45; S2. F45 \"Film, TV and digital IP, earning every month.\"; S2 describes a Media Owners offer for holders of \"film, TV or digital IP\" who want recurring YouTube income."
+  "note": "DRAFT — needs client approval. Status: draft (the service is the earlier site's Media Owners offer; the line is ours). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:514 (\"You own film, TV or digital IP and want predictable, recurring revenue from YouTube.\"), :590 (\"a studio with a deep catalogue\"). \"launched and programmed on YouTube\" is ours, not the earlier site's. The earlier \"recurring revenue\" is already F45 (\"earning every month\")."
  },
  {
   "id": "DC20",
@@ -1369,8 +1398,9 @@
   "source_sentence": "Release order — Films and series released to build an audience, not dropped all at once.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Media Owners list item (optional second) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Reasoning from F82/F83 (series design, upload calendar) applied to a library. No source states it for catalogues."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Reasoning from F82/F83 (series design, upload calendar) applied to a library. No source states it for catalogues.",
+  "retired": "2026-10-23: dropped in copy v4 — no source (copy-drafts said so); Creators is the densest chapter."
  },
  {
   "id": "DC21",
@@ -1378,8 +1408,9 @@
   "source_sentence": "/metadata-pass",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers).",
+  "retired": "2026-10-23: dropped in copy v4 — invented studio chatter with no source (the earlier site has none); the command cloud is boxed in."
  },
  {
   "id": "DC22",
@@ -1387,8 +1418,9 @@
   "source_sentence": "/rights-sweep",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers).",
+  "retired": "2026-10-23: dropped in copy v4 — invented studio chatter with no source (the earlier site has none); the command cloud is boxed in."
  },
  {
   "id": "DC23",
@@ -1396,8 +1428,9 @@
   "source_sentence": "/sponsor-slot",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers).",
+  "retired": "2026-10-23: dropped in copy v4 — invented studio chatter with no source (the earlier site has none); the command cloud is boxed in."
  },
  {
   "id": "DC24",
@@ -1405,8 +1438,9 @@
   "source_sentence": "Re-upload found — claim filed",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers).",
+  "retired": "2026-10-23: dropped in copy v4 — invented studio chatter with no source (the earlier site has none); the command cloud is boxed in."
  },
  {
   "id": "DC25",
@@ -1414,8 +1448,9 @@
   "source_sentence": "Shorts cut from the long episode",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers).",
+  "retired": "2026-10-23: dropped in copy v4 — invented studio chatter with no source (the earlier site has none); the command cloud is boxed in."
  },
  {
   "id": "DC26",
@@ -1423,8 +1458,9 @@
   "source_sentence": "Chapters added to the new upload",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers).",
+  "retired": "2026-10-23: dropped in copy v4 — invented studio chatter with no source (the earlier site has none); the command cloud is boxed in."
  },
  {
   "id": "DC27",
@@ -1432,8 +1468,9 @@
   "source_sentence": "Series trailer scheduled",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers).",
+  "retired": "2026-10-23: dropped in copy v4 — invented studio chatter with no source (the earlier site has none); the command cloud is boxed in."
  },
  {
   "id": "DC28",
@@ -1441,8 +1478,9 @@
   "source_sentence": "Sponsor read approved",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers).",
+  "retired": "2026-10-23: dropped in copy v4 — invented studio chatter with no source (the earlier site has none); the command cloud is boxed in."
  },
  {
   "id": "DC29",
@@ -1450,8 +1488,9 @@
   "source_sentence": "Playlist reordered for the series",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers).",
+  "retired": "2026-10-23: dropped in copy v4 — invented studio chatter with no source (the earlier site has none); the command cloud is boxed in."
  },
  {
   "id": "DC30",
@@ -1459,17 +1498,18 @@
   "source_sentence": "Monthly review sent",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Command cloud item (more chatter, plan §5 ★) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Illustrative studio chatter in the style of F26–F38, covering the services above. Deliberately no figures, names or times (no invented numbers).",
+  "retired": "2026-10-23: dropped in copy v4 — invented studio chatter with no source (the earlier site has none); the command cloud is boxed in."
  },
  {
   "id": "DC31",
-  "claim": "We also work with brands and agencies looking to partner with African creators.",
-  "source_sentence": "We also work with brands and agencies looking to partner with African creators.",
-  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
-  "location": "v3 #brands — Lead-in line above the brief steps (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Verbatim S2 (FAQ, \"Who do you work with?\")."
+  "claim": "We connect brands and agencies to African creators and IP, and manage everything from brief to reporting.",
+  "source_sentence": "We connect your brand to premium African creators and IP – and manage everything from brief to reporting.",
+  "url": "/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)",
+  "location": "index.html:687 (the Brands section, headed \"FOR BRANDS & AGENCIES\" at :682) → rebuild #brands .br__lead",
+  "kind": "service",
+  "note": "Approved 2026-10-23: from the client's own earlier site, which the client asked us to use to finish the drafts (\"for the draft use this https://relaxed-crisp-6fca75.netlify.app/ … stick to the remaining draft\"). Source file: index.html (byte-identical to public/index.html; the Netlify deploy served this static page, not the unfinished Next.js app in src/). Brand translated: Content Motley → Creative Motley. \"your brand\" → \"brands and agencies\" (the earlier section's own audience, :682); \"premium\" dropped (no hype). Replaces the v3 DC31 (\"We also work with brands and agencies…\", the second sentence of the FAQ at :1206), which opened the Brands block with \"also\" and was a third \"We work with\" on the page."
  },
  {
   "id": "DC32",
@@ -1496,7 +1536,7 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. S2: \"a curated network of vetted creators\"."
+  "note": "DRAFT — needs client approval. Status: draft. Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:693 (\"Curated network of vetted creators\"), :660–661 (\"Strategic Matching — Right creators for your brand goals\"). \"whose audiences fit the brief\" is ours."
  },
  {
   "id": "DC35",
@@ -1505,25 +1545,25 @@
   "url": "docs/copy-drafts.md",
   "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. S2: \"a single contract and point of contact\"; F48 \"One contract.\" (step named \"Contract\" so F48 is not repeated)."
+  "note": "DRAFT — needs client approval. Status: draft. Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:701 (\"One contract, one point of contact\"). Says \"One agreement\" so F48 \"One contract.\" is not repeated; \"however many creators are on it\" is ours."
  },
  {
   "id": "DC36",
-  "claim": "Make — Made in the creator’s own voice, to your brief.",
-  "source_sentence": "Make — Made in the creator’s own voice, to your brief.",
+  "claim": "Make — In the creator’s own voice: a campaign that feels like content.",
+  "source_sentence": "Make — In the creator’s own voice: a campaign that feels like content.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Answers F24 \"Brands — budget, no voice\". Drafted."
+  "note": "DRAFT — needs client approval. Status: draft. Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:697 (\"YouTube-native campaigns that feel like content\"). \"In the creator’s own voice\" is ours (it answers F24 \"Brands — budget, no voice\"). v4 (2026-10-23) replaces \"Made in the creator’s own voice, to your brief.\" (\"Make — Made\" echoed)."
  },
  {
   "id": "DC37",
-  "claim": "Report — Performance tracked and brand lift measured, from first upload to final report.",
-  "source_sentence": "Report — Performance tracked and brand lift measured, from first upload to final report.",
-  "url": "docs/copy-drafts.md",
-  "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. S2: \"Performance tracking & brand lift measurement\"; S2 campaign management \"from the brief through to reporting\"."
+  "claim": "Report — Performance tracked and brand lift measured, in numbers your CMO can use.",
+  "source_sentence": "Performance tracking & brand lift measurement | Full Reporting: Numbers your CMO can use",
+  "url": "/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)",
+  "location": "index.html:705 (\"Performance tracking & brand lift measurement\") and :665–666 (\"Full Reporting\" / \"Numbers your CMO can use\") → rebuild #brands .brief__step:nth-child(5)",
+  "kind": "service",
+  "note": "Approved 2026-10-23: from the client's own earlier site, which the client asked us to use to finish the drafts (\"for the draft use this https://relaxed-crisp-6fca75.netlify.app/ … stick to the remaining draft\"). Source file: index.html (byte-identical to public/index.html; the Netlify deploy served this static page, not the unfinished Next.js app in src/). Brand translated: Content Motley → Creative Motley. Both halves are the earlier site's. Replaces \"…from first upload to final report\" (\"Report — … final report\" echoed, and DC31 now says \"from brief to reporting\"). It sits inside the drafted \"How a brief runs\" list (DC32–DC36), so with ?drafts=0 it is hidden with the list."
  },
  {
   "id": "DC40",
@@ -1531,8 +1571,9 @@
   "source_sentence": "Inside the instrument",
   "url": "docs/copy-drafts.md",
   "location": "v3 #method — Spec list label (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S1 F62. Picks up F62 \"…passes through one instrument…\". Optional; the list can run unlabelled."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: S1 F62. Picks up F62 \"…passes through one instrument…\". Optional; the list can run unlabelled.",
+  "retired": "2026-10-23: dropped in copy v4 — optional label not used; F62 already says \"one instrument\"."
  },
  {
   "id": "DC41",
@@ -1694,16 +1735,16 @@
   "url": "https://www.youtube.com/watch?v=H9qoC981BAU",
   "location": "v3 #showcase — Video card title — Omoni Oboli TV (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"LOVE WAS NOT INVITED - Nigerian Movies 2026 Latest Full Movies\" (id H9qoC981BAU). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"LOVE WAS NOT INVITED - Nigerian Movies 2026 Latest Full Movies\" (id H9qoC981BAU). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json. Since 2026-10-23 not on the page: card 2 plays DC66, the earlier site's own pick (index.html:791). Kept as the alternative if DC66 fails verification. (Its premise, a woman at her ex's wedding who meets the bride's ex, is the poster's \"Two exes. One wedding.\")"
  },
  {
   "id": "DC66",
   "claim": "Love in Every Word 2: The Wedding",
   "source_sentence": "LOVE IN EVERY WORD 2 - THE WEDDING",
   "url": "https://www.youtube.com/watch?v=OQQaDqLCgKg",
-  "location": "v3 #showcase — Video card title — Omoni Oboli TV (Track C draft, opt)",
+  "location": "v3 #showcase — Video card title — Omoni Oboli TV (card 2 since 2026-10-23)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"LOVE IN EVERY WORD 2 - THE WEDDING\" (id OQQaDqLCgKg). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+  "note": "DRAFT — needs client approval. Status: draft (use). The video is the client's own pick: the earlier site featured OQQaDqLCgKg for Omoni Oboli TV (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75), index.html:791, the FEATURED embed). The title is the display form of \"LOVE IN EVERY WORD 2 - THE WEDDING\" as search listings give it; it is not yet confirmed on YouTube (oEmbed could not run). Replaces DC65 on card 2 (2026-10-23). See docs/videos.json."
  },
  {
   "id": "DC67",
@@ -1792,8 +1833,9 @@
   "source_sentence": "It starts with a discovery call: your goals, your content, your audience.",
   "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
   "location": "v3 #process — Optional third sentence for \"Blank page\" (after F76 + F77) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Near-verbatim S2 (\"How we work\": \"Discovery Call — unpack your goals, content and audience\"). Its next step, \"Channel audit — deep dive into analytics, SEO & monetization\", is already F77."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: from site. Source: S2. Near-verbatim S2 (\"How we work\": \"Discovery Call — unpack your goals, content and audience\"). Its next step, \"Channel audit — deep dive into analytics, SEO & monetization\", is already F77.",
+  "retired": "2026-10-23: dropped in copy v4 — the discovery call is said once, in Apply (DC101); Process stays the seven-step production loop."
  },
  {
   "id": "DC85",
@@ -1828,8 +1870,9 @@
   "source_sentence": "In the hand",
   "url": "docs/copy-drafts.md",
   "location": "v3 #kit — Kit run label for the phone (replaces the step name used now) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Kit currently labels its runs \"Production\", \"Sound\", \"Sound\", \"Published\" (step names), so steps are named twice on the page. Descriptive, no claim."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: —. Kit currently labels its runs \"Production\", \"Sound\", \"Sound\", \"Published\" (step names), so steps are named twice on the page. Descriptive, no claim.",
+  "retired": "2026-10-23: dropped in copy v4 — the phone shot's head is F98 \"The work went out.\", which hands over to Results."
  },
  {
   "id": "DC90",
@@ -1837,8 +1880,9 @@
   "source_sentence": "Director",
   "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
   "location": "v3 #directors — Role line under each name (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: from site. Source: S1 F104; S2. Singular of F104 \"Directors\"; S2 lists each as \"Director\". The live site gives no other title (F106 note: no Founder/CEO)."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: from site. Source: S1 F104; S2. Singular of F104 \"Directors\"; S2 lists each as \"Director\". The live site gives no other title (F106 note: no Founder/CEO).",
+  "retired": "2026-10-23: dropped in copy v4 — replaced by the client's own role lines F137 and F138 (client message 2026-10-23)."
  },
  {
   "id": "DC91",
@@ -1846,8 +1890,9 @@
   "source_sentence": "Between them, leadership experience from YouTube, Paramount, Multichoice, Africa Magic and Circo Live.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #directors — Shared line under both names (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S1 F54–F59. Restates F54–F59. Assumes the two directors are \"the leadership\" F54 refers to: confirm. If used, move the credits row out of Brands so the line appears once."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: S1 F54–F59. Restates F54–F59. Assumes the two directors are \"the leadership\" F54 refers to: confirm. If used, move the credits row out of Brands so the line appears once.",
+  "retired": "2026-10-23: dropped in copy v4 — it credited the five companies of the live site's credits row to Olayinka Lawal and Gbenga Sosanya; on the client's earlier site those are the CV of the lead it named (index.html:1026–1044), whose bio the client asked us to leave out. Must not return."
  },
  {
   "id": "DC92",
@@ -1855,26 +1900,27 @@
   "source_sentence": "Creator management and commercial growth",
   "url": "docs/copy-drafts.md",
   "location": "v3 #directors — Candidate focus line (to confirm and assign per director) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: S2. S2 (search summary) says the directors focus on \"creator management and commercial growth\" but not who does which. Do not render until the client assigns it."
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: draft. Source: S2. S2 (search summary) says the directors focus on \"creator management and commercial growth\" but not who does which. Do not render until the client assigns it.",
+  "retired": "2026-10-23: dropped in copy v4 — no source (not on the earlier site either), and the client gave roles instead."
  },
  {
   "id": "DC100",
-  "claim": "We work with established creators, filmmakers, media companies and content owners who already have traction and want to build a sustainable business.",
-  "source_sentence": "We work with established creators, filmmakers, media companies and content owners who already have traction and want to build a sustainable business.",
-  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
-  "location": "v3 #apply — Who we work with (above \"Apply to join\") (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Near-verbatim S2 (FAQ): \"We work with established YouTube creators, filmmakers, media companies and content owners who have existing traction and want to build a sustainable business.\""
+  "claim": "For established creators, filmmakers, studios and content owners who already have traction and want to build a sustainable business.",
+  "source_sentence": "We work with established YouTube creators, filmmakers, media companies and content owners who have existing traction and want to build a sustainable business.",
+  "url": "/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)",
+  "location": "index.html:1206 (FAQ \"Who do you work with?\"); \"studios\" per index.html:590 (\"a solo creator or a studio with a deep catalogue\") → rebuild #apply .apply-who",
+  "kind": "positioning",
+  "note": "Approved 2026-10-23: from the client's own earlier site, which the client asked us to use to finish the drafts (\"for the draft use this https://relaxed-crisp-6fca75.netlify.app/ … stick to the remaining draft\"). Source file: index.html (byte-identical to public/index.html; the Netlify deploy served this static page, not the unfinished Next.js app in src/). Brand translated: Content Motley → Creative Motley. Opens \"For…\" so the page does not have two paragraphs starting \"We work with\" (DC03); \"media companies\" → \"studios\" (the earlier site's own word, :590) so it does not repeat the deck above it (\"We turn channels into media companies.\", F111); \"YouTube\" dropped (every service on the page is YouTube); \"have existing traction\" → \"already have traction\"."
  },
  {
   "id": "DC101",
   "claim": "Apply with your channel details. We review each application and, if there is a fit, book a discovery call.",
-  "source_sentence": "Apply with your channel details. We review each application and, if there is a fit, book a discovery call.",
-  "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
-  "location": "v3 #apply — How applying works (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Close paraphrase of S2 (FAQ): click \"Apply to Join\" and submit your channel details; the team reviews it and, \"if we see a fit, we’ll schedule a discovery call\"."
+  "source_sentence": "Click \"Apply to Join\" and share your channel details. We'll review your application, and if we see a fit, we'll schedule a discovery call to discuss your goals and how we can help.",
+  "url": "/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)",
+  "location": "index.html:1258 (FAQ \"How do I get started?\") → rebuild #apply .apply-how",
+  "kind": "contact",
+  "note": "Approved 2026-10-23: from the client's own earlier site, which the client asked us to use to finish the drafts (\"for the draft use this https://relaxed-crisp-6fca75.netlify.app/ … stick to the remaining draft\"). Source file: index.html (byte-identical to public/index.html; the Netlify deploy served this static page, not the unfinished Next.js app in src/). Brand translated: Content Motley → Creative Motley. Close paraphrase; the only mention of the discovery call on the page (DC80 dropped). \"We typically respond within 24-48 hours\" (index.html:1393) is not added: a promise for the client to confirm."
  },
  {
   "id": "DC102",
@@ -1882,7 +1928,8 @@
   "source_sentence": "We work with creators who treat this like a real business.",
   "url": "https://creativemotley.com/ (earlier version, as summarised by the search index on 2026-10-19; not on the live page)",
   "location": "v3 #apply — Closing line before the marquee (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: from site. Source: S2. Near-verbatim S2: \"We work with creators who treat this like a real business.\""
+  "kind": "dropped",
+  "note": "DROPPED (was a draft). Status: from site. Source: S2. Near-verbatim S2: \"We work with creators who treat this like a real business.\"",
+  "retired": "2026-10-23: dropped in copy v4 — overlaps DC100 and the deck (a fourth \"business\" line)."
  }
 ]

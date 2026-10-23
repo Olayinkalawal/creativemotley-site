@@ -157,9 +157,3 @@ html.ct-over .rail__index, html.ct-over .rail__mark, html.ct-over .rail__legal {
   .apply-cta .pill::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 44px; translate: 0 -50%; }
 }
 
-/* ?drafts=0 (html.no-drafts): with the two drafted lines hidden, the pill sits under the dek in one column (it floated
-   alone in the right column) */
-@media (min-width: 1024px) {
-  html.no-drafts .apply-join { grid-template-columns: minmax(0, 1fr); }
-  html.no-drafts .apply-join .apply-cta { grid-column: 1; grid-row: auto; margin-top: 0; }
-}

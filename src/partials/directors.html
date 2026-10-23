@@ -12,9 +12,11 @@
        glide behind their heads on a serif line that runs with scroll (decorative, aria-hidden: the names are read
        once, in the list below). On portrait screens the film is wider than the screen: the scroll pans from one
        portrait to the other. The site never says which portrait is which, so no name is ever set against a face.
-     - The people (.dr-info): the two names, each with its role line (DC90) and a slot for the bio the client will
-       send (data-bio; empty until then, and an empty slot renders nothing), then the line they share (DC91) and the
-       "Leadership experience from" credits (F54–F59, moved here from III Brands).
+     - The people (.dr-info): the two names, each with its role line (F137, F138: the client's own words, 2026-10-23)
+       and a slot for the bio the client will send (data-bio; empty until then, and an empty slot renders nothing).
+       No bio, career or credential is written for either of them. The shared line (DC91) and the "Leadership
+       experience from" credits (F54–F59) were removed on 2026-10-23 and are never to be set against these two names
+       (docs/copy-v4.md).
      The set dissolves into the room quickly (data-dissolve 0.16 viewport) through finer noise with a fainter rim
      (data-dissolve-noise / -rim, gl/stage.js → gl/lib/post.js), so it never rests as an island of curtain.
      The room is a sheet at its foot (data-wipe on the run): X's light painting is revealed exactly under the
@@ -60,33 +62,18 @@
       <ul class="dr-people">
         <li class="dr-person" data-reveal>
           <h3 class="dr-person__name">Olayinka Lawal</h3>
-          <p class="dr-person__role" data-draft="DC90">Director</p>
+          <p class="dr-person__role">Co-founder and CTO, WealthMotley</p>
           <!-- bio slot: the client's 20–25 words for Olayinka Lawal go here, as plain text (no rendering until then:
                an empty slot collapses). docs/copy-drafts.md, IX, has the template. -->
           <p class="dr-person__bio" data-bio="olayinka-lawal"></p>
         </li>
         <li class="dr-person" data-reveal="0.06">
           <h3 class="dr-person__name">Gbenga Sosanya</h3>
-          <p class="dr-person__role" data-draft="DC90">Director</p>
+          <p class="dr-person__role">Board member</p>
           <!-- bio slot: the client's 20–25 words for Gbenga Sosanya (as above) -->
           <p class="dr-person__bio" data-bio="gbenga-sosanya"></p>
         </li>
       </ul>
-      <div class="dr-shared" data-reveal="0.1">
-        <!-- DC91 names the same five companies as the credits list right under it: hidden until the client chooses
-             one of the two (wording unchanged; remove `hidden` to show it) -->
-        <p class="dr-shared__line" data-draft="DC91" hidden>Between them, leadership experience from YouTube, Paramount, Multichoice, Africa Magic and Circo Live.</p>
-        <div class="dr-credits">
-          <p class="dr-credits__label" id="directors-credits">Leadership experience from</p>
-          <ul class="dr-credits__list" aria-labelledby="directors-credits">
-            <li>YouTube</li>
-            <li>Paramount</li>
-            <li>Multichoice</li>
-            <li>Africa Magic</li>
-            <li>Circo Live</li>
-          </ul>
-        </div>
-      </div>
     </div>
   </div>
 </section>
