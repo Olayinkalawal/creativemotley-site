@@ -207,15 +207,14 @@ export function drag3d(stage, host, name, hintAt) {
      grows with the device), inside the host (8 px in from its sides, 6 px from its foot, 64 px from its top: under the
      header bar): a column to the box's right, its foot on the box's foot; with no room there (the device runs to the
      host's right side), a row under the box, its right end on the box's; with no room there either (to the foot too: a
-     phone held sideways), a row to the box's left, its foot on the box's foot. No copy measure, no search, no far corner:
+     phone held sideways), a row to the box's left at the host's foot (under the copy). No copy measure, no search:
      every layout keeps its copy left of the device (desktop, a phone held sideways) or under it at its left (a phone, a
-     tablet: a short label), so the box's right side, the strip under its right end and the gap left of it at the foot
-     are the device's own (zb-fix measured the copy, rail, header and footer clear at every size; these are the slots
-     the earlier copy-aware search chose in all 135 of its states, without its jumps). */
+     tablet), so the box's right side, the strip under its right end and the foot left of it are the device's own
+     (zb-fix measured the drawn pixels, the copy, rail, header, footer and markers clear at every rest and hold, 7 sizes). */
   const place = (b, dy) => {
     const s = FINE ? 34 : 40, l = s * 3 + 12, B = [b.x0, b.y0, b.x1, b.y1].map((v, i) => (v - (i & 1 ? d.y : d.x)) / d.k - (i & 1) * dy), m = 12 + (B[2] - B[0]) / 50,
       r = B[2] + m + s > W - 8, u = r && B[3] + m + s > H - 6, w = r ? l : s, h = r ? s : l,
-      X = cl(u ? B[0] - m - l : r ? B[2] - l : B[2] + m, 8, W - 8 - w), Y = cl(u ? B[3] - s : r ? B[3] + m : B[3] - l, 64, H - 6 - h);
+      X = cl(u ? B[0] - m - l : r ? B[2] - l : B[2] + m, 8, W - 8 - w), Y = cl(u ? H : r ? B[3] + m : B[3] - l, 64, H - 6 - h);
     return [X, Y, X + w, Y + h, r];
   };
 
