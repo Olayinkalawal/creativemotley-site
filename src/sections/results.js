@@ -1,4 +1,4 @@
-/* VIII · Results: four counters (F99–F102).
+/* VIII · Results: three counters (F99–F101).
    A counter counts once, as soon as it is in view (its hairline above 95% of the viewport): a short time-based ease-out (1.3 s),
    with the gold drawing along the hairline in step and the + fading in on the landing (the unit, M, always shows).
    So whenever the page is at rest the figure is settled, never caught mid-count. It resets (invisibly) only once

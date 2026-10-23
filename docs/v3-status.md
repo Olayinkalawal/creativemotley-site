@@ -1108,3 +1108,83 @@ model 259,592 → 260,153 (+0.2%). The lab GLBs are byte-identical to `public/`,
 - **Sheets:** `qa/shots/v3p5_best.jpg` (the five devices at their best key and at 3x, and the homepage inside the glass);
   the tracks' before/after sheets `qa/shots/v3p5_cam_before_after.jpg`, `v3p5_kitA_before_after.jpg`,
   `v3p5_kitA_fixes.jpg`, `v3p5_kitB_before_after.jpg`.
+
+# Phase 6: copy (verified 2026-10-23)
+The client (Olayinka Lawal, 2026-10-23): "so I am the CTO/Co founder of wealthmotley, Gbenga is part of the board. now
+for the draft use this https://relaxed-crisp-6fca75.netlify.app/ that was the earlier site. u dont need to use sholz
+image or bio just stick to the remaining draft. just think crititcally and make it work on the new site", then "just
+make it work". Copy v4 finished the drafts from that earlier site (Content Motley, the business's earlier name; source
+S7 in `docs/copy-drafts.md`) with everything about its named lead left out, and set the two role lines from the
+client's message (S8). Then this verification, fresh eyes, on a production build and on the GitHub Pages build. The
+client summary is `docs/copy-v4.md`; the client sheet `qa/shots/v3p6_copy.jpg` (git-ignored: force-add it to commit).
+Evidence: `/tmp/claude-0/-home-user-creativemotley-site/f5fb006b-f00a-5174-8cc3-2633425655d9/scratchpad/copy4/verify/`
+(fact checks `fc_*.txt`; the page read top to bottom `read_*.json`; walks `walk/`; captures `shots/`); the builder's own
+in `copy4/apply/`, the plan in `copy4/plan/plan.json`.
+
+## P6.1 Source
+S7 is the static homepage of the client's repo `contentmotley` (`index.html`, byte-identical to `public/index.html`).
+Its figures match the live site (100M+ monthly views, 70+ channels, 13+ with 1M+ subscribers: `index.html:453–461`);
+the unfinished Next.js app in the same repo does not (1B+ views, 200+ channels, 120+ films: `src/app/page.tsx:31–47`,
+its lead's CV figures) and is not used, nor is `blog.html` (bylined to the lead). Every approved line cites its
+`index.html` line in facts.json; the roles cite the client's message (F137, F138).
+
+## P6.2 What a visitor reads now, by chapter (1440 and 390 read the same words)
+- **I Storytellers:** "Creative Motley is a creator service provider, not a traditional multi-channel network:
+  hands-on strategy, management and monetisation for YouTube channels, on transparent terms. No channel is a line
+  item." (DC01, S7 `:1232`), then the reach line (DC03, `:1219`). Both approved: they now show with `?drafts=0` too.
+- **II Creators:** "What we run", six rows 01–06 (Channel strategy, Programming, Monetisation, Rights and Content ID,
+  Brand deals, Reporting): S7's names, our one-liners, still a draft. SEO and Thumbnails cut. "Monetise your catalogue".
+- **III Brands:** "We connect brands and agencies to African creators and IP, and manage everything from brief to
+  reporting." (DC31, `:687`, approved), then "How a brief runs" 01–05 (draft; step 05, S7's own two lines, is approved
+  but shows only with the drafted list around it).
+- **IV Method, VI Process, VII Kit:** unchanged.
+- **V Showcase:** card 2 is S7's own featured Omoni Oboli TV video (OQQaDqLCgKg, `:791`), titled "Love in Every Word 2:
+  The Wedding" (draft: the title is from search listings; YouTube is blocked here, so not oEmbed-verified).
+- **VIII Results:** three counters, 100M+ / 70+ / 13+ (2 + 1 on wide screens, clear of the faces). "16+ years in media"
+  is gone: on S7 it is the lead's career length.
+- **IX Directors:** "The two people answerable for all of it." Olayinka Lawal, "Co-founder and CTO, WealthMotley";
+  Gbenga Sosanya, "Board member". No bio, career or credential for either; the shared line (DC91) and the "Leadership
+  experience from" credits are gone (on S7 those five names are the lead's roles one for one, `:541–571`, `:1026–1044`;
+  next to the only two names on the page they would read as theirs, and as employers they cannot be reworded into a
+  company claim).
+- **X Apply:** "For established creators, filmmakers, studios and content owners who already have traction and want to
+  build a sustainable business." and "Apply with your channel details. We review each application and, if there is a
+  fit, book a discovery call." (DC100, DC101, `:1206`, `:1258`; approved). Every contact stays info@creativemotley.com.
+
+## P6.3 What this verification changed
+- `src/partials/brands.html`, `directors.html`, `results.html`: the HTML comments ship in the built page (view-source),
+  and three of them described the removed credits and the 16+ figure as the earlier site's lead's CV. Reworded to a
+  neutral pointer to `docs/copy-v4.md` (Directors: "never to be set against these two names"). No visible change.
+- `docs/facts.json` F106: its note said the site gives no role beyond "Directors"; it now says the role lines are the
+  client's own (F137, F138) and nothing else is attached to either name.
+- `docs/copy-drafts.md`: DC65's Use column `use` → `alt`, DC66's `optional` → `use` (DC66 is the card on the page; the
+  showcase generator takes the "use" pick).
+- `docs/copy-v4.md`: it listed the Report step among the lines that "show even with drafts hidden"; it does not (it
+  sits inside the drafted brief list). Now said separately.
+
+## P6.4 Checks
+- **No trace of the earlier site's lead:** "Sholz", "Laelle", "Aforevo" (any case) in the built HTML, JS, CSS and JSON of
+  both builds: none; `src/`, `public/` and `index.html`: none. The credits names and "16+" appear nowhere on the page.
+- **Fact check** (production build and Pages build): desktop and mobile 471 strings, `--drafts 0` 389: pass. 38 draft ids
+  on the page await the client (47 in phase 5).
+- **The page read** (visible text in order, 1440 and 390, with and without drafts): no sentence repeated; no
+  `data-draft` on an approved line (DC01, DC03, DC31, DC37, DC100, DC101, F137, F138); `?drafts=0` hides only the
+  services, Catalogue channels, the brief list, the Method part lines, the video titles and the Kit run labels, and
+  Storytellers and Apply keep their paragraphs.
+- **Walks** (production build, 0.2-screen steps): CLS 0, no console error or warning, no failed request, no horizontal
+  overflow and no text past the viewport at 1440, 1280, 1024, 1920, 390, 360, 820 × 1180 and 844 × 390, each with WebGL
+  and at tier 0; `?drafts=0` at 1440 and 390 the same. The changed blocks, captured at 1440, 1280, 1920, 390, 360 and
+  820: nothing clipped or off-screen; the only box overlap (1920, "How a brief runs" over the "01" numeral's line box,
+  4 px) is font boxes with no ink touching, unchanged markup.
+- **GitHub Pages build** (`scripts/build-pages.mjs`, served under `/creativemotley-site/`; 252 root paths rewritten,
+  `noindex` on the page): full reads at 1440 and 390 with WebGL and at tier 0: no failed request, no error, CLS 0;
+  fact check in all four modes passes. Showcase generator: `--check` ok, 7 cards.
+
+## P6.5 For the client (short)
+1. Is "the board" Creative Motley Ltd's, and is WealthMotley part of it? If the board has others, F105 ("The two people
+   answerable for all of it.") changes. Bios, if wanted: 20–25 words each.
+2. Does anyone at the company today hold the credits / 16+ years? If so, it returns in that person's bio only.
+3. Approve or replace our wording: the six service lines, Catalogue channels, brief steps 01–04, the video titles.
+4. Are 24/7 support, the 24–48-hour reply and the results timing still promises? (left out until confirmed)
+5. Emmabel TV and Royal Arts TV (on the earlier site, not the live one): add to the Showcase?
+6. Card 2's poster tagline ("Two exes. One wedding.") fits the previous film better; keep the new video?

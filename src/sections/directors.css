@@ -1,6 +1,6 @@
 /* IX · Directors: the opener (title and dek over the empty set), the stage (the alpha film rising from the foot of
-   the screen, the names on a serif line behind the heads), then the people (names, role lines, bio slots, the shared
-   line and the credits) on the umber room.
+   the screen, the names on a serif line behind the heads), then the people (names, role lines and bio slots) on the
+   umber room.
    Static by default (no JS, reduced motion): no running line (the names are in the list below); on upright screens
    the heads are two crops of the still, side by side (.dr-duo).
    .dr-on (JS, motion allowed): the line repeats and runs with scroll; the stage pins briefly; on phones the film pans.
@@ -163,7 +163,8 @@ html.js .dr-video.is-ready { opacity: 1; }
   transform: translateX(calc(var(--f) * -100%));
 }
 
-/* ── the people: names with their role lines and bio slots, then the line they share and the credits ── */
+/* ── the people: names with their role lines and bio slots (the shared line and the credits row were removed
+   2026-10-23, docs/copy-v4.md; at ≥ 900 px the list keeps the left column of the grid) ── */
 .dr-info {
   position: relative; display: grid; gap: clamp(28px, 5svh, 56px) clamp(32px, 6vw, 96px); align-items: start;
   padding-block: clamp(36px, 7svh, 72px) 0; color: var(--cream);
@@ -189,11 +190,3 @@ html.js .dr-video.is-ready { opacity: 1; }
 .dr-person__bio { margin-top: 0.85em; font: var(--f-body); letter-spacing: var(--ls-body); color: rgba(244, 237, 223, 0.84); max-width: 30em; }
 .dr-person__bio:empty { display: none; }
 
-.dr-shared { display: grid; gap: clamp(22px, 3.6svh, 36px); padding-top: clamp(14px, 2svh, 20px); }
-.dr-shared__line { font: var(--f-lead); letter-spacing: var(--ls-lead); max-width: 22em; text-wrap: pretty; }
-.dr-credits__label { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream-mute); }
-.dr-credits__list {
-  display: grid; grid-template-columns: repeat(3, max-content); gap: 0.55em 1.8em; margin-top: 0.9em;
-  font: var(--f-label); letter-spacing: var(--ls-label);
-}
-@media (max-width: 479px) { .dr-credits__list { grid-template-columns: repeat(2, max-content); } }
