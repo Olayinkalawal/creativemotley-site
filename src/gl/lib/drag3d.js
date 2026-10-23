@@ -27,7 +27,8 @@
    only the region blocks the browser's pinch. Past 1.15× the section gets .d3-zoomed (its copy steps back). Keyboard:
    the region is focusable (role img; its label names the device and the keys): arrows turn it (±15° / ±8°, eased
    0.35 s), 0 or Escape resets. A one-time hint (per visit: sessionStorage) fades in beside the device the first time
-   one rests on screen, for 3 s, and never after a drag (left of the zoom buttons where it would meet them).
+   one rests on screen, for 3 s, and never after a drag (where it would meet the zoom buttons: over a row of them, left
+   of a column).
    Reduced motion (if the stage ever ran under it): no glide, no eases. Every change asks the stage for a frame
    (stage.invalidate), so the stage's idle-stop re-arms only while something moves. */
 import { onFrame, input } from '../../core/scroll.js';
@@ -37,8 +38,6 @@ const KEY = 'cm-d3-hint';
 let seen = false;
 try { seen = !!sessionStorage.getItem(KEY); } catch { /* storage off: once per page view */ }
 const cl = (v, a, b) => Math.min(b, Math.max(a, v));
-// two rects [x0, y0, x1, y1] closer than m px
-const hit = (a, q, m = 6) => a[0] < q[2] + m && q[0] < a[2] + m && a[1] < q[3] + m && q[1] < a[3] + m;
 const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 // the zoom buttons (docs/ui-strings.json; their icons are _teardown.css's): label, factor (0: reset)
 const BTN = [['Zoom in', 1.5], ['Zoom out', 1 / 1.5], ['Reset view', 0]];
@@ -47,34 +46,19 @@ export function drag3d(stage, host, name, hintAt) {
   host.insertAdjacentHTML('beforeend', `<div class="d3w"><div class="d3" tabindex="0" role="img"></div><div class="d3__hint" aria-hidden="true"></div><div class="d3__btns">${
     BTN.map(([t]) => `<button type="button" class="d3__b" aria-label="${t}"></button>`).join('')}</div></div>`);
   const lay = host.lastElementChild, [reg, hint, bar] = lay.children, sec = host.closest('section');
-  // the host's size, observed (reading it in the frame after the class and style writes forced a layout each frame);
-  // and what the zoom buttons keep clear of (avoid, host px): the rail (mark, index, the legal line; fixed: viewport
-  // px stand for host px, as the host is pinned at the top while a device is live), the copy's label, head and rows,
-  // the chapter's title, the hero frame's mark, dek and index; laid out (offsets: no transforms, so a frame in flight
-  // or a line reveal measures where it rests; as wide as their content: a short label leaves the room beside it) as
-  // the host resizes. place() counts those on screen now (the section's .is-in; the rail's and the hero frame's
-  // always; a title under an .is-out has gone), so copy that is not up yet (an orbit) or gone (another shot's) frees
-  // its room
-  let W = host.clientWidth, H = host.clientHeight, avoid = [];
-  const rg = document.createRange();
-  const ro = new ResizeObserver(([e]) => {
-    W = e.contentRect.width; H = e.contentRect.height;
-    avoid = [...document.querySelectorAll('.rail>*'), ...host.querySelectorAll('.td__label,.td__head,.td__spec,.td__giant,.mark,.frame__dek,.index')].map((e) => {
-      let x = 0, y = 0;
-      for (let n = e; n && n !== host; n = n.offsetParent) x += n.offsetLeft, y += n.offsetTop;
-      rg.selectNodeContents(e);
-      return [x, y, x + rg.getBoundingClientRect().width, y + e.offsetHeight, e];
-    });
-  });
+  // the host's size, observed (reading it in the frame after the class and style writes forced a layout each frame); a
+  // resize also re-places the zoom buttons (pY: place(), below), zoomed or not
+  let W = host.clientWidth, H = host.clientHeight, P, pY = NaN;
+  const ro = new ResizeObserver(([e]) => { W = e.contentRect.width; H = e.contentRect.height; pY = NaN; });
   ro.observe(host);
   const st = (e, k, v) => { if (e['_' + k] !== v) { e['_' + k] = v; e.style.setProperty(k, v); } };
   const cls = (e, c, v) => { if (e['_' + c] !== v) { e['_' + c] = v; e.classList.toggle(c, v); } };
-  const at = (e, x, y) => st(e, 'transform', `translate(${x.toFixed(0)}px,${y.toFixed(0)}px)`);
+  const at = (e, x, y) => st(e, 'transform', `translate(${x | 0}px,${y | 0}px)`);
 
   const d = { az: 0, el: 0, k: 1, x: 0, y: 0, cx: 0, cy: 0 };
   let on = false, box = null, dy0 = 0, reduced = false, y0 = NaN, sy = 0, lastY = NaN, last = performance.now();
   let drag = null, vA = 0, vE = 0, glide = false, tw = null, zt = null, pinch = null, tap = null, moved = 0, type = '';
-  let occ = { az: 0, el: 0, k: 1, t: 0 }, occNow = false, hintOn = 0, hintY = 0, hintT = 0, restAt = 0, retT = 0, zoomT = 0, frozen = null, P, pY = NaN;
+  let occ = { az: 0, el: 0, k: 1, t: 0 }, occNow = false, hintOn = 0, hintY = 0, hintT = 0, restAt = 0, retT = 0, zoomT = 0, frozen = null;
   const pts = new Map();
   const now = () => performance.now();
   const kick = () => stage.invalidate();
@@ -208,29 +192,31 @@ export function drag3d(stage, host, name, hintAt) {
     if (seen || !on || busy() || Math.abs(scrollY - lastY) > 2) return;
     seenNow(); hintOn = 1; hintY = sy;
     hint.textContent = `Drag to turn · ${!FINE || input.trackpad || /Mac/.test(navigator.platform) ? 'pinch' : 'double-click'} to zoom`;
-    const [x, y] = hintAt ? hintAt(box) : [(box.x0 + box.x1) / 2, box.y1 + 14], w = hint.offsetWidth / 2, Y = cl(y - dy0, 12, H - 44);
-    let X = cl(x, 120, W - 120);
-    if (hit([X - w, Y, X + w, Y + 30], P[3])) X = P[3][0] - w - 6;   // clear of the buttons: to their left (they sit at the device's right end)
+    const [x, y] = hintAt ? hintAt(box) : [(box.x0 + box.x1) / 2, box.y1 + 14], w = hint.offsetWidth / 2;
+    let X = cl(x, 120, W - 120), Y = cl(y - dy0, 12, H - 44);
+    // within 6 px of the buttons (P): over a row of them (under the device, the copy can follow close below), left of a column
+    if (X - w < P[2] + 6 && P[0] < X + w + 6 && Y < P[3] + 6 && P[1] < Y + 36) P[4] ? Y = P[1] - 36 : X = P[0] - w - 6;
     at(hint, X, Y);
     st(hint, 'opacity', '1');
     hintT = setTimeout(hideHint, 3000);
   };
 
-  /* ── where the zoom buttons go (host px: [x, y, row, rect]) ───────────────────────────────────────────────
-     From the device's box at 1× (the zoom taken out: css x' = k·x + d.x; the box is the drawn device's bounds to a few
-     px), the first of these, each kept inside the host (8 px in from its sides, 6 px from its foot, 64 px from its top:
-     under the header bar), that is 12 px clear of the box and 6 px of the copy on screen (avoid), 14 px out from the
-     box (so one pushed back inside the host, nearer the device, is passed over: the box can miss a part's tip by a few
-     px): a column to the box's right, its foot on the box's foot; a row under the box, its right end on the box's; a
-     row over it; a column to its left; then the section's free corners beside the device's left edge, a row at the
-     foot (under the copy), then at the top (a phone held sideways: the device fills its column, the copy's leaves
-     room). With none of those: a column inside the box at its lower right (the old place; no state measured needs it). */
+  /* ── where the zoom buttons go (host px: [x0, y0, x1, y1, row]) ──────────────────────────────────────────
+     Beside the device's box at 1× (B: the zoom taken out, css x' = k·x + d.x), m px out from it (the box is the fit's
+     sampled points, which can miss a drawn edge by ~2 % of its width: the console's chassis through its orbit, so m
+     grows with the device), inside the host (8 px in from its sides, 6 px from its foot, 64 px from its top: under the
+     header bar): a column to the box's right, its foot on the box's foot; with no room there (the device runs to the
+     host's right side), a row under the box, its right end on the box's; with no room there either (to the foot too: a
+     phone held sideways), a row to the box's left, its foot on the box's foot. No copy measure, no search, no far corner:
+     every layout keeps its copy left of the device (desktop, a phone held sideways) or under it at its left (a phone, a
+     tablet: a short label), so the box's right side, the strip under its right end and the gap left of it at the foot
+     are the device's own (zb-fix measured the copy, rail, header and footer clear at every size; these are the slots
+     the earlier copy-aware search chose in all 135 of its states, without its jumps). */
   const place = (b, dy) => {
-    const s = FINE ? 34 : 40, l = s * 3 + 12, B = [b.x0, b.y0, b.x1, b.y1].map((v, i) => (v - (i & 1 ? d.y : d.x)) / d.k - (i & 1) * dy);
-    for (const [x, y, w, h, f] of [[B[2] + 14, B[3] - l, s, l], [B[2] - l, B[3] + 14, l, s], [B[2] - l, B[1] - 14 - s, l, s], [B[0] - 14 - s, B[3] - l, s, l], [B[0] - 14 - l, H, l, s], [B[0] - 14 - l, 0, l, s], [B[2] - s - 14, B[3] - l, s, l, 1]]) {
-      const X = cl(x, 8, W - 8 - w), Y = cl(y, 64, H - 6 - h), r = [X, Y, X + w, Y + h];
-      if (f || !(hit(r, B, 12) || avoid.some((q) => hit(r, q) && q[4].matches('.is-in:not(.is-out *),.frame *,.rail *')))) return [X, Y, w > s, r];
-    }
+    const s = FINE ? 34 : 40, l = s * 3 + 12, B = [b.x0, b.y0, b.x1, b.y1].map((v, i) => (v - (i & 1 ? d.y : d.x)) / d.k - (i & 1) * dy), m = 12 + (B[2] - B[0]) / 50,
+      r = B[2] + m + s > W - 8, u = r && B[3] + m + s > H - 6, w = r ? l : s, h = r ? s : l,
+      X = cl(u ? B[0] - m - l : r ? B[2] - l : B[2] + m, 8, W - 8 - w), Y = cl(u ? B[3] - s : r ? B[3] + m : B[3] - l, 64, H - 6 - h);
+    return [X, Y, X + w, Y + h, r];
   };
 
   /* ── per frame ───────────────────────────────────────────────────────────────────────────────────────── */
@@ -241,9 +227,11 @@ export function drag3d(stage, host, name, hintAt) {
     on = !!(allow && b);
     if (b) box = b, dy0 = dy;
     // the buttons (place(), above): placed at the scroll's pose and 1×, then held through a zoom, a turn and their eases
-    // back, so a second click lands on the button the first did; placed again once the page scrolls. (Here, before this
-    // frame's eases move the zoom: the box came posed with the last frame's, so the ease's last step is still held.)
-    if (on && (sy !== pY || !(busy() || d.k > 1.0001 || d.az || d.el))) P = place(b, dy), pY = sy;
+    // back, and while the device or the buttons are hovered (the pointer parallax and the hero's idle turn move the box
+    // a few px: the buttons stay under the pointer on its way to them, and on a tapped device), so a second click lands
+    // on the button the first did; placed again once the page scrolls or resizes. (Here, before this frame's eases move the
+    // zoom: the box came posed with the last frame's, so the ease's last step is still held.)
+    if (on && (sy !== pY || !(busy() || d.k > 1.0001 || d.az || d.el || lay.matches(':hover')))) P = place(b, dy), pY = sy;
     if (was && !on) { if (drag) endDrag(false); pts.clear(); pinch = null; hideHint(); back(500); unzoom(500); }
     // the glide, the tweens, the zoom's ease
     if (glide) {
@@ -271,7 +259,7 @@ export function drag3d(stage, host, name, hintAt) {
       const x0 = cl(b.x0 - 10, 0, W), x1 = cl(b.x1 + 10, 0, W), y1 = cl(b.y0 - 10 - dy, 0, H), y2 = cl(b.y1 + 10 - dy, 0, H);
       at(reg, x0, y1);
       st(reg, 'width', `${Math.max(48, Math.round((x1 - x0) / 4) * 4)}px`); st(reg, 'height', `${Math.max(48, Math.round((y2 - y1) / 4) * 4)}px`);
-      at(bar, P[0], P[1]); st(bar, 'flex-direction', P[2] ? 'row' : 'column');
+      at(bar, P[0], P[1]); cls(bar, 'is-row', P[4]);
     }
     // the hint: once, the first time a device rests on screen (where the scene says it may; not scrolled for 0.75 s)
     if (!seen && on && rest && !busy()) {
