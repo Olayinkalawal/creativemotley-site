@@ -47,10 +47,11 @@ export function drag3d(stage, host, name, hintAt) {
     BTN.map(([t]) => `<button type="button" class="d3__b" aria-label="${t}"></button>`).join('')}</div></div>`);
   const lay = host.lastElementChild, [reg, hint, bar] = lay.children, sec = host.closest('section');
   // the host's size, observed (reading it in the frame after the class and style writes forced a layout each frame); a
-  // resize also re-places the zoom buttons over its next 30 frames (rz: place(), below), zoomed, hovered or not, as the
-  // scene's slot follows the page's re-measure (core/layout.js: 80 ms after the body settles)
-  let W = host.clientWidth, H = host.clientHeight, P, pY, rz;
-  const ro = new ResizeObserver(([e]) => { W = e.contentRect.width; H = e.contentRect.height; rz = 30; });
+  // resize (not the first observation: rz -1 → 0) also re-places the zoom buttons over the next 30 drawn frames (rz:
+  // place(), below), zoomed, hovered or not, as the scene's box follows the page's re-measure some frames on
+  // (core/layout.js, the stage's own resize); frames, not time: a slow or idle stage still gets its 30
+  let W = host.clientWidth, H = host.clientHeight, P, pY, rz = -1;
+  const ro = new ResizeObserver(([e]) => { W = e.contentRect.width; H = e.contentRect.height; rz = ~rz && 30; });
   ro.observe(host);
   const st = (e, k, v) => { if (e['_' + k] !== v) { e['_' + k] = v; e.style.setProperty(k, v); } };
   const cls = (e, c, v) => { if (e['_' + c] !== v) { e['_' + c] = v; e.classList.toggle(c, v); } };
@@ -230,9 +231,10 @@ export function drag3d(stage, host, name, hintAt) {
     // the buttons (place(), above): placed at the scroll's pose and 1×, then held through a zoom, a turn and their eases
     // back, and while the device or the buttons are hovered (the pointer parallax and the hero's idle turn move the box
     // a few px: the buttons stay under the pointer on its way to them, and on a tapped device), so a second click lands
-    // on the button the first did; placed again once the page scrolls or resizes. (Here, before this frame's eases move the
-    // zoom: the box came posed with the last frame's, so the ease's last step is still held.)
-    if (on && (sy !== pY || rz-- > 0 || !(busy() || d.k > 1.0001 || d.az || d.el || lay.matches(':hover')))) P = place(b, dy), pY = sy;
+    // on the button the first did; placed again once the page scrolls, and over 30 frames after a resize (rz). (Here,
+    // before this frame's eases move the zoom: the box came posed with the last frame's, so the ease's last step is
+    // still held.)
+    if (on && (sy !== pY || rz > 0 && rz-- || !(busy() || d.k > 1.0001 || d.az || d.el || lay.matches(':hover')))) P = place(b, dy), pY = sy;
     if (was && !on) { if (drag) endDrag(false); pts.clear(); pinch = null; hideHint(); back(500); unzoom(500); }
     // the glide, the tweens, the zoom's ease
     if (glide) {
