@@ -9,7 +9,7 @@
    The active index is exposed as state.active and as a "showcase:active" event on the section.
    Posters are <picture>s (AVIF, WebP fallback): small files for the static grid; in the animated run on desktop the
    proxy asks for the 1200-px file, the one the WebGL scene uploads, so each poster is fetched once.
-   After the run: "Watch the work" (initVideos below), the XXL video cards. */
+   After the run: "On the roster", the creator index, and "Watch the work", the XXL video cards (initVideos below). */
 import './showcase.css';
 import { onFrame, clamp, smooth, seg, lenis, view } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
@@ -292,7 +292,10 @@ export function init() {
    - play: the shared modal morphs from the card art (View Transitions); the youtube-nocookie iframe is created once
      the modal has opened and removed before it closes. No iframe exists until a click.
    - the row: native horizontal scroll with snap; Previous / Next and the 0N / 0M counter from 720 px, the counter alone
-     under the row on phones (both polite live regions: the one shown is announced). */
+     under the row on phones (both polite live regions: the one shown is announced).
+   - On the roster (above the row, the same markup source): each Watch row opens the same modal with its video (the
+     card's art when the creator has a card, else a black frame until the player fades in; no morph from a text row).
+     Without JS a row is a plain YouTube link. */
 export function initVideos(sec) {
   const wv = sec.querySelector('[data-wv]');
   if (!wv) return;
@@ -340,35 +343,63 @@ export function initVideos(sec) {
     if (l < sl || l + li.offsetWidth > sl + scroller.clientWidth) scroller.scrollTo({ left: l, behavior: REDUCED ? 'auto' : 'smooth' });
   });
 
-  /* play */
+  /* play: a card, or a Watch row of the roster above the row (sec [data-ros]: a modified or middle click is left to its
+     link, a new tab on YouTube) */
+  const artFor = (id) => items.find((li) => li.dataset.yt === id)?.querySelector('.wv__art img') || null;
   wv.addEventListener('click', (e) => {
-    const b = e.target.closest('[data-wv-play]');
-    if (b) openVideo(b.closest('.wv__item'));
+    const li = e.target.closest('[data-wv-play]')?.closest('.wv__item');
+    if (!li) return;
+    const t = li.querySelector('.wv__t');
+    openVideo({ id: li.dataset.yt, title: t.textContent, draft: t.dataset.draft, by: li.querySelector('.wv__by').textContent, art: artFor(li.dataset.yt) });
   });
-  function openVideo(li) {
-    const id = li.dataset.yt;
-    const card = li.querySelector('.wv__art img');
-    const t = li.querySelector('.wv__t'), by = li.querySelector('.wv__by');
+  const ros = sec.querySelector('[data-ros]');
+  // a roster row has no picture to grow from: a detached source (modal.js morphs only from a rendered element) fades in
+  const NO_MORPH = document.createElement('i');
+  ros?.querySelectorAll('[data-ros-yt]').forEach((a) => a.setAttribute('aria-haspopup', 'dialog'));
+  ros?.addEventListener('click', (e) => {
+    const a = e.target.closest('[data-ros-yt]');
+    if (!a || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    const id = a.dataset.rosYt;
+    openVideo({ id, title: a.dataset.rosT, draft: a.dataset.rosDraft, by: a.querySelector('.ros__nm').textContent, art: artFor(id), from: NO_MORPH });
+  });
+  // the shared modal still closing: a closing morph (modal.js) ends by emptying the dialog and clearing its source's
+  // transition name, even when another modal has opened since (e.g. the poster modal shut a moment before a row or a
+  // card is pressed). Until then the dialog is shut but not yet empty, or mid-morph (#modal.vt): wait (at most 4 s),
+  // or the video would open empty and the next morph would meet a duplicate transition name.
+  const modalEl = document.getElementById('modal'), modalBody = modalEl?.querySelector('[data-modal-body]');
+  const closing = () => !!modalEl && (modalEl.classList.contains('vt') || (!modalEl.classList.contains('open') && modalBody?.childElementCount > 0));
+  function openVideo(o) {
+    if (!closing()) return openVideoNow(o);
+    let t = 0;
+    const go = () => { mo.disconnect(); clearTimeout(t); openVideoNow(o); };
+    const mo = new MutationObserver(() => { if (!closing()) go(); });
+    mo.observe(modalEl, { attributes: true, attributeFilter: ['class'], childList: true, subtree: true });
+    t = setTimeout(go, 4000);
+  }
+  // title: the heading (a drafted title carries its draft id); by: the creator; art: the card's picture (a roster row of
+  // a creator with no card has none: the frame stays black until the player fades in); from: the morph's source
+  function openVideoNow({ id, title, draft, by, art, from = art }) {
     const fig = document.createElement('figure');
     fig.className = 'wvm'; fig.dataset.theme = 'dark';
-    fig.innerHTML = `<div class="wvm__frame"><img class="wvm__art" alt="" decoding="async" width="1920" height="1080"></div>
+    fig.innerHTML = `<div class="wvm__frame">${art ? '<img class="wvm__art" alt="" decoding="async" width="1920" height="1080">' : ''}</div>
       <figcaption class="wvm__cap"><p class="wvm__by"></p><h2 class="wvm__t" id="modal-title"></h2>
         <a class="boxlink wvm__yt" target="_blank" rel="noopener" data-draft="DC62">Watch on YouTube <span class="ar">↗</span></a></figcaption>`;
-    fig.querySelector('.wvm__art').src = card.currentSrc || card.src;
-    fig.querySelector('.wvm__by').textContent = by.textContent;
+    if (art) fig.querySelector('.wvm__art').src = art.currentSrc || art.src;
+    fig.querySelector('.wvm__by').textContent = by;
     const h = fig.querySelector('.wvm__t');
-    h.textContent = t.textContent;
-    if (t.dataset.draft) h.dataset.draft = t.dataset.draft;
+    h.textContent = title;
+    if (draft) h.dataset.draft = draft;
     fig.querySelector('.wvm__yt').href = `https://www.youtube.com/watch?v=${encodeURIComponent(id)}`;
     let frame = null;
     openModal(fig, {
-      from: card,
+      from,
       onOpen() {
         frame = document.createElement('iframe');
         frame.className = 'wvm__player';
         frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&playsinline=1`;
         // the player's name: the video's title, or (?drafts=0, where the drafted titles are hidden) the creator's name
-        frame.title = document.documentElement.classList.contains('no-drafts') && t.dataset.draft ? by.textContent : t.textContent;
+        frame.title = document.documentElement.classList.contains('no-drafts') && draft ? by : title;
         frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';   // (no allowfullscreen: allow wins)
         frame.referrerPolicy = 'strict-origin-when-cross-origin';
         frame.addEventListener('load', () => frame?.classList.add('is-in'), { once: true });

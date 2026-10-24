@@ -972,7 +972,8 @@
   "url": "https://creativemotley.com/",
   "location": "#directors .dirs-title p",
   "kind": "positioning",
-  "note": "Serif line under 'Directors'."
+  "note": "Serif line under 'Directors'.",
+  "retired": "2026-10-24: replaced by F149. The client: \"yes its creative motley board, it includes more but leave it as two for now\" (client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation)), so \"The two people\" implied the two named are the whole board."
  },
  {
   "id": "F106",
@@ -1315,8 +1316,8 @@
   "source_sentence": "Channel strategy — A dedicated strategist: what the channel is for, and what it makes next.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:597 (\"Channel Strategy & Programming\"), :636 (\"Dedicated channel strategist\", the \"What You Get\" list), :755 (\"We handle strategy, SEO, …\"). v4 (2026-10-23) adds \"A dedicated strategist:\" (the earlier site's promise of a named person); \"what the channel is for, and what it makes next\" is ours. Row 01 of \"What we run\"."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:597 (\"Channel Strategy & Programming\"), :636 (\"Dedicated channel strategist\", the \"What You Get\" list), :755 (\"We handle strategy, SEO, …\"). v4 (2026-10-23) adds \"A dedicated strategist:\" (the earlier site's promise of a named person); \"what the channel is for, and what it makes next\" is ours. Row 01 of \"What we run\"."
  },
  {
   "id": "DC12",
@@ -1324,8 +1325,8 @@
   "source_sentence": "Programming — Series, formats and the order they go out.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:597 (\"Channel Strategy & Programming\"; its line \"Upload calendars, series design, and content planning\", :598, is not used: \"series design\" and \"upload calendar\" are already Process F82/F83), :755 (\"programming\"). \"Series, formats and the order they go out\" is ours. Row 02."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:597 (\"Channel Strategy & Programming\"; its line \"Upload calendars, series design, and content planning\", :598, is not used: \"series design\" and \"upload calendar\" are already Process F82/F83), :755 (\"programming\"). \"Series, formats and the order they go out\" is ours. Row 02."
  },
  {
   "id": "DC13",
@@ -1353,8 +1354,8 @@
   "source_sentence": "Monetisation — Ads and sponsorship, set up so views pay.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:604–605 (\"Monetization & Brand Deals — Ad optimization, sponsorships, and revenue growth\"); UK spelling as the earlier site itself writes it at :590 (\"monetise\") and :746 (\"monetisation\"). \"set up so views pay\" is ours. Row 03."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:604–605 (\"Monetization & Brand Deals — Ad optimization, sponsorships, and revenue growth\"); UK spelling as the earlier site itself writes it at :590 (\"monetise\") and :746 (\"monetisation\"). \"set up so views pay\" is ours. Row 03."
  },
  {
   "id": "DC16",
@@ -1362,8 +1363,8 @@
   "source_sentence": "Rights and Content ID — Re-uploads found, claimed and earning for you.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:618–619 (\"Rights & Content ID — Protect your IP and monetize reuploads\"). \"Re-uploads found, claimed and earning for you\" is ours (close to the source). Row 04."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:618–619 (\"Rights & Content ID — Protect your IP and monetize reuploads\"). \"Re-uploads found, claimed and earning for you\" is ours (close to the source). Row 04."
  },
  {
   "id": "DC17",
@@ -1371,8 +1372,8 @@
   "source_sentence": "Brand deals — Access to the brand briefs that come to us.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:638 (\"Access to brand deal pipeline\"), :604 (\"Monetization & Brand Deals\"). \"the brand briefs that come to us\" is ours. Row 05."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:638 (\"Access to brand deal pipeline\"), :604 (\"Monetization & Brand Deals\"). \"the brand briefs that come to us\" is ours. Row 05."
  },
  {
   "id": "DC18",
@@ -1380,8 +1381,8 @@
   "source_sentence": "Reporting — A monthly review of what moved and what changes.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Services list item (name — line) (Track C draft, opt)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:637 (\"Monthly performance reviews\": this settles copy-drafts question 6, \"monthly\" is the earlier site's), :755 (\"… monetization, rights and reporting\"). \"of what moved and what changes\" is ours. Row 06 (on the page since 2026-10-23)."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft (the service name is the earlier site's; the one-line description is ours, for the client's approval). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:637 (\"Monthly performance reviews\": this settles copy-drafts question 6, \"monthly\" is the earlier site's), :755 (\"… monetization, rights and reporting\"). \"of what moved and what changes\" is ours. Row 06 (on the page since 2026-10-23)."
  },
  {
   "id": "DC19",
@@ -1389,8 +1390,8 @@
   "source_sentence": "Catalogue channels — Your film and TV library, launched and programmed on YouTube.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #creators — Media Owners list item (under F44–F46) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft (the service is the earlier site's Media Owners offer; the line is ours). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:514 (\"You own film, TV or digital IP and want predictable, recurring revenue from YouTube.\"), :590 (\"a studio with a deep catalogue\"). \"launched and programmed on YouTube\" is ours, not the earlier site's. The earlier \"recurring revenue\" is already F45 (\"earning every month\")."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft (the service is the earlier site's Media Owners offer; the line is ours). Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:514 (\"You own film, TV or digital IP and want predictable, recurring revenue from YouTube.\"), :590 (\"a studio with a deep catalogue\"). \"launched and programmed on YouTube\" is ours, not the earlier site's. The earlier \"recurring revenue\" is already F45 (\"earning every month\")."
  },
  {
   "id": "DC20",
@@ -1526,8 +1527,8 @@
   "source_sentence": "Brief — You tell us the audience, the message and the budget.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. F38 \"Brand brief received — Lagos\"; F24 \"Brands — budget, no voice\". Drafted."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft. Source: —. F38 \"Brand brief received — Lagos\"; F24 \"Brands — budget, no voice\". Drafted."
  },
  {
   "id": "DC34",
@@ -1535,8 +1536,8 @@
   "source_sentence": "Match — We put forward creators from a vetted network whose audiences fit the brief.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:693 (\"Curated network of vetted creators\"), :660–661 (\"Strategic Matching — Right creators for your brand goals\"). \"whose audiences fit the brief\" is ours."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft. Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:693 (\"Curated network of vetted creators\"), :660–661 (\"Strategic Matching — Right creators for your brand goals\"). \"whose audiences fit the brief\" is ours."
  },
  {
   "id": "DC35",
@@ -1544,8 +1545,8 @@
   "source_sentence": "Contract — One agreement and one point of contact, however many creators are on it.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:701 (\"One contract, one point of contact\"). Says \"One agreement\" so F48 \"One contract.\" is not repeated; \"however many creators are on it\" is ours."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft. Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:701 (\"One contract, one point of contact\"). Says \"One agreement\" so F48 \"One contract.\" is not repeated; \"however many creators are on it\" is ours."
  },
  {
   "id": "DC36",
@@ -1553,8 +1554,8 @@
   "source_sentence": "Make — In the creator’s own voice: a campaign that feels like content.",
   "url": "docs/copy-drafts.md",
   "location": "v3 #brands — Brief step (name — line) (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:697 (\"YouTube-native campaigns that feel like content\"). \"In the creator’s own voice\" is ours (it answers F24 \"Brands — budget, no voice\"). v4 (2026-10-23) replaces \"Made in the creator’s own voice, to your brief.\" (\"Make — Made\" echoed)."
+  "kind": "service",
+  "note": "Approved 2026-10-24 by the client (\"yes the online descpription is fine\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 3: the service descriptions, the brief steps and Catalogue channels). data-draft removed; it shows with ?drafts=0. Was: Status: draft. Earlier site (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)): index.html:697 (\"YouTube-native campaigns that feel like content\"). \"In the creator’s own voice\" is ours (it answers F24 \"Brands — budget, no voice\"). v4 (2026-10-23) replaces \"Made in the creator’s own voice, to your brief.\" (\"Make — Made\" echoed)."
  },
  {
   "id": "DC37",
@@ -1931,5 +1932,212 @@
   "kind": "dropped",
   "note": "DROPPED (was a draft). Status: from site. Source: S2. Near-verbatim S2: \"We work with creators who treat this like a real business.\"",
   "retired": "2026-10-23: dropped in copy v4 — overlaps DC100 and the deck (a fourth \"business\" line)."
+ },
+ {
+  "id": "F139",
+  "claim": "Emmabel TV",
+  "source_sentence": "add emmabel and royal arts to showcase. yes its creative motley board, it includes more but leave it as two for now, none of use have the YT/paramount experience only sholz, but we will add her later. yes the online descpription is fine. yes there is support. add biodun stephen, bolu essien, ariyike dimples, officer woos, brainjotter, goldscreen TV, abayomi alvin,",
+  "url": "client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #showcase .ros (On the roster): a row's name",
+  "kind": "name",
+  "note": "One of Creative Motley's creators, named by the client on 2026-10-24 (written \"emmabel\"). Display spelling: Channel title 'Emmabel TV'; handle and socials use 'EmmabelTV247' / 'Emmabel TV 247'. Not 'Emmanuel TV' (an unrelated religious channel). Spelling to confirm with the client where it differs from the client's. Showcase rule (F64): no stats, results, titles or client wording beside the name. Channel https://www.youtube.com/@EmmabelTV247 (confirmed); see docs/videos.json."
+ },
+ {
+  "id": "DC110",
+  "claim": "Love and Kasala",
+  "source_sentence": "LOVE AND KASALA - Nigerian Movies 2025 latest full movies",
+  "url": "https://www.youtube.com/watch?v=2SgtAvc1HV8",
+  "location": "v3 #showcase — video title for Emmabel TV: the modal heading when the roster row plays (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"LOVE AND KASALA - Nigerian Movies 2025 latest full movies\" (id 2SgtAvc1HV8). Confidence: confirmed (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). The client's own pick: the earlier site, index.html:850 (embed youtube.com/embed/2SgtAvc1HV8), :858 (label \"Emmabel TV\"). See docs/videos.json."
+ },
+ {
+  "id": "F140",
+  "claim": "Royal Arts TV",
+  "source_sentence": "add emmabel and royal arts to showcase. yes its creative motley board, it includes more but leave it as two for now, none of use have the YT/paramount experience only sholz, but we will add her later. yes the online descpription is fine. yes there is support. add biodun stephen, bolu essien, ariyike dimples, officer woos, brainjotter, goldscreen TV, abayomi alvin,",
+  "url": "client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #showcase .ros (On the roster): a row's name",
+  "kind": "name",
+  "note": "One of Creative Motley's creators, named by the client on 2026-10-24 (written \"royal arts\"). Display spelling: As on the channel and the earlier site. Run by filmmaker Emem Isong (Royal Arts Academy); she also has a separate 'Emem Isong TV' channel, which is not this one. Spelling to confirm with the client where it differs from the client's. Showcase rule (F64): no stats, results, titles or client wording beside the name. Channel https://www.youtube.com/@RoyalArtsTV (confirmed); see docs/videos.json."
+ },
+ {
+  "id": "DC111",
+  "claim": "Love Stood Still",
+  "source_sentence": "LOVE STOOD STILL - Nigerian Movies 2025 Latest Full Movies",
+  "url": "https://www.youtube.com/watch?v=ScAcee_5Q4A",
+  "location": "v3 #showcase — video title for Royal Arts TV: the modal heading when the roster row plays (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"LOVE STOOD STILL - Nigerian Movies 2025 Latest Full Movies\" (id ScAcee_5Q4A). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). The client's own pick: the earlier site, index.html:925 (embed youtube.com/embed/ScAcee_5Q4A), :933 (label \"Royal Arts TV\"). See docs/videos.json."
+ },
+ {
+  "id": "F141",
+  "claim": "Biodun Stephen",
+  "source_sentence": "add emmabel and royal arts to showcase. yes its creative motley board, it includes more but leave it as two for now, none of use have the YT/paramount experience only sholz, but we will add her later. yes the online descpription is fine. yes there is support. add biodun stephen, bolu essien, ariyike dimples, officer woos, brainjotter, goldscreen TV, abayomi alvin,",
+  "url": "client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #showcase .ros (On the roster): a row's name",
+  "kind": "name",
+  "note": "One of Creative Motley's creators, named by the client on 2026-10-24 (written \"biodun stephen\"). Display spelling: Filmmaker (writer, director, producer); she uses she/her per Wikipedia. Channel title is styled 'BIODUNSTEPHEN TV' / 'BiodunStephenTV'. Use the person's name, as with 'Kunle Afolayan'. Spelling to confirm with the client where it differs from the client's. Showcase rule (F64): no stats, results, titles or client wording beside the name. Channel https://www.youtube.com/@BIODUNSTEPHENTV (confirmed); see docs/videos.json."
+ },
+ {
+  "id": "DC112",
+  "claim": "Uninvited Bride",
+  "source_sentence": "UNINVITED BRIDE - Blessibg Obasi| Biodun Stephen Nigerian Movies 2025 Latest Full Movies",
+  "url": "https://www.youtube.com/watch?v=vuJBH0QyxZk",
+  "location": "v3 #showcase — video title for Biodun Stephen: the modal heading when the roster row plays (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"UNINVITED BRIDE - Blessibg Obasi| Biodun Stephen Nigerian Movies 2025 Latest Full Movies\" (id vuJBH0QyxZk). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+ },
+ {
+  "id": "F142",
+  "claim": "Bolu Essien",
+  "source_sentence": "add emmabel and royal arts to showcase. yes its creative motley board, it includes more but leave it as two for now, none of use have the YT/paramount experience only sholz, but we will add her later. yes the online descpription is fine. yes there is support. add biodun stephen, bolu essien, ariyike dimples, officer woos, brainjotter, goldscreen TV, abayomi alvin,",
+  "url": "client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #showcase .ros (On the roster): a row's name",
+  "kind": "name",
+  "note": "One of Creative Motley's creators, named by the client on 2026-10-24 (written \"bolu essien\"). Display spelling: Actor, writer and producer (Becoming Abi on Netflix, Girls' Hostel on YouTube). Channel title 'Bolu Essien TV'; press also writes 'BoluEssienTV'. Not the unrelated channel 'bolu' (UCqjDZc5rzUa45PatbORRMfQ). Spelling to confirm with the client where it differs from the client's. Showcase rule (F64): no stats, results, titles or client wording beside the name. Channel https://www.youtube.com/@BoluEssien (confirmed); see docs/videos.json."
+ },
+ {
+  "id": "DC113",
+  "claim": "Girls’ Hostel, episode 1: It Girl",
+  "source_sentence": "GIRLS' HOSTEL- EPISODE 1 (IT GIRL) FEAT. BOLU ESSIEN, ONYINYE ODOKORO, RONKE 'OMOOBA', EVA IBIAM",
+  "url": "https://www.youtube.com/watch?v=8NM-yaMdmeg",
+  "location": "v3 #showcase — video title for Bolu Essien: the modal heading when the roster row plays (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"GIRLS' HOSTEL- EPISODE 1 (IT GIRL) FEAT. BOLU ESSIEN, ONYINYE ODOKORO, RONKE 'OMOOBA', EVA IBIAM\" (id 8NM-yaMdmeg). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+ },
+ {
+  "id": "F143",
+  "claim": "Ariyiike Dimples",
+  "source_sentence": "add emmabel and royal arts to showcase. yes its creative motley board, it includes more but leave it as two for now, none of use have the YT/paramount experience only sholz, but we will add her later. yes the online descpription is fine. yes there is support. add biodun stephen, bolu essien, ariyike dimples, officer woos, brainjotter, goldscreen TV, abayomi alvin,",
+  "url": "client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #showcase .ros (On the roster): a row's name",
+  "kind": "name",
+  "note": "One of Creative Motley's creators, named by the client on 2026-10-24 (written \"ariyike dimples\"). Display spelling: The client wrote 'ariyike dimples'; her own spelling (X @Ariyiikedimples, channel 'AriyiikeDimples', video titles 'ARIYIIKE DIMPLES') has a double i. Wikipedia files her as 'Ariyike Owolagba'. Recommend 'Ariyiike Dimples' and ask the client to confirm. Spelling to confirm with the client where it differs from the client's. Showcase rule (F64): no stats, results, titles or client wording beside the name. Channel https://www.youtube.com/@RiskyStudiosTV (confirmed); see docs/videos.json."
+ },
+ {
+  "id": "DC114",
+  "claim": "Insult Upon Injury",
+  "source_sentence": "INSULT UPON INJURY | RISKY STUDIOS TV | ARIYIIKE DIMPLES",
+  "url": "https://www.youtube.com/watch?v=pb2jiuqmAms",
+  "location": "v3 #showcase — video title for Ariyiike Dimples: the modal heading when the roster row plays (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"INSULT UPON INJURY | RISKY STUDIOS TV | ARIYIIKE DIMPLES\" (id pb2jiuqmAms). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+ },
+ {
+  "id": "F144",
+  "claim": "Officer Woos",
+  "source_sentence": "add emmabel and royal arts to showcase. yes its creative motley board, it includes more but leave it as two for now, none of use have the YT/paramount experience only sholz, but we will add her later. yes the online descpription is fine. yes there is support. add biodun stephen, bolu essien, ariyike dimples, officer woos, brainjotter, goldscreen TV, abayomi alvin,",
+  "url": "client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #showcase .ros (On the roster): a row's name",
+  "kind": "name",
+  "note": "One of Creative Motley's creators, named by the client on 2026-10-24 (written \"officer woos\"). Display spelling: Stage name of Jubril Oladapo Gbadamosi. Channel title 'OFFICER WOOS'. A second channel, 'OFFICER WOOS TV' (@woosentertainment), is not the main one. Spelling to confirm with the client where it differs from the client's. Showcase rule (F64): no stats, results, titles or client wording beside the name. Channel https://www.youtube.com/@OFFICERWOOS (confirmed); see docs/videos.json."
+ },
+ {
+  "id": "DC115",
+  "claim": "The Introduction",
+  "source_sentence": "THE INTRODUCTION - (Officer Woos new comedy) SAKA",
+  "url": "https://www.youtube.com/watch?v=bx0QofHIX68",
+  "location": "v3 #showcase — video title for Officer Woos: the modal heading when the roster row plays (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"THE INTRODUCTION - (Officer Woos new comedy) SAKA\" (id bx0QofHIX68). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+ },
+ {
+  "id": "F145",
+  "claim": "Brain Jotter",
+  "source_sentence": "add emmabel and royal arts to showcase. yes its creative motley board, it includes more but leave it as two for now, none of use have the YT/paramount experience only sholz, but we will add her later. yes the online descpription is fine. yes there is support. add biodun stephen, bolu essien, ariyike dimples, officer woos, brainjotter, goldscreen TV, abayomi alvin,",
+  "url": "client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #showcase .ros (On the roster): a row's name",
+  "kind": "name",
+  "note": "One of Creative Motley's creators, named by the client on 2026-10-24 (written \"brainjotter\"). Display spelling: The client wrote 'brainjotter'. Wikipedia and his main channel use 'Brain Jotter' (two words); some uploads write 'Brainjotter'. Stage name of Chukwuebuka Emmanuel Amuzie. Recommend 'Brain Jotter'. Spelling to confirm with the client where it differs from the client's. Showcase rule (F64): no stats, results, titles or client wording beside the name. Channel https://www.youtube.com/@BrainJotterComedian (probable); see docs/videos.json."
+ },
+ {
+  "id": "DC116",
+  "claim": "Thera-Pissed",
+  "source_sentence": "THERA-PISSED - Brain Jotter comedy",
+  "url": "https://www.youtube.com/watch?v=menYRpHwVdM",
+  "location": "v3 #showcase — video title for Brain Jotter: the modal heading when the roster row plays (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"THERA-PISSED - Brain Jotter comedy\" (id menYRpHwVdM). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+ },
+ {
+  "id": "F146",
+  "claim": "Gold Screen TV",
+  "source_sentence": "add emmabel and royal arts to showcase. yes its creative motley board, it includes more but leave it as two for now, none of use have the YT/paramount experience only sholz, but we will add her later. yes the online descpription is fine. yes there is support. add biodun stephen, bolu essien, ariyike dimples, officer woos, brainjotter, goldscreen TV, abayomi alvin,",
+  "url": "client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #showcase .ros (On the roster): a row's name",
+  "kind": "name",
+  "note": "One of Creative Motley's creators, named by the client on 2026-10-24 (written \"goldscreen TV\"). Display spelling: The client wrote 'goldscreen TV'. The YouTube channel title is 'Gold Screen TV' (handle @GoldScreenTV-NG); IMDb and its TikTok (@goldscreentv) write 'Goldscreen TV'. Recommend 'Gold Screen TV' as on the channel, or 'Goldscreen TV' if the client prefers; never 'Golden Screen' (a different channel, /c/goldenscreenmoviestv). Spelling to confirm with the client where it differs from the client's. Showcase rule (F64): no stats, results, titles or client wording beside the name. Channel https://www.youtube.com/@GoldScreenTV-NG (confirmed); see docs/videos.json."
+ },
+ {
+  "id": "DC117",
+  "claim": "Never Far Away",
+  "source_sentence": "NEVER FAR AWAY - Nigerian Movies 2025 Latest Full ... (truncated in the index)",
+  "url": "https://www.youtube.com/watch?v=eRfM081tX0I",
+  "location": "v3 #showcase — video title for Gold Screen TV: the modal heading when the roster row plays (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"NEVER FAR AWAY - Nigerian Movies 2025 Latest Full ... (truncated in the index)\" (id eRfM081tX0I). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+ },
+ {
+  "id": "F147",
+  "claim": "Abayomi Alvin",
+  "source_sentence": "add emmabel and royal arts to showcase. yes its creative motley board, it includes more but leave it as two for now, none of use have the YT/paramount experience only sholz, but we will add her later. yes the online descpription is fine. yes there is support. add biodun stephen, bolu essien, ariyike dimples, officer woos, brainjotter, goldscreen TV, abayomi alvin,",
+  "url": "client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation)",
+  "location": "rebuild #showcase .ros (On the roster): a row's name",
+  "kind": "name",
+  "note": "One of Creative Motley's creators, named by the client on 2026-10-24 (written \"abayomi alvin\"). Display spelling: Actor and producer. Channel title 'AbayomiAlvin Tv' (he calls it 'Abayomi Alvin TV'). Use the person's name. Spelling to confirm with the client where it differs from the client's. Showcase rule (F64): no stats, results, titles or client wording beside the name. Channel https://www.youtube.com/@AbayomiAlvinTv (confirmed); see docs/videos.json."
+ },
+ {
+  "id": "DC118",
+  "claim": "The Little Things",
+  "source_sentence": "THE LITTLE THINGS -ABAYOMI ALVIN, CAROLINE IGBEN, LUCY EDET,OLUWADOLARZ, HERMES FULL Nigerian Movie",
+  "url": "https://www.youtube.com/watch?v=bzpqmWl8sE4",
+  "location": "v3 #showcase — video title for Abayomi Alvin: the modal heading when the roster row plays (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"THE LITTLE THINGS -ABAYOMI ALVIN, CAROLINE IGBEN, LUCY EDET,OLUWADOLARZ, HERMES FULL Nigerian Movie\" (id bzpqmWl8sE4). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+ },
+ {
+  "id": "DC76",
+  "claim": "On the roster",
+  "source_sentence": "On the roster",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #showcase — label over the creator index (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Source: —. Label over the 16-name index. Never a word that presents the list as complete (\"The roster\", \"All creators\", a count): Results says 70+ channels managed (F100) and the index shows 16."
+ },
+ {
+  "id": "DC77",
+  "claim": "Watch",
+  "source_sentence": "Watch",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #showcase — a roster row that plays its video in the modal (UI) (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Source: —. Interface label, as DC61 and DC62."
+ },
+ {
+  "id": "DC78",
+  "claim": "Channel ↗",
+  "source_sentence": "Channel ↗",
+  "url": "docs/copy-drafts.md",
+  "location": "v3 #showcase — a roster row that opens the creator's YouTube channel (UI) (round 2)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval. Source: —. Not on the page today: the generator writes it only for a creator with no playable video and a confirmed or probable channel (every creator has a playable video on 2026-10-24)."
+ },
+ {
+  "id": "F148",
+  "claim": "Support — On WhatsApp and Telegram, 24/7.",
+  "source_sentence": "24/7 WhatsApp/Telegram support",
+  "url": "/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)",
+  "location": "index.html:641 (the creators' \"What You Get\" list) → rebuild #creators .svc__row (row 07 of \"What we run\")",
+  "kind": "service",
+  "note": "Approved 2026-10-24: the earlier site's promise (index.html:641, \"24/7 WhatsApp/Telegram support\"), confirmed true by the client (\"yes there is support\", client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation), answering docs/copy-v4.md question 4). Reworded only to the list's \"name — line\" form. Creators only: it is the creators' list on the earlier site, and each sentence appears once. The other two promises asked about (a 24–48-hour reply, index.html:1393, and the results timing) were not confirmed and stay off the page."
+ },
+ {
+  "id": "F149",
+  "claim": "Two of the people answerable for all of it.",
+  "source_sentence": "The two people answerable for all of it.",
+  "url": "https://creativemotley.com/",
+  "location": "#directors .dirs-title p → rebuild #directors .dr-open .dek",
+  "kind": "positioning",
+  "note": "Approved 2026-10-24: the live site's own line (F105) with \"The two people\" → \"Two of the people\", the smallest change that makes it true: the board is Creative Motley's and has more members than the two named, who stay the only two on the page for now (client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation): \"yes its creative motley board, it includes more but leave it as two for now\"). The drop cap stays T. Not \"Two of the board\" (Olayinka Lawal's board seat is not stated: F137) nor \"who run Creative Motley\" (no such role was given)."
  }
 ]

@@ -87,3 +87,38 @@ On the page the name is always "Creative Motley", in British spelling. If the cr
 3. **Our wording.** Are the service descriptions, the brief steps and "Catalogue channels" right as written? They are our words around your earlier site's names, and you can approve them or send your own.
 4. **Promises.** Are 24/7 support, a 24–48-hour reply and the results timing still true? If so, we can add them to Creators and Apply.
 5. **Emmabel TV and Royal Arts TV.** They were on your earlier site but not on the live one. Should they join the Showcase?
+
+## Round 2 (24 October)
+
+Your reply of 24 October answered all five questions. Here is what changed on the page. Nothing about Sholz is on the page or in the copy. She will be added later, as you said. The changes are in a production build and were measured at eight screen sizes, from a small phone to a wide desktop, plus the still (no-WebGL) version. Nothing overflows, nothing jumps, and the page loads nothing from YouTube until someone presses play. `qa/shots/v3p7_roster.jpg` shows each changed chapter on desktop and on a phone.
+
+**V · Showcase: nine more creators.** Emmabel TV, Royal Arts TV and the seven others you named are now on the page. None of them has a poster, and we won't make pictures of real people, so they appear by name in a new list under the poster wall, *On the roster*. It holds all 16 creators in alphabetical order, in two columns. Each name has a **Watch** link that plays one of that creator's videos in the same player as the cards. Nothing else sits beside a name: no title, figure or claim. The list never says it is complete, because Results counts 70+ channels. The seven video cards below it are unchanged.
+
+To keep the chapter from growing too long, each poster on a laptop or desktop now holds for a slightly shorter scroll, the same as on phones. With the new list, Showcase is 4.18 screens long at 1440 × 900, up from 3.82, and 3.93 screens on a phone, up from 3.25.
+
+The videos for Emmabel TV and Royal Arts TV are the ones your earlier site played under their names. For the other seven we chose a public video that search listings place on each creator's own channel. We had to rely on search listings because YouTube itself can't be reached from where we work. None of the nine videos has been checked on YouTube yet. We will check them all before launch, and until then each title, which shows only in the player, stays a draft.
+
+**Spellings to confirm.** We used each creator's own spelling, which differs slightly from your message in three places:
+- **Ariyiike Dimples**, with a double i, as on her channel and her posts.
+- **Brain Jotter**, as two words, as on his main channel.
+- **Gold Screen TV**, the channel's own name. IMDb and its TikTok write "Goldscreen TV".
+
+**II · Creators.** You approved the six service descriptions and Catalogue channels, so they now show as final. A seventh row has been added, taken from your earlier site:
+> **Support** On WhatsApp and Telegram, 24/7.
+
+It sits in Creators only, so the line appears once. The 24–48-hour reply and the results timing stay off the page, because you didn't confirm them.
+
+**III · Brands.** The four brief steps you approved now show as final.
+
+**IX · Directors.** The line under the title now reads:
+> Two of the people answerable for all of it.
+
+It is your live site's own line, changed only so that it no longer suggests the two of you are the whole board. The two names and your role lines are unchanged.
+
+## Still open
+
+1. **The spellings above.** Are they right?
+2. **Brain Jotter's channel.** Several channels carry his name. His video comes from the one we believe is his main channel, youtube.com/@BrainJotterComedian. Is that right?
+3. **Newer videos.** The videos for Emmabel TV, Royal Arts TV and Abayomi Alvin date from late 2024 to late 2025. Send a link if you'd rather show something newer.
+4. **Labels still in draft.** "What we run" (over the services) and "How a brief runs" (over the brief steps) weren't in the last question, so they are still drafts. So are "On the roster", "Watch" and "Watch the work". Are they fine?
+5. **From last time.** Is WealthMotley part of Creative Motley Ltd? And if you want bios, send 20–25 words each.
