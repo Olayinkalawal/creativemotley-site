@@ -1,0 +1,190 @@
+{
+ "chapter": "results",
+ "name": "VIII Results: The Oculus",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/results/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 241052,
+    "q": 59
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/results/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 440066,
+    "q": 62
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/results/desktop-3840.avif",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 745396,
+    "q": 67
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/results/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 377592,
+    "q": 83
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/results/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 711524,
+    "q": 85
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/results/desktop-3840.webp",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 1162938,
+    "q": 86
+   }
+  ]
+ },
+ "thumb": [
+  {
+   "src": "/creativemotley-site/assets/scenes/results/thumb-320.avif",
+   "w": 320,
+   "h": 180,
+   "bytes": 15698
+  },
+  {
+   "src": "/creativemotley-site/assets/scenes/results/thumb-320.webp",
+   "w": 320,
+   "h": 180,
+   "bytes": 15822
+  }
+ ],
+ "phone": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/results/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 300602,
+    "q": 57
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/results/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 178416,
+    "q": 54
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/results/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 95864,
+    "q": 50
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/results/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 426776,
+    "q": 78
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/results/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 267696,
+    "q": 78
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/results/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 148902,
+    "q": 76
+   }
+  ]
+ },
+ "focus": [
+  0.5,
+  0.52
+ ],
+ "phoneFocus": [
+  0.5,
+  0.5
+ ],
+ "titleSide": "top",
+ "phoneTitle": "top",
+ "titleBox": {
+  "desktop": [
+   0.31,
+   0.05,
+   0.6,
+   0.3
+  ],
+  "phone": [
+   0.12,
+   0.165,
+   0.86,
+   0.3
+  ]
+ },
+ "key": "#7298A6",
+ "titleBg": {
+  "desktop": "#82ADBB",
+  "phone": "#8FA5B1"
+ },
+ "titleInk": {
+  "desktop": "light",
+  "phone": "dark"
+ },
+ "titleContrast": {
+  "desktop": {
+   "mean": 2.43,
+   "worst10": 2.18
+  },
+  "phone": {
+   "mean": 7.79,
+   "worst10": 6.55
+  }
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRt4AAABXRUJQVlA4INIAAACQBQCdASogABIAPu1kqE2ppaOiMAgBMB2JagCdMtVBbwIZTOLRqUhKYiHmJBpJbMVsQ+Zo3AD8rApXS2tRbzkH1xLQZ2gfaIQNFeqDz+AdzTWiZDzwosytMUXDQ42l7PXdNiDTV2g95Lnq+QucoAV2BVwIuJhZztpQ4UvkJqBIO/5jUQUmb2Nym2FDRn3u0ZBuKbad5vxCwV5xh5Y3t9Hje/3GFCoDko8TZz0KWIAHZWoJzxrE5bxJ8w8ZakZZj3h0s+7QXsSveSCzU7/2TUooAAA=",
+  "phone": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABQBACdASoMABoALrV2u12jqampiYC0S2AE6ZQYwa5oCgdU9Nigmvq5oDwAAMouNqQdy/f1upiTCjcTKGqT0tHlqUJKRS++idbXhvKDDXovlGmKUXQuw58iFrIVUZQwPf7eA2paC0cPlfz+pjnrkGALbQoT+4dYLigjun6fr11bNC2QjJy+tcHdvXZxyAAA"
+ },
+ "credit": {
+  "desktop": "Nano Banana Pro 4K e04207f9 > edit 922b10cb, then local retouch and grade (tub, orange branch, oculus sky to mid cerulean, varnish, canvas grain): masters/results/d9.png",
+  "phone": "9:16 recomposition from 922b10cb, job 9bc59196, graded to match d9 (sky, varnish, grain): masters/results/p3.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "ink",
+   "worst10Bare": 2.18,
+   "alphaForTitle3": 0.2,
+   "alphaForDek4_5": 0.35,
+   "zoneLumaSd": 12.7,
+   "advice": "dark halo ~0.3 behind the cream title and dek (the oculus sky is mid cerulean)"
+  },
+  "phone": {
+   "colour": "paper",
+   "worst10Bare": 6.53,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 18.7
+  }
+ },
+ "masterpiece": "after Mantegna, Camera degli Sposi oculus (1465-74)",
+ "artNote": "Desktop: title left-aligned at about 24% of the viewport over the oculus sky; frame at zoom about 1.2, focus u 0.52, v 0.40 from the top. Phone: the ring's top arc ends at v 0.15, so the title cap line sits at v >= 0.165; the terracotta tub and its pole intrude at the lower right of the box (u > 0.77, v > 0.24), so keep the dek left of u 0.76.",
+ "depth": {
+  "src": "/creativemotley-site/assets/scenes/results/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 12992
+ }
+}

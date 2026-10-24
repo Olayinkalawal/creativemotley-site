@@ -1,0 +1,163 @@
+{
+ "hero": {
+  "manifest": "/creativemotley-site/assets/scenes/hero/manifest.json",
+  "name": "Hero: the Creation, in daylight",
+  "key": "#9EC6E3",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRvIAAABXRUJQVlA4IOYAAACwBQCdASogABIAPu1gqE2ppSOiMAgBMB2JZgCdMvuDgPI76eeSEf4qAPnGYVb1vZUaYFwa2YAA/kEzfsm0dvqi4nxzzezxDuU87zgpzY+sfayQWuyyDxudYjqglsxPepmrOQwfkaf4czfTky/sI32uARAWPlww6BeSrpOAAVJ1u9DCspCffbJMo6scuF4OiW7Leef21dGzkSrOrEwEJh1frHmF3lVgdh1znPTsW808lZThrSYPkt0D6NVOG/2/pZxCI4p76GjgSzSJma3IGKfGeSqsqDBKVicCr5+qZIVr+tz6ZAAAAA==",
+   "phone": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAQBACdASoMABoAPu1yrU+pp6QiMAgBMB2JagCdAGYXTi4CXoj+3n0swAD+86SFjzlXTSI+bAFyGmuiN8Q+lTfLROUE9WeOBV2pGyepUQjuu23V6Ki+hFifKuPnemSSh846WlxcKdTxtgI6rK7R25cM3rXKWAAA"
+  },
+  "thumb": [
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 11920
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 11992
+   }
+  ]
+ },
+ "storytellers": {
+  "manifest": "/creativemotley-site/assets/scenes/storytellers/manifest.json",
+  "name": "I Storytellers: The School of Athens, now",
+  "key": "#A62A16",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACQBQCdASogABIAPu1iqU2ppaQiMAgBMB2JQBOmas0gK5UWx13Jz5R6RMh4cWtRd5Kyj2cg0AD+8X+Cvl09gEf3Z82YJUEh0+i585SRqrUXyDf1sXTxztEPFdqX9CzKVBhXx6Z7B4BSksYHEJH0FYIrEFWnzWLty5M4auG6uzQxnHPXHl2SxL0dnlTp793kWP88qmQ3M7LRcMxq2ijnp6Cops8WKJ6/4qDQlzGveBkh0qXJ7PongeHCQeOjp4t9vR12riKnpVA4M1YAAAA=",
+   "phone": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAADQAwCdASoMABoAPu1iqU2ppaQiMAgBMB2JbACdMoAC+lCMX8qqGqAA/u9h/Fw29XVoaS+ZtHj/V9JbeqpDhwQTEijfqWKxYzJIiKMCOISrB45Tft46wDmzvibKrtc+ZY7bGi5GgcGR6TKHE05DiEKfT75WZZdgGLzQacwm5MdDbt0RDG9vx9ngCNpLWI8OeH4wIhh3lZ7gRNHfpeAAAA=="
+  },
+  "thumb": [
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 15977
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 16018
+   }
+  ]
+ },
+ "creators": {
+  "manifest": "/creativemotley-site/assets/scenes/creators/manifest.json",
+  "name": "II Creators: The Mona Lisa, on camera",
+  "key": "#9A6A2A",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAADwBACdASogABIAPu1kq06ppaOpqA1RMB2JYgC2yEXemkjImf2o5x6DwbP4cPxDfWwA/u2btGMxdctiioOFU6ft2alksmu/P9etLSaaHbZP75JnOnQjUaHWR+mK6L2F/W6ZRy+wI5l/ajY8wOt1/eI0i0O9KSqlSzf8XWNJ59VftYEMhgA2WrZIDOGyAAAA",
+   "phone": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADQAwCdASoMABoALrV2u12jqampiYC0SzAFR6IdeLUs9jSUEizxhgAA/t7Nu+OV3ZqQ/CqUBOGbLNNydn3C+ewf3qw4NXKm7yvW6wlcjnmI0hkFyHybtO27nlDqV3l/oHHm/WI0niJWoFS88Uz7La7qDsrHFzjcb/rflEKWgccCHB0AAAA="
+  },
+  "thumb": [
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 5889
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 6632
+   }
+  ]
+ },
+ "brands": {
+  "manifest": "/creativemotley-site/assets/scenes/brands/manifest.json",
+  "name": "III Brands: The Arnolfini, signed",
+  "key": "#6E1418",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADwBACdASogABIAPuVeo02pJSMiMAwBIByJQBYdg9BJhsaYibqRPYQIpryNBvnukQAA/uQjKKxPz925bPJoH4ThpO6KOHRoqbTYZKKIc+dt6GPYqJRsBaNqMgztYNQfsuwEF02dAeP4yMsZUNQsV+ssL3/zdnubjd38XNu437fqd0xMHkAAHcpVa1bEyCJckAv1ZrV6sUvCxAAA",
+   "phone": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAAAQBACdASoMABoAPu1iqk2ppaQiMAgBMB2JZgCdMoADTeuIht6wKttIeAD+7oRoIY9jAmZfQaF5lZnm3UeCIXoLqwKSbTku/kM5uaDX18fuzrrYPhjoJHA1bSUlOovSGulyT+zx1medqK2p1yDreyEukKuRorIhjQAAAA=="
+  },
+  "thumb": [
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 6886
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 7438
+   }
+  ]
+ },
+ "results": {
+  "manifest": "/creativemotley-site/assets/scenes/results/manifest.json",
+  "name": "VIII Results: The Oculus",
+  "key": "#7298A6",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRt4AAABXRUJQVlA4INIAAACQBQCdASogABIAPu1kqE2ppaOiMAgBMB2JagCdMtVBbwIZTOLRqUhKYiHmJBpJbMVsQ+Zo3AD8rApXS2tRbzkH1xLQZ2gfaIQNFeqDz+AdzTWiZDzwosytMUXDQ42l7PXdNiDTV2g95Lnq+QucoAV2BVwIuJhZztpQ4UvkJqBIO/5jUQUmb2Nym2FDRn3u0ZBuKbad5vxCwV5xh5Y3t9Hje/3GFCoDko8TZz0KWIAHZWoJzxrE5bxJ8w8ZakZZj3h0s+7QXsSveSCzU7/2TUooAAA=",
+   "phone": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAABQBACdASoMABoALrV2u12jqampiYC0S2AE6ZQYwa5oCgdU9Nigmvq5oDwAAMouNqQdy/f1upiTCjcTKGqT0tHlqUJKRS++idbXhvKDDXovlGmKUXQuw58iFrIVUZQwPf7eA2paC0cPlfz+pjnrkGALbQoT+4dYLigjun6fr11bNC2QjJy+tcHdvXZxyAAA"
+  },
+  "thumb": [
+   {
+    "src": "/creativemotley-site/assets/scenes/results/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 15698
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/results/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 15822
+   }
+  ]
+ },
+ "directors": {
+  "manifest": "/creativemotley-site/assets/scenes/directors/manifest.json",
+  "name": "IX Directors: The Ambassadors' chairs",
+  "key": "#3F4D1F",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sq1EppiOiqAqpMB2JZQC3uDTwM7iFBJUXaDRkZRV5OCbBnFyYAP7c6jXRPZIWGXILjuabe4ZBl17dSJ5FG2wJuOc+MtscoLrLwz9OlS9SUFfOWHzbOX8BSH9Pfn/8fCUza6WteOMDaGlmKwf2zJZgRpVmJxG8ZFCDOdV39zoewxjpaAAAAA==",
+   "phone": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADwAwCdASoMABoAPu1iqk2ppaQiMAgBMB2JQBadDSwBazV0MBVbfkAAAP79soqcH+VMh9sE0cv/1Zxekry7j71fd7ggBn8fFGIElCWf1Ww482GYPHg6N37VfHnN7q/RmXdgk1sfC64hFrikLoqEhg096KCWuTslOQYfkwAA"
+  },
+  "thumb": [
+   {
+    "src": "/creativemotley-site/assets/scenes/directors/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 9030
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/directors/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 10150
+   }
+  ]
+ },
+ "apply": {
+  "manifest": "/creativemotley-site/assets/scenes/apply/manifest.json",
+  "name": "X Apply: The Birth of Venus, live",
+  "key": "#DFAFA0",
+  "placeholder": {
+   "desktop": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACwBQCdASogABIAPu1qrVCppaQiqAqpMB2JQBOmZgjLc9FrYEDi5W5KxNRSR0TnEkLLz+xELiAA/vN0E+BUVMdLdugbE6/2GWE2tUYWI4SiKX4O984u5rVkKQAdwi+ncR2koQzcGqzDEZF+MgRBPtQIfCoS/kQx0laPzi+NEoFDUYBmkeIAI5kPVlPyjA/laz68rQRt+LFJdLfB/psMtSg5rWrZZVswFKJ5iLKGAINkp+8mK49F/cATtOg235iKJv2qKtEQaPFMLxsAAAA=",
+   "phone": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoMABoAPu1mqk4ppaOiMAgBMB2JZACdAYv2tW68w8eCFi/wAAD+9jJLKMVTyAWQBPUYa8kzj55HGJRahln7TinrSH/Vq8h9BM8Ef6238L46oi2iEuKJhqxpODeR5pbNl+i0SUd+cSN9FKeCQoMHPV+Wl3sseelLxhhsztsGdTnXUytfyjo1OYdw8yAAAA=="
+  },
+  "thumb": [
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/thumb-320.avif",
+    "w": 320,
+    "h": 180,
+    "bytes": 14854
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/thumb-320.webp",
+    "w": 320,
+    "h": 180,
+    "bytes": 14414
+   }
+  ]
+ }
+}

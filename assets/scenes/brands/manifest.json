@@ -1,0 +1,190 @@
+{
+ "chapter": "brands",
+ "name": "III Brands: The Arnolfini, signed",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 117601,
+    "q": 72
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 183115,
+    "q": 72
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/desktop-3840.avif",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 264023,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 169358,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 264892,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/desktop-3840.webp",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 399240,
+    "q": 86
+   }
+  ]
+ },
+ "thumb": [
+  {
+   "src": "/creativemotley-site/assets/scenes/brands/thumb-320.avif",
+   "w": 320,
+   "h": 180,
+   "bytes": 6886
+  },
+  {
+   "src": "/creativemotley-site/assets/scenes/brands/thumb-320.webp",
+   "w": 320,
+   "h": 180,
+   "bytes": 7438
+  }
+ ],
+ "phone": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 233524,
+    "q": 72
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 158024,
+    "q": 72
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 100129,
+    "q": 70
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 348466,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 221852,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/brands/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 141470,
+    "q": 86
+   }
+  ]
+ },
+ "focus": [
+  0.64,
+  0.58
+ ],
+ "phoneFocus": [
+  0.52,
+  0.47
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top",
+ "titleBox": {
+  "desktop": [
+   0.04,
+   0.05,
+   0.47,
+   0.4
+  ],
+  "phone": [
+   0.05,
+   0.02,
+   0.95,
+   0.19
+  ]
+ },
+ "key": "#6E1418",
+ "titleBg": {
+  "desktop": "#43332C",
+  "phone": "#311B1B"
+ },
+ "titleInk": {
+  "desktop": "light",
+  "phone": "light"
+ },
+ "titleContrast": {
+  "desktop": {
+   "mean": 12.01,
+   "worst10": 6.41
+  },
+  "phone": {
+   "mean": 16.11,
+   "worst10": 12.45
+  }
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADwBACdASogABIAPuVeo02pJSMiMAwBIByJQBYdg9BJhsaYibqRPYQIpryNBvnukQAA/uQjKKxPz925bPJoH4ThpO6KOHRoqbTYZKKIc+dt6GPYqJRsBaNqMgztYNQfsuwEF02dAeP4yMsZUNQsV+ssL3/zdnubjd38XNu437fqd0xMHkAAHcpVa1bEyCJckAv1ZrV6sUvCxAAA",
+  "phone": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAAAQBACdASoMABoAPu1iqk2ppaQiMAgBMB2JZgCdMoADTeuIht6wKttIeAD+7oRoIY9jAmZfQaF5lZnm3UeCIXoLqwKSbTku/kM5uaDX18fuzrrYPhjoJHA1bSUlOovSGulyT+zx1medqK2p1yDreyEukKuRorIhjQAAAA=="
+ },
+ "credit": {
+  "desktop": "Wider room (painting fixes 2026-10-20): the live master (Nano Banana Pro 4K edit 2c6c6c5e > 322047e0 + local retouch, d5_r3) registered at 0.67 into 4K job fbcc3a18 (a zoom-out of the room), the outer room from 2K job 1afbee35, a shadow glaze over the window wall; seams repaired locally (middle window, bed curtain, far-left sill): masters/brands/wide_d_r2.png",
+  "phone": "9:16 recomposition from 322047e0, job b5fd8ac6, then local retouch (inscription, painted skin, calmer ceiling, mirror): masters/brands/p1_r3.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "ink",
+   "worst10Bare": 6.41,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 29.4,
+   "advice": "optional: the glaze in the master carries the title; at most a ~0.2 dark gradient over u 0-0.47, v 0-0.40"
+  },
+  "phone": {
+   "colour": "ink",
+   "worst10Bare": 12.44,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 15.3
+  }
+ },
+ "masterpiece": "after Jan van Eyck, The Arnolfini Portrait (1434)",
+ "artNote": "Desktop (wider room, 2026-10-20 fixes): cream title and dek on the glazed window wall and the shadowed ceiling (u 0-0.47); the couple stands right of it (u 0.485-0.827, his hat top at v 0.43), the convex mirror at (0.62, 0.55), the chandelier candle at (0.637, 0.365). The site's title box at rest (about u 0.20-0.64, v 0.06-0.40) measures 8.8:1 worst decile bare. Phone: the title box ends at v 0.19, above the chandelier.",
+ "depth": {
+  "src": "/creativemotley-site/assets/scenes/brands/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 11420
+ }
+}

@@ -1,0 +1,176 @@
+{
+ "chapter": "creators",
+ "name": "II Creators: The Mona Lisa, on camera",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 109185,
+    "q": 72
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 170283,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 157100,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 257264,
+    "q": 86
+   }
+  ]
+ },
+ "thumb": [
+  {
+   "src": "/creativemotley-site/assets/scenes/creators/thumb-320.avif",
+   "w": 320,
+   "h": 180,
+   "bytes": 5889
+  },
+  {
+   "src": "/creativemotley-site/assets/scenes/creators/thumb-320.webp",
+   "w": 320,
+   "h": 180,
+   "bytes": 6632
+  }
+ ],
+ "phone": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 240212,
+    "q": 72
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 153697,
+    "q": 72
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 96270,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 354976,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 216156,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/creators/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 131262,
+    "q": 86
+   }
+  ]
+ },
+ "focus": [
+  0.72,
+  0.36
+ ],
+ "phoneFocus": [
+  0.56,
+  0.5
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top",
+ "titleBox": {
+  "desktop": [
+   0.04,
+   0.04,
+   0.62,
+   0.3
+  ],
+  "phone": [
+   0.05,
+   0.03,
+   0.95,
+   0.2
+  ]
+ },
+ "key": "#9A6A2A",
+ "titleBg": {
+  "desktop": "#DAC291",
+  "phone": "#B5BEB0"
+ },
+ "titleInk": {
+  "desktop": "dark",
+  "phone": "dark"
+ },
+ "titleContrast": {
+  "desktop": {
+   "mean": 11.52,
+   "worst10": 10.22
+  },
+  "phone": {
+   "mean": 10.42,
+   "worst10": 9.42
+  }
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAADwBACdASogABIAPu1kq06ppaOpqA1RMB2JYgC2yEXemkjImf2o5x6DwbP4cPxDfWwA/u2btGMxdctiioOFU6ft2alksmu/P9etLSaaHbZP75JnOnQjUaHWR+mK6L2F/W6ZRy+wI5l/ajY8wOt1/eI0i0O9KSqlSzf8XWNJ59VftYEMhgA2WrZIDOGyAAAA",
+  "phone": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADQAwCdASoMABoALrV2u12jqampiYC0SzAFR6IdeLUs9jSUEizxhgAA/t7Nu+OV3ZqQ/CqUBOGbLNNydn3C+ewf3qw4NXKm7yvW6wlcjnmI0hkFyHybtO27nlDqV3l/oHHm/WI0niJWoFS88Uz7La7qDsrHFzjcb/rflEKWgccCHB0AAAA="
+ },
+ "credit": {
+  "desktop": "Wider for 4:3 (painting fixes 2026-10-20): the live master (Nano Banana Pro 4K edit chain 88f177c9 > f931edb0 > 506535aa + local retouch, d7_r3) at 0.88 in the lower right, 12% new valley on the left and sky on top from 2K job fda32678 (2.2x upscale, craquelure and grain); seams repaired locally (column, the sky over her head, the lower-left lake, the parapet, the left join's crackle): masters/creators/wide_d_r2.png",
+  "phone": "9:16 recomposition from 506535aa, job 5f92e37c, then local retouch (neckline, specks, path, sleeves, camera badge): masters/creators/p1_r3.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "paper",
+   "worst10Bare": 10.22,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 9.8,
+   "advice": "none needed"
+  },
+  "phone": {
+   "colour": "paper",
+   "worst10Bare": 9.42,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 8.8
+  }
+ },
+ "masterpiece": "after Leonardo da Vinci, Mona Lisa (c. 1503-19)",
+ "artNote": "Desktop (wider canvas, 2026-10-20 fixes): dark ink on the pale sky and haze; her hair starts at u 0.661 (the fitted title stops at u 0.645), her face at (0.72, 0.36), the column at the right edge. No scrim. Phone: dark ink in the sky, dek above v 0.21.",
+ "depth": {
+  "src": "/creativemotley-site/assets/scenes/creators/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 12198
+ }
+}

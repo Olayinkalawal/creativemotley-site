@@ -1,0 +1,189 @@
+{
+ "chapter": "apply",
+ "name": "X Apply: The Birth of Venus, live",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 253287,
+    "q": 69
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 417502,
+    "q": 72
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/desktop-3840.avif",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 571410,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 336824,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 536182,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/desktop-3840.webp",
+    "w": 3840,
+    "h": 2160,
+    "bytes": 784090,
+    "q": 86
+   }
+  ]
+ },
+ "thumb": [
+  {
+   "src": "/creativemotley-site/assets/scenes/apply/thumb-320.avif",
+   "w": 320,
+   "h": 180,
+   "bytes": 14854
+  },
+  {
+   "src": "/creativemotley-site/assets/scenes/apply/thumb-320.webp",
+   "w": 320,
+   "h": 180,
+   "bytes": 14414
+  }
+ ],
+ "phone": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 305878,
+    "q": 69
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 179059,
+    "q": 64
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 99834,
+    "q": 59
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 418478,
+    "q": 85
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 267754,
+    "q": 85
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/apply/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 146870,
+    "q": 83
+   }
+  ]
+ },
+ "focus": [
+  0.62,
+  0.42
+ ],
+ "phoneFocus": [
+  0.52,
+  0.5
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top",
+ "titleBox": {
+  "desktop": [
+   0.05,
+   0.06,
+   0.45,
+   0.33
+  ],
+  "phone": [
+   0.08,
+   0.04,
+   0.92,
+   0.3
+  ]
+ },
+ "key": "#DFAFA0",
+ "titleBg": {
+  "desktop": "#E8E0D6",
+  "phone": "#D1D1B6"
+ },
+ "titleInk": {
+  "desktop": "dark",
+  "phone": "dark"
+ },
+ "titleContrast": {
+  "desktop": {
+   "mean": 15.28,
+   "worst10": 14.51
+  },
+  "phone": {
+   "mean": 12.85,
+   "worst10": 11.41
+  }
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACwBQCdASogABIAPu1qrVCppaQiqAqpMB2JQBOmZgjLc9FrYEDi5W5KxNRSR0TnEkLLz+xELiAA/vN0E+BUVMdLdugbE6/2GWE2tUYWI4SiKX4O984u5rVkKQAdwi+ncR2koQzcGqzDEZF+MgRBPtQIfCoS/kQx0laPzi+NEoFDUYBmkeIAI5kPVlPyjA/laz68rQRt+LFJdLfB/psMtSg5rWrZZVswFKJ5iLKGAINkp+8mK49F/cATtOg235iKJv2qKtEQaPFMLxsAAAA=",
+  "phone": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoMABoAPu1mqk4ppaOiMAgBMB2JZACdAYv2tW68w8eCFi/wAAD+9jJLKMVTyAWQBPUYa8kzj55HGJRahln7TinrSH/Vq8h9BM8Ef6238L46oi2iEuKJhqxpODeR5pbNl+i0SUd+cSN9FKeCQoMHPV+Wl3sseelLxhhsztsGdTnXUytfyjo1OYdw8yAAAA=="
+ },
+ "credit": {
+  "desktop": "Nano Banana Pro 4K 5f652579 > edit e47abfe4, then local retouch (second camera out, roses, drapery end, fourth foot, hair; final round: the raised fist cleaned of the old camera rim, seam and flecks feathered): masters/apply/final_d2.png",
+  "phone": "Nano Banana Pro 4K text-only job efface4c (a true vertical Birth of Venus), local retouch (back wind figure clothed in silk, hair coil, gold hoop, attendant camera, cloud contrast; the gimbal screen glazed down): masters/apply/final_p2.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "paper",
+   "worst10Bare": 14.53,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 4.2
+  },
+  "phone": {
+   "colour": "paper",
+   "worst10Bare": 11.41,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 8.5
+  }
+ },
+ "masterpiece": "after Sandro Botticelli, The Birth of Venus (c. 1484-86)",
+ "artNote": "The site's one light painting: dark ink on the pale sky, desktop and phone. Phone: the wind drapery starts at v ~0.32 and the tree at v ~0.35; the attendant's face sits at u 0.93-1.0 and crops away on screens taller than 9:16, so phoneFocus u 0.52 keeps both wind-pair faces (u 0.14-0.28) in.",
+ "depth": {
+  "src": "/creativemotley-site/assets/scenes/apply/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 13452
+ }
+}

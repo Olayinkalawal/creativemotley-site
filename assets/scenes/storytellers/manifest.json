@@ -1,0 +1,177 @@
+{
+ "chapter": "storytellers",
+ "name": "I Storytellers: The School of Athens, now",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 250907,
+    "q": 70
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 390964,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 343348,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 528578,
+    "q": 86
+   }
+  ]
+ },
+ "thumb": [
+  {
+   "src": "/creativemotley-site/assets/scenes/storytellers/thumb-320.avif",
+   "w": 320,
+   "h": 180,
+   "bytes": 15977
+  },
+  {
+   "src": "/creativemotley-site/assets/scenes/storytellers/thumb-320.webp",
+   "w": 320,
+   "h": 180,
+   "bytes": 16018
+  }
+ ],
+ "phone": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 306552,
+    "q": 64
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 172725,
+    "q": 61
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 96791,
+    "q": 57
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 418628,
+    "q": 83
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 264032,
+    "q": 83
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/storytellers/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 150376,
+    "q": 82
+   }
+  ]
+ },
+ "focus": [
+  0.51,
+  0.48
+ ],
+ "phoneFocus": [
+  0.55,
+  0.55
+ ],
+ "titleSide": "left",
+ "phoneTitle": "top",
+ "titleBox": {
+  "desktop": [
+   0.06,
+   0.04,
+   0.5,
+   0.32
+  ],
+  "phone": [
+   0.05,
+   0.03,
+   0.95,
+   0.22
+  ]
+ },
+ "key": "#A62A16",
+ "titleBg": {
+  "desktop": "#523429",
+  "phone": "#2F1F1D"
+ },
+ "titleInk": {
+  "desktop": "light",
+  "phone": "light"
+ },
+ "titleContrast": {
+  "desktop": {
+   "mean": 11.16,
+   "worst10": 5.25
+  },
+  "phone": {
+   "mean": 15.74,
+   "worst10": 9.32
+  }
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACQBQCdASogABIAPu1iqU2ppaQiMAgBMB2JQBOmas0gK5UWx13Jz5R6RMh4cWtRd5Kyj2cg0AD+8X+Cvl09gEf3Z82YJUEh0+i585SRqrUXyDf1sXTxztEPFdqX9CzKVBhXx6Z7B4BSksYHEJH0FYIrEFWnzWLty5M4auG6uzQxnHPXHl2SxL0dnlTp793kWP88qmQ3M7LRcMxq2ijnp6Cops8WKJ6/4qDQlzGveBkh0qXJ7PongeHCQeOjp4t9vR12riKnpVA4M1YAAAA=",
+  "phone": "data:image/webp;base64,UklGRqoAAABXRUJQVlA4IJ4AAADQAwCdASoMABoAPu1iqU2ppaQiMAgBMB2JbACdMoAC+lCMX8qqGqAA/u9h/Fw29XVoaS+ZtHj/V9JbeqpDhwQTEijfqWKxYzJIiKMCOISrB45Tft46wDmzvibKrtc+ZY7bGi5GgcGR6TKHE05DiEKfT75WZZdgGLzQacwm5MdDbt0RDG9vx9ngCNpLWI8OeH4wIhh3lZ7gRNHfpeAAAA=="
+ },
+ "credit": {
+  "desktop": "Nano Banana Pro 4K edit chain e5dca105 > ecb56a24 > 69bf0b47 > cbee6a1a, then local retouch (sunglasses, two faces, craquelure finish; final round: the laptop hand repainted in skin with modelled fingers, sunglasses rim neutralised): masters/storytellers/d7_r4.png",
+  "phone": "9:16 recomposition from cbee6a1a, job d32e86f3, plus edits f6d5f9bd (palm-down hand, plain laptop, ochre boot) and 767948c8 (gimbal held at the chest) composited locally, round-3 finish, the cone finger cut back to a short thumb: masters/storytellers/final_p2.png"
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "ink",
+   "worst10Bare": 5.26,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 35.1,
+   "advice": "REQUIRED: dark gradient ~0.6 over u 0-0.5, v 0-0.40, gone by v 0.5 (Apollo statue)"
+  },
+  "phone": {
+   "colour": "ink",
+   "worst10Bare": 9.34,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 24.7,
+   "advice": "soft dark top scrim ~0.35, gone by v 0.30; title cap above v 0.19"
+  }
+ },
+ "masterpiece": "after Raphael, The School of Athens (1509-11)",
+ "artNote": "Desktop: light ink over the REQUIRED dark gradient scrim (about 0.6 over u 0-0.5, v 0-0.40, gone by v 0.5): the lit Apollo niche statue is in the box. With the scrim the zone measures luma sd ~10, cream worst-10% ~13.6:1. Phone: light ink in the dark vault; title cap above v 0.19 (the bright arch sky starts at v ~0.18 at centre); a soft dark top scrim (~0.35, gone by v 0.30) brings the dark field to 25%. phoneFocus u 0.55 keeps the gimbal in.",
+ "depth": {
+  "src": "/creativemotley-site/assets/scenes/storytellers/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 11808
+ }
+}

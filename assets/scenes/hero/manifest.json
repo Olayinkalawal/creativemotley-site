@@ -1,0 +1,213 @@
+{
+ "chapter": "hero",
+ "name": "Hero: the Creation, in daylight",
+ "desktop": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/desktop-2048.avif",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 154658,
+    "q": 59
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/desktop-2880.avif",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 229054,
+    "q": 59
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/desktop-2048.webp",
+    "w": 2048,
+    "h": 1152,
+    "bytes": 193230,
+    "q": 79
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/desktop-2880.webp",
+    "w": 2880,
+    "h": 1620,
+    "bytes": 287630,
+    "q": 78
+   }
+  ]
+ },
+ "thumb": [
+  {
+   "src": "/creativemotley-site/assets/scenes/hero/thumb-320.avif",
+   "w": 320,
+   "h": 180,
+   "bytes": 11920
+  },
+  {
+   "src": "/creativemotley-site/assets/scenes/hero/thumb-320.webp",
+   "w": 320,
+   "h": 180,
+   "bytes": 11992
+  }
+ ],
+ "phone": {
+  "avif": [
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/phone-1640.avif",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 120461,
+    "q": 72
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/phone-1170.avif",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 83580,
+    "q": 72
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/phone-828.avif",
+    "w": 828,
+    "h": 1472,
+    "bytes": 55747,
+    "q": 72
+   }
+  ],
+  "webp": [
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/phone-1640.webp",
+    "w": 1640,
+    "h": 2916,
+    "bytes": 183492,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/phone-1170.webp",
+    "w": 1170,
+    "h": 2080,
+    "bytes": 116300,
+    "q": 86
+   },
+   {
+    "src": "/creativemotley-site/assets/scenes/hero/phone-828.webp",
+    "w": 828,
+    "h": 1472,
+    "bytes": 73132,
+    "q": 86
+   }
+  ]
+ },
+ "focus": [
+  0.5,
+  0.45
+ ],
+ "phoneFocus": [
+  0.5,
+  0.376
+ ],
+ "titleSide": "frame",
+ "phoneTitle": "frame",
+ "titleBox": {
+  "desktop": [
+   0.3875,
+   0.227,
+   0.6125,
+   0.773
+  ],
+  "phone": [
+   0.147,
+   0.13,
+   0.853,
+   0.87
+  ]
+ },
+ "key": "#9EC6E3",
+ "titleBg": {
+  "desktop": "#C1D2DF",
+  "phone": "#B1C3D0"
+ },
+ "titleInk": {
+  "desktop": "dark",
+  "phone": "dark"
+ },
+ "titleContrast": {
+  "desktop": {
+   "mean": 12.89,
+   "worst10": 12.39
+  },
+  "phone": {
+   "mean": 11.02,
+   "worst10": 2.72
+  }
+ },
+ "placeholder": {
+  "desktop": "data:image/webp;base64,UklGRvIAAABXRUJQVlA4IOYAAACwBQCdASogABIAPu1gqE2ppSOiMAgBMB2JZgCdMvuDgPI76eeSEf4qAPnGYVb1vZUaYFwa2YAA/kEzfsm0dvqi4nxzzezxDuU87zgpzY+sfayQWuyyDxudYjqglsxPepmrOQwfkaf4czfTky/sI32uARAWPlww6BeSrpOAAVJ1u9DCspCffbJMo6scuF4OiW7Leef21dGzkSrOrEwEJh1frHmF3lVgdh1znPTsW808lZThrSYPkt0D6NVOG/2/pZxCI4p76GjgSzSJma3IGKfGeSqsqDBKVicCr5+qZIVr+tz6ZAAAAA==",
+  "phone": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAAAQBACdASoMABoAPu1yrU+pp6QiMAgBMB2JagCdAGYXTi4CXoj+3n0swAD+86SFjzlXTSI+bAFyGmuiN8Q+lTfLROUE9WeOBV2pGyepUQjuu23V6Ki+hFifKuPnemSSh846WlxcKdTxtgI6rK7R25cM3rXKWAAA"
+ },
+ "credit": {
+  "desktop": "Nano Banana Pro 4K repaint of the hero (hero2 d1, judged 2026-10-21: mean luma 0.49 at 1440x900 vs Editions 0.33; Laplacian variance 657/550 vs 658/462), same two figures and reach, no floating kit, the fingertip gap empty sky; local retouch (zero credit): the sunglasses-arm emblem cloned out, the AI hatch strokes and dust in the lower-right bushes softened (median + bilateral, 70%), the blue hues graded to ~55% saturation (sky RGB 90,177,237 -> 152,203,237). scratchpad hero3h/retouch.py",
+  "phone": "the 'reach' crop of the retouched desktop master: 9:16 at full height (1728x3072), centred on the fingertip gap (desktop uv x 0.334-0.648); the hands and the gap in, the bodies out, so the 3D camera sits truly between the fingertips on phones (every portrait repaint failed the gap check: p4's gap was 0.043 W)"
+ },
+ "propBox": {
+  "desktop": [
+   0.432,
+   0.325,
+   0.55,
+   0.43
+  ],
+  "phone": [
+   0.312,
+   0.325,
+   0.688,
+   0.43
+  ]
+ },
+ "propCentre": {
+  "desktop": [
+   0.491,
+   0.383
+  ],
+  "phone": [
+   0.5,
+   0.383
+  ]
+ },
+ "faces": {
+  "desktop": [
+   [
+    0.319,
+    0.336
+   ],
+   [
+    0.697,
+    0.207
+   ]
+  ]
+ },
+ "titleScrim": {
+  "desktop": {
+   "colour": "paper",
+   "worst10Bare": 12.4,
+   "alphaForTitle3": 0.0,
+   "alphaForDek4_5": 0.0,
+   "zoneLumaSd": 36.3,
+   "advice": "none: ink type with a cream halo; a cream frosted panel behind the dek and index over the pines"
+  },
+  "phone": {
+   "colour": "paper",
+   "worst10Bare": 2.7,
+   "alphaForTitle3": 0.05,
+   "alphaForDek4_5": 0.25,
+   "zoneLumaSd": 51.6,
+   "advice": "none: ink type; a cream panel behind the dek and index over the landscape"
+  }
+ },
+ "masterpiece": "after Michelangelo, The Creation of Adam (c. 1512)",
+ "artNote": "Light, Editions-like: the golden frame sits centred over the reach (titleBox: the frame at 1440x900 and, on phones, at 390x844), its type in ink with a cream halo (the sky behind it is bright). propBox: the empty sky between the fingertips (his tip at uv 0.432, 0.397; hers at 0.550, 0.355), where the real-time 3D camera floats (centred at propCentre, about 0.08 of the painting's width); phones keep the gap at the screen's centre line (gap 178 css px at 390x844). faces: the two faces (the construction lines are masked off them).",
+ "depth": {
+  "src": "/creativemotley-site/assets/scenes/hero/depth.webp",
+  "w": 1920,
+  "h": 1080,
+  "bytes": 17542
+ }
+}

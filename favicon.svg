@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Edition I (v3 palette): a gilt lens ring on umber, its seven-bladed aperture in the accent (the hero's camera) -->
+  <rect width="64" height="64" rx="14" fill="#2A1E10"/>
+  <circle cx="32" cy="32" r="20" fill="none" stroke="#D9BC85" stroke-width="5"/>
+  <polygon points="32,22.5 39.43,26.08 41.26,34.11 36.12,40.56 27.88,40.56 22.74,34.11 24.57,26.08" fill="#E0338A"/>
+</svg>
