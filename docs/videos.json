@@ -15,7 +15,8 @@
       "note": "Round 2 (2026-10-24, the nine creators the client added): the research track rated each channel and video on its own three-step scale; each video carries it as \"confidence\" beside the \"verification\" level it maps to (confirmed -> channel-confirmed, probable -> channel-probable, unknown -> unverified). Full evidence: the research files (roster/research/channels.json, channels.md, in the session scratchpad), summarised per item below.",
       "confirmed": "A direct source ties the id (or the channel) to the creator, and an independent source agrees.",
       "probable": "The search index lists the id with a title that names the creator or matches the channel's own title format, and a source ties the title (not the id) to the channel. A re-upload on another channel cannot be ruled out until oEmbed runs.",
-      "unknown": "Nothing ties the id or the channel to the creator. Never linked from the page."
+      "unknown": "Nothing ties the id or the channel to the creator. Never linked from the page.",
+      "client_pick": "A video with \"client_pick\" was embedded under that creator's name on the client's earlier site (/home/user/olayinkalawal/contentmotley/index.html): the earlier site played this video under that name. The client named the creators (2026-10-24), not these videos. A strong hint, not proof: one other embed there (k93tb6pQce0, labelled \"Layi Wasabi\") is indexed as a Broda Shaggi upload."
     },
     "client_pick": "A video with \"client_pick\" was embedded under that creator's name on the client's earlier site (/home/user/olayinkalawal/contentmotley/index.html), which the client asked us to use (2026-10-23). A strong hint, not proof: one other embed there (k93tb6pQce0, labelled \"Layi Wasabi\") is indexed as a Broda Shaggi upload."
   },
@@ -77,7 +78,7 @@
           "url": "https://www.youtube.com/watch?v=OQQaDqLCgKg",
           "duration": null,
           "published": "2025-10-24 (press)",
-          "why": "The client's own pick: the earlier Content Motley site featured this video for Omoni Oboli TV (/home/user/olayinkalawal/contentmotley index.html:791, the FEATURED embed), so it is card 2 since 2026-10-23 (copy v4). The channel's best-known premiere (the sequel to Love in Every Word), a wedding story in which a returning ex tests the engagement. Widely covered in Nigerian press, so it is the safest single title if only one card is used.",
+          "why": "The earlier site's pick: the earlier Content Motley site featured this video for Omoni Oboli TV (/home/user/olayinkalawal/contentmotley index.html:791, the FEATURED embed), so it is card 2 since 2026-10-23 (copy v4). The channel's best-known premiere (the sequel to Love in Every Word), a wedding story in which a returning ex tests the engagement. Widely covered in Nigerian press, so it is the safest single title if only one card is used.",
           "verification": "channel-probable",
           "evidence": "Search summary calls this the main listing, with the cast (Uzor Arukwe, BamBam, Patience Ozokwo, Chris Attoh…) in its description; an Omoni Oboli TV community post says to watch the film 'only on Omoni Oboli TV'. Several re-uploads exist on other channels (e.g. 9dTRJalYO_0, MgKfecE8FPE): do not use those.",
           "sources": [
@@ -321,7 +322,7 @@
           "url": "https://www.youtube.com/watch?v=2SgtAvc1HV8",
           "duration": "about 2 h 4 min (FilmFlux; unconfirmed on YouTube)",
           "published": "2025-09-30 (FilmFlux; the stars' posts of the same week)",
-          "why": "The client's own pick: the earlier Content Motley site embedded this id under the Emmabel TV label. A Lagos romantic comedy (a mechanic and a keke driver).",
+          "why": "The earlier site's pick: the earlier Content Motley site embedded this id under the Emmabel TV label. A Lagos romantic comedy (a mechanic and a keke driver).",
           "verification": "channel-confirmed",
           "confidence": "confirmed",
           "client_pick": "index.html:850 (embed youtube.com/embed/2SgtAvc1HV8), :858 (label \"Emmabel TV\")",
@@ -366,7 +367,7 @@
           "url": "https://www.youtube.com/watch?v=ScAcee_5Q4A",
           "duration": "about 1 h 46 min (FilmFlux Royal Arts TV listing; unconfirmed on YouTube)",
           "published": "about November 2025 (index: 'about 351 days ago')",
-          "why": "The client's own pick: the earlier Content Motley site embedded this id under the Royal Arts TV label. A romance (an architect courts an heiress under false pretences).",
+          "why": "The earlier site's pick: the earlier Content Motley site embedded this id under the Royal Arts TV label. A romance (an architect courts an heiress under false pretences).",
           "verification": "channel-probable",
           "confidence": "probable",
           "client_pick": "index.html:925 (embed youtube.com/embed/ScAcee_5Q4A), :933 (label \"Royal Arts TV\")",
@@ -592,6 +593,26 @@
       "channel_why_not_confirmed": "Several channels carry his name ('Brainjotter' UC07WvjOcNC_g2DBo9j3fYDQ, 'Brainjotterjunior' UCTRSKlWBkB8qik3ZhuEVSAQ, 'Brain Jotter Entertainment' UCIWIIBS5AepV9zx1mt7I6YQ, 'BrainJotter Comedy' @BrainJotterComedy). No first-party source (his own socials) was seen naming @BrainJotterComedian. Ask the client for the channel URL.",
       "videos": [
         {
+          "id": "mr1Nx39P6Mo",
+          "title": "OGENE BOYS",
+          "title_full_as_indexed": "OGENE BOYS - Brain Jotter Nigerian Movies 2026 Latest Full Movies",
+          "channel": "not named by any source (the series carries his name)",
+          "url": "https://www.youtube.com/watch?v=mr1Nx39P6Mo",
+          "duration": null,
+          "published": "about 2026-09-27 (index)",
+          "why": "Part 1 of Ogene Boys, his 2026 film series and his newest work; a series opener explains itself to a new viewer. Leads since 2026-10-24 (fix round): the earlier pick's title, THERA-PISSED, reads as crude in British English as a modal heading on a brand site.",
+          "verification": "channel-probable",
+          "confidence": "probable",
+          "evidence": [
+            "Research track (2026-10-24): the search index lists https://www.youtube.com/watch?v=mr1Nx39P6Mo with this title (roster/research/channels.json, Brain Jotter alternates)",
+            "Fix round WebSearch (2026-10-24): parts 2 and 3 indexed in the same title format: 'TALES OF THE SEVEN EVENTS - OGENE BOYS 2 - Brain Jotter Nigerian movies 2026 Latest Full Movies' https://www.youtube.com/watch?v=OTF59cTqc5A and 'THE GHOST OF THE PAST - OGENE BOYS 3 - Brain Jotter Nigerian movies 2026 Latest Full Movies' https://www.youtube.com/watch?v=Ky76LCiqYMo",
+            "Fix round WebSearch (2026-10-24): a third-party upload 'Ogene Boys episode 4 (Release date and time Review)_ BRAIN JOTTER Nigeria movie' https://www.youtube.com/watch?v=rF7zUnSgKnc ties the series to him"
+          ],
+          "note": "Probable: the title names him and the series is his, but no source names the uploading channel (a movie channel, not @BrainJotterComedian, may have uploaded it). Check with oEmbed before launch."
+        }
+      ],
+      "alternates": [
+        {
           "id": "menYRpHwVdM",
           "title": "THERA-PISSED",
           "title_full_as_indexed": "THERA-PISSED - Brain Jotter comedy",
@@ -605,16 +626,20 @@
           "evidence": [
             "Search index lists https://www.youtube.com/watch?v=menYRpHwVdM with this title",
             "Same title format: 'MY PASTOR MY GOD - Brain Jotter Comedy' https://www.youtube.com/watch?v=KKetIHHNizg"
-          ]
-        }
-      ],
-      "alternates": [
+          ],
+          "note": "Not used since 2026-10-24 (fix round): the title reads as crude in British English as the modal heading on a brand site. Its title fact DC116 is retired. Same probable level."
+        },
         {
-          "id": "mr1Nx39P6Mo",
-          "title_full_as_indexed": "OGENE BOYS - Brain Jotter Nigerian Movies 2026 Latest Full Movies",
-          "published": "about 2026-09-27 (index)",
+          "id": "OTF59cTqc5A",
+          "title_full_as_indexed": "TALES OF THE SEVEN EVENTS - OGENE BOYS 2 - Brain Jotter Nigerian movies 2026 Latest Full Movies",
           "confidence": "probable",
-          "note": "His newest work is a film series (Ogene Boys 1-3: mr1Nx39P6Mo, OTF59cTqc5A, Ky76LCiqYMo). Use part 1 if the client prefers films to skits."
+          "note": "Ogene Boys part 2 (fix round WebSearch, 2026-10-24)."
+        },
+        {
+          "id": "Ky76LCiqYMo",
+          "title_full_as_indexed": "THE GHOST OF THE PAST - OGENE BOYS 3 - Brain Jotter Nigerian movies 2026 Latest Full Movies",
+          "confidence": "probable",
+          "note": "Ogene Boys part 3 (fix round WebSearch, 2026-10-24)."
         }
       ],
       "flags": [
