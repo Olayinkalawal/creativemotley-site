@@ -10,7 +10,14 @@
       "unverified": "The id was found, but neither the uploader nor the content could be tied to the creator. Do not ship it until checked."
     },
     "how_to_verify": "Where youtube.com is reachable: for id in $(node -e \"const v=require('./docs/videos.json');console.log(v.creators.flatMap(c=>c.videos.map(x=>x.id)).join(' '))\"); do curl -s \"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=$id&format=json\" | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{const j=JSON.parse(s);console.log('$id',j.author_name,'|',j.title)}catch{console.log('$id','NOT FOUND')}})\"; done  (check author_name against 'channel' below).",
-    "thumbnails": "i.ytimg.com is blocked here, so no thumbnail was fetched or checked. Card faces could use the site's own posters (public/assets/posters/<slug>.webp) until real thumbnails are fetched at build time somewhere unblocked."
+    "thumbnails": "i.ytimg.com is blocked here, so no thumbnail was fetched or checked. Card faces could use the site's own posters (public/assets/posters/<slug>.webp) until real thumbnails are fetched at build time somewhere unblocked.",
+    "confidence": {
+      "note": "Round 2 (2026-10-24, the nine creators the client added): the research track rated each channel and video on its own three-step scale; each video carries it as \"confidence\" beside the \"verification\" level it maps to (confirmed -> channel-confirmed, probable -> channel-probable, unknown -> unverified). Full evidence: the research files (roster/research/channels.json, channels.md, in the session scratchpad), summarised per item below.",
+      "confirmed": "A direct source ties the id (or the channel) to the creator, and an independent source agrees.",
+      "probable": "The search index lists the id with a title that names the creator or matches the channel's own title format, and a source ties the title (not the id) to the channel. A re-upload on another channel cannot be ruled out until oEmbed runs.",
+      "unknown": "Nothing ties the id or the channel to the creator. Never linked from the page."
+    },
+    "client_pick": "A video with \"client_pick\" was embedded under that creator's name on the client's earlier site (/home/user/olayinkalawal/contentmotley/index.html), which the client asked us to use (2026-10-23). A strong hint, not proof: one other embed there (k93tb6pQce0, labelled \"Layi Wasabi\") is indexed as a Broda Shaggi upload."
   },
   "official_channel": {
     "creative_motley": {
@@ -286,6 +293,440 @@
       "flags": [
         "Two channels exist: KAPTV (https://www.youtube.com/user/kafolayan, older trailers) and KAPStream (@kapstream_tv, full films). Many 'full movie' uploads of his films on other channels are unofficial (e.g. Anikulapo, October 1): do not use them."
       ]
+    },
+    {
+      "creator": "Emmabel TV",
+      "fact": "F139",
+      "poster": null,
+      "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"emmabel\"). Display spelling: Channel title 'Emmabel TV'; handle and socials use 'EmmabelTV247' / 'Emmabel TV 247'. Not 'Emmanuel TV' (an unrelated religious channel).",
+      "makes": "Nollywood feature films",
+      "channel_url": "https://www.youtube.com/@EmmabelTV247",
+      "channel_name": "Emmabel TV",
+      "channel_handle": "@EmmabelTV247",
+      "channel_id": null,
+      "channel_verification": "confirmed",
+      "channel_evidence": [
+        "Search index: 'Emmabel TV - YouTube' at https://www.youtube.com/@EmmabelTV247 (description: 'your ultimate destination for Nollywood entertainment')",
+        "https://www.instagram.com/emmabeltv247/",
+        "https://www.facebook.com/p/Emmabel-TV-247-61573221740117/",
+        "https://filmflux.app/channel/emmabeltv247",
+        "Earlier site label 'Emmabel TV': /home/user/olayinkalawal/contentmotley/index.html:858"
+      ],
+      "videos": [
+        {
+          "id": "2SgtAvc1HV8",
+          "title": "LOVE AND KASALA",
+          "title_full_as_indexed": "LOVE AND KASALA - Nigerian Movies 2025 latest full movies",
+          "channel": "Emmabel TV",
+          "url": "https://www.youtube.com/watch?v=2SgtAvc1HV8",
+          "duration": "about 2 h 4 min (FilmFlux; unconfirmed on YouTube)",
+          "published": "2025-09-30 (FilmFlux; the stars' posts of the same week)",
+          "why": "The client's own pick: the earlier Content Motley site embedded this id under the Emmabel TV label. A Lagos romantic comedy (a mechanic and a keke driver).",
+          "verification": "channel-confirmed",
+          "confidence": "confirmed",
+          "client_pick": "index.html:850 (embed youtube.com/embed/2SgtAvc1HV8), :858 (label \"Emmabel TV\")",
+          "evidence": [
+            "/home/user/olayinkalawal/contentmotley/index.html:850 (iframe src youtube.com/embed/2SgtAvc1HV8) and :858 (label 'Emmabel TV'); same lines in public/index.html",
+            "Search index lists https://www.youtube.com/watch?v=2SgtAvc1HV8 with this title (query: youtube.com/watch?v=2SgtAvc1HV8)",
+            "https://filmflux.app/movie/52f1c324-da60-42f3-b9c3-b889541a356f-love-and-kasala (channel: Emmabel Tv)",
+            "https://www.threads.com/@sonia_uche/post/DPQntw-kZb- ('Showing Now On Emmabel Tv YouTube Channel')",
+            "https://www.threads.com/@kunleremiofficial/post/DPhkwQVkt8G ('still showing on YouTube, Emmabel Tv')",
+            "https://www.nollywoodtimes.com/2025/10/movie-review-love-and-kasala-charm.html"
+          ]
+        }
+      ],
+      "flags": [
+        "About a year old; the channel's later uploads could not be listed (youtube.com blocked). Keep the client's pick unless the client names a newer one."
+      ]
+    },
+    {
+      "creator": "Royal Arts TV",
+      "fact": "F140",
+      "poster": null,
+      "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"royal arts\"). Display spelling: As on the channel and the earlier site. Run by filmmaker Emem Isong (Royal Arts Academy); she also has a separate 'Emem Isong TV' channel, which is not this one.",
+      "makes": "Nollywood feature films",
+      "channel_url": "https://www.youtube.com/@RoyalArtsTV",
+      "channel_name": "Royal Arts TV",
+      "channel_handle": "@RoyalArtsTV",
+      "channel_id": "UCHtfUf-9779RPujVXixJ7Tw (probable: a 'Royal Arts TV - YouTube' page at this id appeared beside /c/royalartstv; not proven to be the same channel)",
+      "channel_verification": "confirmed",
+      "channel_evidence": [
+        "Search index: 'Royal Arts TV - YouTube' at https://www.youtube.com/c/royalartstv and https://www.youtube.com/channel/UCHtfUf-9779RPujVXixJ7Tw; channel description: 'a subsidiary of Royal Arts Academy Training and Production house'",
+        "Search index: 'Welcome To Royal Arts TV' https://www.youtube.com/watch?v=5Vd5HZcAHgU",
+        "https://filmflux.app/channels/RoyalArtsTV",
+        "https://en.wikipedia.org/wiki/Emem_Isong",
+        "Earlier site label 'Royal Arts TV': /home/user/olayinkalawal/contentmotley/index.html:933"
+      ],
+      "videos": [
+        {
+          "id": "ScAcee_5Q4A",
+          "title": "LOVE STOOD STILL",
+          "title_full_as_indexed": "LOVE STOOD STILL - Nigerian Movies 2025 Latest Full Movies",
+          "channel": "Royal Arts TV",
+          "url": "https://www.youtube.com/watch?v=ScAcee_5Q4A",
+          "duration": "about 1 h 46 min (FilmFlux Royal Arts TV listing; unconfirmed on YouTube)",
+          "published": "about November 2025 (index: 'about 351 days ago')",
+          "why": "The client's own pick: the earlier Content Motley site embedded this id under the Royal Arts TV label. A romance (an architect courts an heiress under false pretences).",
+          "verification": "channel-probable",
+          "confidence": "probable",
+          "client_pick": "index.html:925 (embed youtube.com/embed/ScAcee_5Q4A), :933 (label \"Royal Arts TV\")",
+          "evidence": [
+            "/home/user/olayinkalawal/contentmotley/index.html:925 (iframe src youtube.com/embed/ScAcee_5Q4A) and :933 (label 'Royal Arts TV'); same lines in public/index.html",
+            "Search index lists https://www.youtube.com/watch?v=ScAcee_5Q4A with this title (query: youtube.com/watch?v=ScAcee_5Q4A)",
+            "https://filmflux.app/channels/RoyalArtsTV lists 'Love Stood Still 1h 46m'"
+          ],
+          "why_not_confirmed": "The FilmFlux tie is by title only, and a different film with the same title exists on another channel (lYakflVWQD8, 'Love Stood Still (FREDRICK LEONARD NANCY ISIME)'): do not use that one. The earlier site's labels are not always exact (see existing_seven_check.earlier_site_labels), so the client's embed alone is not proof."
+        }
+      ],
+      "alternates": [
+        {
+          "id": "O-qqb_UMIc0",
+          "title_full_as_indexed": "Beyond The Crown - Uzor Arukwe, Bambam, Sultana Auduson, Emem Latest 2026 Romantic Movie #trending",
+          "confidence": "unknown",
+          "note": "Recent (about mid-October 2026) and names Emem in the title, but no source names the uploading channel. Do not use until checked."
+        }
+      ]
+    },
+    {
+      "creator": "Biodun Stephen",
+      "fact": "F141",
+      "poster": null,
+      "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"biodun stephen\"). Display spelling: Filmmaker (writer, director, producer); she uses she/her per Wikipedia. Channel title is styled 'BIODUNSTEPHEN TV' / 'BiodunStephenTV'. Use the person's name, as with 'Kunle Afolayan'.",
+      "makes": "Nollywood feature films",
+      "channel_url": "https://www.youtube.com/@BIODUNSTEPHENTV",
+      "channel_name": "BIODUNSTEPHEN TV",
+      "channel_handle": "@BIODUNSTEPHENTV",
+      "channel_id": "UCLgjn9SPLG7BxyuFB_uNfXQ",
+      "channel_verification": "confirmed",
+      "channel_evidence": [
+        "Search index: 'BIODUNSTEPHEN TV - YouTube' at https://www.youtube.com/@BIODUNSTEPHENTV and https://www.youtube.com/channel/UCLgjn9SPLG7BxyuFB_uNfXQ (description: original Nigerian movies; romantic films, family dramas, comedy)",
+        "https://x.com/BiodunStephenO/status/1974199086795624732 ('UNINVITED BRIDE now showing on BiodunStephenTV')",
+        "https://filmflux.app/channels/BIODUNSTEPHENTV",
+        "https://shutterspeedprojects.com/biodunstephen-tv/",
+        "https://en.wikipedia.org/wiki/Biodun_Stephen"
+      ],
+      "videos": [
+        {
+          "id": "vuJBH0QyxZk",
+          "title": "UNINVITED BRIDE",
+          "title_full_as_indexed": "UNINVITED BRIDE - Blessibg Obasi| Biodun Stephen Nigerian Movies 2025 Latest Full Movies",
+          "channel": "BIODUNSTEPHEN TV",
+          "url": "https://www.youtube.com/watch?v=vuJBH0QyxZk",
+          "duration": "about 1 h 48 min (listings; unconfirmed on YouTube)",
+          "published": "2025-10-03 (listings; her X post the same week)",
+          "why": "Her own channel premiere, written, directed and produced by her and reviewed in the national press; a comedy-drama about a stranger who turns up claiming to be a man's wife.",
+          "verification": "channel-probable",
+          "confidence": "probable",
+          "evidence": [
+            "Search index lists https://www.youtube.com/watch?v=vuJBH0QyxZk with this title; ' - Nigerian Movies 2025 Latest Full Movies' matches the channel's own uploads (e.g. https://videoblogs.com/entertainment/biodunstephen-tv-finding-my-way-nigerian-movies-2025-latest-full-movies)",
+            "https://x.com/BiodunStephenO/status/1974199086795624732",
+            "https://www.premiumtimesng.com/entertainment/nollywood/829132-movie-review-biodun-stephens-uninvited-bride-thrills-despite-predictability.html",
+            "https://nollywood.com/movies/uninvited-bride",
+            "https://filmflux.app/movie/68b247a5-0685-4673-96a5-f0d8bc3943fc-uninvited-bride"
+          ],
+          "flags": [
+            "The uploaded title contains a typo ('Blessibg'); show the short title only."
+          ]
+        }
+      ],
+      "alternates": [
+        {
+          "id": "wUZC0y-pKeE",
+          "title_full_as_indexed": "KENE'S SILENCE - Nigerian Movies 2026 Latest Full Movies",
+          "confidence": "unknown",
+          "note": "About April 2026; a viewer comment mentions 'Sister Biodun's movies', but no source names the uploader or her credit."
+        }
+      ]
+    },
+    {
+      "creator": "Bolu Essien",
+      "fact": "F142",
+      "poster": null,
+      "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"bolu essien\"). Display spelling: Actor, writer and producer (Becoming Abi on Netflix, Girls' Hostel on YouTube). Channel title 'Bolu Essien TV'; press also writes 'BoluEssienTV'. Not the unrelated channel 'bolu' (UCqjDZc5rzUa45PatbORRMfQ).",
+      "makes": "Drama and comedy web series",
+      "channel_url": "https://www.youtube.com/@BoluEssien",
+      "channel_name": "Bolu Essien TV",
+      "channel_handle": "@BoluEssien",
+      "channel_id": null,
+      "channel_verification": "confirmed",
+      "channel_evidence": [
+        "Search index: 'Bolu Essien TV - YouTube' at https://www.youtube.com/@BoluEssien",
+        "https://x.com/boluessien",
+        "https://guardian.ng/life/film/bolu-essien-brings-boarding-school-drama-to-life-with-girls-hostel/ (premieres exclusively on BoluEssienTV)",
+        "https://www.bellanaija.com/2026/02/nostalgia-meets-drama/",
+        "https://www.pulse.ng/story/girls-hostel-by-bolu-essien-shows-the-secondary-school-power-play-that-never-really-leaves-us-2026042309201076734"
+      ],
+      "videos": [
+        {
+          "id": "8NM-yaMdmeg",
+          "title": "GIRLS' HOSTEL – EPISODE 1 (IT GIRL)",
+          "title_full_as_indexed": "GIRLS' HOSTEL- EPISODE 1 (IT GIRL) FEAT. BOLU ESSIEN, ONYINYE ODOKORO, RONKE 'OMOOBA', EVA IBIAM",
+          "channel": "Bolu Essien TV",
+          "url": "https://www.youtube.com/watch?v=8NM-yaMdmeg",
+          "duration": null,
+          "published": "2026-02-13 (series premiere date in the press)",
+          "why": "Episode 1 of the 2026 boarding-school drama series, made for and premiered on the channel; a series opener explains itself to a new viewer.",
+          "verification": "channel-probable",
+          "confidence": "probable",
+          "evidence": [
+            "Search index lists https://www.youtube.com/watch?v=8NM-yaMdmeg with this title",
+            "Search index: playlist 'GIRL'S HOSTEL BY BOLU ESSIEN TV' https://www.youtube.com/playlist?list=PL3hCdGTzoeE5KkR1HNeweODTmkotYaZFB",
+            "Title format matches the channel's earlier series (e.g. 'SALON 001 COMEDY SERIES - EPISODE 10 (MY CUSTOMER'S CUSTOMER) FEAT. BOLU ESSIEN, BLESSING OBASI NZE', https://www.youtube.com/watch?v=EMdf1rObSZA)",
+            "https://odunews.com/2026/04/bolu-essien-writes-produces-and-stars-in-girls-hostel-drama/"
+          ]
+        }
+      ]
+    },
+    {
+      "creator": "Ariyiike Dimples",
+      "fact": "F143",
+      "poster": null,
+      "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"ariyike dimples\"). Display spelling: The client wrote 'ariyike dimples'; her own spelling (X @Ariyiikedimples, channel 'AriyiikeDimples', video titles 'ARIYIIKE DIMPLES') has a double i. Wikipedia files her as 'Ariyike Owolagba'. Recommend 'Ariyiike Dimples' and ask the client to confirm.",
+      "makes": "Drama series and dating talk",
+      "channel_url": "https://www.youtube.com/@RiskyStudiosTV",
+      "channel_name": "AriyiikeDimples (Risky Studios TV)",
+      "channel_handle": "@RiskyStudiosTV",
+      "channel_id": "UC3u-EzxlqMvqd-mzLqSk2bw (probable: same channel title and description in the index)",
+      "channel_verification": "confirmed",
+      "channel_evidence": [
+        "Search index: 'AriyiikeDimples - YouTube' at https://www.youtube.com/@RiskyStudiosTV and at https://www.youtube.com/channel/UC3u-EzxlqMvqd-mzLqSk2bw (description: home of the series RISKY and DATING IN LAGOS, social experiments, short and feature films)",
+        "https://x.com/Ariyiikedimples (links youtube.com/@riskystudiost…)",
+        "https://en.wikipedia.org/wiki/Ariyike_Owolagba"
+      ],
+      "videos": [
+        {
+          "id": "pb2jiuqmAms",
+          "title": "INSULT UPON INJURY",
+          "title_full_as_indexed": "INSULT UPON INJURY | RISKY STUDIOS TV | ARIYIIKE DIMPLES",
+          "channel": "AriyiikeDimples (Risky Studios TV)",
+          "url": "https://www.youtube.com/watch?v=pb2jiuqmAms",
+          "duration": null,
+          "published": "about late September 2026 (index: 'about 29 days ago'; another summary gives 2026-09-25)",
+          "why": "A recent, self-contained episode of her own series 'Risky' (a first date goes wrong), the channel's flagship format.",
+          "verification": "channel-probable",
+          "confidence": "probable",
+          "evidence": [
+            "Search index lists https://www.youtube.com/watch?v=pb2jiuqmAms with the full title naming RISKY STUDIOS TV and ARIYIIKE DIMPLES",
+            "The same id came up in a search scoped to the @RiskyStudiosTV channel, beside its other episodes (BRIDEZILLA _ovA7HcYCCs, PRENUP 5EqS1qgDDXw, DATING IN LAGOS EPISODE 7 P_cajZEOfgQ)"
+          ]
+        }
+      ],
+      "alternates": [
+        {
+          "id": "xRHYcCXuDKs",
+          "title": "BETRAYAL",
+          "published": "about 2026-10-16 (index)",
+          "confidence": "probable",
+          "note": "Newer, but its description was not seen."
+        }
+      ],
+      "flags": [
+        "She also stars in films on other channels (e.g. 'You May Only Kiss the Bride' on Harvesters TV): use her own channel only."
+      ]
+    },
+    {
+      "creator": "Officer Woos",
+      "fact": "F144",
+      "poster": null,
+      "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"officer woos\"). Display spelling: Stage name of Jubril Oladapo Gbadamosi. Channel title 'OFFICER WOOS'. A second channel, 'OFFICER WOOS TV' (@woosentertainment), is not the main one.",
+      "makes": "Comedy skits",
+      "channel_url": "https://www.youtube.com/@OFFICERWOOS",
+      "channel_name": "OFFICER WOOS",
+      "channel_handle": "@OFFICERWOOS",
+      "channel_id": "UCw1CI9X0fOsQxf984GH2HYA",
+      "channel_verification": "confirmed",
+      "channel_evidence": [
+        "Search index: 'OFFICER WOOS - YouTube' at https://www.youtube.com/c/OFFICERWOOS/videos and https://www.youtube.com/channel/UCw1CI9X0fOsQxf984GH2HYA; channel page lists him as founder of Woos Entertainment (W STUDIOS); video descriptions call it his official channel",
+        "https://en.wikipedia.org/wiki/Officer_Woos",
+        "https://www.tiktok.com/@officerwoos"
+      ],
+      "videos": [
+        {
+          "id": "bx0QofHIX68",
+          "title": "THE INTRODUCTION",
+          "title_full_as_indexed": "THE INTRODUCTION - (Officer Woos new comedy) SAKA",
+          "channel": "OFFICER WOOS",
+          "url": "https://www.youtube.com/watch?v=bx0QofHIX68",
+          "duration": null,
+          "published": "about 2026-03-31 (index)",
+          "why": "A recent, self-contained skit (he must meet his girlfriend's family the proper way); the '(Officer Woos new comedy)' title format is his own.",
+          "verification": "channel-probable",
+          "confidence": "probable",
+          "evidence": [
+            "Search index lists https://www.youtube.com/watch?v=bx0QofHIX68 with this title (query: Officer Woos new skit 2026 YouTube)",
+            "Title format matches his uploads, e.g. 'ASEWO BUSINESS- (Officer Woos new comedy)' qBcvBN8fTQ4, 'ASEWO BUSINESS 6 (Officer Woos new comedy)' D9BFZGI1OXY"
+          ]
+        }
+      ],
+      "alternates": [
+        {
+          "id": "A5awAF-Fzks",
+          "title_full_as_indexed": "VIGILANTE (FOOD SELLER) PART 4 (FINAL SAGA) - OFFICER WOOS",
+          "published": "about 2026-10-04 (index)",
+          "confidence": "probable",
+          "note": "Newer, but the last part of a series, so it does not stand alone."
+        }
+      ],
+      "flags": [
+        "June 2026 press (Legit.ng) reported a viral arrest claim that his lawyers called false. Not for the page; no card wording about it.",
+        "He also appears on Broda Shaggi's FDI (MTZlMqXgUZA, already card 4) and in Layi Wasabi skits; avoid choosing a joint video for both."
+      ]
+    },
+    {
+      "creator": "Brain Jotter",
+      "fact": "F145",
+      "poster": null,
+      "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"brainjotter\"). Display spelling: The client wrote 'brainjotter'. Wikipedia and his main channel use 'Brain Jotter' (two words); some uploads write 'Brainjotter'. Stage name of Chukwuebuka Emmanuel Amuzie. Recommend 'Brain Jotter'.",
+      "makes": "Comedy skits",
+      "channel_url": "https://www.youtube.com/@BrainJotterComedian",
+      "channel_name": "Brain Jotter",
+      "channel_handle": "@BrainJotterComedian",
+      "channel_id": "UCxyb0darxVM-h7I4xYWrb4A (probable: 'Brain Jotter' channel with the same booking contact in its description)",
+      "channel_verification": "probable",
+      "channel_evidence": [
+        "Search index: 'Brain Jotter - YouTube' at https://www.youtube.com/@BrainJotterComedian/videos (booking and promotion contact in the description)",
+        "Search index: 'Brain Jotter - YouTube' at https://www.youtube.com/channel/UCxyb0darxVM-h7I4xYWrb4A (booking contact in the description)",
+        "https://en.wikipedia.org/wiki/Brain_Jotter (main channel 'Brain Jotter')",
+        "https://us.youtubers.me/brainjotter-comedian/youtube-estimated-earnings (tracker keyed to the 'brainjotter-comedian' handle)"
+      ],
+      "channel_why_not_confirmed": "Several channels carry his name ('Brainjotter' UC07WvjOcNC_g2DBo9j3fYDQ, 'Brainjotterjunior' UCTRSKlWBkB8qik3ZhuEVSAQ, 'Brain Jotter Entertainment' UCIWIIBS5AepV9zx1mt7I6YQ, 'BrainJotter Comedy' @BrainJotterComedy). No first-party source (his own socials) was seen naming @BrainJotterComedian. Ask the client for the channel URL.",
+      "videos": [
+        {
+          "id": "menYRpHwVdM",
+          "title": "THERA-PISSED",
+          "title_full_as_indexed": "THERA-PISSED - Brain Jotter comedy",
+          "channel": "Brain Jotter",
+          "url": "https://www.youtube.com/watch?v=menYRpHwVdM",
+          "duration": null,
+          "published": "about late June 2026 (index: 'about 116 days ago'; another summary gives 2026-06-29)",
+          "why": "A recent stand-alone skit in his core format; the ' - Brain Jotter comedy' title suffix matches his uploads.",
+          "verification": "channel-probable",
+          "confidence": "probable",
+          "evidence": [
+            "Search index lists https://www.youtube.com/watch?v=menYRpHwVdM with this title",
+            "Same title format: 'MY PASTOR MY GOD - Brain Jotter Comedy' https://www.youtube.com/watch?v=KKetIHHNizg"
+          ]
+        }
+      ],
+      "alternates": [
+        {
+          "id": "mr1Nx39P6Mo",
+          "title_full_as_indexed": "OGENE BOYS - Brain Jotter Nigerian Movies 2026 Latest Full Movies",
+          "published": "about 2026-09-27 (index)",
+          "confidence": "probable",
+          "note": "His newest work is a film series (Ogene Boys 1-3: mr1Nx39P6Mo, OTF59cTqc5A, Ky76LCiqYMo). Use part 1 if the client prefers films to skits."
+        }
+      ],
+      "flags": [
+        "Past press about a 2022 skit backlash. Not for the page."
+      ]
+    },
+    {
+      "creator": "Gold Screen TV",
+      "fact": "F146",
+      "poster": null,
+      "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"goldscreen TV\"). Display spelling: The client wrote 'goldscreen TV'. The YouTube channel title is 'Gold Screen TV' (handle @GoldScreenTV-NG); IMDb and its TikTok (@goldscreentv) write 'Goldscreen TV'. Recommend 'Gold Screen TV' as on the channel, or 'Goldscreen TV' if the client prefers; never 'Golden Screen' (a different channel, /c/goldenscreenmoviestv).",
+      "makes": "Nollywood films and series",
+      "channel_url": "https://www.youtube.com/@GoldScreenTV-NG",
+      "channel_name": "Gold Screen TV",
+      "channel_handle": "@GoldScreenTV-NG",
+      "channel_id": null,
+      "channel_verification": "confirmed",
+      "channel_evidence": [
+        "Search index: 'Gold Screen TV - YouTube' at https://www.youtube.com/@GoldScreenTV-NG (description: Nigerian movies and Nollywood series, new episodes Wednesday and Saturday 6pm WAT)",
+        "https://filmflux.app/channels/goldscreentv-ng",
+        "TikTok @goldscreentv post promoting 'Never Far Away' on the 'Goldscreen TV channel on YouTube' (seen via https://www.tiktok.com/discover/taye-arimoro-and-his-twin-sister)",
+        "https://m.imdb.com/title/tt39300960/ (company credit: Goldscreen TV)"
+      ],
+      "videos": [
+        {
+          "id": "eRfM081tX0I",
+          "title": "NEVER FAR AWAY",
+          "title_full_as_indexed": "NEVER FAR AWAY - Nigerian Movies 2025 Latest Full ... (truncated in the index)",
+          "channel": "Gold Screen TV",
+          "url": "https://www.youtube.com/watch?v=eRfM081tX0I",
+          "duration": "about 1 h 27 min (IMDb)",
+          "published": "2025-11-01 (IMDb release date, Nigeria)",
+          "why": "The channel's own production (IMDb credits Goldscreen TV as the company) and the title it promoted most; a romantic comedy-drama about two exes forced to work together.",
+          "verification": "channel-probable",
+          "confidence": "probable",
+          "evidence": [
+            "Search index lists https://www.youtube.com/watch?v=eRfM081tX0I with this (truncated) title; the uploader was not shown",
+            "https://m.imdb.com/title/tt39300960/ (Goldscreen TV; dir. Debola Ogunshina; Teniola Aladese, Taye Arimoro, Gabriel Afolayan)",
+            "https://filmflux.app/channels/goldscreentv-ng lists Never Far Away first",
+            "https://www.zikoko.com/pop/best-nollywood-movies-on-youtube-december-2025/ (lists it as on YouTube)"
+          ]
+        }
+      ],
+      "alternates": [
+        {
+          "id": "n_K9CyiJiQI",
+          "title_full_as_indexed": "A GIGOLO FOR VALS - Nigerian Movies 2026 Latest Full Movies",
+          "published": "2026 (about February, FilmFlux's newest Gold Screen TV title)",
+          "confidence": "probable",
+          "note": "Newer; FilmFlux lists it under Gold Screen Tv, but no source names the uploader of this id."
+        }
+      ]
+    },
+    {
+      "creator": "Abayomi Alvin",
+      "fact": "F147",
+      "poster": null,
+      "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"abayomi alvin\"). Display spelling: Actor and producer. Channel title 'AbayomiAlvin Tv' (he calls it 'Abayomi Alvin TV'). Use the person's name.",
+      "makes": "Nollywood feature films",
+      "channel_url": "https://www.youtube.com/@AbayomiAlvinTv",
+      "channel_name": "AbayomiAlvin Tv",
+      "channel_handle": "@AbayomiAlvinTv",
+      "channel_id": "UC8qbGxyVM7lYLwU5NJ_CCNA",
+      "channel_verification": "confirmed",
+      "channel_evidence": [
+        "Search index: 'AbayomiAlvin Tv - YouTube' at https://www.youtube.com/channel/UC8qbGxyVM7lYLwU5NJ_CCNA and https://www.youtube.com/c/AbayomiAlvinTv/videos ('Welcome to AbayomiAlvinTV')",
+        "https://culturecustodian.com/my-life-in-nollywood-abayomi-alvin/ (his films coming out on 'his YouTube channel, Abayomi Alvin TV')",
+        "https://thenicheng.com/why-nollywood-actors-are-taking-their-films-to-youtube-abayomi-alvin/"
+      ],
+      "videos": [
+        {
+          "id": "bzpqmWl8sE4",
+          "title": "THE LITTLE THINGS",
+          "title_full_as_indexed": "THE LITTLE THINGS -ABAYOMI ALVIN, CAROLINE IGBEN, LUCY EDET,OLUWADOLARZ, HERMES FULL Nigerian Movie",
+          "channel": "AbayomiAlvin Tv",
+          "url": "https://www.youtube.com/watch?v=bzpqmWl8sE4",
+          "duration": "about 77 min (listing; unconfirmed on YouTube)",
+          "published": "about late December 2024 (premiere reported 2024-12-29)",
+          "why": "A romantic drama he stars in, premiered on his own channel. Older than the other picks: no newer upload could be tied to his channel.",
+          "verification": "channel-probable",
+          "confidence": "probable",
+          "evidence": [
+            "Search index lists https://www.youtube.com/watch?v=bzpqmWl8sE4 with this title",
+            "https://kolaolaiya.com/2024/12/29/the-little-things-2024/ (premieres on AbayomiAlvin Tv on YouTube)",
+            "https://www.ngmovies.com.ng/the-little-things-2024/ (credits Abayomi Alvin TV)"
+          ]
+        }
+      ],
+      "alternates": [
+        {
+          "id": "alc4fZSsZVw",
+          "title": "In Love With Two Sisters",
+          "published": "2025 (index)",
+          "confidence": "unknown",
+          "note": "Stars him, but no source names the uploading channel."
+        }
+      ],
+      "flags": [
+        "Ask the client for a newer upload on his channel if one should lead."
+      ]
     }
-  ]
+  ],
+  "roster": {
+    "note": "On the roster (src/partials/showcase.html, between the poster run and Watch the work; rows written by src/partials/showcase.videos.mjs). Every creator in this file, en-GB alphabetical, each with a name fact. A row's action: 'Watch' (plays in the shared modal; a plain YouTube link without JS) with a poster creator's card video, else the first video whose verification is in 'playable' and whose title has a fact; else 'Channel ↗' (channel_url, when channel_verification is in 'channel_ok'); else the name alone. Unknown ids and channels are never linked. A row shows the name and its action only: no title, stat or claim (F64 rule); the title is the modal's heading. The client names these as Creative Motley's creators (2026-10-24, 'it includes more'), and Results says 70+ channels managed (F100), so the list is never presented as complete.",
+    "order": "alpha",
+    "playable": [
+      "channel-confirmed",
+      "channel-probable"
+    ],
+    "channel_ok": [
+      "confirmed",
+      "probable"
+    ]
+  }
 }

@@ -254,6 +254,37 @@ html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none
   .wv__yt { grid-column: 2; grid-row: 1 / span 2; align-self: end; margin: 0 0 6px; }
 }
 
+/* ── On the roster: the creator index between the poster run and the video row (rows generated from docs/videos.json
+   by src/partials/showcase.videos.mjs). Type only: each row is the name in the lead serif with its action under it in
+   small caps; columns that read down (CSS columns: the alphabetical order runs down the first, then the next), a
+   hairline over each row (a border, so it survives forced colours). Phones: two columns. From 720 px: up to four,
+   each at least as wide as the longest name on one line ("Diary of a Naija Girl", 6.2 × the lead size with its
+   tracking), so four from 1280 px and on a landscape phone (844 × 390), three at 1024 and on tablets. The action comes
+   first in the markup, so a row is announced "Watch <name>", and shows second (order). ──────────────────────────── */
+.ros { position: relative; color: var(--cream); padding-top: clamp(24px, 4vh, 48px); }
+.ros__label { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream-mute); margin-bottom: clamp(10px, 1.8vh, 18px); }
+.ros__list { columns: 2; column-gap: 16px; }
+@media (min-width: 720px) { .ros__list { columns: 4 calc(var(--t-lead) * 6.2); column-gap: clamp(16px, 2.4vw, 48px); } }
+.ros__item { break-inside: avoid; border-top: 1px solid rgba(244, 237, 223, 0.2); }
+/* every row keeps the action's line, so the columns stay level when a row has no action (or ?drafts=0 hides it) */
+.ros__row {
+  display: grid; align-content: start; gap: 3px; padding: 8px 0 10px;
+  min-height: calc(var(--t-lead) * var(--lh-lead) + var(--t-small) * var(--lh-small) + 21px);
+  color: inherit; text-decoration: none; transition: opacity 0.35s var(--ease-out);
+}
+.ros__nm { font: var(--f-lead); letter-spacing: var(--ls-lead); min-width: 0; transition: transform 0.5s var(--ease-out); }
+.ros__act { order: 1; font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream-mute); white-space: nowrap; transition: color 0.25s; }
+.ros__act--watch::before {   /* the play mark: a small triangle (pure CSS, as on the cards) */
+  content: ''; display: inline-block; margin-right: 0.6em; vertical-align: -0.05em;
+  border-style: solid; border-width: 0.42em 0 0.42em 0.7em; border-color: transparent transparent transparent currentColor;
+}
+a.ros__row:hover .ros__act, a.ros__row:focus-visible .ros__act { color: var(--cream); }
+@media (hover: hover) {   /* the row under the pointer comes forward, the others step back */
+  .ros__list:has(a.ros__row:hover) .ros__row:not(:hover) { opacity: 0.45; }
+  a.ros__row:hover .ros__nm { transform: translateX(6px); }
+}
+@media (prefers-reduced-motion: reduce) { .ros__row, .ros__nm { transition: none; } a.ros__row:hover .ros__nm { transform: none; } }
+
 /* ── the video modal (src/ui/modal.js; the shared modal's own rules are in src/styles/modal.css) ─────────────── */
 .wvm { display: grid; gap: clamp(14px, 2.4vh, 24px); width: min(1100px, calc(100vw - 32px), calc((100svh - 200px) * 16 / 9)); color: var(--cream); }
 .wvm__frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 4px; background: #000;
