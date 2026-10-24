@@ -70,7 +70,7 @@ Every contact point stays **info@creativemotley.com**. That is the address on yo
 
 ## What we left out, and why
 
-- **Everything about Sholz.** That covers his name, photo, bio, roles, awards, P&L, email, phone and blog bylines.
+- **Everything about Sholz.** That covers her name, photo, bio, roles, awards, P&L, email, phone and blog bylines.
 - **"Leadership experience from YouTube, Paramount, MultiChoice, Africa Magic, Circo Live."** On your earlier site these five names are Sholz's roles, one for one. The only people the new site names are the two of you, so the row would read as your experience wherever it sat. It can't be reworded as a company claim either, because these were employers, not clients or partners.
 - **"16+ years in media"** (also "17 years" and "150+ TV / series"). On your earlier site these are Sholz's career length and commissioning record, written as company figures.
 - **Testimonials, "Highest Watched Nollywood Movie", "grew 3x in 6 months" and the 2024 campaign reel.** Each of these is anonymous, unverifiable, a result tied to a named creator, or a placeholder.
@@ -92,11 +92,11 @@ On the page the name is always "Creative Motley", in British spelling. If the cr
 
 Your reply of 24 October answered all five questions. Here is what changed on the page. Nothing about Sholz is on the page or in the copy. She will be added later, as you said. The changes are in a production build and were measured at eight screen sizes, from a small phone to a wide desktop, plus the still (no-WebGL) version. Nothing overflows, nothing jumps, and the page loads nothing from YouTube until someone presses play. `qa/shots/v3p7_roster.jpg` shows each changed chapter on desktop and on a phone.
 
-**V · Showcase: nine more creators.** Emmabel TV, Royal Arts TV and the seven others you named are now on the page. None of them has a poster, and we won't make pictures of real people, so they appear by name in a new list under the poster wall, *On the roster*. It holds all 16 creators in alphabetical order, in two columns. Each name has a **Watch** link that plays one of that creator's videos in the same player as the cards. Nothing else sits beside a name: no title, figure or claim. The list never says it is complete, because Results counts 70+ channels. The seven video cards below it are unchanged.
+**V · Showcase: nine more creators.** Emmabel TV, Royal Arts TV and the seven others you named are now on the page. None of them has a poster, and we won't make pictures of real people, so they appear by name in a new list under the poster wall, *On the roster*. It holds all 16 creators in alphabetical order: four columns on most laptops and desktops, three on a tablet or a small laptop, and two on a phone. Under each name is a **Watch** link that plays one of that creator's videos in the same player as the cards. Nothing else sits beside a name: no title, figure or claim. The list never says it is complete, because Results counts 70+ channels. The seven video cards below it are unchanged.
 
-To keep the chapter from growing too long, each poster on a laptop or desktop now holds for a slightly shorter scroll, the same as on phones. With the new list, Showcase is 4.18 screens long at 1440 × 900, up from 3.82, and 3.93 screens on a phone, up from 3.25.
+The list is set in compact columns so the chapter grows as little as possible, and the poster wall keeps its pace. With the new list, Showcase is 4.2 screens long at 1440 × 900, up from 3.8, and 3.9 screens on a phone, up from 3.3.
 
-The videos for Emmabel TV and Royal Arts TV are the ones your earlier site played under their names. For the other seven we chose a public video that search listings place on each creator's own channel. We had to rely on search listings because YouTube itself can't be reached from where we work. None of the nine videos has been checked on YouTube yet. We will check them all before launch, and until then each title, which shows only in the player, stays a draft.
+The videos for Emmabel TV and Royal Arts TV are the ones your earlier site played under their names. For six of the other seven we chose a public video that search listings place on each creator's own channel. For Brain Jotter we chose part 1 of *Ogene Boys*, his 2026 film series. The listings put his name in its title but don't say which channel uploaded it. We had to rely on search listings because YouTube itself can't be reached from where we work. None of the nine videos has been checked on YouTube yet. We will check them all before launch, and until then each title, which shows only in the player, stays a draft.
 
 **Spellings to confirm.** We used each creator's own spelling, which differs slightly from your message in three places:
 - **Ariyiike Dimples**, with a double i, as on her channel and her posts.
@@ -113,12 +113,13 @@ It sits in Creators only, so the line appears once. The 24–48-hour reply and t
 **IX · Directors.** The line under the title now reads:
 > Two of the people answerable for all of it.
 
-It is your live site's own line, changed only so that it no longer suggests the two of you are the whole board. The two names and your role lines are unchanged.
+It is your live site's own line, changed only so that it no longer suggests the two of you are the whole board. You asked for the change, but you haven't seen these words yet (see below). The two names and your role lines are unchanged.
 
 ## Still open
 
 1. **The spellings above.** Are they right?
-2. **Brain Jotter's channel.** Several channels carry his name. His video comes from the one we believe is his main channel, youtube.com/@BrainJotterComedian. Is that right?
-3. **Newer videos.** The videos for Emmabel TV, Royal Arts TV and Abayomi Alvin date from late 2024 to late 2025. Send a link if you'd rather show something newer.
-4. **Labels still in draft.** "What we run" (over the services) and "How a brief runs" (over the brief steps) weren't in the last question, so they are still drafts. So are "On the roster", "Watch" and "Watch the work". Are they fine?
-5. **From last time.** Is WealthMotley part of Creative Motley Ltd? And if you want bios, send 20–25 words each.
+2. **The Directors line.** Is "Two of the people answerable for all of it." right, or would you like other words?
+3. **Brain Jotter.** His Watch link plays part 1 of *Ogene Boys*. Is that a good choice? Several channels carry his name, and we believe his main one is youtube.com/@BrainJotterComedian. Is that right?
+4. **Newer videos.** The videos for Emmabel TV, Royal Arts TV and Abayomi Alvin date from late 2024 to late 2025. Send a link if you'd rather show something newer.
+5. **Labels still in draft.** "What we run" (over the services) and "How a brief runs" (over the brief steps) weren't in the last question, so they are still drafts. So are "On the roster", "Watch" and "Watch the work". Are they fine?
+6. **From last time.** Is WealthMotley part of Creative Motley Ltd? And if you want bios, send 20–25 words each.

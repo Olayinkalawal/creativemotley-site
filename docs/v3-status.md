@@ -1188,3 +1188,110 @@ its lead's CV figures) and is not used, nor is `blog.html` (bylined to the lead)
 4. Are 24/7 support, the 24–48-hour reply and the results timing still promises? (left out until confirmed)
 5. Emmabel TV and Royal Arts TV (on the earlier site, not the live one): add to the Showcase?
 6. Card 2's poster tagline ("Two exes. One wedding.") fits the previous film better; keep the new video?
+
+# Phase 7: client round 2, the roster (verified 2026-10-24)
+The client (Olayinka Lawal, 2026-10-24), answering the five questions in `docs/copy-v4.md`: "add emmabel and royal arts
+to showcase. yes its creative motley board, it includes more but leave it as two for now, none of use have the
+YT/paramount experience only sholz, but we will add her later. yes the online descpription is fine. yes there is
+support. add biodun stephen, bolu essien, ariyike dimples, officer woos, brainjotter, goldscreen TV, abayomi alvin,"
+A builder applied it, a critic reviewed it (verdict: fix), and this round fixed the findings and verified the whole
+site on a production build and on the GitHub Pages build. The client summary is `docs/copy-v4.md` "Round 2"; the client
+sheet `qa/shots/v3p7_roster.jpg` (git-ignored: force-add it to commit). Evidence:
+`/tmp/claude-0/-home-user-creativemotley-site/f5fb006b-f00a-5174-8cc3-2633425655d9/scratchpad/roster/` (`research/`
+channels and videos, `build/` the builder, `crit/` the critic, `final/` this round: `out/` results, `tools/` scripts,
+`shots/` captures).
+
+## P7.1 What a visitor sees now
+- **V Showcase:** the poster wall is unchanged (seven posters; desktop dwell 26, so the run is 7 × 26 + 100 svh as
+  before). Under it, **"On the roster"** (DC76, draft): all 16 creators in en-GB alphabetical order, each row the name
+  in the lead serif with "▶ Watch" (DC77, draft) under it. Four columns from about 1100 px and on a landscape phone
+  (844 × 390), three from 600 px (1024, tablets, 667 × 375), two on phones. Watch opens the cards' modal with that
+  creator's video (its title, a draft, is the modal heading); no title, figure or claim sits beside a name (F64 rule);
+  no picture of any of the nine new creators. Then "Watch the work", the seven cards, unchanged.
+- **II Creators:** "What we run" has seven rows: 01–06 approved (no `data-draft`), 07 new, **Support — On WhatsApp and
+  Telegram, 24/7.** (F148; earlier site `index.html:641`, confirmed by the client). Catalogue channels approved. The
+  label "What we run" (DC10) is still a draft. The 24–48 h reply and the results timing are not on the page.
+- **III Brands:** brief steps 01–04 approved; the label "How a brief runs" (DC32) is still a draft.
+- **IX Directors:** "Two of the people answerable for all of it." (F149, ours, derived from the live site's F105; the
+  client asked for the change, not for these words: in "Still open"). The two names and role lines are unchanged.
+  Nothing about the earlier site's lead is on the page.
+- **X Apply:** unchanged (the support line is in Creators only, so it appears once).
+
+## P7.2 Each roster row's video (search-index evidence only: youtube.com, i.ytimg.com and oEmbed are blocked here)
+| Creator | Video (draft title) | Video | Channel |
+|---|---|---|---|
+| Abayomi Alvin | bzpqmWl8sE4 "The Little Things" (DC118) | probable | @AbayomiAlvinTv, confirmed |
+| Ariyiike Dimples | pb2jiuqmAms "Insult Upon Injury" (DC114) | probable | @RiskyStudiosTV, confirmed |
+| Biodun Stephen | vuJBH0QyxZk "Uninvited Bride" (DC112) | probable | @BIODUNSTEPHENTV, confirmed |
+| Bolu Essien | 8NM-yaMdmeg "Girls’ Hostel, episode 1: It Girl" (DC113) | probable | @BoluEssien, confirmed |
+| Brain Jotter | mr1Nx39P6Mo "Ogene Boys" (DC119) | probable (uploader not named) | @BrainJotterComedian, probable |
+| Emmabel TV | 2SgtAvc1HV8 "Love and Kasala" (DC110) | confirmed (the earlier site's embed + index) | @EmmabelTV247, confirmed |
+| Gold Screen TV | eRfM081tX0I "Never Far Away" (DC117) | probable | @GoldScreenTV-NG, confirmed |
+| Officer Woos | bx0QofHIX68 "The Introduction" (DC115) | probable | @OFFICERWOOS, confirmed |
+| Royal Arts TV | ScAcee_5Q4A "Love Stood Still" (DC111) | probable (the earlier site's embed) | @RoyalArtsTV, confirmed |
+The seven poster creators' rows play their card's video (unchanged: Layi Wasabi, Diary of a Naija Girl and Kie Kie
+channel-confirmed; Omoni Oboli TV, Isbae U, Broda Shaggi and Kunle Afolayan channel-probable).
+
+## P7.3 The critic's findings, and what this round did
+1. **Roster too tall; the desktop poster dwell cut 26 → 22 unasked and unrecorded.** Fixed. Every width now uses the
+   stacked row (name, then the action, `--f-lead`); from 600 px `columns: 4 calc(var(--t-lead) * 6.3)` (6.3 = the
+   longest name, "Diary of a Naija Girl", 6.27 × the lead size) with a 2vw gap, so four columns appear only where that
+   name fits on one line, three elsewhere. The desktop dwell is back to 26 (`--sc-run: 282svh` and both CSS fallbacks);
+   the choice is recorded in the `showcase.html` header.
+2. **"his" for Sholz in two docs.** Fixed: `copy-v4.md` (her name), `copy-drafts.md` (her bio line, her card, her 120+
+   TV movies).
+3. **DC116 "Thera-Pissed".** Retired (reads as crude as a modal heading). Brain Jotter's row plays mr1Nx39P6Mo, part 1
+   of his 2026 film series Ogene Boys (DC119, draft, probable: the title names him and parts 2 and 3, OTF59cTqc5A and
+   Ky76LCiqYMo, are indexed in the same format; no source names the uploader). menYRpHwVdM is now an alternate.
+4. **Approval overstated.** `videos.json` `client_pick` now says the earlier site played the video under that name
+   (the client named the creators, not the videos); "The client's own pick" → "the earlier site's own pick" in two
+   `why`s and the DC66, DC110, DC111 notes. F149's note says "derived from F105, not yet seen by the client", and the
+   wording is question 2 of "Still open".
+5. **Rows announced "Abayomi Alvin Watch".** Fixed: the generator writes the action first and CSS shows it second
+   (`order: 1`); each row is now "Watch Abayomi Alvin" (with `?drafts=0`, the name alone).
+6. **Found here: a race in `showcase.js`.** On the desktop path, Esc during the poster modal's opening morph, then a
+   card or a row pressed within about 100 ms: the video never opened, and a TypeError was thrown (the skipped opening
+   morph drops `#modal.vt` before the closing morph has run, so the wait let the video in, and the closing morph then
+   shut it). The baseline (6e0e270) did not fail this way. `closing()` now also waits while the dialog still holds
+   content; the race passes at 0, 50, 100, 200 and 450 ms, Esc settled or mid-morph, rows and cards, desktop and tier 0.
+
+## P7.4 Numbers (production build; 6e0e270 = copy v4, before the roster)
+| | 6e0e270 | builder | now |
+|---|---|---|---|
+| Showcase, 1440 × 900 (scripts/perf.mjs lengths; tier 0 in brackets) | 3.82 (2.47) | 4.18 | 4.20 (2.85) |
+| Showcase, 390 × 844 | 3.25 (1.70) | 3.93 | 3.93 (2.38) |
+| Showcase, 844 × 390 tier 0 | | 7.20 | 6.78 |
+| The roster at 1440 / 1280 / 1920 / 1024 / 820 × 1180 / 844 × 390 / 390 (px) | | 574 / 550 / 583 / 518 / 515 / 486 / 574 | 340 / 334 / 349 / 468 / 489 / 322 / 574 |
+| Page, desktop / phone (screens) | 30.3 / 29.2 | | 30.7 / 29.9 |
+| First load, desktop @1× / @2× / phone @2× | 0.75 / 0.89 / 0.49 MB | | 0.75 / 0.89 / 0.49 MB (no GLB before input) |
+| gzip: HTML / CSS / entry JS / lazy JS | 25.8 / 24.7 / 38.2 / 220.6 KB | | +1.0 / +0.3 / +0.3 / −0.0 KB |
+
+## P7.5 Checks
+- **Fact check** (both builds): desktop and mobile 507 strings, `--drafts 0` 443: pass; 29 draft ids on the page.
+- **Generator:** `node src/partials/showcase.videos.mjs --check`: ok, 7 cards, 16 roster rows (16 watch); an unknown
+  argument exits 2.
+- **Walk** (production build, half-screen steps, whole page): 1440, 1280, 1024, 1920, 390, 360, 820 × 1180 and
+  844 × 390, each on the WebGL path (SwiftShader) and at tier 0, plus reduced motion and `?drafts=0` at 1440 and 390:
+  20 cases, horizontal overflow 0, CLS 0, no console error, no failed request, no third-party request. No name wraps
+  at any size (also 1100, 1279, 768 × 1024, 720, 667 × 375, 640, 620, 600). Re-walked after the race fix at 1440, 390,
+  844 × 390 and tier 0: the same.
+- **Every roster row** (1440 tier 0 and WebGL, 390, 844 × 390, `?drafts=0`; both builds): link = the row's
+  youtube.com/watch URL, `target=_blank`, `rel=noopener`; title fact = a live draft for that id; Enter opens the modal
+  with that heading, its draft id, the creator's name, focus inside and the youtube-nocookie player only once open;
+  Escape removes the player and returns focus to the row; Ctrl-click opens a tab and no modal; no request to a third
+  party and no iframe before the first click. With `?drafts=0` the heading is hidden and the player is named after the
+  creator. The cards' path is unchanged (`final/out/interact-prod.json`).
+- **No trace of the earlier site's lead:** "Sholz", "Laelle", "Aforevo" (any case) in both builds: none; also
+  `src/`, `public/`, `index.html`. "Thera-Pissed": none.
+- **GitHub Pages build** (`scripts/build-pages.mjs`, served under `/creativemotley-site/`, root 404): fact check in all
+  four modes passes; every roster row as above; walk at 1440 and 390 (WebGL path and tier 0), 844 × 390 and 1440
+  `?drafts=0`: overflow 0, CLS 0, no error, no failed request, no third-party request. Showcase 4.20 screens at 1440.
+
+## P7.6 For the client (short; `docs/copy-v4.md` "Still open")
+1. Spellings: Ariyiike Dimples, Brain Jotter, Gold Screen TV.
+2. The Directors line "Two of the people answerable for all of it.": right, or other words?
+3. Brain Jotter: part 1 of Ogene Boys, and is @BrainJotterComedian his main channel?
+4. Newer videos for Emmabel TV, Royal Arts TV or Abayomi Alvin, if wanted.
+5. The labels still in draft: "What we run", "How a brief runs", "On the roster", "Watch", "Watch the work".
+6. WealthMotley and Creative Motley Ltd; bios (20–25 words each), if wanted.
+7. Before launch: oEmbed on all 16 roster ids and the seven cards where YouTube is reachable (Brain Jotter's first).

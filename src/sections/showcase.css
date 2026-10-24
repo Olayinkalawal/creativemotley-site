@@ -257,14 +257,15 @@ html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none
 /* ── On the roster: the creator index between the poster run and the video row (rows generated from docs/videos.json
    by src/partials/showcase.videos.mjs). Type only: each row is the name in the lead serif with its action under it in
    small caps; columns that read down (CSS columns: the alphabetical order runs down the first, then the next), a
-   hairline over each row (a border, so it survives forced colours). Phones: two columns. From 720 px: up to four,
-   each at least as wide as the longest name on one line ("Diary of a Naija Girl", 6.2 × the lead size with its
-   tracking), so four from 1280 px and on a landscape phone (844 × 390), three at 1024 and on tablets. The action comes
-   first in the markup, so a row is announced "Watch <name>", and shows second (order). ──────────────────────────── */
+   hairline over each row (a border, so it survives forced colours). Phones: two columns. From 600 px: up to four,
+   each at least as wide as the longest name on one line ("Diary of a Naija Girl" measures 6.27 × the lead size with
+   its tracking: 6.3). So four from about 1100 px and on a landscape phone (844 × 390; the gap is 2vw so it keeps
+   four), three at 1024, on tablets and on a small landscape phone. The action comes first in the markup, so a row is
+   announced "Watch <name>", and shows second (order). ────────────────────────────────────────────────────────── */
 .ros { position: relative; color: var(--cream); padding-top: clamp(24px, 4vh, 48px); }
 .ros__label { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream-mute); margin-bottom: clamp(10px, 1.8vh, 18px); }
 .ros__list { columns: 2; column-gap: 16px; }
-@media (min-width: 720px) { .ros__list { columns: 4 calc(var(--t-lead) * 6.2); column-gap: clamp(16px, 2.4vw, 48px); } }
+@media (min-width: 600px) { .ros__list { columns: 4 calc(var(--t-lead) * 6.3); column-gap: clamp(16px, 2vw, 48px); } }
 .ros__item { break-inside: avoid; border-top: 1px solid rgba(244, 237, 223, 0.2); }
 /* every row keeps the action's line, so the columns stay level when a row has no action (or ?drafts=0 hides it) */
 .ros__row {

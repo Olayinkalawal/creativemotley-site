@@ -365,10 +365,12 @@ export function initVideos(sec) {
   });
   // the shared modal still closing: a closing morph (modal.js) ends by emptying the dialog and clearing its source's
   // transition name, even when another modal has opened since (e.g. the poster modal shut a moment before a row or a
-  // card is pressed). Until then the dialog is shut but not yet empty, or mid-morph (#modal.vt): wait (at most 4 s),
-  // or the video would open empty and the next morph would meet a duplicate transition name.
+  // card is pressed). Until then the dialog still holds its content, or is mid-morph (#modal.vt): wait (at most 4 s),
+  // or the video would open empty and the next morph would meet a duplicate transition name. Content counts even while
+  // .open is still on: Esc during the opening morph starts the closing one, the skipped opening morph drops .vt early,
+  // and .open goes only when the closing morph's update runs (a row or card can only be pressed once Esc has been).
   const modalEl = document.getElementById('modal'), modalBody = modalEl?.querySelector('[data-modal-body]');
-  const closing = () => !!modalEl && (modalEl.classList.contains('vt') || (!modalEl.classList.contains('open') && modalBody?.childElementCount > 0));
+  const closing = () => !!modalEl && (modalEl.classList.contains('vt') || modalBody?.childElementCount > 0);
   function openVideo(o) {
     if (!closing()) return openVideoNow(o);
     let t = 0;

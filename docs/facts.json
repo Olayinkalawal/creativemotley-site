@@ -1745,7 +1745,7 @@
   "url": "https://www.youtube.com/watch?v=OQQaDqLCgKg",
   "location": "v3 #showcase — Video card title — Omoni Oboli TV (card 2 since 2026-10-23)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft (use). The video is the client's own pick: the earlier site featured OQQaDqLCgKg for Omoni Oboli TV (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75), index.html:791, the FEATURED embed). The title is the display form of \"LOVE IN EVERY WORD 2 - THE WEDDING\" as search listings give it; it is not yet confirmed on YouTube (oEmbed could not run). Replaces DC65 on card 2 (2026-10-23). See docs/videos.json."
+  "note": "DRAFT — needs client approval. Status: draft (use). The video is the earlier site's own pick: it featured OQQaDqLCgKg for Omoni Oboli TV (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75), index.html:791, the FEATURED embed). The title is the display form of \"LOVE IN EVERY WORD 2 - THE WEDDING\" as search listings give it; it is not yet confirmed on YouTube (oEmbed could not run). Replaces DC65 on card 2 (2026-10-23). See docs/videos.json."
  },
  {
   "id": "DC67",
@@ -1949,7 +1949,7 @@
   "url": "https://www.youtube.com/watch?v=2SgtAvc1HV8",
   "location": "v3 #showcase — video title for Emmabel TV: the modal heading when the roster row plays (round 2)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"LOVE AND KASALA - Nigerian Movies 2025 latest full movies\" (id 2SgtAvc1HV8). Confidence: confirmed (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). The client's own pick: the earlier site, index.html:850 (embed youtube.com/embed/2SgtAvc1HV8), :858 (label \"Emmabel TV\"). See docs/videos.json."
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"LOVE AND KASALA - Nigerian Movies 2025 latest full movies\" (id 2SgtAvc1HV8). Confidence: confirmed (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). The earlier site's own pick (it played this video under that name): index.html:850 (embed youtube.com/embed/2SgtAvc1HV8), :858 (label \"Emmabel TV\"). See docs/videos.json."
  },
  {
   "id": "F140",
@@ -1967,7 +1967,7 @@
   "url": "https://www.youtube.com/watch?v=ScAcee_5Q4A",
   "location": "v3 #showcase — video title for Royal Arts TV: the modal heading when the roster row plays (round 2)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"LOVE STOOD STILL - Nigerian Movies 2025 Latest Full Movies\" (id ScAcee_5Q4A). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). The client's own pick: the earlier site, index.html:925 (embed youtube.com/embed/ScAcee_5Q4A), :933 (label \"Royal Arts TV\"). See docs/videos.json."
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"LOVE STOOD STILL - Nigerian Movies 2025 Latest Full Movies\" (id ScAcee_5Q4A). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). The earlier site's own pick (it played this video under that name): index.html:925 (embed youtube.com/embed/ScAcee_5Q4A), :933 (label \"Royal Arts TV\"). See docs/videos.json."
  },
  {
   "id": "F141",
@@ -2057,7 +2057,8 @@
   "url": "https://www.youtube.com/watch?v=menYRpHwVdM",
   "location": "v3 #showcase — video title for Brain Jotter: the modal heading when the roster row plays (round 2)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"THERA-PISSED - Brain Jotter comedy\" (id menYRpHwVdM). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"THERA-PISSED - Brain Jotter comedy\" (id menYRpHwVdM). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json.",
+  "retired": "2026-10-24 (fix round): not used. As the modal heading on a brand site the title reads as crude in British English, and no client question covered it. Brain Jotter's row plays DC119 (Ogene Boys, mr1Nx39P6Mo) instead."
  },
  {
   "id": "F146",
@@ -2094,6 +2095,15 @@
   "location": "v3 #showcase — video title for Abayomi Alvin: the modal heading when the roster row plays (round 2)",
   "kind": "draft",
   "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"THE LITTLE THINGS -ABAYOMI ALVIN, CAROLINE IGBEN, LUCY EDET,OLUWADOLARZ, HERMES FULL Nigerian Movie\" (id bzpqmWl8sE4). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+ },
+ {
+  "id": "DC119",
+  "claim": "Ogene Boys",
+  "source_sentence": "OGENE BOYS - Brain Jotter Nigerian Movies 2026 Latest Full Movies",
+  "url": "https://www.youtube.com/watch?v=mr1Nx39P6Mo",
+  "location": "v3 #showcase — video title for Brain Jotter: the modal heading when the roster row plays (round 2, fix round)",
+  "kind": "draft",
+  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"OGENE BOYS - Brain Jotter Nigerian Movies 2026 Latest Full Movies\" (id mr1Nx39P6Mo), part 1 of his 2026 film series. Confidence: probable (research track and fix round, 2026-10-24, WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted): the title names him and parts 2 and 3 are indexed in the same format, but no source names the uploading channel. Replaces DC116. See docs/videos.json."
  },
  {
   "id": "DC76",
@@ -2138,6 +2148,6 @@
   "url": "https://creativemotley.com/",
   "location": "#directors .dirs-title p → rebuild #directors .dr-open .dek",
   "kind": "positioning",
-  "note": "Approved 2026-10-24: the live site's own line (F105) with \"The two people\" → \"Two of the people\", the smallest change that makes it true: the board is Creative Motley's and has more members than the two named, who stay the only two on the page for now (client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation): \"yes its creative motley board, it includes more but leave it as two for now\"). The drop cap stays T. Not \"Two of the board\" (Olayinka Lawal's board seat is not stated: F137) nor \"who run Creative Motley\" (no such role was given)."
+  "note": "Derived from F105 (the live site's own line), not yet seen by the client: \"The two people\" → \"Two of the people\", the smallest change that makes it true. The board is Creative Motley's and has more members than the two named, who stay the only two on the page for now (client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation): \"yes its creative motley board, it includes more but leave it as two for now\"). The client asked for the change in substance, not for this wording: it is in docs/copy-v4.md \"Still open\". The drop cap stays T. Not \"Two of the board\" (Olayinka Lawal's board seat is not stated: F137) nor \"who run Creative Motley\" (no such role was given)."
  }
 ]
