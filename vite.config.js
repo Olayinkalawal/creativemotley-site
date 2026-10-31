@@ -67,8 +67,31 @@ function glbGzip() {
   };
 }
 
+/* the built page carries no HTML comments: in the source they are working notes (owners, fact ids, art direction,
+   client messages), and Vite keeps them, so anyone could read them in the page source. Inline <script> and <style>
+   blocks are left as they are. Build only: the dev server keeps them for whoever reads the markup. */
+function stripHtmlComments() {
+  const strip = (html) => html.split(/(<script\b[\s\S]*?<\/script>|<style\b[\s\S]*?<\/style>)/i)
+    .map((part, i) => (i % 2 ? part : part.replace(/[ \t]*<!--[\s\S]*?-->[ \t]*\r?\n?/g, ''))).join('');
+  return { name: 'cm-strip-html-comments', apply: 'build', transformIndexHtml: { order: 'post', handler: strip } };
+}
+
+/* the camera key sheets (src/gl/keys/*.json) carry "//" notes for whoever tunes them; gl/scenes/plates.js already skips
+   them, so the build leaves them out of the bundle (they shipped as plain strings in the plates chunk) */
+function stripKeyNotes() {
+  const strip = (o) => (Array.isArray(o) ? o.map(strip) : o && typeof o === 'object'
+    ? Object.fromEntries(Object.entries(o).filter(([k]) => !k.startsWith('//')).map(([k, v]) => [k, strip(v)])) : o);
+  return {
+    name: 'cm-strip-key-notes', apply: 'build', enforce: 'pre',
+    transform(code, id) {
+      if (!/\/src\/gl\/keys\/[^/]+\.json$/.test(id.split('?')[0])) return null;
+      return { code: JSON.stringify(strip(JSON.parse(code))), map: null };
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [includes(), threeSlim(), retired(), glbGzip(), sitemapLastmod()],   // threeSlim: build only (scripts/three-slim.mjs)
+  plugins: [includes(), stripHtmlComments(), stripKeyNotes(), threeSlim(), retired(), glbGzip(), sitemapLastmod()],   // threeSlim: build only (scripts/three-slim.mjs)
   build: {
     target: 'es2020',
     assetsInlineLimit: 0,

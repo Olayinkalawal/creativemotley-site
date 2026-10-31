@@ -6,34 +6,7 @@
   "url": "https://creativemotley.com/",
   "location": "header#chrome a.wordmark",
   "kind": "name",
-  "note": "Wordmark: Archivo 700, uppercase, letter-spacing .2em; markup is 'Creative&nbsp;Motley' followed by a label span."
- },
- {
-  "id": "F02",
-  "claim": "(label beside the name; removed)",
-  "source_sentence": "(label beside the name; removed)",
-  "url": "https://creativemotley.com/",
-  "location": "header#chrome a.wordmark span.label",
-  "kind": "name",
-  "note": "Instrument Serif italic at 66% opacity, sits right after the wordmark."
- },
- {
-  "id": "F03",
-  "claim": "Creative Motley",
-  "source_sentence": "Creative Motley",
-  "url": "https://creativemotley.com/",
-  "location": "#boot .boot-mark (loader)",
-  "kind": "name",
-  "note": "Loader mark above the progress rule; 11px Archivo 600, .34em tracking, uppercase."
- },
- {
-  "id": "F04",
-  "claim": "(title beside the name; removed)",
-  "source_sentence": "Creative Motley",
-  "url": "https://creativemotley.com/",
-  "location": "<title>; meta[property=og:title]",
-  "kind": "name",
-  "note": "The commented-out title card set it as two words, the second in italic serif on its own line (see F10). Live only as page/OG title."
+  "note": "Wordmark: Archivo 700, uppercase, letter-spacing .2em; markup is 'Creative&nbsp;Motley' followed by a small label span. 2026-10-31 (S11): the rebuild's wordmark is the name alone, \"Creative Motley\" on one line in Archivo 700 (the hero's mark, the rail's mark, the top bar, the 404); the label after it on the live site is not used. The page title is F158."
  },
  {
   "id": "F05",
@@ -168,7 +141,8 @@
   "source_sentence": "Chapter I",
   "url": "https://creativemotley.com/",
   "location": "#film .beat.chapter .ch-eyebrow",
-  "kind": "ui-copy"
+  "kind": "ui-copy",
+  "retired": "2026-10-31: the client's message (S11, docs/copy-drafts.md): remove every word the site took from the design reference. Chapter numbering in Roman numerals came from the reference. Not on the page since v3; retired so it does not come back. The index numbers its chapters 01–10."
  },
  {
   "id": "F20",
@@ -249,7 +223,8 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ghosts .ghost.solid:nth-child(3)",
   "kind": "ui-copy",
-  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at .3 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Slash-command chip (.ghost.solid: dark fill, white 12px Archivo 600). Position left:50%;top:16.7%."
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at .3 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Slash-command chip (.ghost.solid: dark fill, white 12px Archivo 600). Position left:50%;top:16.7%.",
+  "retired": "2026-10-31: the client's message (S11, docs/copy-drafts.md): remove every word the site took from the design reference. The command chip came from the reference. The cloud now carries the earlier site's own words (F159–F161) and F33."
  },
  {
   "id": "F29",
@@ -285,7 +260,8 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ghosts .ghost.solid:nth-child(7)",
   "kind": "ui-copy",
-  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at .3 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Slash-command chip (.ghost.solid: dark fill, white 12px Archivo 600). Position left:46%;top:45.1%."
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at .3 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Slash-command chip (.ghost.solid: dark fill, white 12px Archivo 600). Position left:46%;top:45.1%.",
+  "retired": "2026-10-31: the client's message (S11, docs/copy-drafts.md): remove every word the site took from the design reference. The slash-command form came from the reference; the cloud now carries the earlier site's own words (F159–F161)."
  },
  {
   "id": "F33",
@@ -294,7 +270,7 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ghosts .ghost:nth-child(8)",
   "kind": "ui-copy",
-  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.1 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Position left:64%;top:52.2%."
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at 0.1 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Position left:64%;top:52.2%. Rebuild since 2026-10-31 (S11): the note on the Creators cloud's dark card (#creators .cloud__note), under \"Content planning\" (F161)."
  },
  {
   "id": "F34",
@@ -321,7 +297,8 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ghosts .ghost.solid:nth-child(11)",
   "kind": "ui-copy",
-  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at .3 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Slash-command chip (.ghost.solid: dark fill, white 12px Archivo 600). Position left:52%;top:73.5%."
+  "note": "Ambient 'ghost' feed card behind the Chapter I cream page: aria-hidden, drawn at .3 opacity. The HTML comment calls these 'real operational lines, not lorem', but the site never presents them as results. Treat as illustrative production-note UI. Slash-command chip (.ghost.solid: dark fill, white 12px Archivo 600). Position left:52%;top:73.5%.",
+  "retired": "2026-10-31: the client's message (S11, docs/copy-drafts.md): remove every word the site took from the design reference. As F32."
  },
  {
   "id": "F37",
@@ -384,7 +361,7 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-row:nth-of-type(1) a.ed-link",
   "kind": "cta",
-  "note": "mailto:info@creativemotley.com?subject=Creator%20network. Chip: 1px outline, radius 5px."
+  "note": "mailto:info@creativemotley.com?subject=Creator%20network. Chip: 1px outline, radius 5px. 2026-10-31 (S11): the arrow is the earlier site's → (S7 index.html:503), not the ↗ the live site took from the reference; the source sentence is the live site's, verbatim."
  },
  {
   "id": "F44",
@@ -411,7 +388,7 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-row:nth-of-type(2) a.ed-link",
   "kind": "cta",
-  "note": "mailto subject 'Catalogue'. The live site (and the earlier site, index.html:517 \"Monetize your catalogue →\") spell it with a z; since 2026-10-23 the rebuild sets it in British English, \"Monetise\", to match \"Monetisation\" in the services list and the rest of the page (claim = the page; source_sentence = the live site, verbatim)."
+  "note": "mailto subject 'Catalogue'. The live site (and the earlier site, index.html:517 \"Monetize your catalogue →\") spell it with a z; since 2026-10-23 the rebuild sets it in British English, \"Monetise\", to match \"Monetisation\" in the services list and the rest of the page (claim = the page; source_sentence = the live site, verbatim). 2026-10-31 (S11): the arrow is the earlier site's → (S7 index.html:517), not the ↗ the live site took from the reference; the source sentence is the live site's, verbatim."
  },
  {
   "id": "F47",
@@ -438,7 +415,7 @@
   "url": "https://creativemotley.com/",
   "location": "#next .ed-row:nth-of-type(3) a.ed-link",
   "kind": "cta",
-  "note": "mailto subject 'Brief'."
+  "note": "mailto subject 'Brief'. 2026-10-31 (S11): the arrow is the earlier site's → (S7 index.html:531), not the ↗ the live site took from the reference; the source sentence is the live site's, verbatim."
  },
  {
   "id": "F50",
@@ -542,7 +519,8 @@
   "source_sentence": "Chapter IV",
   "url": "https://creativemotley.com/",
   "location": "#method .method-copy .ch-eyebrow",
-  "kind": "ui-copy"
+  "kind": "ui-copy",
+  "retired": "2026-10-31: the client's message (S11, docs/copy-drafts.md): remove every word the site took from the design reference. Chapter numbering in Roman numerals came from the reference. Not on the page since v3; retired so it does not come back. The index numbers its chapters 01–10."
  },
  {
   "id": "F61",
@@ -568,7 +546,8 @@
   "url": "https://creativemotley.com/",
   "location": "#showcase .pw-meta .ed-label",
   "kind": "ui-copy",
-  "note": "Markup 'Chapter V &middot; Showcase'; kept on one line."
+  "note": "Markup 'Chapter V &middot; Showcase'; kept on one line.",
+  "retired": "2026-10-31: the client's message (S11, docs/copy-drafts.md): remove every word the site took from the design reference. Chapter numbering in Roman numerals came from the reference. Not on the page since v3; retired so it does not come back. The index numbers its chapters 01–10."
  },
  {
   "id": "F64",
@@ -666,7 +645,8 @@
   "source_sentence": "Chapter VI · Process",
   "url": "https://creativemotley.com/",
   "location": "#process .ed-label.proc-eyebrow",
-  "kind": "ui-copy"
+  "kind": "ui-copy",
+  "retired": "2026-10-31: the client's message (S11, docs/copy-drafts.md): remove every word the site took from the design reference. Chapter numbering in Roman numerals came from the reference. Not on the page since v3; retired so it does not come back. The index numbers its chapters 01–10."
  },
  {
   "id": "F74",
@@ -873,7 +853,8 @@
   "url": "https://creativemotley.com/",
   "location": "#results .rx-copy .ch-eyebrow",
   "kind": "ui-copy",
-  "note": "Rebuild: 'Chapter VII' is now the kicker of the new Kit chapter (#kit, docs/teardown-v2.md), the photoreal teardowns between Process and Results; Results is chapter VIII (see F103)."
+  "note": "Rebuild: 'Chapter VII' is now the kicker of the new Kit chapter (#kit, docs/teardown-v2.md), the photoreal teardowns between Process and Results; Results is chapter VIII (see F103).",
+  "retired": "2026-10-31: the client's message (S11, docs/copy-drafts.md): remove every word the site took from the design reference. Chapter numbering in Roman numerals came from the reference. Not on the page since v3; retired so it does not come back. The index numbers its chapters 01–10."
  },
  {
   "id": "F97",
@@ -964,7 +945,8 @@
   "url": "https://creativemotley.com/",
   "location": "#directors .dirs-title .ch-eyebrow",
   "kind": "ui-copy",
-  "note": "Rebuild: 'Chapter VIII' is now the Results kicker (#results), because the new chapter VII Kit sits before it (docs/teardown-v2.md); Directors is chapter IX ('Chapter IX', docs/ui-strings.json) and Apply chapter X ('Chapter X', docs/ui-strings.json)."
+  "note": "Rebuild: 'Chapter VIII' is now the Results kicker (#results), because the new chapter VII Kit sits before it (docs/teardown-v2.md); Directors is chapter IX ('Chapter IX', docs/ui-strings.json) and Apply chapter X ('Chapter X', docs/ui-strings.json).",
+  "retired": "2026-10-31: the client's message (S11, docs/copy-drafts.md): remove every word the site took from the design reference. Chapter numbering in Roman numerals came from the reference. Not on the page since v3; retired so it does not come back. The index numbers its chapters 01–10."
  },
  {
   "id": "F104",
@@ -1143,7 +1125,7 @@
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(1) (a href=#next + span.num 'I')",
   "kind": "ui-copy",
-  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'I' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'I' Instrument Serif 11px right-aligned at 42% opacity. 2026-10-31 (S11): the index numbers its chapters 01–10 (the earlier site's own style, S7 index.html:734–761), not Roman numerals; \"I\" is now \"01\"."
  },
  {
   "id": "F124",
@@ -1152,7 +1134,7 @@
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(2) (a href=#creators + span.num 'II')",
   "kind": "ui-copy",
-  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'II' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'II' Instrument Serif 11px right-aligned at 42% opacity. 2026-10-31 (S11): the index numbers its chapters 01–10 (the earlier site's own style, S7 index.html:734–761), not Roman numerals; \"II\" is now \"02\"."
  },
  {
   "id": "F125",
@@ -1161,7 +1143,7 @@
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(3) (a href=#brands + span.num 'III')",
   "kind": "ui-copy",
-  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'III' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'III' Instrument Serif 11px right-aligned at 42% opacity. 2026-10-31 (S11): the index numbers its chapters 01–10 (the earlier site's own style, S7 index.html:734–761), not Roman numerals; \"III\" is now \"03\"."
  },
  {
   "id": "F126",
@@ -1170,7 +1152,7 @@
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(4) (a href=#method + span.num 'IV')",
   "kind": "ui-copy",
-  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'IV' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'IV' Instrument Serif 11px right-aligned at 42% opacity. 2026-10-31 (S11): the index numbers its chapters 01–10 (the earlier site's own style, S7 index.html:734–761), not Roman numerals; \"IV\" is now \"04\"."
  },
  {
   "id": "F127",
@@ -1179,7 +1161,7 @@
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(5) (a href=#showcase + span.num 'V')",
   "kind": "ui-copy",
-  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'V' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'V' Instrument Serif 11px right-aligned at 42% opacity. 2026-10-31 (S11): the index numbers its chapters 01–10 (the earlier site's own style, S7 index.html:734–761), not Roman numerals; \"V\" is now \"05\"."
  },
  {
   "id": "F128",
@@ -1188,7 +1170,7 @@
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(6) (a href=#process + span.num 'VI')",
   "kind": "ui-copy",
-  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'VI' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'VI' Instrument Serif 11px right-aligned at 42% opacity. 2026-10-31 (S11): the index numbers its chapters 01–10 (the earlier site's own style, S7 index.html:734–761), not Roman numerals; \"VI\" is now \"06\"."
  },
  {
   "id": "F129",
@@ -1197,7 +1179,7 @@
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(7) (a href=#results + span.num 'VII')",
   "kind": "ui-copy",
-  "note": "Rebuild numbering (docs/teardown-v2.md): the new chapter VII Kit sits between Process and Results, so the chapters after it move up one; the live site's numeral here was 'VII'. Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'VIII' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Rebuild numbering (docs/teardown-v2.md): the new chapter VII Kit sits between Process and Results, so the chapters after it move up one; the live site's numeral here was 'VII'. Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'VIII' Instrument Serif 11px right-aligned at 42% opacity. 2026-10-31 (S11): the index numbers its chapters 01–10 (the earlier site's own style, S7 index.html:734–761), not Roman numerals; \"VIII\" is now \"08\"."
  },
  {
   "id": "F130",
@@ -1206,7 +1188,7 @@
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(8) (a href=#directors + span.num 'VIII')",
   "kind": "ui-copy",
-  "note": "Rebuild numbering (docs/teardown-v2.md): the new chapter VII Kit sits between Process and Results, so the chapters after it move up one; the live site's numeral here was 'VIII'. Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'IX' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Rebuild numbering (docs/teardown-v2.md): the new chapter VII Kit sits between Process and Results, so the chapters after it move up one; the live site's numeral here was 'VIII'. Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'IX' Instrument Serif 11px right-aligned at 42% opacity. 2026-10-31 (S11): the index numbers its chapters 01–10 (the earlier site's own style, S7 index.html:734–761), not Roman numerals; \"IX\" is now \"09\"."
  },
  {
   "id": "F131",
@@ -1215,7 +1197,7 @@
   "url": "https://creativemotley.com/",
   "location": "nav#index ol li:nth-child(9) (a href=#foot + span.num 'IX')",
   "kind": "ui-copy",
-  "note": "Rebuild numbering (docs/teardown-v2.md): the new chapter VII Kit sits between Process and Results, so the chapters after it move up one; the live site's numeral here was 'IX'. Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'X' Instrument Serif 11px right-aligned at 42% opacity."
+  "note": "Rebuild numbering (docs/teardown-v2.md): the new chapter VII Kit sits between Process and Results, so the chapters after it move up one; the live site's numeral here was 'IX'. Fixed chapter index, bottom-left: name Archivo 600 14px, numeral 'X' Instrument Serif 11px right-aligned at 42% opacity. 2026-10-31 (S11): the index numbers its chapters 01–10 (the earlier site's own style, S7 index.html:734–761), not Roman numerals; \"X\" is now \"10\"."
  },
  {
   "id": "F136",
@@ -1224,7 +1206,7 @@
   "url": "docs/teardown-v2.md",
   "location": "rebuild: hero index li[data-for=kit] (a href=#kit + span.rn 'VII'), cloned into the rail, the chapters dropdown and the mobile menu",
   "kind": "ui-copy",
-  "note": "Rebuild-only chapter (no live-site source): the label 'Kit' is a UI string (docs/ui-strings.json) naming chapter VII, the console, microphone, headphones and phone taken apart; its kicker is 'Chapter VII' (F96). Same index style as F123–F131."
+  "note": "Rebuild-only chapter (no live-site source): the label 'Kit' is a UI string (docs/ui-strings.json) naming chapter VII, the console, microphone, headphones and phone taken apart; its kicker is 'Chapter VII' (F96). Same index style as F123–F131. 2026-10-31 (S11): the index numbers its chapters 01–10 (the earlier site's own style, S7 index.html:734–761), not Roman numerals; \"VII\" is now \"07\"."
  },
  {
   "id": "F132",
@@ -1243,7 +1225,7 @@
   "location": "hero film (brand's own art)",
   "kind": "plate-art",
   "note": "Third-party mark painted into the brand's own film. Shown only in motion: the remap passes f300–f342 in ~0.45 s. Not a claim; never held.",
-  "retired": "2026-10-21: the hero film and its frames (the SONY lettering among them) are deleted; the hero is the Creation in daylight with the real-time camera (gl/scenes/hero3d.js). Nothing on the page shows this art."
+  "retired": "2026-10-21: the hero film and its frames (the SONY lettering among them) are deleted; the hero is the Creation in daylight with the real-time camera (gl/scenes/hero3d.js). Nothing on the page shows this art. 2026-10-31: the film's files (public/assets/frames/hero, 1,140 webp; public/assets/video/film, 4 mp4; about 92 MB) and scripts/encode-film.sh are deleted at the client's request (\"delete the old sony frames too\", 2026-10-31), and the frames job in scripts/prep_assets.py is gone: the film no longer ships."
  },
  {
   "id": "F134",
@@ -1716,11 +1698,11 @@
  {
   "id": "DC62",
   "claim": "Watch on YouTube →",
-  "source_sentence": "Watch on YouTube ↗",
+  "source_sentence": "Watch on YouTube →",
   "url": "docs/copy-drafts.md",
   "location": "v3 #showcase — the video modal's link (UI) (.wvm__yt; the cards no longer carry it since 2026-10-31)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: —. Interface label; the ↗ matches F43/F46/F49."
+  "note": "DRAFT — needs client approval. Status: draft. Source: —. Interface label; the → matches F43/F46/F49. 2026-10-31 (S11): → for ↗, as F43/F46/F49."
  },
  {
   "id": "DC63",
@@ -2141,11 +2123,11 @@
  {
   "id": "DC78",
   "claim": "Channel →",
-  "source_sentence": "Channel ↗",
+  "source_sentence": "Channel →",
   "url": "docs/copy-drafts.md",
   "location": "v3 #showcase — a roster row that opens the creator's YouTube channel (UI) (round 2)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Source: —. Not on the page today: the generator writes it only for a creator with no playable video and a confirmed or probable channel (every creator has a playable video on 2026-10-24). Off the page since 2026-10-31 (the roster is the cards: every creator has one, so the typographic index, which listed every creator a second time, is gone). The generator no longer writes it."
+  "note": "DRAFT — needs client approval. Source: —. Not on the page today: the generator writes it only for a creator with no playable video and a confirmed or probable channel (every creator has a playable video on 2026-10-24). Off the page since 2026-10-31 (the roster is the cards: every creator has one, so the typographic index, which listed every creator a second time, is gone). The generator no longer writes it. 2026-10-31 (S11): → for ↗, as F43/F46/F49."
  },
  {
   "id": "F148",
@@ -2263,5 +2245,41 @@
   "location": "#showcase .wv__art img (the card thumbnails; the video modal's still)",
   "kind": "plate-art",
   "note": "The creators' own thumbnail art, cropped to 16:9 and resized only (no edits). All 16 reviewed on 2026-10-31 (contact sheet): titles, cast, channel names, credits and one tagline; no stats, view counts, awards, results or Creative Motley claims. None of it is used as a claim; the cards' text is the name fact and the title fact. Kunle Afolayan's (Wx8X265MT3E) is a night frame from the trailer, with no text. Replaces F134 (the poster small print)."
+ },
+ {
+  "id": "F158",
+  "claim": "Creative Motley — Africa’s creator service provider",
+  "source_sentence": "Creative Motley is Africa’s creator service provider — helping creators, filmmakers and media brands turn views into long-term revenue.",
+  "url": "https://creativemotley.com/",
+  "location": "rebuild <title>; meta[property=og:title]",
+  "kind": "name",
+  "note": "Since 2026-10-31 (S11): the page title and the social title: the name (F01) and the positioning line (F06) joined by an em dash. No new words."
+ },
+ {
+  "id": "F159",
+  "claim": "Upload calendars",
+  "source_sentence": "Upload calendars, series design, and content planning",
+  "url": "/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)",
+  "location": "index.html:598 (under \"Channel Strategy & Programming\") → rebuild #creators .cr__cloud: the upper right-hand node and the lower echo",
+  "kind": "ui-copy",
+  "note": "Since 2026-10-31 (S11): one of the three words of the Creators cloud, which replace the slash commands F28, F32 and F36. The earlier site's own wording, set as a label; Process says the same in its own line (F82)."
+ },
+ {
+  "id": "F160",
+  "claim": "Series design",
+  "source_sentence": "Upload calendars, series design, and content planning",
+  "url": "/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)",
+  "location": "index.html:598 → rebuild #creators .cr__cloud: the lower right-hand node and the upper echo",
+  "kind": "ui-copy",
+  "note": "Since 2026-10-31 (S11): as F159; capitalised as a label."
+ },
+ {
+  "id": "F161",
+  "claim": "Content planning",
+  "source_sentence": "Upload calendars, series design, and content planning",
+  "url": "/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75)",
+  "location": "index.html:598 → rebuild #creators .cr__cloud .cloud__cmd (the dark card, over F33)",
+  "kind": "ui-copy",
+  "note": "Since 2026-10-31 (S11): as F159; capitalised as a label."
  }
 ]

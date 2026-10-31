@@ -1,4 +1,4 @@
-/* The phone still path (STILL in core/env.js; the reference's still-image fallback): one painting per chapter, nothing
+/* The phone still path (STILL in core/env.js): one painting per chapter, nothing
    streamed. This module answers every scene id, so the stage keeps its dissolves, wipes and paper cuts, and each
    section draws one still:
    - the chapter's portrait painting from public/assets/scenes/<chapter>/manifest.json (the art track's encodes:

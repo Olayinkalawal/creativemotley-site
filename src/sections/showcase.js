@@ -83,7 +83,7 @@ function openVideoNow({ id, title, draft, by, art }) {
   fig.className = 'wvm'; fig.dataset.theme = 'dark';
   fig.innerHTML = `<div class="wvm__frame"><img class="wvm__art" alt="" decoding="async" width="1920" height="1080"></div>
     <figcaption class="wvm__cap"><p class="wvm__by"></p><h2 class="wvm__t" id="modal-title"></h2>
-      <a class="boxlink wvm__yt" target="_blank" rel="noopener" data-draft="DC62">Watch on YouTube <span class="ar">→</span></a></figcaption>`;
+      <a class="boxlink wvm__yt" target="_blank" rel="noopener" data-draft="DC62">Watch on YouTube <span class="ar" aria-hidden="true">→</span></a></figcaption>`;
   const still = fig.querySelector('.wvm__art');
   const big = largest(art), hot = !!big && warm.get(art) === big;
   still.src = hot ? big : art.currentSrc || art.src;

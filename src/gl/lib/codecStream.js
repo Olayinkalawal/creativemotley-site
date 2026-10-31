@@ -1,5 +1,5 @@
-/* WebCodecs scrubber for our own short-GOP MP4s (scripts/encode-film.sh: one video track, moov first, a keyframe
-   every 8 frames, closed GOPs). Seeking a <video> re-decodes the whole GOP on every seek and measured ~100 ms
+/* WebCodecs scrubber for our own short-GOP MP4s (one video track, moov first, a keyframe every 8 frames, closed
+   GOPs; the hero film's encode script went with the film on 2026-10-31, and nothing imports this now). Seeking a <video> re-decodes the whole GOP on every seek and measured ~100 ms
    median even on an idle page; here each GOP is decoded once, in order, into a small cache of ImageBitmaps around
    the playhead, so scrubbing forward and back shows exact frames from memory, and the decoder keeps a GOP ahead.
    - demux: only what our encodes contain (stsd avc1/avcC or av01/av1C, stts, ctts, stss, stsz, stsc, stco/co64);

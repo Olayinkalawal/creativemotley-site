@@ -14,7 +14,7 @@
    <div class="pf" data-reveal>
      <h4 class="pf__label">Label</h4>
      <p class="pf__body">Serif body.</p>                       (add .pf--sans on .pf for a grey sans body)
-     <a class="boxlink" href="…">Link text <span class="ar">→</span></a>
+     <a class="boxlink" href="…">Link text <span class="ar" aria-hidden="true">→</span></a>
    </div>
 
    ── 2 · notes fan: initFan(ul) ───────────────────────────────────────────────────────────────────

@@ -99,7 +99,7 @@
   --f-body: 500 var(--t-body) / var(--lh-body) var(--sans);
   --f-small: 600 var(--t-small) / var(--lh-small) var(--sans);
 
-  /* layout: the right 4/5 column, as in the reference grid */
+  /* layout: the right 4/5 column */
   /* the side insets also clear an iPhone's notch and rounded corners held sideways (viewport-fit=cover, index.html) */
   --gutter: max(clamp(16px, 2.2vw, 32px), env(safe-area-inset-left, 0px), env(safe-area-inset-right, 0px));
   --rail-w: clamp(200px, 20vw, 288px);

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """"Fresh daylight" grade for the chapter masters (client-approved 2026-10-21 on qa/shots/v3-grade-study.jpg; live).
-One recipe for every chapter master (.art/masters-2026-10-20/<chapter>-<desktop|phone>.png), tuned by eye against the
-reference frames (kept outside the repo). Steps, in CIE Lab (D65):
+One recipe for every chapter master (.art/masters-2026-10-20/<chapter>-<desktop|phone>.png), tuned by eye. Steps, in
+CIE Lab (D65):
   1. craquelure: thin dark cracks are found with a grey closing of L and filled back in, gated so bold dark detail
      (pupils, outlines) and busy texture (hair, carpets, damask) are left alone;
   2. varnish cast: the yellow-amber cast is measured on the near-neutral pixels (stone, linen, sky, plaster) and

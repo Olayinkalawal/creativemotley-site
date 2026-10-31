@@ -1,5 +1,5 @@
 /* Smooth scroll (Lenis) on our own requestAnimationFrame (no GSAP).
-   - Mouse wheel: 0.85 s expo-out per notch (the reference feel).
+   - Mouse wheel: 0.85 s expo-out per notch.
    - Trackpad (more than ~50 wheel events a second): 0.15 s, so the OS's own inertia is not smoothed twice.
    - Touch: native (no syncTouch). Reduced motion: native scroll, no Lenis.
    view.frame counts ticks: per-frame hand-offs between modules (the teardown slot rect) compare it. */

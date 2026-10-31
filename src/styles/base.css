@@ -108,7 +108,7 @@ html.no-drafts [data-draft] { display: none !important; }
 }
 .display { font: var(--f-display); letter-spacing: var(--ls-display); }   /* serif display lines */
 .dek { font: var(--f-dek); letter-spacing: var(--ls-dek); text-wrap: balance; }
-.head { font: var(--f-dek); letter-spacing: var(--ls-dek); text-wrap: balance; }   /* serif head on paper: the dek's size, as in the reference */
+.head { font: var(--f-dek); letter-spacing: var(--ls-dek); text-wrap: balance; }   /* serif head on paper: the dek's size */
 .t-head { font: var(--f-head); letter-spacing: var(--ls-head); text-wrap: balance; }   /* sans head */
 .lead { font: var(--f-lead); letter-spacing: var(--ls-lead); }
 .label { font: var(--f-label); letter-spacing: var(--ls-label); }
@@ -169,7 +169,7 @@ html.no-drafts [data-draft] { display: none !important; }
 .pill--solid { background: var(--th-pill-bg); color: var(--th-pill-fg); box-shadow: none; }
 .pill--solid:hover { background: var(--th-pill-bg-h); }
 
-/* ── layout: right 4/5 column (reference grid) ────────────────────────── */
+/* ── layout: right 4/5 column ────────────────────────── */
 .col { position: relative; width: 100%; padding-inline: var(--col-pad); }
 @media (min-width: 1024px) {
   .col { width: calc(100% - var(--rail-w)); margin-left: auto; padding-inline: clamp(24px, 4.4vw, 72px) clamp(24px, 4vw, 64px); }
