@@ -52,13 +52,13 @@ jobs.append((os.path.join(SRC, 'method', 'm_0001.jpg'), os.path.join(pl, 'method
 
 with Pool(4) as p: p.map(webp, jobs)
 
-# videos: copy as delivered by the live site
+# videos: none are copied as delivered any more (the folder is kept)
 v = mk('video')
 # (Results' film and its plate went with the old Results painting on 2026-10-20: the oculus master is a still,
 #  public/assets/scenes/results, scripts/art-masters.json)
-for rel, name in (('directors/directors.webm', 'directors.webm'), ('directors/directors.mp4', 'directors.mp4')):
-    s = os.path.join(SRC, rel)
-    if os.path.exists(s) and not os.path.exists(os.path.join(v, name)): shutil.copy(s, os.path.join(v, name))
+# (the Directors film is no longer copied as delivered, 2026-10-31: the live files carry a third-party logo on the left
+#  portrait's cap; scripts/encode-directors.sh makes the site's encodes from the master with it taken off, and the
+#  HEVC-with-alpha directors.mp4 is gone, WebKit plays the packed H.264 film)
 for f in ('og.jpg', 'favicon.svg'):
     s = os.path.join(SRC, f)
     if os.path.exists(s): shutil.copy(s, os.path.join(ROOT, 'public', f))

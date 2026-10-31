@@ -129,6 +129,23 @@ As you also asked, the old hero film is deleted: its 1,140 frames and four video
 Sony marks among them) and the script that made them. Nothing on the page used them any more. The repository's design
 notes about the reference are deleted too, and its other notes no longer name it.
 
+## Round 4 (31 October): the cap logo, and Kunle Afolayan's card
+**IX · Directors.** As you asked, the Knicks logo is gone from the cap in the Directors film. The small maker's flag on
+the side of the same cap, by the brim, is gone too, because we keep other companies' marks out of the site's art. The
+cap is now plain cap fabric in every frame of the 20-second film, and it follows the head as it turns. The still
+shown before the film plays, and the pair of portraits on phones, are clean too. Nothing else changed: your faces,
+glasses, clothes, the second portrait, the torn-paper edge, the timing and the movement are exactly as before. The
+retouch was done with ordinary image processing, not an AI tool, so no new likeness of anyone was made.
+`qa/shots/v3p10_directors_no_logo.jpg` shows the cap before and after at three moments, the chapter on a laptop, and
+the portraits on a phone.
+
+On iPhones, iPads and Macs, Safari used to play a separate copy of the film. That copy still showed the logo, and it
+could only be remade on a Mac, so we deleted it. Safari now gets a new version of the film that the page draws itself.
+It is also much lighter: 3.8 MB instead of 15.1 MB (1.5 MB on phones). We have checked it in Chrome, but not yet in
+Safari on a real iPhone or Mac (see below).
+
+**V · Showcase.** Kunle Afolayan's card stays as it is, as you said: the Aníkúlápó trailer and its frame from YouTube.
+
 ## Still open
 
 1. **The spellings above.** Are they right?
@@ -137,3 +154,4 @@ notes about the reference are deleted too, and its other notes no longer name it
 4. **Newer videos.** The videos for Emmabel TV, Royal Arts TV and Abayomi Alvin date from late 2024 to late 2025. Send a link if you'd rather show something newer.
 5. **Labels still in draft.** "What we run" (over the services) and "How a brief runs" (over the brief steps) weren't in the last question, so they are still drafts. So are "On the roster", "Watch" and "Watch the work". Are they fine?
 6. **From last time.** Is WealthMotley part of Creative Motley Ltd? And if you want bios, send 20–25 words each.
+7. **Safari.** When you next open the site on an iPhone or a Mac, could you look at the Directors chapter? The film should rise in with the two portraits and play once. If you see a still picture instead of the film, or a dark box around the portraits, please tell us.

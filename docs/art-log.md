@@ -482,3 +482,50 @@ Athens (its purple robes are the only violet left in the push, 10% of bright pix
 phone's lit screen now carries the Creators painting (`public/assets/scenes/creators/phone-828.webp`, centre-cropped,
 under a Creative Motley status line; no third-party marks). The homepage camera stills (`cam-hero`, `cam-front`,
 `cam-lens`) were re-rendered for the new lens glass at the same pose, size and placement.
+
+## Phase 10: the cap logo off the Directors film (2026-10-31, no AI, no credits)
+The client (2026-10-31, `docs/copy-drafts.md` S12): "keep kunle, remove the knicks logo". The left portrait of the
+Directors alpha film (IX) wears a cap with a New York Knicks logo on its front and the cap maker's small flag on its
+left side by the brim; our rule (no text, logos or brand marks in our art, above) takes both off. Nothing else changes:
+the faces, glasses, beard, ruff, clothes, the right portrait and its headphones, the torn-paper matte, the alpha, the
+timing and the motion are the master's own.
+- **Source:** the client's live master (`creativemotley.com/directors/directors.webm`: 1920x1080, 30 fps, 600 frames,
+  20 s, VP9 + alpha; local copy `/home/user/cm-film/source/site/directors/directors.webm`, never modified).
+- **Method** (`scripts/retouch-directors-cap.py`, deterministic; its docstring has every step): built once from frame 0,
+  where the head faces front (`build` → `scripts/assets/directors-cap/`, 72 KB: a clean plate, a core and a feathered
+  mask per mark; no logo pixels are stored). The logo is the non-blue blob on the crown, repainted with a 9 px margin
+  (its embroidery rim and the compression ringing round it) and a 6 px soft edge; the flag is the orange outline on
+  the side panel, with 4 px and 5 px. The clean fabric is the surrounding crown's own: its shading carried smoothly
+  across the front panel (a membrane fill of the low-pass colour), its grain quilted in 12 px blocks from plain crown
+  pixels of the same frame (fixed seed). No seam or mark is drawn: the panel shows no centre seam above the logo.
+  Every frame is matched to frame 0 (OpenCV ECC: a homography for the logo, an affine for the flag), never to the
+  frame before, so the patch never drifts and takes the source's own 5-frame step cadence; it is colour-matched to the
+  cap round it in that frame; the brim is found again in every frame (it slides against the logo as the head turns)
+  and kept, its dark junction line rebuilt from its own pixels where the logo's lowest point lay on it. Alpha is never
+  touched, and outside the mask every RGBA byte is the master's.
+- **AI:** none. No image tool, model or job id was used, for the cap or anything else; no credits spent.
+- **Checks** (all 600 frames; the retoucher's and the judge's runs, `scratchpad/knx/knx-retouch/qa/` and
+  `knx/knx-judge1/`): outside the mask the RGBA is bit-identical to the master and the alpha is identical everywhere;
+  the mask is 18,279–19,230 px a frame and never reaches below the brim's top edge (face, glasses, hair untouched).
+  Left in the tracked mark area: logo orange 0 in every frame (master 4,449–4,765), its white outline 0 (master 1,947
+  mean), flag orange 0 (master 82–163); a match against the logo's own edges scores −0.03 after (0.85 on the master).
+  Tracking: worst match 0.951 (logo) / 0.934 (flag), alignment error median 0.54 / 0.41 px. Seams: ΔE 2.08 mean at the
+  logo patch's rim, inside the plain cap's own 3.67. The judge passed it (no swim, shimmer, seam, halo or lost brim
+  edge at 1:1, 2x or a 1920 retina).
+- **Still:** `public/assets/video/directors-poster.webp` is the clean frame 0, made as the old one was (PIL Lanczos to
+  1600x900, RGBA, WebP quality 80, method 6: that recipe reproduces the old poster byte for byte): 149,090 bytes (was
+  153,096), the alpha identical to the old poster's. It is also the noscript image and the two still-pair crops.
+- **Encodes** (`scripts/encode-directors.sh`, now from the local master through the retouch; its flatten frames are
+  bit-identical to the retoucher's clean master): `directors.webm` 2,309,735 bytes (was 2,381,308), `directors-sm.webm`
+  960,597 (was 989,632), same VP9-alpha settings (crf 42 / 45). New for WebKit: `directors-pack.mp4` (1920x2160 H.264
+  High 5.1, crf 27.5) 3,784,874 bytes and `directors-pack-sm.mp4` (1280x1440, High 4.0, crf 28) 1,516,201, the colour
+  above and the alpha as grey below (YUV matrix tagged BT.601, as the WebM is decoded). Deleted: `directors.mp4` (HEVC with alpha, 15,124,776 bytes, the logo still on it;
+  only macOS can encode that format). `scripts/prep_assets.py` no longer copies the live films into the site.
+- **Left as is:** a 1–2 px pale fleck on the dark crown/brim junction under the old logo's lowest point in frames
+  ~140–150 and ~530–570 (the logo's white tip blended into the brim's highlight; the judge could not see it in a VP9 crf 42 encode);
+  the patch's grain is a little calmer than the painting's (0.13 vs 0.22 levels a frame) and does not jump at the
+  master's own keyframes; the front panel has no centre seam (none shows above the logo; drawing one would be an
+  artistic choice). The glasses' small temple plaque is not a readable mark and is part of the protected glasses; the
+  headphones carry no mark.
+- **A re-exported master** needs `retouch-directors-cap.py build` and a look at the boxes; the script refuses a file
+  whose frame 0 does not match its assets.

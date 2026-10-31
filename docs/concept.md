@@ -96,7 +96,7 @@
 - **Scene `plate:umber`:** a dark umber stage with soft gold light and slow dust (shader-only).
 - **Opener:** giant "Directors" (F104); dek F105.
 - **Content:**
-  - The directors' alpha film (two painted portraits, blinking); webm with alpha, HEVC fallback for Safari.
+  - The directors' alpha film (two painted portraits, blinking); webm with alpha, HEVC fallback for Safari (2026-10-31: the HEVC film is gone; Safari plays a packed H.264 film, colour above and alpha below, drawn into a canvas with WebGL; the cap logo is retouched out of every version, `docs/art-log.md` Phase 10).
   - Names F106 and F107 on a serif marquee.
 
 ## Apply (`#apply`)

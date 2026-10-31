@@ -1,8 +1,11 @@
 /* IX · Directors: the alpha film and the names.
-   - The film (two painted portraits on transparency): VP9-with-alpha WebM, or HEVC-with-alpha MP4 on WebKit
-     (Safari plays WebM but not its alpha). Wherever the film is drawn at most ~1400 device pixels wide (phones, 1x
-     screens up to 1440 wide) the 1280px VP9 encode (data-dr-sm) is used, else the 1920px one; the small one is the
-     first source, so if it were missing the browser would simply fall through to the full one.
+   - The film (two painted portraits on transparency): VP9-with-alpha WebM. WebKit (Safari plays WebM but not its
+     alpha) gets the packed film instead (data-dr-pack: H.264, the colour above, the alpha as grey below), played in the
+     same <video> and drawn into a canvas over it by gl/lib/alphapack.js (a lazy chunk, loaded with the poster); without
+     WebGL the poster stands there. ?alphapack=1 forces the packed path (to test it in Chromium). Wherever the film is
+     drawn at most ~1400 device pixels wide (phones, 1x screens up to 1440 wide) the 1280px encode (data-dr-sm) is
+     used, else the 1920px one; the small one is the first source of its kind, so if it were missing the browser would
+     simply fall through to the full one (on the packed path too: alphapack.js gives up only when the last one fails).
    - Loading: two and a half screens before it is reached the film gets its poster (frame 1, a transparent WebP);
      the film itself starts loading then on wide screens, but only 0.6 of a screen ahead on narrow ones, and never
      when the reader asked to save data or is on a 2G/3G connection (the poster stands). It plays only while it is
@@ -21,7 +24,7 @@
 import './directors.css';
 import { onFrame, clamp, smooth, seg } from '../core/scroll.js';
 import { geo, onLayout } from '../core/layout.js';
-import { REDUCED } from '../core/env.js';
+import { REDUCED, GL_RENDERER } from '../core/env.js';
 
 const isWebKit = () => { const ua = navigator.userAgent; return /AppleWebKit/.test(ua) && !/Chrome\/|Chromium\/|Android/.test(ua); };
 // the reader asked to save data, or the connection is slow: the poster is the film
@@ -44,24 +47,30 @@ export function init() {
   const railW = window.innerWidth >= 1024 ? Math.min(288, Math.max(200, window.innerWidth * 0.2)) : 0;
   const filmPx = Math.min(window.innerWidth - railW, window.innerHeight * 0.74 * 16 / 9) * (window.devicePixelRatio || 1);
   const small = narrow || filmPx <= 1400;
-  if (!small || webkit) video.querySelector('source[data-dr-sm]')?.remove();
-  if (webkit) { const mp4 = video.querySelector('source[type^="video/mp4"]'); if (mp4) video.prepend(mp4); }
-  const posterOnly = REDUCED || lite();
+  const packed = webkit || /[?&]alphapack=1(&|$)/.test(location.search);
+  // no WebGL (or ?tier=0) on the packed path: the poster is the film
+  const posterOnly = REDUCED || lite() || (packed && GL_RENDERER === null);
+  for (const s of video.querySelectorAll(packed ? 'source:not([data-dr-pack])' : '[data-dr-pack]')) s.remove();
+  if (!small) video.querySelector('[data-dr-sm]')?.remove();
+  if (packed && !posterOnly) film.classList.add('dr-pack');   // the video plays unseen; the pack's canvas shows it
   video.muted = true;
   const ready = () => video.classList.add('is-ready');
   video.addEventListener('loadeddata', ready, { once: true });
-  let loaded = false, inView = false, still = false;
+  let loaded = false, inView = false, still = false, dead = false;
+  // the pack gave up (no WebGL, a lost context, a video error): its poster stands, the film stops
+  const stop = () => { dead = true; video.pause(); if (toggle) toggle.hidden = true; };
   const poster = () => {
     const src = video.dataset.poster;
     if (still || !src) return;
     still = true;
+    if (film.classList.contains('dr-pack')) import('../gl/lib/alphapack.js').then((m) => m.pack(video, src, stop), () => { stop(); film.classList.remove('dr-pack'); });
     const img = new Image();
     img.onload = ready; img.src = src;
     video.poster = src;
   };
   const load = () => {
     poster();
-    if (loaded || posterOnly) return;
+    if (loaded || posterOnly || dead) return;
     // load() first: it re-runs source selection over the sources as they now stand (the parser already picked a
     // candidate from the markup's order, and flipping preload first would start fetching that one)
     loaded = true; video.load(); video.preload = 'auto';
@@ -74,7 +83,7 @@ export function init() {
   let shown = REDUCED, held = false;
   const label = () => { if (toggle) toggle.textContent = held || video.ended ? 'Play' : 'Pause'; };
   const sync = () => {
-    if (inView && !posterOnly) { load(); if (shown && !held && !video.ended) video.play().catch(() => {}); else if (!video.paused) video.pause(); }
+    if (inView && !posterOnly && !dead) { load(); if (shown && !held && !video.ended) video.play().catch(() => {}); else if (!video.paused) video.pause(); }
     else if (!video.paused) video.pause();
   };
   if (toggle && !posterOnly) {

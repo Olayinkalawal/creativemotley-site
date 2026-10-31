@@ -24,8 +24,11 @@
      chapter's end as it scrolls up, so X's ink title never crosses the dark room mid-dissolve.
      data-umber keys the room's pool of light per region (umber.js): a dim, low pool on the opener, a bright one behind
      the heads on the stage, a lower, softer one under the people.
-     Film sources (scripts/encode-directors.sh): VP9-with-alpha WebM, 1920 px (desktop) and 1280 px (narrow screens,
-     data-dr-sm, dropped elsewhere by directors.js); WebKit gets the HEVC-with-alpha mp4 (moved first by directors.js). -->
+     Film sources (scripts/encode-directors.sh, from the client's master with the cap logo taken off, 2026-10-31):
+     VP9-with-alpha WebM, 1920 px (desktop) and 1280 px (narrow screens, data-dr-sm, dropped elsewhere by directors.js);
+     WebKit gets the packed H.264 film instead (data-dr-pack: the colour above, the alpha as grey below, drawn into a
+     canvas by gl/lib/alphapack.js), the other kind being dropped by directors.js. Cache-busted (?v=): /assets/* is
+     served immutable (vercel.json), so a changed film or poster takes a new query. -->
 <section class="chapter" id="directors" data-chapter data-theme="dark" data-scene="plate:directors" data-plate="directors"
   data-bleed="0.3" data-rise data-umber="-0.12 0.3 0.42 0.5 0.55" aria-labelledby="directors-title">
   <div class="opener col dr-open">
@@ -42,20 +45,21 @@
         </div>
         <div class="dr-film" data-dr-film>
           <video class="dr-video" data-dr-video muted playsinline preload="none" aria-hidden="true" tabindex="-1"
-            disablepictureinpicture disableremoteplayback width="1920" height="1080" data-poster="/assets/video/directors-poster.webp">
-            <source data-dr-sm src="/assets/video/directors-sm.webm?v=2" type='video/webm; codecs="vp9"'>
-            <source src="/assets/video/directors.webm?v=2" type='video/webm; codecs="vp9"'>
-            <source src="/assets/video/directors.mp4" type='video/mp4; codecs="hvc1"'>
+            disablepictureinpicture disableremoteplayback width="1920" height="1080" data-poster="/assets/video/directors-poster.webp?v=2">
+            <source data-dr-sm src="/assets/video/directors-sm.webm?v=3" type='video/webm; codecs="vp9"'>
+            <source src="/assets/video/directors.webm?v=3" type='video/webm; codecs="vp9"'>
+            <source data-dr-pack data-dr-sm src="/assets/video/directors-pack-sm.mp4" type='video/mp4; codecs="avc1.640028"'>
+            <source data-dr-pack src="/assets/video/directors-pack.mp4" type='video/mp4; codecs="avc1.640033"'>
           </video>
-          <noscript><img class="dr-video" src="/assets/video/directors-poster.webp" alt="" width="1600" height="900"></noscript>
+          <noscript><img class="dr-video" src="/assets/video/directors-poster.webp?v=2" alt="" width="1600" height="900"></noscript>
         </div>
         <!-- the film moves on its own (20 s, once, then it holds its last frame): a pause control (WCAG 2.2.2) -->
         <button class="dr-toggle" type="button" data-dr-toggle hidden>Pause</button>
         <!-- the still pair: the static layout on upright screens (reduced motion, no JS), where the film's wide frame
              would leave the faces small; each portrait gets its own crop of the still, side by side, under the names -->
         <div class="dr-duo" aria-hidden="true">
-          <div class="dr-duo__crop" style="--f: 0.226"><img src="/assets/video/directors-poster.webp" alt="" width="1600" height="900" loading="lazy" decoding="async"></div>
-          <div class="dr-duo__crop" style="--f: 0.724"><img src="/assets/video/directors-poster.webp" alt="" width="1600" height="900" loading="lazy" decoding="async"></div>
+          <div class="dr-duo__crop" style="--f: 0.226"><img src="/assets/video/directors-poster.webp?v=2" alt="" width="1600" height="900" loading="lazy" decoding="async"></div>
+          <div class="dr-duo__crop" style="--f: 0.724"><img src="/assets/video/directors-poster.webp?v=2" alt="" width="1600" height="900" loading="lazy" decoding="async"></div>
         </div>
       </div>
     </div>
