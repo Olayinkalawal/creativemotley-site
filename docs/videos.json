@@ -2,7 +2,7 @@
   "note": "Track C research (plan §5 Showcase 'watch the work', §9). One or two public YouTube videos per showcased creator, for the XXL video cards (thumbnail first, player in a modal only on click). Researched 2026-10-19. Showcase rule (F64 note): the site attaches no stats, results or client wording to any creator; 'why' is for the builder and the client, never for the page.",
   "verification": {
     "method": "search-index title match only",
-    "oembed": "NOT RUN. WebFetch fails DNS for every host in this session (youtube.com and even creativemotley.com), and Bash curl to youtube.com / web.archive.org is refused by the egress proxy (403, policy). Not routed around.",
+    "oembed": "RUN 2026-10-31 (node src/partials/showcase.videos.mjs --verify, through the session proxy): all 16 videos on the page play from the creator's own channel. Replaced: Kie Kie (embedding off), Kunle Afolayan (third-party uploads), Abayomi Alvin (video removed).",
     "levels": {
       "indexed": "The search index lists https://www.youtube.com/watch?v=<id> with this title, and its description or a news source ties it to the creator.",
       "channel-confirmed": "A second source (news, podcast listing, channel mirror listing) names the uploading channel.",
@@ -48,7 +48,10 @@
           "published": "about mid-2026 (index: 'about 113 days ago')",
           "why": "A recent episode of his own lawyer character, 'The Law': the poster's 'The Law' tagline and courtroom props are this format. Recent, so it shows the channel as it is now.",
           "verification": "channel-confirmed",
-          "evidence": "Search index lists the watch URL with this title; a channel listing for UCJWrb-dnwFY0GTAeA2gKHPg titled 'Layi Wasabi' (seen in search results via an Invidious mirror, not fetched) shows it alongside his 'Court in Session' sketches."
+          "evidence": "Search index lists the watch URL with this title; a channel listing for UCJWrb-dnwFY0GTAeA2gKHPg titled 'Layi Wasabi' (seen in search results via an Invidious mirror, not fetched) shows it alongside his 'Court in Session' sketches.",
+          "confidence": "confirmed",
+          "oembed_uploader": "Layi Wasabi (@layiwasabi)",
+          "oembed_checked": "2026-10-31"
         },
         {
           "id": "gc_CdEdEVrQ",
@@ -79,13 +82,16 @@
           "duration": null,
           "published": "2025-10-24 (press)",
           "why": "The earlier site's pick: the earlier Content Motley site featured this video for Omoni Oboli TV (/home/user/olayinkalawal/contentmotley index.html:791, the FEATURED embed), so it is card 2 since 2026-10-23 (copy v4). The channel's best-known premiere (the sequel to Love in Every Word), a wedding story in which a returning ex tests the engagement. Widely covered in Nigerian press, so it is the safest single title if only one card is used.",
-          "verification": "channel-probable",
+          "verification": "channel-confirmed",
           "evidence": "Search summary calls this the main listing, with the cast (Uzor Arukwe, BamBam, Patience Ozokwo, Chris Attoh…) in its description; an Omoni Oboli TV community post says to watch the film 'only on Omoni Oboli TV'. Several re-uploads exist on other channels (e.g. 9dTRJalYO_0, MgKfecE8FPE): do not use those.",
           "sources": [
             "https://www.youtube.com/post/UgkxJ31jwSl8qCrDVtibuqTlP62IHMm_jUkJ",
             "https://www.pulse.ng/story/omoni-obolis-love-in-every-word-sequel-1-million-views-reaction-2025102511574512966",
             "https://thewittyreview.medium.com/movie-review-love-in-every-word-the-wedding-56f5e0732de1"
-          ]
+          ],
+          "confidence": "confirmed",
+          "oembed_uploader": "Omoni Oboli TV (@OmoniOboliTv)",
+          "oembed_checked": "2026-10-31"
         },
         {
           "id": "H9qoC981BAU",
@@ -120,13 +126,16 @@
           "duration": null,
           "published": "April 2025 (press)",
           "why": "A full 'Curiosity Made Me Ask' episode (the poster's tagline) with Richard Mofe-Damijo; the polygamy exchange matches the poster's 'Could he be a polygamist?' bubble. Widely covered.",
-          "verification": "channel-probable",
+          "verification": "channel-confirmed",
           "evidence": "Search index title; New Telegraph, Talk Talk Nigeria and InformationNG cover the episode. The 'NAME ON CURIOSITY MADE ME ASK!' title format matches the show's own uploads (Apple Podcasts lists the same format under 'Isbae U').",
           "sources": [
             "https://newtelegraphng.com/rmd-slams-isbae-u-for-calling-him-by-his-first-name/",
             "https://www.talktalknigeria.com/home/2025/4/12/rmd-claps-back-at-isbae-u-on-curiosity-made-me-ask-show-dragging-late-father-into-the-mix",
             "https://www.informationng.com/2025/04/my-father-had-five-wives-having-just-one-feels-unfair-rmd.html"
-          ]
+          ],
+          "confidence": "confirmed",
+          "oembed_uploader": "Isbae U (@Isbae_u)",
+          "oembed_checked": "2026-10-31"
         },
         {
           "id": "U-xB3IOipac",
@@ -158,8 +167,11 @@
           "url": "https://www.youtube.com/watch?v=MTZlMqXgUZA",
           "duration": null,
           "why": "Episode 1 of FDI, one of the four series named on his poster ('FDI'); a series opener explains itself to a new viewer.",
-          "verification": "channel-probable",
-          "evidence": "Search index title and description (Jide Kosoko, Officer Woos, Small Stout); 'Brodashaggi' in the title."
+          "verification": "channel-confirmed",
+          "evidence": "Search index title and description (Jide Kosoko, Officer Woos, Small Stout); 'Brodashaggi' in the title.",
+          "confidence": "confirmed",
+          "oembed_uploader": "official BRODA SHAGGI (@BrodaShaggi)",
+          "oembed_checked": "2026-10-31"
         },
         {
           "id": "HcZDHLW7cKA",
@@ -196,7 +208,10 @@
             "https://podcasts.apple.com/ng/podcast/bisola-aiyeola-speaks-on-intentional-friendships-dear/id1888131074?i=1000757479765",
             "https://open.spotify.com/episode/7jFrUCxhxkNlUk5TvJzsx9",
             "https://pmnewsnigeria.com/2026/07/17/bisola-aiyeola-opens-up-on-loyalty-friendship-dynamics/"
-          ]
+          ],
+          "confidence": "confirmed",
+          "oembed_uploader": "Diary of A Naija Girl (@diaryofanaijagirl)",
+          "oembed_checked": "2026-10-31"
         },
         {
           "id": "7OBeFS70vpg",
@@ -220,6 +235,34 @@
       "poster": "public/assets/posters/kie-kie.webp",
       "videos": [
         {
+          "id": "fJKF3JlGsBE",
+          "title": "HUSBAND OR DARE | Nigerian movies 2026 Latest full movies",
+          "channel": "KieKieTV",
+          "channel_url": "https://www.youtube.com/@KieKieTV",
+          "url": "https://www.youtube.com/watch?v=fJKF3JlGsBE",
+          "why": "Her newest feature on her own channel (published 1 Oct 2026), replacing Reheated Passion (QoZJOlmynbw), whose embedding is turned off (oEmbed 401), so it cannot play in the site's player.",
+          "verification": "channel-confirmed",
+          "oembed": {
+            "checked": "2026-10-31",
+            "author_name": "KieKieTV",
+            "title": "HUSBAND OR DARE | Nigerian movies 2026 Latest full movies"
+          },
+          "confidence": "confirmed",
+          "oembed_uploader": "KieKieTV (@KieKieTV)",
+          "oembed_checked": "2026-10-31"
+        }
+      ],
+      "alternates": [
+        {
+          "id": "DW2c985ZYDY",
+          "title": "HEATED PASSION",
+          "channel": "KieKieTV",
+          "note": "Her 2025 feature with Kunle Remi (premiered on KiekieTV, 19 Dec 2025, ≈100 min per PartyJollof). Channel-probable. Not to be confused with 'Reheated Passion'.",
+          "source": "https://www.partyjolloftv.com/movies/heated-passion-1439"
+        }
+      ],
+      "rejected": [
+        {
           "id": "QoZJOlmynbw",
           "title": "REHEATED PASSION | Nigerian movies 2026 Latest full movies",
           "channel": "KieKieTV",
@@ -232,7 +275,8 @@
           "sources": [
             "https://leadership.ng/kiekie-marks-birthday-with-simple-but-meaningful-request/",
             "https://www.legit.ng/entertainment/celebrities/1715522-gift-i-kiekie-marks-birthday-special-request-fans/"
-          ]
+          ],
+          "rejected": "2026-10-31: replaced, see the first video"
         },
         {
           "id": "RdlXuz1_iKo",
@@ -244,16 +288,8 @@
           "published": "about July 2026 (index: 'about 93 days ago')",
           "why": "A skit (Dr Shaggi and Nurse Kiekie in a hospital) that joins two showcased creators in one video; named on the Broda Shaggi poster. Gives Kie Kie a 'skits' card beside the feature.",
           "verification": "channel-probable",
-          "evidence": "Search index title includes '| KieKieTV'; description: 'Dr. Shaggi and Nurse Kiekie are just trying to survive their patients'."
-        }
-      ],
-      "alternates": [
-        {
-          "id": "DW2c985ZYDY",
-          "title": "HEATED PASSION",
-          "channel": "KieKieTV",
-          "note": "Her 2025 feature with Kunle Remi (premiered on KiekieTV, 19 Dec 2025, ≈100 min per PartyJollof). Channel-probable. Not to be confused with 'Reheated Passion'.",
-          "source": "https://www.partyjolloftv.com/movies/heated-passion-1439"
+          "evidence": "Search index title includes '| KieKieTV'; description: 'Dr. Shaggi and Nurse Kiekie are just trying to survive their patients'.",
+          "rejected": "2026-10-31: replaced, see the first video"
         }
       ]
     },
@@ -262,6 +298,28 @@
       "fact": "F70",
       "poster": "public/assets/posters/kunle-afolayan.webp",
       "videos": [
+        {
+          "id": "Wx8X265MT3E",
+          "title": "Aníkúlápó Series Season2: The Ghoul Awakens ｜ Official Trailer",
+          "channel": "KAPTV",
+          "channel_url": "https://www.youtube.com/@kapteevee",
+          "url": "https://www.youtube.com/watch?v=Wx8X265MT3E",
+          "why": "The official trailer on KAPTV, his own production channel (youtube.com/user/kafolayan). Replaces The Figurine (7A3M-n54gG8, uploaded by The Vault of Cinemas) and The CEO (bebw28CTnHA, uploaded by nollywoodGO): neither is his channel.",
+          "verification": "channel-confirmed",
+          "oembed": {
+            "checked": "2026-10-31",
+            "author_name": "KAPTV",
+            "title": "Aníkúlápó Series Season2: The Ghoul Awakens ｜ Official Trailer"
+          },
+          "confidence": "confirmed",
+          "oembed_uploader": "KAPTV (@kapteevee)",
+          "oembed_checked": "2026-10-31"
+        }
+      ],
+      "flags": [
+        "Two channels exist: KAPTV (https://www.youtube.com/user/kafolayan, older trailers) and KAPStream (@kapstream_tv, full films). Many 'full movie' uploads of his films on other channels are unofficial (e.g. Anikulapo, October 1): do not use them."
+      ],
+      "rejected": [
         {
           "id": "7A3M-n54gG8",
           "title": "The Figurine: Araromire (2009)",
@@ -274,7 +332,8 @@
           "sources": [
             "https://filmefiko.com/cinema/kunle-afolayan-is-bringing-2009-movie-the-figurine-to-youtube/",
             "https://whatkeptmeup.com/nigerian-film-industry-articles/after-a-netflix-focused-era-kunle-afolayan-brings-recall-to-the-big-screen/"
-          ]
+          ],
+          "rejected": "2026-10-31: replaced, see the first video"
         },
         {
           "id": "bebw28CTnHA",
@@ -288,11 +347,9 @@
           "sources": [
             "https://www.qed.ng/kunle-afolayan-brings-the-ceo-to-youtube/",
             "https://filmefiko.com/news/kunle-afolayan-the-ceo-rerelease/"
-          ]
+          ],
+          "rejected": "2026-10-31: replaced, see the first video"
         }
-      ],
-      "flags": [
-        "Two channels exist: KAPTV (https://www.youtube.com/user/kafolayan, older trailers) and KAPStream (@kapstream_tv, full films). Many 'full movie' uploads of his films on other channels are unofficial (e.g. Anikulapo, October 1): do not use them."
       ]
     },
     {
@@ -333,7 +390,9 @@
             "https://www.threads.com/@sonia_uche/post/DPQntw-kZb- ('Showing Now On Emmabel Tv YouTube Channel')",
             "https://www.threads.com/@kunleremiofficial/post/DPhkwQVkt8G ('still showing on YouTube, Emmabel Tv')",
             "https://www.nollywoodtimes.com/2025/10/movie-review-love-and-kasala-charm.html"
-          ]
+          ],
+          "oembed_uploader": "Emmabel TV (@EmmabelTV247)",
+          "oembed_checked": "2026-10-31"
         }
       ],
       "flags": [
@@ -368,15 +427,17 @@
           "duration": "about 1 h 46 min (FilmFlux Royal Arts TV listing; unconfirmed on YouTube)",
           "published": "about November 2025 (index: 'about 351 days ago')",
           "why": "The earlier site's pick: the earlier Content Motley site embedded this id under the Royal Arts TV label. A romance (an architect courts an heiress under false pretences).",
-          "verification": "channel-probable",
-          "confidence": "probable",
+          "verification": "channel-confirmed",
+          "confidence": "confirmed",
           "client_pick": "index.html:925 (embed youtube.com/embed/ScAcee_5Q4A), :933 (label \"Royal Arts TV\")",
           "evidence": [
             "/home/user/olayinkalawal/contentmotley/index.html:925 (iframe src youtube.com/embed/ScAcee_5Q4A) and :933 (label 'Royal Arts TV'); same lines in public/index.html",
             "Search index lists https://www.youtube.com/watch?v=ScAcee_5Q4A with this title (query: youtube.com/watch?v=ScAcee_5Q4A)",
             "https://filmflux.app/channels/RoyalArtsTV lists 'Love Stood Still 1h 46m'"
           ],
-          "why_not_confirmed": "The FilmFlux tie is by title only, and a different film with the same title exists on another channel (lYakflVWQD8, 'Love Stood Still (FREDRICK LEONARD NANCY ISIME)'): do not use that one. The earlier site's labels are not always exact (see existing_seven_check.earlier_site_labels), so the client's embed alone is not proof."
+          "why_not_confirmed": "The FilmFlux tie is by title only, and a different film with the same title exists on another channel (lYakflVWQD8, 'Love Stood Still (FREDRICK LEONARD NANCY ISIME)'): do not use that one. The earlier site's labels are not always exact (see existing_seven_check.earlier_site_labels), so the client's embed alone is not proof.",
+          "oembed_uploader": "Royal Arts TV (@RoyalArtsTV)",
+          "oembed_checked": "2026-10-31"
         }
       ],
       "alternates": [
@@ -416,8 +477,8 @@
           "duration": "about 1 h 48 min (listings; unconfirmed on YouTube)",
           "published": "2025-10-03 (listings; her X post the same week)",
           "why": "Her own channel premiere, written, directed and produced by her and reviewed in the national press; a comedy-drama about a stranger who turns up claiming to be a man's wife.",
-          "verification": "channel-probable",
-          "confidence": "probable",
+          "verification": "channel-confirmed",
+          "confidence": "confirmed",
           "evidence": [
             "Search index lists https://www.youtube.com/watch?v=vuJBH0QyxZk with this title; ' - Nigerian Movies 2025 Latest Full Movies' matches the channel's own uploads (e.g. https://videoblogs.com/entertainment/biodunstephen-tv-finding-my-way-nigerian-movies-2025-latest-full-movies)",
             "https://x.com/BiodunStephenO/status/1974199086795624732",
@@ -427,7 +488,9 @@
           ],
           "flags": [
             "The uploaded title contains a typo ('Blessibg'); show the short title only."
-          ]
+          ],
+          "oembed_uploader": "BIODUNSTEPHEN TV (@BIODUNSTEPHENTV)",
+          "oembed_checked": "2026-10-31"
         }
       ],
       "alternates": [
@@ -467,14 +530,16 @@
           "duration": null,
           "published": "2026-02-13 (series premiere date in the press)",
           "why": "Episode 1 of the 2026 boarding-school drama series, made for and premiered on the channel; a series opener explains itself to a new viewer.",
-          "verification": "channel-probable",
-          "confidence": "probable",
+          "verification": "channel-confirmed",
+          "confidence": "confirmed",
           "evidence": [
             "Search index lists https://www.youtube.com/watch?v=8NM-yaMdmeg with this title",
             "Search index: playlist 'GIRL'S HOSTEL BY BOLU ESSIEN TV' https://www.youtube.com/playlist?list=PL3hCdGTzoeE5KkR1HNeweODTmkotYaZFB",
             "Title format matches the channel's earlier series (e.g. 'SALON 001 COMEDY SERIES - EPISODE 10 (MY CUSTOMER'S CUSTOMER) FEAT. BOLU ESSIEN, BLESSING OBASI NZE', https://www.youtube.com/watch?v=EMdf1rObSZA)",
             "https://odunews.com/2026/04/bolu-essien-writes-produces-and-stars-in-girls-hostel-drama/"
-          ]
+          ],
+          "oembed_uploader": "Bolu Essien TV (@BoluEssien)",
+          "oembed_checked": "2026-10-31"
         }
       ]
     },
@@ -504,12 +569,14 @@
           "duration": null,
           "published": "about late September 2026 (index: 'about 29 days ago'; another summary gives 2026-09-25)",
           "why": "A recent, self-contained episode of her own series 'Risky' (a first date goes wrong), the channel's flagship format.",
-          "verification": "channel-probable",
-          "confidence": "probable",
+          "verification": "channel-confirmed",
+          "confidence": "confirmed",
           "evidence": [
             "Search index lists https://www.youtube.com/watch?v=pb2jiuqmAms with the full title naming RISKY STUDIOS TV and ARIYIIKE DIMPLES",
             "The same id came up in a search scoped to the @RiskyStudiosTV channel, beside its other episodes (BRIDEZILLA _ovA7HcYCCs, PRENUP 5EqS1qgDDXw, DATING IN LAGOS EPISODE 7 P_cajZEOfgQ)"
-          ]
+          ],
+          "oembed_uploader": "AriyiikeDimples (@RiskyStudiosTV)",
+          "oembed_checked": "2026-10-31"
         }
       ],
       "alternates": [
@@ -551,12 +618,14 @@
           "duration": null,
           "published": "about 2026-03-31 (index)",
           "why": "A recent, self-contained skit (he must meet his girlfriend's family the proper way); the '(Officer Woos new comedy)' title format is his own.",
-          "verification": "channel-probable",
-          "confidence": "probable",
+          "verification": "channel-confirmed",
+          "confidence": "confirmed",
           "evidence": [
             "Search index lists https://www.youtube.com/watch?v=bx0QofHIX68 with this title (query: Officer Woos new skit 2026 YouTube)",
             "Title format matches his uploads, e.g. 'ASEWO BUSINESS- (Officer Woos new comedy)' qBcvBN8fTQ4, 'ASEWO BUSINESS 6 (Officer Woos new comedy)' D9BFZGI1OXY"
-          ]
+          ],
+          "oembed_uploader": "OFFICER WOOS (@OFFICERWOOS)",
+          "oembed_checked": "2026-10-31"
         }
       ],
       "alternates": [
@@ -583,7 +652,7 @@
       "channel_name": "Brain Jotter",
       "channel_handle": "@BrainJotterComedian",
       "channel_id": "UCxyb0darxVM-h7I4xYWrb4A (probable: 'Brain Jotter' channel with the same booking contact in its description)",
-      "channel_verification": "probable",
+      "channel_verification": "confirmed",
       "channel_evidence": [
         "Search index: 'Brain Jotter - YouTube' at https://www.youtube.com/@BrainJotterComedian/videos (booking and promotion contact in the description)",
         "Search index: 'Brain Jotter - YouTube' at https://www.youtube.com/channel/UCxyb0darxVM-h7I4xYWrb4A (booking contact in the description)",
@@ -601,14 +670,16 @@
           "duration": null,
           "published": "about 2026-09-27 (index)",
           "why": "Part 1 of Ogene Boys, his 2026 film series and his newest work; a series opener explains itself to a new viewer. Leads since 2026-10-24 (fix round): the earlier pick's title, THERA-PISSED, reads as crude in British English as a modal heading on a brand site.",
-          "verification": "channel-probable",
-          "confidence": "probable",
+          "verification": "channel-confirmed",
+          "confidence": "confirmed",
           "evidence": [
             "Research track (2026-10-24): the search index lists https://www.youtube.com/watch?v=mr1Nx39P6Mo with this title (roster/research/channels.json, Brain Jotter alternates)",
             "Fix round WebSearch (2026-10-24): parts 2 and 3 indexed in the same title format: 'TALES OF THE SEVEN EVENTS - OGENE BOYS 2 - Brain Jotter Nigerian movies 2026 Latest Full Movies' https://www.youtube.com/watch?v=OTF59cTqc5A and 'THE GHOST OF THE PAST - OGENE BOYS 3 - Brain Jotter Nigerian movies 2026 Latest Full Movies' https://www.youtube.com/watch?v=Ky76LCiqYMo",
             "Fix round WebSearch (2026-10-24): a third-party upload 'Ogene Boys episode 4 (Release date and time Review)_ BRAIN JOTTER Nigeria movie' https://www.youtube.com/watch?v=rF7zUnSgKnc ties the series to him"
           ],
-          "note": "Probable: the title names him and the series is his, but no source names the uploading channel (a movie channel, not @BrainJotterComedian, may have uploaded it). Check with oEmbed before launch."
+          "note": "Probable: the title names him and the series is his, but no source names the uploading channel (a movie channel, not @BrainJotterComedian, may have uploaded it). Check with oEmbed before launch.",
+          "oembed_uploader": "Brain Jotter (@BrainJotterComedian)",
+          "oembed_checked": "2026-10-31"
         }
       ],
       "alternates": [
@@ -673,14 +744,16 @@
           "duration": "about 1 h 27 min (IMDb)",
           "published": "2025-11-01 (IMDb release date, Nigeria)",
           "why": "The channel's own production (IMDb credits Goldscreen TV as the company) and the title it promoted most; a romantic comedy-drama about two exes forced to work together.",
-          "verification": "channel-probable",
-          "confidence": "probable",
+          "verification": "channel-confirmed",
+          "confidence": "confirmed",
           "evidence": [
             "Search index lists https://www.youtube.com/watch?v=eRfM081tX0I with this (truncated) title; the uploader was not shown",
             "https://m.imdb.com/title/tt39300960/ (Goldscreen TV; dir. Debola Ogunshina; Teniola Aladese, Taye Arimoro, Gabriel Afolayan)",
             "https://filmflux.app/channels/goldscreentv-ng lists Never Far Away first",
             "https://www.zikoko.com/pop/best-nollywood-movies-on-youtube-december-2025/ (lists it as on YouTube)"
-          ]
+          ],
+          "oembed_uploader": "Gold Screen TV (@GoldScreenTV-NG)",
+          "oembed_checked": "2026-10-31"
         }
       ],
       "alternates": [
@@ -711,6 +784,37 @@
       ],
       "videos": [
         {
+          "id": "AlYIilRoBhQ",
+          "title": "THE LITTLE THINGS IN MARRIAGE - Nigerian Movies 2026 Latest Full Movies",
+          "channel": "AbayomiAlvin Tv",
+          "channel_url": "https://www.youtube.com/@AbayomiAlvinTv",
+          "url": "https://www.youtube.com/watch?v=AlYIilRoBhQ",
+          "why": "A feature on his own channel (published 12 Mar 2026). Replaces The Little Things (bzpqmWl8sE4), which no longer exists on YouTube (oEmbed 404).",
+          "verification": "channel-confirmed",
+          "oembed": {
+            "checked": "2026-10-31",
+            "author_name": "AbayomiAlvin Tv",
+            "title": "THE LITTLE THINGS IN MARRIAGE - Nigerian Movies 2026 Latest Full Movies"
+          },
+          "confidence": "confirmed",
+          "oembed_uploader": "AbayomiAlvin Tv (@AbayomiAlvinTv)",
+          "oembed_checked": "2026-10-31"
+        }
+      ],
+      "alternates": [
+        {
+          "id": "alc4fZSsZVw",
+          "title": "In Love With Two Sisters",
+          "published": "2025 (index)",
+          "confidence": "unknown",
+          "note": "Stars him, but no source names the uploading channel."
+        }
+      ],
+      "flags": [
+        "Ask the client for a newer upload on his channel if one should lead."
+      ],
+      "rejected": [
+        {
           "id": "bzpqmWl8sE4",
           "title": "THE LITTLE THINGS",
           "title_full_as_indexed": "THE LITTLE THINGS -ABAYOMI ALVIN, CAROLINE IGBEN, LUCY EDET,OLUWADOLARZ, HERMES FULL Nigerian Movie",
@@ -725,20 +829,9 @@
             "Search index lists https://www.youtube.com/watch?v=bzpqmWl8sE4 with this title",
             "https://kolaolaiya.com/2024/12/29/the-little-things-2024/ (premieres on AbayomiAlvin Tv on YouTube)",
             "https://www.ngmovies.com.ng/the-little-things-2024/ (credits Abayomi Alvin TV)"
-          ]
+          ],
+          "rejected": "2026-10-31: replaced, see the first video"
         }
-      ],
-      "alternates": [
-        {
-          "id": "alc4fZSsZVw",
-          "title": "In Love With Two Sisters",
-          "published": "2025 (index)",
-          "confidence": "unknown",
-          "note": "Stars him, but no source names the uploading channel."
-        }
-      ],
-      "flags": [
-        "Ask the client for a newer upload on his channel if one should lead."
       ]
     }
   ],

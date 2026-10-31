@@ -1717,8 +1717,8 @@
   "source_sentence": "THE LAW VS. THE MACHINE",
   "url": "https://www.youtube.com/watch?v=6aheOxb7GPU",
   "location": "v3 #showcase — Video card title — Layi Wasabi (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"THE LAW VS. THE MACHINE\" (id 6aheOxb7GPU). Verification: channel-confirmed, search index only (oEmbed could not run). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader Layi Wasabi (@layiwasabi), the creator's own channel. DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"THE LAW VS. THE MACHINE\" (id 6aheOxb7GPU). Verification: channel-confirmed, search index only (oEmbed could not run). See docs/videos.json."
  },
  {
   "id": "DC64",
@@ -1744,8 +1744,8 @@
   "source_sentence": "LOVE IN EVERY WORD 2 - THE WEDDING",
   "url": "https://www.youtube.com/watch?v=OQQaDqLCgKg",
   "location": "v3 #showcase — Video card title — Omoni Oboli TV (card 2 since 2026-10-23)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft (use). The video is the earlier site's own pick: it featured OQQaDqLCgKg for Omoni Oboli TV (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75), index.html:791, the FEATURED embed). The title is the display form of \"LOVE IN EVERY WORD 2 - THE WEDDING\" as search listings give it; it is not yet confirmed on YouTube (oEmbed could not run). Replaces DC65 on card 2 (2026-10-23). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader Omoni Oboli TV (@OmoniOboliTv), the creator's own channel. DRAFT — needs client approval. Status: draft (use). The video is the earlier site's own pick: it featured OQQaDqLCgKg for Omoni Oboli TV (/home/user/olayinkalawal/contentmotley (Content Motley, earlier site; Netlify relaxed-crisp-6fca75), index.html:791, the FEATURED embed). The title is the display form of \"LOVE IN EVERY WORD 2 - THE WEDDING\" as search listings give it; it is not yet confirmed on YouTube (oEmbed could not run). Replaces DC65 on card 2 (2026-10-23). See docs/videos.json."
  },
  {
   "id": "DC67",
@@ -1753,8 +1753,8 @@
   "source_sentence": "RMD ON CURIOSITY MADE ME ASK!",
   "url": "https://www.youtube.com/watch?v=nOedKYSXuPU",
   "location": "v3 #showcase — Video card title — Isbae U (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"RMD ON CURIOSITY MADE ME ASK!\" (id nOedKYSXuPU). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader Isbae U (@Isbae_u), the creator's own channel. DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"RMD ON CURIOSITY MADE ME ASK!\" (id nOedKYSXuPU). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
  },
  {
   "id": "DC68",
@@ -1771,8 +1771,8 @@
   "source_sentence": "FDI - FEDERAL DISTURBANCE INTELLIGENCE (Epi 1) Brodashaggi",
   "url": "https://www.youtube.com/watch?v=MTZlMqXgUZA",
   "location": "v3 #showcase — Video card title — Broda Shaggi (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"FDI - FEDERAL DISTURBANCE INTELLIGENCE (Epi 1) Brodashaggi\" (id MTZlMqXgUZA). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader official BRODA SHAGGI (@BrodaShaggi), the creator's own channel. DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"FDI - FEDERAL DISTURBANCE INTELLIGENCE (Epi 1) Brodashaggi\" (id MTZlMqXgUZA). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
  },
  {
   "id": "DC70",
@@ -1789,8 +1789,8 @@
   "source_sentence": "Bisola Aiyeola speaks on Intentional Friendships",
   "url": "https://www.youtube.com/watch?v=2FY9NcE2lbw",
   "location": "v3 #showcase — Video card title — Diary of a Naija Girl (Track C draft, rec)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"Bisola Aiyeola speaks on Intentional Friendships\" (id 2FY9NcE2lbw). Verification: channel-confirmed, search index only (oEmbed could not run). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader Diary of A Naija Girl (@diaryofanaijagirl), the creator's own channel. DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"Bisola Aiyeola speaks on Intentional Friendships\" (id 2FY9NcE2lbw). Verification: channel-confirmed, search index only (oEmbed could not run). See docs/videos.json."
  },
  {
   "id": "DC72",
@@ -1808,7 +1808,8 @@
   "url": "https://www.youtube.com/watch?v=QoZJOlmynbw",
   "location": "v3 #showcase — Video card title — Kie Kie (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"REHEATED PASSION | Nigerian movies 2026 Latest full movies\" (id QoZJOlmynbw). Verification: channel-confirmed, search index only (oEmbed could not run). See docs/videos.json."
+  "note": "RETIRED 2026-10-31: video replaced (Her newest feature on her own channel (published 1 Oct 2026), replacing Reheated Passion (QoZJOlmynbw), whose embedding is turned off (oEmbed 401), so it cannot play in the site's player.) DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"REHEATED PASSION | Nigerian movies 2026 Latest full movies\" (id QoZJOlmynbw). Verification: channel-confirmed, search index only (oEmbed could not run). See docs/videos.json.",
+  "retired": true
  },
  {
   "id": "DC74",
@@ -1817,7 +1818,8 @@
   "url": "https://www.youtube.com/watch?v=RdlXuz1_iKo",
   "location": "v3 #showcase — Video card title — Kie Kie (with Broda Shaggi) (Track C draft, opt)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"DR SHAGGI IN DISTRESS\" (id RdlXuz1_iKo). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+  "note": "RETIRED 2026-10-31: video replaced (Her newest feature on her own channel (published 1 Oct 2026), replacing Reheated Passion (QoZJOlmynbw), whose embedding is turned off (oEmbed 401), so it cannot play in the site's player.) DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"DR SHAGGI IN DISTRESS\" (id RdlXuz1_iKo). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json.",
+  "retired": true
  },
  {
   "id": "DC75",
@@ -1826,7 +1828,8 @@
   "url": "https://www.youtube.com/watch?v=7A3M-n54gG8",
   "location": "v3 #showcase — Video card title — Kunle Afolayan (Track C draft, rec)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"The Figurine: Araromire (2009)\" (id 7A3M-n54gG8). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json."
+  "note": "RETIRED 2026-10-31: video replaced (The official trailer on KAPTV, his own production channel (youtube.com/user/kafolayan). Replaces The Figurine (7A3M-n54gG8, uploaded by The Vault of Cinemas) and The CEO (bebw28CTnHA, uploaded by nollywoodGO): neither is his channel.) DRAFT — needs client approval. Status: draft. Source: videos.json. Display form of the YouTube title \"The Figurine: Araromire (2009)\" (id 7A3M-n54gG8). Verification: channel-probable, search index only (oEmbed could not run). See docs/videos.json.",
+  "retired": true
  },
  {
   "id": "DC80",
@@ -1948,8 +1951,8 @@
   "source_sentence": "LOVE AND KASALA - Nigerian Movies 2025 latest full movies",
   "url": "https://www.youtube.com/watch?v=2SgtAvc1HV8",
   "location": "v3 #showcase — video title for Emmabel TV: the modal heading when the roster row plays (round 2)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"LOVE AND KASALA - Nigerian Movies 2025 latest full movies\" (id 2SgtAvc1HV8). Confidence: confirmed (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). The earlier site's own pick (it played this video under that name): index.html:850 (embed youtube.com/embed/2SgtAvc1HV8), :858 (label \"Emmabel TV\"). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader Emmabel TV (@EmmabelTV247), the creator's own channel. DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"LOVE AND KASALA - Nigerian Movies 2025 latest full movies\" (id 2SgtAvc1HV8). Confidence: confirmed (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). The earlier site's own pick (it played this video under that name): index.html:850 (embed youtube.com/embed/2SgtAvc1HV8), :858 (label \"Emmabel TV\"). See docs/videos.json."
  },
  {
   "id": "F140",
@@ -1966,8 +1969,8 @@
   "source_sentence": "LOVE STOOD STILL - Nigerian Movies 2025 Latest Full Movies",
   "url": "https://www.youtube.com/watch?v=ScAcee_5Q4A",
   "location": "v3 #showcase — video title for Royal Arts TV: the modal heading when the roster row plays (round 2)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"LOVE STOOD STILL - Nigerian Movies 2025 Latest Full Movies\" (id ScAcee_5Q4A). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). The earlier site's own pick (it played this video under that name): index.html:925 (embed youtube.com/embed/ScAcee_5Q4A), :933 (label \"Royal Arts TV\"). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader Royal Arts TV (@RoyalArtsTV), the creator's own channel. DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"LOVE STOOD STILL - Nigerian Movies 2025 Latest Full Movies\" (id ScAcee_5Q4A). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). The earlier site's own pick (it played this video under that name): index.html:925 (embed youtube.com/embed/ScAcee_5Q4A), :933 (label \"Royal Arts TV\"). See docs/videos.json."
  },
  {
   "id": "F141",
@@ -1984,8 +1987,8 @@
   "source_sentence": "UNINVITED BRIDE - Blessibg Obasi| Biodun Stephen Nigerian Movies 2025 Latest Full Movies",
   "url": "https://www.youtube.com/watch?v=vuJBH0QyxZk",
   "location": "v3 #showcase — video title for Biodun Stephen: the modal heading when the roster row plays (round 2)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"UNINVITED BRIDE - Blessibg Obasi| Biodun Stephen Nigerian Movies 2025 Latest Full Movies\" (id vuJBH0QyxZk). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader BIODUNSTEPHEN TV (@BIODUNSTEPHENTV), the creator's own channel. DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"UNINVITED BRIDE - Blessibg Obasi| Biodun Stephen Nigerian Movies 2025 Latest Full Movies\" (id vuJBH0QyxZk). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
  },
  {
   "id": "F142",
@@ -2002,8 +2005,8 @@
   "source_sentence": "GIRLS' HOSTEL- EPISODE 1 (IT GIRL) FEAT. BOLU ESSIEN, ONYINYE ODOKORO, RONKE 'OMOOBA', EVA IBIAM",
   "url": "https://www.youtube.com/watch?v=8NM-yaMdmeg",
   "location": "v3 #showcase — video title for Bolu Essien: the modal heading when the roster row plays (round 2)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"GIRLS' HOSTEL- EPISODE 1 (IT GIRL) FEAT. BOLU ESSIEN, ONYINYE ODOKORO, RONKE 'OMOOBA', EVA IBIAM\" (id 8NM-yaMdmeg). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader Bolu Essien TV (@BoluEssien), the creator's own channel. DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"GIRLS' HOSTEL- EPISODE 1 (IT GIRL) FEAT. BOLU ESSIEN, ONYINYE ODOKORO, RONKE 'OMOOBA', EVA IBIAM\" (id 8NM-yaMdmeg). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
  },
  {
   "id": "F143",
@@ -2020,8 +2023,8 @@
   "source_sentence": "INSULT UPON INJURY | RISKY STUDIOS TV | ARIYIIKE DIMPLES",
   "url": "https://www.youtube.com/watch?v=pb2jiuqmAms",
   "location": "v3 #showcase — video title for Ariyiike Dimples: the modal heading when the roster row plays (round 2)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"INSULT UPON INJURY | RISKY STUDIOS TV | ARIYIIKE DIMPLES\" (id pb2jiuqmAms). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader AriyiikeDimples (@RiskyStudiosTV), the creator's own channel. DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"INSULT UPON INJURY | RISKY STUDIOS TV | ARIYIIKE DIMPLES\" (id pb2jiuqmAms). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
  },
  {
   "id": "F144",
@@ -2038,8 +2041,8 @@
   "source_sentence": "THE INTRODUCTION - (Officer Woos new comedy) SAKA",
   "url": "https://www.youtube.com/watch?v=bx0QofHIX68",
   "location": "v3 #showcase — video title for Officer Woos: the modal heading when the roster row plays (round 2)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"THE INTRODUCTION - (Officer Woos new comedy) SAKA\" (id bx0QofHIX68). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader OFFICER WOOS (@OFFICERWOOS), the creator's own channel. DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"THE INTRODUCTION - (Officer Woos new comedy) SAKA\" (id bx0QofHIX68). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
  },
  {
   "id": "F145",
@@ -2075,8 +2078,8 @@
   "source_sentence": "NEVER FAR AWAY - Nigerian Movies 2025 Latest Full ... (truncated in the index)",
   "url": "https://www.youtube.com/watch?v=eRfM081tX0I",
   "location": "v3 #showcase — video title for Gold Screen TV: the modal heading when the roster row plays (round 2)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"NEVER FAR AWAY - Nigerian Movies 2025 Latest Full ... (truncated in the index)\" (id eRfM081tX0I). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader Gold Screen TV (@GoldScreenTV-NG), the creator's own channel. DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"NEVER FAR AWAY - Nigerian Movies 2025 Latest Full ... (truncated in the index)\" (id eRfM081tX0I). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
  },
  {
   "id": "F147",
@@ -2094,7 +2097,8 @@
   "url": "https://www.youtube.com/watch?v=bzpqmWl8sE4",
   "location": "v3 #showcase — video title for Abayomi Alvin: the modal heading when the roster row plays (round 2)",
   "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"THE LITTLE THINGS -ABAYOMI ALVIN, CAROLINE IGBEN, LUCY EDET,OLUWADOLARZ, HERMES FULL Nigerian Movie\" (id bzpqmWl8sE4). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json."
+  "note": "RETIRED 2026-10-31: video replaced (A feature on his own channel (published 12 Mar 2026). Replaces The Little Things (bzpqmWl8sE4), which no longer exists on YouTube (oEmbed 404).) DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"THE LITTLE THINGS -ABAYOMI ALVIN, CAROLINE IGBEN, LUCY EDET,OLUWADOLARZ, HERMES FULL Nigerian Movie\" (id bzpqmWl8sE4). Confidence: probable (research track 2026-10-24 (WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted)). See docs/videos.json.",
+  "retired": true
  },
  {
   "id": "DC119",
@@ -2102,8 +2106,8 @@
   "source_sentence": "OGENE BOYS - Brain Jotter Nigerian Movies 2026 Latest Full Movies",
   "url": "https://www.youtube.com/watch?v=mr1Nx39P6Mo",
   "location": "v3 #showcase — video title for Brain Jotter: the modal heading when the roster row plays (round 2, fix round)",
-  "kind": "draft",
-  "note": "DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"OGENE BOYS - Brain Jotter Nigerian Movies 2026 Latest Full Movies\" (id mr1Nx39P6Mo), part 1 of his 2026 film series. Confidence: probable (research track and fix round, 2026-10-24, WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted): the title names him and parts 2 and 3 are indexed in the same format, but no source names the uploading channel. Replaces DC116. See docs/videos.json."
+  "kind": "name",
+  "note": "Verified by YouTube oEmbed on 2026-10-31: uploader Brain Jotter (@BrainJotterComedian), the creator's own channel. DRAFT — needs client approval, and needs checking on YouTube (oEmbed). Display form of the indexed title \"OGENE BOYS - Brain Jotter Nigerian Movies 2026 Latest Full Movies\" (id mr1Nx39P6Mo), part 1 of his 2026 film series. Confidence: probable (research track and fix round, 2026-10-24, WebSearch index only; youtube.com, i.ytimg.com and oEmbed blocked here, not contacted): the title names him and parts 2 and 3 are indexed in the same format, but no source names the uploading channel. Replaces DC116. See docs/videos.json."
  },
  {
   "id": "DC76",
@@ -2149,5 +2153,32 @@
   "location": "#directors .dirs-title p → rebuild #directors .dr-open .dek",
   "kind": "positioning",
   "note": "Derived from F105 (the live site's own line), not yet seen by the client: \"The two people\" → \"Two of the people\", the smallest change that makes it true. The board is Creative Motley's and has more members than the two named, who stay the only two on the page for now (client message 2026-10-24 (Olayinka Lawal, the site's owner, in this project's conversation): \"yes its creative motley board, it includes more but leave it as two for now\"). The client asked for the change in substance, not for this wording: it is in docs/copy-v4.md \"Still open\". The drop cap stays T. Not \"Two of the board\" (Olayinka Lawal's board seat is not stated: F137) nor \"who run Creative Motley\" (no such role was given)."
+ },
+ {
+  "id": "DC120",
+  "claim": "Husband or Dare",
+  "source_sentence": "HUSBAND OR DARE | Nigerian movies 2026 Latest full movies",
+  "url": "https://www.youtube.com/watch?v=fJKF3JlGsBE",
+  "location": "v3 #showcase — video title for Kie Kie (card or roster row; the modal heading)",
+  "kind": "name",
+  "note": "Display form of the YouTube title, verified by YouTube oEmbed on 2026-10-31: uploader \"KieKieTV\" (https://www.youtube.com/@KieKieTV). Her newest feature on her own channel (published 1 Oct 2026), replacing Reheated Passion (QoZJOlmynbw), whose embedding is turned off (oEmbed 401), so it cannot play in the site's player."
+ },
+ {
+  "id": "DC121",
+  "claim": "Aníkúlápó: The Ghoul Awakens, official trailer",
+  "source_sentence": "Aníkúlápó Series Season2: The Ghoul Awakens ｜ Official Trailer",
+  "url": "https://www.youtube.com/watch?v=Wx8X265MT3E",
+  "location": "v3 #showcase — video title for Kunle Afolayan (card or roster row; the modal heading)",
+  "kind": "name",
+  "note": "Display form of the YouTube title, verified by YouTube oEmbed on 2026-10-31: uploader \"KAPTV\" (https://www.youtube.com/@kapteevee). The official trailer on KAPTV, his own production channel (youtube.com/user/kafolayan). Replaces The Figurine (7A3M-n54gG8, uploaded by The Vault of Cinemas) and The CEO (bebw28CTnHA, uploaded by nollywoodGO): neither is his channel."
+ },
+ {
+  "id": "DC122",
+  "claim": "The Little Things in Marriage",
+  "source_sentence": "THE LITTLE THINGS IN MARRIAGE - Nigerian Movies 2026 Latest Full Movies",
+  "url": "https://www.youtube.com/watch?v=AlYIilRoBhQ",
+  "location": "v3 #showcase — video title for Abayomi Alvin (card or roster row; the modal heading)",
+  "kind": "name",
+  "note": "Display form of the YouTube title, verified by YouTube oEmbed on 2026-10-31: uploader \"AbayomiAlvin Tv\" (https://www.youtube.com/@AbayomiAlvinTv). A feature on his own channel (published 12 Mar 2026). Replaces The Little Things (bzpqmWl8sE4), which no longer exists on YouTube (oEmbed 404)."
  }
 ]
