@@ -1,4 +1,4 @@
-/* Photoreal teardowns (the Editions Retail moment). One scene per run. Method's td:camera3d and the Kit's td:kit are
+/* Photoreal teardowns. One scene per run. Method's td:camera3d and the Kit's td:kit are
    real-time 3D now (gl/scenes/camera3d.js, gl/scenes/kit3d.js) and never registered here, one draw per frame. The choreography is gl/lib/tdcore.js (shared with sections/_teardown.js);
    this file only draws it: "device d at orbit o / explode e, framed so, over its colour key", plus the cut between
    two shots. Phase 3 can swap this renderer (real-time 3D, video) without touching the choreography.

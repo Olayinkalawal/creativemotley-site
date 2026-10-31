@@ -29,10 +29,6 @@ html.nav-light:not(.scrolled) .nav .pill--solid { background: var(--ink); color:
 html.nav-light:not(.scrolled) .nav .pill--solid:hover { background: var(--accent-ink); }
 .nav a { text-decoration: none; }
 .nav__brand { display: flex; align-items: baseline; gap: 0.5em; white-space: nowrap; }
-.nav__brand .ed { opacity: 0.8; }
-@media (max-width: 479px) {   /* phones: the edition under the name (Editions' two-line lockup), so the bar never crowds */
-  .nav__brand { flex-direction: column; align-items: flex-start; gap: 0; line-height: 1.2; }
-}
 .nav__links { display: none; align-items: center; gap: clamp(18px, 2vw, 32px); }
 .nav__right { margin-left: auto; display: flex; align-items: center; gap: clamp(12px, 1.6vw, 28px); }
 .nav__mail { display: none; }
@@ -97,14 +93,15 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
   .rail__index { position: absolute; left: 16px; right: 16px; bottom: 74px; opacity: 0; visibility: hidden; transition: opacity 0.4s; }
   .rail__legal { position: absolute; left: 16px; bottom: 14px; font: var(--f-small); letter-spacing: var(--ls-small); opacity: 0.85; }
   html.rail-docked .rail__mark, html.rail-docked .rail__index { opacity: 1; visibility: visible; }
+  /* docked, the rail's wordmark sits just under the top bar's: one name at a time, so the bar's yields to it */
+  .nav__brand { transition: opacity 0.35s var(--ease-out), visibility 0.35s; }
+  html.rail-docked .nav__brand { opacity: 0; visibility: hidden; }
   .rail .index a { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 6px; }   /* a real box (focusable) */
   .rail .index li :is(.nm, .rn) { transition: opacity 0.3s, color 0.3s var(--ease-out); }
 }
-/* the edition mark (a lockup: the head role, its "New" in the serif at the same size). The rail's copy is the same
-   lockup scaled down, so the hero's mark lands on it exactly (ui/hero.js flies one onto the other). */
-.mark { display: block; width: max-content; font: var(--f-head); letter-spacing: var(--ls-head); line-height: 0.9; }
-.mark em { font-family: var(--serif); font-style: italic; font-weight: 400; letter-spacing: -0.01em; }
-.mark .mark__ed { display: block; }
+/* the wordmark: the client's name alone, on one line, in the head role (Archivo 700, as F01 records it). The rail's copy
+   is the same mark scaled down, so the hero's mark lands on it exactly (ui/hero.js flies one onto the other). */
+.mark { display: block; width: max-content; font: var(--f-head); letter-spacing: var(--ls-head); line-height: 0.9; white-space: nowrap; }
 .rail__mark { transform: scale(0.7); transform-origin: 0 0; }
 
 /* the index list: names in tight bold sans, numerals in serif at the same size, dotted leader on the active one */
@@ -133,7 +130,7 @@ html.menu-open .nav__menu span::before { transform: translateY(-6px) rotate(-90d
 .rail .index li.is-light.is-plate .rn { text-shadow: 0 0 1px rgba(244, 237, 223, 0.95), 0 0 3px rgba(244, 237, 223, 0.9), 0 0 8px rgba(244, 237, 223, 0.8), 0 0 16px rgba(244, 237, 223, 0.55); }
 
 /* ── hero: the Creation in daylight, the golden frame over it (mark, dek, index), the 3D camera in the gap ─────────
-   Light, as Editions' frame reads over its painting: ink type with a cream halo (the sky behind it is bright), a gilt
+   Light: ink type with a cream halo (the sky behind it is bright), a gilt
    hairline, no dark veil; a cream frosted panel only behind the dek and the index (they sit over the pines and the
    garden), never over the camera, which floats between the mark and the dek (ui/hero.js, gl/scenes/hero3d.js). */
 .hero { position: relative; height: 190svh; }   /* one screen at rest, then the camera's move (ui/hero.js) */

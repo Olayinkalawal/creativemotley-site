@@ -1,4 +1,4 @@
-/* Teardown runs (the Editions Retail moment) on a pure black stage, or each device on its colour key (the Kit).
+/* Teardown runs on a pure black stage, or each device on its colour key (the Kit).
    Pinned (JS): the device fills the screen while the view orbits it (the chapter title top-left over a soft ink
    scrim); then it glides into the column layout, right of the copy, and comes apart beside its spec list. A run of
    several devices (.td--seq) then cuts device to device: the next colour key wipes in, the copy crossfades.
@@ -186,7 +186,7 @@ html.js .td.td--mk:not(:has(.td__mk--name))[data-td-ready]:not(.td-static) .td__
   font: var(--f-small); letter-spacing: var(--ls-caps); color: var(--gold); font-variant-numeric: tabular-nums;
 }
 
-/* ── desktop: the column layout (Editions: copy left, device right) ───────────────────────────────── */
+/* ── desktop: the column layout (copy left, device right) ───────────────────────────────── */
 @media (min-width: 1024px) {
   .td {
     --td-col-x: calc(var(--rail-w) + clamp(20px, 2.8vw, 44px));

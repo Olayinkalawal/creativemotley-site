@@ -24,7 +24,7 @@
  },
  "storytellers": {
   "manifest": "/assets/scenes/storytellers/manifest.json",
-  "name": "I Storytellers: The School of Athens, now",
+  "name": "Storytellers: The School of Athens, now",
   "key": "#A62A16",
   "placeholder": {
    "desktop": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACQBQCdASogABIAPu1iqU2ppaQiMAgBMB2JQBOmas0gK5UWx13Jz5R6RMh4cWtRd5Kyj2cg0AD+8X+Cvl09gEf3Z82YJUEh0+i585SRqrUXyDf1sXTxztEPFdqX9CzKVBhXx6Z7B4BSksYHEJH0FYIrEFWnzWLty5M4auG6uzQxnHPXHl2SxL0dnlTp793kWP88qmQ3M7LRcMxq2ijnp6Cops8WKJ6/4qDQlzGveBkh0qXJ7PongeHCQeOjp4t9vR12riKnpVA4M1YAAAA=",
@@ -47,7 +47,7 @@
  },
  "creators": {
   "manifest": "/assets/scenes/creators/manifest.json",
-  "name": "II Creators: The Mona Lisa, on camera",
+  "name": "Creators: The Mona Lisa, on camera",
   "key": "#9A6A2A",
   "placeholder": {
    "desktop": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAADwBACdASogABIAPu1kq06ppaOpqA1RMB2JYgC2yEXemkjImf2o5x6DwbP4cPxDfWwA/u2btGMxdctiioOFU6ft2alksmu/P9etLSaaHbZP75JnOnQjUaHWR+mK6L2F/W6ZRy+wI5l/ajY8wOt1/eI0i0O9KSqlSzf8XWNJ59VftYEMhgA2WrZIDOGyAAAA",
@@ -70,7 +70,7 @@
  },
  "brands": {
   "manifest": "/assets/scenes/brands/manifest.json",
-  "name": "III Brands: The Arnolfini, signed",
+  "name": "Brands: The Arnolfini, signed",
   "key": "#6E1418",
   "placeholder": {
    "desktop": "data:image/webp;base64,UklGRqYAAABXRUJQVlA4IJoAAADwBACdASogABIAPuVeo02pJSMiMAwBIByJQBYdg9BJhsaYibqRPYQIpryNBvnukQAA/uQjKKxPz925bPJoH4ThpO6KOHRoqbTYZKKIc+dt6GPYqJRsBaNqMgztYNQfsuwEF02dAeP4yMsZUNQsV+ssL3/zdnubjd38XNu437fqd0xMHkAAHcpVa1bEyCJckAv1ZrV6sUvCxAAA",
@@ -93,7 +93,7 @@
  },
  "results": {
   "manifest": "/assets/scenes/results/manifest.json",
-  "name": "VIII Results: The Oculus",
+  "name": "Results: The Oculus",
   "key": "#7298A6",
   "placeholder": {
    "desktop": "data:image/webp;base64,UklGRt4AAABXRUJQVlA4INIAAACQBQCdASogABIAPu1kqE2ppaOiMAgBMB2JagCdMtVBbwIZTOLRqUhKYiHmJBpJbMVsQ+Zo3AD8rApXS2tRbzkH1xLQZ2gfaIQNFeqDz+AdzTWiZDzwosytMUXDQ42l7PXdNiDTV2g95Lnq+QucoAV2BVwIuJhZztpQ4UvkJqBIO/5jUQUmb2Nym2FDRn3u0ZBuKbad5vxCwV5xh5Y3t9Hje/3GFCoDko8TZz0KWIAHZWoJzxrE5bxJ8w8ZakZZj3h0s+7QXsSveSCzU7/2TUooAAA=",
@@ -116,7 +116,7 @@
  },
  "directors": {
   "manifest": "/assets/scenes/directors/manifest.json",
-  "name": "IX Directors: The Ambassadors' chairs",
+  "name": "Directors: The Ambassadors' chairs",
   "key": "#3F4D1F",
   "placeholder": {
    "desktop": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBQCdASogABIAPu1sq1EppiOiqAqpMB2JZQC3uDTwM7iFBJUXaDRkZRV5OCbBnFyYAP7c6jXRPZIWGXILjuabe4ZBl17dSJ5FG2wJuOc+MtscoLrLwz9OlS9SUFfOWHzbOX8BSH9Pfn/8fCUza6WteOMDaGlmKwf2zJZgRpVmJxG8ZFCDOdV39zoewxjpaAAAAA==",
@@ -139,7 +139,7 @@
  },
  "apply": {
   "manifest": "/assets/scenes/apply/manifest.json",
-  "name": "X Apply: The Birth of Venus, live",
+  "name": "Apply: The Birth of Venus, live",
   "key": "#DFAFA0",
   "placeholder": {
    "desktop": "data:image/webp;base64,UklGRtgAAABXRUJQVlA4IMwAAACwBQCdASogABIAPu1qrVCppaQiqAqpMB2JQBOmZgjLc9FrYEDi5W5KxNRSR0TnEkLLz+xELiAA/vN0E+BUVMdLdugbE6/2GWE2tUYWI4SiKX4O984u5rVkKQAdwi+ncR2koQzcGqzDEZF+MgRBPtQIfCoS/kQx0laPzi+NEoFDUYBmkeIAI5kPVlPyjA/laz68rQRt+LFJdLfB/psMtSg5rWrZZVswFKJ5iLKGAINkp+8mK49F/cATtOg235iKJv2qKtEQaPFMLxsAAAA=",

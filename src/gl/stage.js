@@ -1,11 +1,11 @@
-/* The persistent stage: one WebGL canvas fixed behind the page (the Editions "Background").
+/* The persistent stage: one WebGL canvas fixed behind the page.
    Sections declare which scene they show with data-scene="id". Each frame the stage:
      1. finds the section under the reading line and any scene boundary inside the viewport,
      2. skips rendering entirely while an opaque paper panel ([data-opaque]) covers the screen,
      3. renders the one or two scenes involved into render targets,
      4. composites them through the post pass (ink-bleed dissolve + film finish).
 
-   Lifecycle (v3, the Editions pipeline):
+   Lifecycle (v3):
      - scene modules are factories, each its own dynamic chunk (gl/boot.js): a module is imported the first time one
        of its ids comes into the mount window;
      - the mount window is the active scene run ±1 (a run = consecutive sections showing the same scene), plus the

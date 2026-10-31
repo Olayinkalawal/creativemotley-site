@@ -1,5 +1,5 @@
 /* A scroll-scrubbed video as a texture (the hero film; any device sequence kept as video).
-   Sources are short-GOP encodes (a keyframe every 6 frames, scripts/encode-film.sh), so any frame decodes from at most
+   Sources are short-GOP encodes (a keyframe every 6 frames; the film and its encode script went on 2026-10-31), so any frame decodes from at most
    five others: AV1 where canPlayType says so, H.264 for every other browser.
    - seek(f): the playhead in frames (float); at most one seek in flight, the latest target wins (coalesced), so a
      fast scroll skips frames instead of queueing them;

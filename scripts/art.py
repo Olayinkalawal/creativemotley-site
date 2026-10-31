@@ -287,7 +287,7 @@ def crackle(h: int, w: int, cell: float, seed: int) -> np.ndarray:
 
 def finish(im: Image.Image, f: dict) -> Image.Image:
     """Optional per-master oil finish (a config's desktop.finish / phone.finish), so a painting that came back
-    photographic sits in the edition's one hand: a warm umber lift in the deep shadows (shadowLift, 8-bit steps at
+    photographic sits in the set's one hand: a warm umber lift in the deep shadows (shadowLift, 8-bit steps at
     black, gone by mid-dark), less saturated greens (greenSat, a factor), a small high-frequency soften (soften: 0.3 =
     30% of the way to a blur of `softenSigma` px), and a craquelure network darkening the paint along its cracks
     (crack: strength, cell: mean cell size in px of this master, seed); shadows: [{poly, amount, feather}], a passage

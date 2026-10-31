@@ -10,9 +10,9 @@
 .cr__cloud { height: clamp(220px, 30vh, 260px); --cloud-drift: 0.16; }
 .cr__cloud .cloud__node:not(.cloud__card) { font: var(--f-lead); letter-spacing: var(--ls-lead); }
 .cr__cloud .cloud__card { padding: 16px 18px 13px; }
-/* every command stays whole inside the cloud's box (phase 4: at 1024 the right-hand commands were cut, "/retention-chec"):
-   the right-hand ones hang from the box's right edge, the echoes from its left */
-.cr__cloud .cloud__list > .cloud__node:not(.cloud__card) { left: auto; right: 0; translate: 0 -50%; max-width: 100%; }
+/* every node stays whole inside the cloud's box (phase 4: at 1024 the right-hand nodes were cut): the right-hand ones hang
+   from the box's right edge (0.08em in, for a last glyph's overhang), the echoes from its left */
+.cr__cloud .cloud__list > .cloud__node:not(.cloud__card) { left: auto; right: 0; translate: 0 -50%; max-width: 100%; padding-right: 0.08em; }
 .cr__cloud .cloud__echoes .cloud__node { left: 0; translate: 0 -50%; max-width: 100%; }
 /* the echoes repeat the two commands: depth on wide screens only (below 1280 and on phones they read as doubled text) */
 @media (max-width: 1279px) { .cr__cloud .cloud__echoes { display: none; } }

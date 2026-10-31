@@ -1,7 +1,7 @@
 /* Shared paper components (owner: builder A). Imported by _paper.js; markup contracts are documented there.
    1 .pf      feature block: label + serif body + boxed link
    2 .fan     production notes fanned in 3D (row on wide screens, a cascade on phones)
-   3 .cloud   slash commands at several sizes and depths, one dark highlighted card
+   3 .cloud   short labels at several sizes and depths, one dark highlighted card
    4 .pc      photo card: a photo set inside a painted mat (a crop of a plate)
    5 .dense   two columns of "title | grey description" rows
    + .crop    utility: show a region of a plate, see below */

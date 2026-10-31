@@ -29,13 +29,8 @@ def webp(args):
     im.save(dst, 'WEBP', quality=q, method=6)
 
 jobs = []
-# hero film: 570 frames. lg = the live 1920 webp as-is; sm = 1100 wide for phones
-lg, sm = mk('frames', 'hero', 'lg'), mk('frames', 'hero', 'sm')
-for f in sorted(os.listdir(os.path.join(SRC, 'frames'))):
-    if not f.endswith('.webp'): continue
-    s = os.path.join(SRC, 'frames', f)
-    if not os.path.exists(os.path.join(lg, f)): shutil.copy(s, os.path.join(lg, f))
-    jobs.append((s, os.path.join(sm, f), 1100, 66))
+# (the hero film's 570 frames, public/assets/frames/hero, were deleted on 2026-10-31 with its videos and encode script:
+#  unused since 2026-10-21, and its camera carried a maker's lettering (F133). Nothing here writes them back.)
 # method film: 453 frames (1800 jpg) → webp
 lg, sm = mk('frames', 'method', 'lg'), mk('frames', 'method', 'sm')
 for f in sorted(os.listdir(os.path.join(SRC, 'method'))):

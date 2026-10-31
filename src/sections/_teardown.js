@@ -1,4 +1,4 @@
-/* Teardown runs, the Editions Retail choreography (markup: partials/method.html, partials/kit.html; scene:
+/* Teardown runs, the teardown choreography (markup: partials/method.html, partials/kit.html; scene:
    gl/scenes/teardowns.js; the shared clock, timeline and framing math: gl/lib/tdcore.js).
      <section class="td [td--open] [td--seq]" data-td [data-td-open] data-wipe data-scene="td:ID" …>
        <div class="td__run" data-td-run>               pinned for --td-run (phones: --td-run-m)
