@@ -1,6 +1,6 @@
 # Build contract
 
-Every builder reads this, `docs/concept.md` (what each chapter is) and `docs/reference-study.md` (the Editions patterns) before writing code. The shell is done and committed: chrome, rail, hero, chapter I, the stage and the skeleton partials. Use it as the house style; `src/partials/storytellers.html` and `src/sections/storytellers.*` are the worked example.
+Every builder reads this and `docs/concept.md` (what each chapter is) before writing code. The shell is done and committed: chrome, rail, hero, chapter I, the stage and the skeleton partials. Use it as the house style; `src/partials/storytellers.html` and `src/sections/storytellers.*` are the worked example.
 
 ## Stack and commands
 - Vite 8 + plain ES modules (no framework), `three@0.186.1`, `lenis@1.3.27` (driven from our own rAF in `core/scroll.js`). **GSAP and ScrollTrigger are uninstalled (v3)**: scroll-driven values are pure functions of `onFrame`'s `view`, and timed tweens are CSS transitions or the keyframe player (`gl/timeline.js`). No new dependencies without a reason written in your report.
@@ -36,10 +36,10 @@ Every builder reads this, `docs/concept.md` (what each chapter is) and `docs/ref
 - **Classes** (in `base.css`):
   - Type roles: `.giant` (chapter titles: the title role), `.numeral`, `.display`, `.dek` (serif deck over scenes), `.head` (serif head on paper, the dek's size), `.t-head` (sans head), `.lead` (serif body), `.label`, `.body`, `.small`, `.mute`.
   - `.dc` is the drop cap (Imperial Script, self-hosted A–Z subset): wrap the first letter, `<span class="dc">B</span>uilt …`.
-  - `.boxlink` is the "Read help doc ↗" pattern: `<a class="boxlink" href="…">Join the network <span class="ar">↗</span></a>`. Mind F43, F46 and F49: the ↗ is part of the fact.
+  - `.boxlink` is the boxed call to action: `<a class="boxlink" href="…">Join the network <span class="ar" aria-hidden="true">→</span></a>`. Mind F43, F46 and F49: the → is part of the fact (S11; never ↗).
   - `.pill` / `.pill--solid`.
 - **Layout:**
-  - `.col` is the Editions right 4/5 column on desktop and full width on mobile.
+  - `.col` is the right 4/5 column on desktop and full width on mobile.
   - `.opener` is a transparent ≥140svh region; the stage shows through it.
   - `.scrim` puts a soft dark halo behind opener text.
   - `.opener--light`: an opener over a light painting (its manifest's `titleInk` is `"dark"`): ink type and a pale halo. Wrap it in a **full-width** `<div data-theme="light">` (the rail reads themes across the page width, and `.col` does not reach under the rail). X Apply is the example.

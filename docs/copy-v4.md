@@ -115,6 +115,20 @@ It sits in Creators only, so the line appears once. The 24–48-hour reply and t
 
 It is your live site's own line, changed only so that it no longer suggests the two of you are the whole board. You asked for the change, but you haven't seen these words yet (see below). The two names and your role lines are unchanged.
 
+## Round 3 (31 October): nothing left from the reference site
+As you asked, nothing on the site comes from the site we used as a design reference any more. The old title and the
+label beside your name are gone from the page, the browser tab, link previews and the "page not found" page. The mark
+is now simply **Creative Motley**, and the tab reads "Creative Motley — Africa’s creator service provider", your own
+line. Three smaller things went with them:
+- The commands in Creators were set in the reference's style, and one of them was its wording exactly. They now read
+  "Upload calendars", "Series design" and "Content planning", from your earlier site.
+- The chapters are numbered 01–10 instead of in Roman numerals.
+- The boxed links end in your earlier site's → arrow.
+
+As you also asked, the old hero film is deleted: its 1,140 frames and four videos (about 92 MB, the frames with the
+Sony marks among them) and the script that made them. Nothing on the page used them any more. The repository's design
+notes about the reference are deleted too, and its other notes no longer name it.
+
 ## Still open
 
 1. **The spellings above.** Are they right?

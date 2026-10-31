@@ -1,18 +1,18 @@
-# Handoff: where the rebuild stands (branch `editions-rebuild`)
+# Handoff: where the rebuild stands
 
 ## Done
 - **Shell:** the persistent WebGL stage, the top bar, the side rail, the hero with its golden frame and Da Vinci lines, and the mobile menu.
 - **All nine chapters are built**, and every chapter except Storytellers and Apply has been through at least one fresh-critic + fix round:
-  - I Storytellers: hero film, stats, three-ways diagram.
-  - II Creators: notes fan, command cloud, Media Owners.
-  - III Brands: photo cards, leadership row.
-  - IV Method: painted room → camera teardown.
-  - V Showcase: 16 video cards, each the video's own YouTube thumbnail (self-hosted), playing in the modal (2026-10-31: the poster arc is gone at the client's request; `docs/v3-status.md` Phase 8).
-  - VI Process: object track, Sound teardowns, long-description grid.
-  - VII Results: painting → phone teardown with the four stats.
-  - VIII Directors: alpha film + names line.
-  - IX Apply: hands reprise, Contact marquee, draggable stickers.
-- **Photoreal teardowns** (Editions exploded-hub pattern), five of them:
+  - Storytellers: hero film, stats, three-ways diagram.
+  - Creators: notes fan, word cloud, Media Owners.
+  - Brands: photo cards, leadership row.
+  - Method: painted room → camera teardown.
+  - Showcase: 16 video cards, each the video's own YouTube thumbnail (self-hosted), playing in the modal (2026-10-31: the poster arc is gone at the client's request; `docs/v3-status.md` Phase 8).
+  - Process: object track, Sound teardowns, long-description grid.
+  - Results: painting → phone teardown with the four stats.
+  - Directors: alpha film + names line.
+  - Apply: hands reprise, Contact marquee, draggable stickers.
+- **Photoreal teardowns** (orbit, then explode), five of them:
   - camera (one-to-one with the brand camera, unbranded) in Method
   - podcast console in Creators
   - microphone + headphones in Process (Sound)

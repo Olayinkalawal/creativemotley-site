@@ -15,8 +15,8 @@ The Results painting is not served as a still on the live site; it exists only i
 (with third-party thumbnails cycling on the TV). Its portrait is therefore generated natively from the same brief,
 which plan §6 allows ("or generate portrait natively from the same brief").
 
-House style, from the four references: museum-grade Renaissance/Baroque oil on canvas, visible brushwork and fine
-craquelure, chiaroscuro, warm umber shadows and gold accents. Young African creators in flowing Renaissance silks
+House style, from the four references: museum-grade old-master oil on canvas, visible brushwork and fine
+craquelure, chiaroscuro, warm umber shadows and gold accents. Young African creators in flowing period silks
 worn with modern details (sport sunglasses, sneakers, gold chains), and modern media kit (camera, microphones,
 headphones, ring light, mixer) painted in the same oil technique. Occasional neon-magenta props.
 
@@ -184,7 +184,7 @@ Re-running: `python3 scripts/art.py` downloads the masters from d8j0ntlcm91z4.cl
 
 ## Masters, modernised (client request)
 **Request (2026-10-19):** "the pictures u did, or used — i would prefer renaissance popular ones but make them modern."
-So every chapter painting after the hero becomes a famous Renaissance masterpiece, recognisable at a glance, re-staged
+So every chapter painting after the hero becomes a famous old-master painting, recognisable at a glance, re-staged
 with young Black African creators and modern media kit and painted as a museum oil. The hero (a modern Creation of
 Adam) stays. Everything below is **staged, not live**: masters and encodes are in the session scratchpad
 (`.../scratchpad/masters/<chapter>/` and `.../scratchpad/masters/encoded/<chapter>/`), and
