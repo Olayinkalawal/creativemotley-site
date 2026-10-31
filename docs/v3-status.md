@@ -3,11 +3,11 @@
 Measured 2026-10-19 on the integrated phase-1 build (tracks A engine, B art, C copy/video, D type/chrome, plus the
 integration fixes listed below), production build (`vite build`) served by the same static server Track A used
 (`scratchpad/qa/serve.mjs`: gzip for text, range requests, immutable caching for `/assets/*`).
-"Before" is the reference review (§4–5, kept outside the repo) unless marked otherwise.
+"Before" is the v2 baseline unless marked otherwise.
 
 ## 1. Targets (docs/v3-plan.md §1)
 
-| Budget | v2 (review) | **v3 phase 1** | v3 target | |
+| Budget | v2 baseline | **v3 phase 1** | v3 target | |
 |---|---|---|---|---|
 | First load, desktop 1440×900 @1×, no scroll | 7.40 MB / 139 req | **0.56 MB / 32 req** | ≤ 1.5 MB | met |
 | First load, desktop @2× | 16.64 MB | **0.61 MB / 32 req** | ≤ 1.5 MB | met |
@@ -25,11 +25,11 @@ integration fixes listed below), production build (`vite build`) served by the s
 | Distinct painted worlds | 3 | **7 paintings** (hero, Storytellers, Creators, Brands, Results, Directors, Apply); 10 of 10 chapters now have their own scene (+ camera teardown, poster room, objects desk, Kit devices, umber room) | one per chapter (≥ 9) | met |
 | Words per screen | ≈ 11 | 11.5 on the page (675 words / 58.5 screens); the drafts (`docs/copy-drafts.md`) reach 42–65 per chapter but are not on the page | ≈ 40–60 | **missed** until the client approves the drafts |
 
-How each number was taken (the review's method throughout):
+How each number was taken (the v2 baseline's method throughout):
 - **Bytes:** CDP Network bytes, cold cache, Chromium 1194 with SwiftShader WebGL. Desktop runs use `?tier=2&q=high` (what a real Mac gets; on SwiftShader the stage would otherwise start at its `low` level). First load is 10 s after `load` with no input. Full read scrolls in half-viewport steps, 1.2 s each, to the bottom. Script: `scratchpad/int/bytes.mjs`.
   - It fixes a counting gap in the phase-1 tracks' copy: media loads report `encodedDataLength` 0, so the film and backdrop videos counted 0 bytes. Media bodies are now counted with `dataLength`. Track A's "1.38 MB first load" was really about 2.6–3 MB, because the film buffered 1.2–1.7 MB at load. That is fixed (§3) and the 0.56 MB above includes media.
 - **Smoothness:** a steady wheel of 50 px every 50 ms. Windows are 10 s each, and 14 s from the top. rAF frame times, layout-shift entries, and stage render calls (`scratchpad/qa/smooth.mjs`). Load average was 1.2–5.9: four cores shared with other agents.
-- **LCP:** unthrottled, `scratchpad/int/lcp.mjs`; throttled, the review's `loadnet.mjs` (562.5 ms latency, 1474.56 kbps, 4× CPU, 390×844 @2×).
+- **LCP:** unthrottled, `scratchpad/int/lcp.mjs`; throttled, `loadnet.mjs` (562.5 ms latency, 1474.56 kbps, 4× CPU, 390×844 @2×).
 
 ### Where the bytes go
 - **Desktop full read @1×, 77.0 MB:**
@@ -55,7 +55,7 @@ How each number was taken (the review's method throughout):
 
 ## 2. Smoothness by chapter (fps; desktop 1440×900, steady wheel)
 
-| Window (start) | v2 WebGL off (review) | v2 WebGL off (Track A's v2 runs) | **v3 WebGL off** | v2 WebGL on (Track A's v2 runs) | **v3 WebGL on** | v3 CLS | v3 stage renders, 5 s idle |
+| Window (start) | v2 WebGL off (baseline) | v2 WebGL off (Track A's v2 runs) | **v3 WebGL off** | v2 WebGL on (Track A's v2 runs) | **v3 WebGL on** | v3 CLS | v3 stage renders, 5 s idle |
 |---|---|---|---|---|---|---|---|
 | Top (hero → film), 14 s | 54.6 | 50.8 / 52.3 | **55.6** | 4.0 / 6.4 | 3.0 | 0 | 0 |
 | II Creators | 56.7 | 57.2 / 56.7 | **55.5** | 4.6 / 3.3 | 7.4 | 0 | 0 |
@@ -854,7 +854,7 @@ for every real-time device). Production builds served locally (`scripts/perf.mjs
 | Words per screen, desktop / phone | | **31.9 / 29.4** (969 words; 47 drafts await the client) | ≈ 40–60 |
 | Horizontal overflow · console | 0 · none | **0 at 1440, 1280, 1024, 1920, 390, 360, 414, 820, 844×390, tier 0 and reduced motion · no errors** | 0 · none |
 
-The hero painting: mean luma 0.29 → 0.49 (the reference's 0.33); desktop-2880.avif 229 → 224 KB, phone-828.avif 99 → 56 KB;
+The hero painting: mean luma 0.29 → 0.49; desktop-2880.avif 229 → 224 KB, phone-828.avif 99 → 56 KB;
 the first-paint plate is `plates/hero.avif` (105 KB). The DOM camera stills: cam-hero 16.6 KB, cam-front 10.6 KB,
 cam-lens 53.9 KB.
 
@@ -872,10 +872,9 @@ cam-lens 53.9 KB.
   + / − / reset buttons beside the device (+ + = 2.25×); two-finger pinch on phones reaches 3× on the hero, Method and
   the Kit with the page scale at 1; double-tap 2× on the hero. Past 1.15× the copy steps back (Method: `d3-zoomed`).
   The 3D viewer artifact has the same zoom (`viewer-kit/out/`), ready to republish.
-- **"The homepage is heavy … replace that camera with the 3D one …" — done.** Against
-  `pair_01_theirs.jpg`: ours is now lighter and cleaner than the reference's own (a clear cerulean sky and cumulus, fresh
-  greens, no varnish; theirs is mid-key with dark pines). At 1:1 the faces, hands and fabrics are crisp. One magenta
-  accent (his headphones), no floating kit. The golden frame reads as the reference's does: ink type on a frosted cream panel,
+- **"The homepage is heavy … replace that camera with the 3D one …" — done.** The hero painting is now light and
+  clean (a clear cerulean sky and cumulus, fresh greens, no varnish). At 1:1 the faces, hands and fabrics are crisp.
+  One magenta accent (his headphones), no floating kit. The golden frame reads as ink type on a frosted cream panel,
   a gilt hairline. The live 3D camera floats between the fingertips at 1024, 1280, 1440 and 1920 (141 px at 1440), turns
   slowly and takes the drag; it is a little darker than the daylight around it and has no contact shadow, so it reads
   slightly placed rather than painted in. Scrolling flies through it: the camera turns lens-on, pushes in until the
@@ -950,6 +949,7 @@ cam-lens 53.9 KB.
    init); a phone deep link to `#kit` measured 0.014 CLS once (a 3 px font-swap shift; 0.004 in SITE-FIX's runs).
 7. **The film's files** are no longer referenced (`public/assets/frames/hero/` 79 MB, `public/assets/video/film/` 13 MB,
    `scripts/encode-film.sh`): `git rm -r public/assets/frames/hero public/assets/video/film` when the director agrees.
+   **Done 2026-10-31** at the client's request (P9).
 8. **Real hardware:** the drag's glide and hint timing, the hero's idle turn, and the Kit's frame rate are unmeasured
    off SwiftShader. If nobody touches the page for 10 s while a device loads, its drag region waits for the next input.
 9. Polish: a contact shadow or warmer key for the hero camera; the second beat sits in ink over the dark lens rim for
@@ -1377,3 +1377,93 @@ the builder, `crit/` the critic, `final/` this round: `out/` results, `tools/` s
    it, or choose another video of his (or a custom thumbnail on KAPTV)?
 2. "Watch the work" (DC60) is the one draft left in Showcase (`copy-drafts.md`); the video titles trace as names.
 3. Brain Jotter and Broda Shaggi have only a 640-pixel thumbnail on YouTube: slightly soft on a 1920 retina screen.
+
+# Phase 9: no reference words (built 2026-10-31)
+The client (2026-10-31, `docs/copy-drafts.md` S11, paraphrased there) asked us to take out every word the site took
+from the design reference, the old title above all, to delete the old Sony-marked film frames, and to delete the
+repo's design notes about the reference. Planned in scratch (`nos/nos-plan/spec.md`, lockup option A), built and
+verified on the GitHub Pages build. Client sheet: `qa/shots/v3p9_no_reference_words.jpg` (git-ignored: force-add it to commit).
+Evidence: `/tmp/claude-0/-home-user-creativemotley-site/f5fb006b-f00a-5174-8cc3-2633425655d9/scratchpad/nos/nos-build/`
+(`tools/` scripts, `renders/` captures, `*.json` and `fc-*.txt` results).
+
+## P9.1 What a visitor sees now
+- The name alone, "Creative Motley", on one line in Archivo 700 (F01): the hero's mark (the h1), the rail's mark, the
+  top bar and the 404. No italic word, and no title, label or number beside it.
+- The tab and share title: "Creative Motley — Africa’s creator service provider" (F158: F01 and F06 joined, no new
+  words). The share image's alt: "Two figures reach toward a camera in a painting".
+- The chapter index numbered 01–10 in the hero, the rail, the dropdown and the menu (the numbers are `aria-hidden`,
+  so a screen reader hears the chapter names only; the h1 reads "Creative Motley").
+- The Creators cloud: "Upload calendars", "Series design" and "Content planning" (F159–F161, the earlier site's own
+  words, S7 `index.html:598`), with "Series bible approved" (F33) on the dark card.
+- → on the boxed links (Join the network, Monetise your catalogue, Brief our team, Watch on YouTube).
+- At 1024 px and wider, once the mark docks in the rail the top bar's name fades out (0.35 s), so one name shows at a
+  time; it comes back at the top. Below 1024 nothing changes, and the phone top bar is one line.
+- The rail's label is "Chapters"; the hero's is "Creative Motley".
+
+## P9.2 What changed
+- **Page:** `index.html` (title, og:title, the two image alts, the top bar, the rail), `partials/hero.html` (the mark,
+  the label, 01–10 with `aria-hidden`), `partials/creators.html` (the cloud's words, →), `partials/brands.html` (→),
+  `sections/showcase.js` (DC62 →, `aria-hidden`), `styles/chrome.css` (the one-line mark; the phone's two-line bar
+  removed; the bar's name yields to the docked rail), `sections/creators.css` (0.08em right padding so the last
+  glyph of a right-hand node is never clipped), `public/404.html` (the name alone; the serif italic font no longer
+  loads), `public/favicon.svg` (its comment).
+- **Build** (`vite.config.js`): `cm-strip-html-comments` (the built page carries no HTML comments; inline script and
+  style are untouched; build only) and `cm-strip-key-notes` (the "//" notes of `src/gl/keys/*.json` stay out of the
+  plates chunk).
+- **Public JSON:** `assets/scenes/index.json` and the seven manifests, and their source `scripts/art-masters.json`:
+  no comparison with the reference, and no Roman numerals in the scene names. The page reads none of these fields.
+- **Facts:** F02, F03 and F04 deleted (they only recorded the old names); F158–F161 new; F28, F32, F36 (the slash
+  commands) and F19, F60, F63, F73, F96, F103 (the "Chapter N" kickers) retired; F01, F33, F43, F46, F49, F123–F131,
+  F136, DC62 and DC78 updated; F133 records the film's deletion. `docs/copy-drafts.md` S11 and `docs/copy-v4.md`
+  Round 3 tell the client.
+- **The hero film is deleted** at the client's request (P4.6 item 7): `public/assets/frames/hero/` (1,140 webp) and
+  `public/assets/video/film/` (4 mp4), about 92 MB, and `scripts/encode-film.sh` (dce12ff). Its frames job is gone
+  from `scripts/prep_assets.py`, so a re-run cannot write them back, and the comments in `gl/lib/codecStream.js` and
+  `gl/lib/video.js` no longer point at the missing script. The Pages copy is now 62 MB.
+- **Repo notes:** README, the docs (concept, build-contract, HANDOFF, teardown-v2, v3-plan, this file, art-log), the
+  code comments and the scripts no longer name or describe the reference; the reference study is deleted (22fe19d)
+  and nothing links to it. A case-insensitive `git grep` of the tracked text files for the reference's names, its
+  product's name, its assistant, the old title and the capture folder returns nothing. The branch name and the commit
+  history are unchanged.
+
+## P9.3 Numbers (code-only production builds, 6ba4b26 → now; KB = 1000 bytes)
+| | 6ba4b26 | now |
+|---|---|---|
+| index.html, raw / gzip | 105.2 / 25.1 KB | 80.4 / 14.7 KB |
+| CSS, raw / gzip | 109,097 / 23,265 B | 109,010 / 23,236 B |
+| Entry JS, raw / gzip | 73,798 / 28,319 B | 73,817 / 28,328 B (`aria-hidden` on DC62's arrow) |
+| Plates chunk, raw / gzip | 14.8 / 5.95 KB | 9.0 / 3.71 KB |
+| First-load text, gzip (HTML + CSS + entry JS + its preload) | 84.5 KB | 74.0 KB |
+| First-load requests: 1440 tier 0 / 390 tier 0 / 1440 WebGL | 11 / 11 / 24 | 11 / 11 / 24 (the same files) |
+| Pages build: index.html, raw / gzip; the whole copy | | 84.4 / 15.1 KB; 62 MB |
+
+## P9.4 Checks (GitHub Pages build under `/creativemotley-site/`, Pages-style 404)
+- **Fact check:** desktop and mobile 436 strings, `--drafts 0` 417 (desktop and mobile): pass, and no draft copy
+  shows with `?drafts=0`.
+- **Shipped text:** no reference word, slash command, ↗ or Roman chapter number in any .html, .js, .css, .json, .svg,
+  .xml or .txt file; no HTML comment in `index.html`, `404.html` or `favicon.svg`; no "//" key in the plates chunk; no
+  `assets/frames/` or `assets/video/film/` in the build, and nothing requests them.
+- **Runtime:** title and og:title "Creative Motley — Africa’s creator service provider"; one h1, "Creative Motley";
+  the hero's label "Creative Motley", the rail's "Chapters"; `.nav__brand` "Creative Motley"; 01–10 in the hero, the
+  rail, the dropdown and the menu (open at 390), each `aria-hidden`; the dropdown's ten thumbnails load (200),
+  Showcase's `showcase-yt.webp` among them. `/creativemotley-site/no-such-page`: 404, title and text "Creative
+  Motley", one line (88 px at 1440, 35 px at 390), its link home to the base.
+- **Walk** (tier 0, wait 3 s, the whole page in half-screen steps): 1440, 1280, 1024, 1920, 820 × 1180, 390,
+  844 × 390 and 320 × 568: overflow 0, CLS 0, no console error, no failed request, no third-party request; the mark
+  inside the frame and above the dek (gap 195 px at 1440, 43 at 320; at 844 × 390 they touch, as before); the top
+  bar's name on one line. WebGL (SwiftShader) at 1440: the same, the stage ready, and the dock lands.
+- **Dock:** a 90 px wheel at 1440: by 0.42 s the rail's mark is at (16, 68), 135 px wide, and the top bar's name is
+  at opacity 0 and hidden; back at the top it returns (opacity 1) and the mark flies home.
+- **Top bar:** one line at 390 and 320; "Apply to join" ends at 332 and 270 px.
+- **Cloud** at 1440, 1280, 1024, 820, 390 and 320: no overlap; every node within 1 px of the cloud's box (the drift's
+  sub-pixel); the last glyph of each right-hand node 0.7–1.7 px inside the clip ("Upload calendars" ends whole).
+- **Repo** (after the check round): the case-insensitive `git grep` of the tracked text returns nothing; no tracked or
+  sheet file name carries a reference word; no doc links to the deleted study or its published review (`v3-plan.md`'s
+  "source of truth" is now the v2 measurements in §1 here); the builder docs (concept, teardown-v2, HANDOFF) no
+  longer name the retired "Chapter N" kickers or the Roman chapter numbers as current.
+
+## P9.5 For the client
+`docs/copy-v4.md` Round 3. Open, outside this request: the cap logo in the Directors film (the client's own art; the
+client decides); the art direction itself (the old-master paintings, the golden frame, the dotted leader, the drop
+caps, the card fan and the dense grid carry no words but are design choices to confirm); the branch name and the
+commit history (making the repository private settles both).

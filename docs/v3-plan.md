@@ -1,8 +1,8 @@
-# Creative Motley v3: lighter, more premium, built on the reference's strengths
+# Creative Motley v3: lighter, more premium
 
 The client: "redo the website: take their strengths and start building an even lighter and premium website."
 
-Source of truth for the gaps: the reference review (kept outside the repo). Read its §2 (pipeline), §5 (smoothness) and §8 (roadmap) before touching code.
+Source of truth for the gaps: the v2 measurements, `docs/v3-status.md` §1.
 
 ## 1. Targets (measured, not guessed)
 | Budget | v2 today | Reference | **v3 target** |
@@ -13,7 +13,7 @@ Source of truth for the gaps: the reference review (kept outside the repo). Read
 | Full read, phone | 80 MB | ≈20 MB | **≤ 6 MB** |
 | JS on the wire (gzip) | 70 KB + 144 KB lazy | ≈720 KB | **≤ 60 KB + ≤ 160 KB lazy** (drop GSAP) |
 | LCP (unthrottled / throttled phone) | 1.1 s / 2.9 s | 5.1 s / 19.4 s | **≤ 1.0 s / ≤ 2.5 s**; never gate copy on WebGL |
-| Scroll smoothness (same software-GL method as the review) | 6–13 fps in teardowns | ≈50 | **≥ 50 everywhere**; zero per-frame layout; CLS < 0.01 |
+| Scroll smoothness (software GL, the v2 baseline's method) | 6–13 fps in teardowns | ≈50 | **≥ 50 everywhere**; zero per-frame layout; CLS < 0.01 |
 | Page length (desktop / phone) | 58.5 vh / 54 screens | 60 / 66 | **≈ 40 vh**, denser content |
 | First chapter title | ≈ 5 screens | ≈ 1 | **≤ 2 screens** |
 | Distinct painted worlds | 3 | 13 | **one per chapter** (≥ 9) |
@@ -29,7 +29,7 @@ Source of truth for the gaps: the reference review (kept outside the repo). Read
 - **Fast first paint, with no loading gate.**
 - **The reduced-motion and tier-0 completeness.**
 
-## 3. Take from the reference
+## 3. What v3 takes on
 1. **A real scene per chapter.** Each chapter gets one painted backdrop and, where it earns it, one 3D prop with parallax. The camera is keyed per chapter with several beats and per-channel easing, and runs on a tiny JSON keyframe timeline: our own ~2 KB player, in place of Theatre's ~80 KB.
 2. **Scene lifecycle.** Each scene is its own dynamic chunk. Mount a ±1 chapter window and dispose outside it. Load the next chapter's assets when the current one becomes active. Compile at idle with `compileAsync`.
 3. **Tiers.**
@@ -60,7 +60,7 @@ Source of truth for the gaps: the reference review (kept outside the repo). Read
    - Depth maps as WebP or removed.
 10. **SEO and measurement basics.** Canonical, Organization JSON-LD, robots.txt and sitemap.xml. A cookieless one-shot beacon is optional.
 
-## 4. Lighter than the reference (our edge)
+## 4. Lighter still (our edge)
 - **Textures.** Use AVIF/WebP, not KTX2, unless KTX2 measures lighter for a given texture. That means no ~0.5 MB Basis transcoder. GLB textures go inside the GLB (`EXT_texture_webp`), and geometry uses meshopt (decoder about 20 KB). Measure GPU upload cost per texture and keep it under one frame per chapter change.
 - **No React or Theatre.** Vanilla three with tree-shaken imports, Lenis and our keyframe player.
 - **No loader gate**, and phones never download desktop assets.

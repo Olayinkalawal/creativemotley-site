@@ -1,4 +1,4 @@
-# Teardowns v2: the orbit, the hand-off, the explode (the reference's teardown choreography)
+# Teardowns v2: the orbit, the hand-off, the explode
 
 The client's notes, verbatim in spirit:
 1. "The camera needs to be big and fill the screen and REPLACE the painted Method opener."
@@ -15,10 +15,9 @@ The choreography below (orbit → hand-off → explode → settle) still holds f
 - **Kit copy (phase 2 integration):** labels are the device names; heads are drafts DC85 "On the desk", DC86 "At the mic", DC87 "In the ears" (F42 is already in Creators and F88/F89 in Process's Sound step, so the Kit does not repeat them), and the phone keeps F98's first sentence, "The work went out.", which Results answers with "The world watched."
 - Run lengths are now Method 3.30 / 2.80 screens and Kit 5.20 / 4.42 screens (desktop / phone), not the 540 / 400 svh below.
 
-## The reference moment
-Desktop and phone captures: frames s_041–s_050 of the reference captures (kept outside the repo).
-- `s_043`/`s_044`: the device is **huge**. It takes up most of the viewport and runs off the bottom edge. A medium sans headline, a serif dek and a small boxed link sit top-left above it. The 3D camera **orbits** the device as you scroll: top-down, front, under, back.
-- `s_047`→`s_048`: the stage goes black. The device turns, moves to the **right half** of the screen and comes apart (exploded view). The left column holds the headline, dek, link and a spec list (icon + bold line, hairline rules). The device stays very large, bleeding off the top of the screen.
+## The target moment
+- Orbit: the device is **huge**. It takes up most of the viewport and runs off the bottom edge. A medium sans headline, a serif dek and a small boxed link sit top-left above it. The 3D camera **orbits** the device as you scroll: top-down, front, under, back.
+- Explode: the stage goes black. The device turns, moves to the **right half** of the screen and comes apart. The left column holds the headline, dek, link and a spec list (icon + bold line, hairline rules). The device stays very large, bleeding off the top of the screen.
 - Phones: copy first, with the device full width below it. Then the spec list, with the exploded device full width below that.
 
 ## What we have (all in `public/assets/teardown/<name>/`, names: camera, mixer, mic, headphones, phone)
@@ -35,17 +34,16 @@ What the orbits look like:
 - **phone:** the back with its camera module, flipping over to the screen side.
 
 ## Page structure (new)
-- **IV · Method** = the camera, one section, nothing painted. `section#method.chapter.td[data-chapter][data-scene="td:camera"]`. In its hero phase the chapter opener (kicker "Chapter IV", giant h2 "Method") sits over the camera filling the screen. The copy column then carries F62 "Everything we make passes through one instrument, and one way of working." and the seven steps as the spec list (the current `#instrument` copy). `#instrument` and `partials/teardown.html` merge into `partials/method.html`. The painted `plate:method` scene is no longer used by Method: drop the `.plates [data-plate=method]` still, and do not register anything for it.
-- **VII · Kit** (NEW chapter, after Process, before Results) = `partials/kit.html`, `section#kit.chapter[data-chapter]` with four teardown runs in this order: console, microphone, headphones, phone. In the first run's hero phase the chapter opener (kicker "Chapter VII", giant h2 "Kit") sits over the console orbit. No dek: F85 and F86, the only "kit" lines, already sit in Process just above.
+- **Method** = the camera, one section, nothing painted. `section#method.chapter.td[data-chapter][data-scene="td:camera"]`. In its hero phase the chapter opener (the giant h2 "Method") sits over the camera filling the screen. The copy column then carries F62 "Everything we make passes through one instrument, and one way of working." and the seven steps as the spec list (the current `#instrument` copy). `#instrument` and `partials/teardown.html` merge into `partials/method.html`. The painted `plate:method` scene is no longer used by Method: drop the `.plates [data-plate=method]` still, and do not register anything for it.
+- **Kit** (NEW chapter, after Process, before Results) = `partials/kit.html`, `section#kit.chapter[data-chapter]` with four teardown runs in this order: console, microphone, headphones, phone. In the first run's hero phase the chapter opener (the giant h2 "Kit") sits over the console orbit. No dek: F85 and F86, the only "kit" lines, already sit in Process just above.
 - The teardowns come **out of** Creators (`#td-mixer`), Process (`#td-mic`, `#td-headphones`) and Results (`#td-phone`). Those chapters are restored to their pre-teardown shape:
   - **Creators:** restore its Creators `.pf` feature block (see `git show 7b57f5f^:src/partials/creators.html`).
   - **Process:** the pinned object run goes straight into the dense sheet as before (`git show 07fe4c1^:src/partials/process.html`, plus later fixes). The sheet's bottom tears off onto the Kit's black.
   - **Results:** the opener dek becomes "The world watched." The four counters return (`git show f2f7f40^:src/partials/results.html` and results.js), and `data-scene`/cam keys go back on the section.
-- **Numbering:** I Storytellers, II Creators, III Brands, IV Method, V Showcase, VI Process, **VII Kit**, VIII Results, IX Directors, X Apply. Update:
+- **Numbering** (superseded 2026-10-31, S11: the chapters are numbered 01–10, with no "Chapter N" kicker): Storytellers 01, Creators 02, Brands 03, Method 04, Showcase 05, Process 06, **Kit 07**, Results 08, Directors 09, Apply 10. Update:
   - the hero index (`partials/hero.html`, the source of the rail, dropdown and menu);
-  - the kickers (Results "Chapter VIII", Directors "Chapter IX", Apply "Chapter X");
-  - the index facts F123–F131 in `docs/facts.json` (`ui-copy`, e.g. "Kit  07", "Results  08", "Apply  10");
-  - `docs/ui-strings.json` ("Kit", "Chapter X", and the new part and device labels below).
+  - the index facts F123–F131 and F136 in `docs/facts.json` (`ui-copy`, e.g. "Kit  07", "Results  08", "Apply  10");
+  - `docs/ui-strings.json` ("Kit", and the new part and device labels below).
 
 ## Kit copy (every string traced: facts.json, or a UI label added to ui-strings.json)
 Device labels and part names are descriptive labels of what the render shows. They are UI strings, not claims. Check each against the final exploded frame and rename a part if the render shows something else (e.g. "Display glass" vs "Front glass").
@@ -61,13 +59,13 @@ Device labels and part names are descriptive labels of what the render shows. Th
 
 ## Choreography of one run (desktop ≥1024; numbers are pin progress p of `[data-td-run]`, tune by eye)
 1. **Orbit / hero, p 0 → ~0.34.**
-   - The device fills the screen. The slot is the whole viewport, and the frame is contain-fit with a hero zoom of about 1.15–1.45 per device (`data-td-hero="zoom sx sy"`, plus `data-td-hero-tall` for portrait), so the device spans roughly 75–95% of the width and may run off an edge as in `s_044`.
+   - The device fills the screen. The slot is the whole viewport, and the frame is contain-fit with a hero zoom of about 1.15–1.45 per device (`data-td-hero="zoom sx sy"`, plus `data-td-hero-tall` for portrait), so the device spans roughly 75–95% of the width and may run off an edge.
    - The orbit frames play 1 → 97 over this span, with a slow push-in (zoom +4%).
    - Hero copy sits top-left over a soft radial ink scrim:
      - first run of a chapter: the chapter opener, kicker plus giant h2, rising and fading with scroll like the other openers;
      - other runs: label plus head, at the medium head scale.
 2. **Hand-off, p ~0.26 → ~0.42** (overlapping the end of the orbit).
-   - The slot glides and shrinks from the full viewport to its column-layout rect on the right, at the same rect as today's `.td__slot` or larger. It may bleed off the right and top like `s_048`, because the frame is not clipped to the slot.
+   - The slot glides and shrinks from the full viewport to its column-layout rect on the right, at the same rect as today's `.td__slot` or larger. It may bleed off the right and top, because the frame is not clipped to the slot.
    - The zoom eases from the hero zoom to `data-td-frame`.
    - The copy block takes its column position at the left, with the head written once (no duplicate text). The spec rows stagger in.
    - Crossfade the orbit's last frame into explode f_0001 over about 2% of p; they match.
@@ -77,7 +75,7 @@ Device labels and part names are descriptive labels of what the render shows. Th
 4. **Settle, p ~0.86 → 1.** The depth parallax and slow push as today, then fade to black at the hand-off to the next scene.
 
 **Phones (portrait).**
-- Hero: the device runs full width, about 100–115% (`data-td-hero-tall`), placed in the middle third. The hero copy goes at the top (the reference's phone layout puts copy above the device) or at the bottom over a gradient; pick whichever reads best.
+- Hero: the device runs full width, about 100–115% (`data-td-hero-tall`), placed in the middle third. The hero copy goes at the top (copy above the device) or at the bottom over a gradient; pick whichever reads best.
 - Hand-off: the device moves into the top slot (today's `-tall` framing), and the copy column with its specs settles at the bottom. Compact two-column specs: titles only, as today.
 - Keep the total run shorter on phones (`--td-run-m`).
 
@@ -128,4 +126,4 @@ Run lengths to start from:
   - The Kit chapter does the same for the console, the microphone, the headphones and the phone.
 - No clipping of the device by the viewport except intended edge bleeds, no copy over the device in the column phase, no horizontal overflow, and no console errors.
 - Fact check passes (desktop + mobile), `npx vite build` is clean, and `?tier=0` plus reduced motion are complete and attractive.
-- Rail, dropdown and menu show I–X. The rail's active item tracks Kit. Nav and rail colours read correctly over the black stages.
+- Rail, dropdown and menu show 01–10 (I–X before S11). The rail's active item tracks Kit. Nav and rail colours read correctly over the black stages.

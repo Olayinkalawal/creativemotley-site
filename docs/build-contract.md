@@ -36,7 +36,7 @@ Every builder reads this and `docs/concept.md` (what each chapter is) before wri
 - **Classes** (in `base.css`):
   - Type roles: `.giant` (chapter titles: the title role), `.numeral`, `.display`, `.dek` (serif deck over scenes), `.head` (serif head on paper, the dek's size), `.t-head` (sans head), `.lead` (serif body), `.label`, `.body`, `.small`, `.mute`.
   - `.dc` is the drop cap (Imperial Script, self-hosted A–Z subset): wrap the first letter, `<span class="dc">B</span>uilt …`.
-  - `.boxlink` is the boxed call to action: `<a class="boxlink" href="…">Join the network <span class="ar">→</span></a>`. Mind F43, F46 and F49: the ↗ is part of the fact.
+  - `.boxlink` is the boxed call to action: `<a class="boxlink" href="…">Join the network <span class="ar" aria-hidden="true">→</span></a>`. Mind F43, F46 and F49: the → is part of the fact (S11; never ↗).
   - `.pill` / `.pill--solid`.
 - **Layout:**
   - `.col` is the right 4/5 column on desktop and full width on mobile.
