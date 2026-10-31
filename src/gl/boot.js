@@ -21,7 +21,6 @@ const KNOWN = [
   ['camera3d', (id) => id === 'td:camera3d' && CAM3D],
   ['kit3d', (id) => id === 'td:kit' && CAM3D],
   ['teardowns', (id) => id.startsWith('td:') && id !== 'td:camera3d' && id !== 'td:kit'],
-  ['posters', (id) => id === 'posters'],
   ['objects', (id) => id === 'objects'],
 ];
 
@@ -33,7 +32,7 @@ function factories() {
   if (rest.length) {
     let all = null;
     list.push({
-      match: (id) => !list.slice(0, -1).some((f) => f.match(id)) && !/^(hero3d|posters|objects|plate:|td:)/.test(id),
+      match: (id) => !list.slice(0, -1).some((f) => f.match(id)) && !/^(hero3d|objects|plate:|td:)/.test(id),
       load: () => (all ||= Promise.all(rest.map((p) => LAZY[p]())).then((ms) => ({ default: (stage) => ms.forEach((m) => m.default?.(stage)) }))),
     });
   }

@@ -7,7 +7,8 @@
    Opening morphs from the clicked element (View Transitions): the element's picture grows into the modal's first
    picture, and the rest cross-fades. `from` names the source explicitly; otherwise it is the button or link the
    reader just clicked (when it is card-sized). No View Transitions, reduced motion, or no source: a plain fade.
-   Closing morphs back to the source while the modal still shows what it opened with; otherwise it fades. */
+   Closing morphs back to the source while the modal still shows what it opened with (its picture's src attribute: a
+   srcset added later to sharpen the same picture keeps it); otherwise it fades. */
 import { lockScroll } from '../core/scroll.js';
 import { REDUCED } from '../core/env.js';
 
@@ -26,7 +27,7 @@ document.addEventListener('click', (e) => {
 }, true);
 
 const pictureIn = (n) => (n ? (n.matches?.('img, video, picture') ? n : n.querySelector('img, video')) || n : null);
-const mediaKey = (n) => (n && (n.currentSrc || n.getAttribute?.('src'))) || '';
+const mediaKey = (n) => (n && (n.getAttribute?.('src') || n.currentSrc)) || '';
 function usable(n) {   // rendered, and no bigger than a card (a click on a whole stage is not a source)
   if (!n || !n.isConnected) return false;
   const r = n.getBoundingClientRect();

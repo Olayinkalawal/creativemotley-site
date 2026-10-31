@@ -11,8 +11,9 @@ import { geo } from '../core/layout.js';
 
 const root = document.documentElement;
 const THUMBS = {   // chapters with no painted scene in the art index yet (tiny crops of their existing art; Method and Kit:
-  // the real-time 3D devices those chapters show, cut from public/assets/teardown/{camera3d,mixer3d}/still_hero.webp)
-  method: '/assets/thumbs/method-3d.webp', showcase: '/assets/thumbs/showcase.webp',
+  // the real-time 3D devices those chapters show, cut from public/assets/teardown/{camera3d,mixer3d}/still_hero.webp;
+  // Showcase: its first four cards' YouTube thumbnails, 2 x 2, since 2026-10-31: a new name, as /assets/* is immutable)
+  method: '/assets/thumbs/method-3d.webp', showcase: '/assets/thumbs/showcase-yt.webp',
   process: '/assets/thumbs/process.webp', kit: '/assets/thumbs/kit-3d.webp',
 };
 
