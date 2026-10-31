@@ -32,7 +32,7 @@
    - Keyboard and contrast.
    - Load weight: the teardown frames total about 63 MB, but they are fetched in a window around the playhead.
 3. **Known nits:**
-   - The Directors film on iPhone is 15 MB (it needs a smaller HEVC-with-alpha encode, made on a Mac with `hevc_videotoolbox`).
+   - ~~The Directors film on iPhone is 15 MB~~ (2026-10-31: the HEVC-with-alpha film is deleted; WebKit plays a packed H.264 film, 3.8 / 1.5 MB, drawn by `src/gl/lib/alphapack.js`; untested on a real Safari: `docs/v3-status.md` Phase 10).
    - Phones get 1100 px hero frames.
    - The Sound teardown headings repeat the Process step lines word for word.
 4. **Publish the preview:** `node scripts/build-pages.mjs`, then push `dist-pages` to the `gh-pages` branch. Repo Settings → Pages must be set to deploy from `gh-pages` / root. Production target: Vercel (`vercel.json`).

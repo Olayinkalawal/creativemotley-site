@@ -1374,7 +1374,8 @@ the builder, `crit/` the critic, `final/` this round: `out/` results, `tools/` s
 
 ## P8.5 For the client (short)
 1. Kunle Afolayan's card shows YouTube's own frame for the Aníkúlápó trailer, which is very dark on the page. Keep
-   it, or choose another video of his (or a custom thumbnail on KAPTV)?
+   it, or choose another video of his (or a custom thumbnail on KAPTV)? **Decided 2026-10-31: kept** (the client,
+   "keep kunle": `copy-drafts.md` S12); the card is unchanged.
 2. "Watch the work" (DC60) is the one draft left in Showcase (`copy-drafts.md`); the video titles trace as names.
 3. Brain Jotter and Broda Shaggi have only a 640-pixel thumbnail on YouTube: slightly soft on a 1920 retina screen.
 
@@ -1464,6 +1465,138 @@ Evidence: `/tmp/claude-0/-home-user-creativemotley-site/f5fb006b-f00a-5174-8cc3-
 
 ## P9.5 For the client
 `docs/copy-v4.md` Round 3. Open, outside this request: the cap logo in the Directors film (the client's own art; the
-client decides); the art direction itself (the old-master paintings, the golden frame, the dotted leader, the drop
+client decides; **decided 2026-10-31: removed**, Phase 10); the art direction itself (the old-master paintings, the golden frame, the dotted leader, the drop
 caps, the card fan and the dense grid carry no words but are design choices to confirm); the branch name and the
 commit history (making the repository private settles both).
+
+# Phase 10: the cap logo off the Directors film; Safari's film (built 2026-10-31)
+The client (2026-10-31, `docs/copy-drafts.md` S12): "keep kunle, remove the knicks logo". Kunle Afolayan's Showcase
+card is kept as it is (P8.5 item 1, decided). The Knicks logo, and the cap maker's small flag beside the brim, came off
+the left portrait's cap in the Directors film and its still: a retoucher made the clean master (`docs/art-log.md`
+Phase 10: method, numbers, no AI), a judge passed it, and this round wired it into the site, replaced the Safari film
+(the old HEVC one still showed the logo) and verified the chapter on the GitHub Pages build. Client sheet:
+`qa/shots/v3p10_directors_no_logo.jpg` (git-ignored: force-add it to commit). Evidence:
+`/tmp/claude-0/-home-user-creativemotley-site/f5fb006b-f00a-5174-8cc3-2633425655d9/scratchpad/knx/` (`knx-retouch/`
+the retoucher, `knx-judge1/` the judge, `knx-wire/` this round: `out/` results and sheets, `tools/` scripts).
+
+## P10.1 What a visitor sees now
+- **IX Directors:** the same film, timing and motion; the left portrait's cap is plain cap fabric (no logo, no flag)
+  in all 600 frames, in the poster before playback, in the no-JS image and in the still pair (phones with reduced
+  motion). Nothing else in the frame changed.
+- **Chrome, Edge, Firefox, Android:** the VP9-with-alpha WebM, as before (`?v=3`: `/assets/*` is served immutable).
+- **Safari (macOS, iPadOS, iOS):** the packed film. The same `<video>` plays `directors-pack(-sm).mp4` (H.264; the
+  colour in the top half, the alpha as grey in the bottom half), muted and inline, at opacity 0 under a canvas that
+  takes the film's box and classes; a ~1.4 KB lazy chunk (`src/gl/lib/alphapack.js`) draws each new frame into the
+  canvas with a tiny WebGL program (colour from the top half, alpha from the bottom, premultiplied). Everything else is
+  the existing code: the film loads 2.5 screens ahead (0.6 on phones), fades in with the dissolve, plays once while in
+  view and holds its last frame; Pause / Play; reduced motion and Save-Data keep the poster. Before: the 15.1 MB HEVC
+  with alpha, logo included.
+- **Safari without WebGL** (and `?alphapack=1&tier=0`): the poster is the film (no film request, no Pause button).
+  A lost WebGL context or a film error: the poster comes back in the film's place, the film stops and its download is
+  dropped.
+
+## P10.2 What changed
+- **Film files** (`public/assets/video/`): `directors.webm` and `directors-sm.webm` re-encoded from the clean master;
+  `directors-pack.mp4` and `directors-pack-sm.mp4` new; `directors.mp4` (HEVC with alpha) deleted;
+  `directors-poster.webp` is the clean frame 0 (the same recipe as before, `retouch-directors-cap.py still`).
+- **`scripts/encode-directors.sh`:** runs from a local master (`SRC`, default the cm-film copy; the curl fetch is gone),
+  pipes the decode through `retouch-directors-cap.py run --raw` before its unchanged flatten, keeps the two-pass
+  VP9-alpha settings, and makes the two pack films (H.264 High, veryslow, crf 27.5 / 28, keyframes at 0 and 10 s, no
+  scene cuts, +faststart, YUV matrix tagged BT.601). `FLAT=` reuses a flat file, `KEEP_FLAT=` keeps it, `ONLY=pack`
+  makes the pack films only. Its flat file is frame-for-frame identical (framemd5, 600/600) to the retoucher's
+  `directors-clean.mkv`. `scripts/retouch-directors-cap.py`: its decoder gets `-nostdin` (the judge's A4).
+- **`scripts/prep_assets.py`:** no longer copies the live films (with the logo) into `public/`.
+- **`src/partials/directors.html`:** the sources are the two WebMs (`?v=3`) and the two packs (`data-dr-pack`, codecs
+  `avc1.640028` / `avc1.640033`); the HEVC source is gone; the poster takes `?v=2` in all four places (`data-poster`,
+  the noscript image, the two still-pair crops).
+- **`src/sections/directors.js`:** the packed path on WebKit (the existing `isWebKit()`) or with `?alphapack=1`; each
+  path drops the other's sources; the poster-only rule also covers the packed path without WebGL; the pack's chunk
+  loads with the poster; a `stop` hook for its fallbacks. **`directors.css`:** three rules (`.dr-pack`: the canvas and
+  the video share one grid cell; the video at opacity 0). **`src/gl/lib/alphapack.js`:** new (outside the eager
+  `sections/*.js` glob, so it is a lazy chunk).
+- **Docs:** `art-log.md` Phase 10 (the retouch), this phase, `copy-v4.md` Round 4, `copy-drafts.md` S12 (Kunle
+  decided: kept), dated notes in `HANDOFF.md` and `concept.md`.
+
+## P10.3 Numbers
+| | before | now |
+|---|---|---|
+| `directors.webm` (1920x1080 VP9 + alpha, crf 42) | 2,381,308 B (logo) | **2,309,735 B** (≤ 2.5 MB) |
+| `directors-sm.webm` (1280x720, crf 45) | 989,632 B (logo) | **960,597 B** (≤ 1.0 MB) |
+| Safari, desktop / tablets | `directors.mp4` HEVC + alpha, 15,124,776 B (logo) | **`directors-pack.mp4`** 1920x2160 H.264 High 5.1, **3,784,874 B** (≤ 4 MB) |
+| Safari, phones | the same 15.1 MB file | **`directors-pack-sm.mp4`** 1280x1440, High 4.0, **1,516,201 B** (≤ 1.6 MB) |
+| `directors-poster.webp` (1600x900 RGBA) | 153,096 B (logo) | **149,090 B** |
+| Fidelity to the clean master, over umber (20 frames; mean / worst frame) | | WebM 1920: 1.77 / 2.69 levels, PSNR 38.1 / 34.0 dB; pack 1920: 1.75 / 2.02, 38.0 / 36.6 dB; WebM 1280: 2.59 / 3.36, 34.6 / 32.2; pack 1280: 2.59 / 2.81, 34.6 / 33.9 |
+| First load (gzip, Vite build, b01f0cd → now) | HTML 14,676 / CSS 23,128 / entry JS 28,362 B | 14,704 / 23,151 / 28,368 B (+57 B: the two pack sources, three CSS rules, the path choice); the same requests |
+| Lazy JS | | `alphapack` chunk 2,441 B raw, **1,364 B gzip** (budget +1.5 KB); loaded only on the packed path, with the poster |
+
+## P10.4 Checks (GitHub Pages build under `/creativemotley-site/`; Chromium 1194, SwiftShader WebGL)
+This Chromium has no H.264 decoder, so the packed path was run with `?alphapack=1` against VP9 copies of the two
+shipped pack films (same layout, decoded from the shipped mp4s and re-encoded near-losslessly: 48.1 / 48.8 dB), put in
+the page by the test server only; the shader, the canvas, the layout and the logic are the shipped ones.
+- **No logo, no flag in the shipped files** (0, 2.5 … 20 s of each of the four, the cap stabilised with the
+  retoucher's track): logo orange 0, its white 0, flag orange 0 in every sample of all four; the match against the
+  logo's own edges ≤ 0.026 (the master, as control: up to 5,614 orange and 5,656 white px, flag 352, match 1.0).
+  Sheet: `knx-wire/out/cap_sheet_shipped.jpg`. The new poster is the clean frame 0 (`still` reproduces it byte for
+  byte); its alpha is the old poster's.
+- **Packed vs native, pixel for pixel** (the same frame, both over flat umber, `out/cmp-harness-*.json`; 9 times each):
+  at 1:1 (1920) and at the site's sizes (1152 from the 1280 encode, 1421 from the 1920 one): the film's opaque pixels
+  differ by 2.9–3.4 levels on average (two different lossy encodes; each is ~3.2 from the master), with no colour or
+  gamma shift (mean signed difference per channel within ±0.45; luma fit slope 0.996–1.000, offset ≤ 0.22); alpha
+  edges 2.0–2.7 (p99 13–17); no halo (the 1–6 px ring outside the cut-out: +0.03 to +0.25 levels, p99 ≤ 1.7);
+  transparent pixels identical (0.000–0.065). Both paths decode the film with BT.601 (in saturated colours BT.601 is off
+  by 0.4–2.1 levels, BT.709 by 2.7–5.8), hence the pack's BT.601 tag. In the page over the umber room (1440 and 1920,
+  `out/cmp-inpage-*.json`): 2.8 / 3.7 levels overall, of which the room's own drift between two loads is 2.4; at 1920
+  the canvas lands within half a pixel of the video's place (a box at x = 393.33 px: the compositor snaps the two
+  layers differently), which shows only along hard edges. Sheet: `out/harness_native_vs_pack_1to1.jpg`.
+- **Walk** (both paths; 1440 × 900, 1280 × 800, 1024 × 768, 1920 × 1080 at 1×; 820 × 1180, 390 × 844, 844 × 390,
+  320 × 568 as touch phones/tablets at 2×; the whole page from the top, then the `#directors` deep link): overflow 0,
+  CLS 0 scrolling and 0 at the deep link and after it, no console error, no failed request, no third-party request,
+  nothing asks for `directors.mp4` (the server's log: 0 of 3,596 requests); the film fades in and plays in all 16;
+  Pause holds it (the time stands still) and Play resumes it in all 16; on the packed path the canvas has the film's
+  box (1152 × 648, 1024 × 576, 819 × 461, 1421 × 799; 1280 × 720 on the phones at 2×, capped at the 1280 encode;
+  998 × 561 at 844 × 390), the video under it is at opacity 0, and the canvas moves again after Play at every size; it
+  holds still while paused at 7 of the 8 sizes in the walk (at 1280 the walk's capture, 0.5 s after the click, caught
+  one more frame on the loaded SwiftShader; a separate run there: 6 identical captures over 4.2 s while paused).
+  Files fetched: the 1280 WebM everywhere but 1920 (the 1920 one), the matching pack on the packed path, never both.
+- **Plays once and holds** (1440 and 390, both paths): seeked to 18.5 s, it ends at 20 s, paused, its last frame
+  stays (two captures 1.5 s apart identical), the button says Play, and Play starts it again from 0.
+- **Reduced motion** (1440, 390, both paths): no film request, no Pause button; 390: the still pair, both crops from
+  `directors-poster.webp?v=2` (1600 px), clean; 1440: the poster in the film's place. CLS at 390: 0. At 1440 a
+  reduced-motion deep link to `#directors` shifts (CLS 0.47–1.46 from run to run) on b01f0cd too (same test on a build
+  of it): not from this change, and open (below).
+- **Tier 0** (`?tier=0`, 1440 and 390): the WebM plays as before (the same CLS 0.0021 at the 1440 deep link as on
+  b01f0cd); with `?alphapack=1&tier=0` (WebKit without WebGL) the poster stands, nothing is fetched, no Pause button.
+- **Fallbacks** (1440, packed path): a lost WebGL context while playing, and a 404 on the film: the poster comes back
+  in the canvas, the film pauses and drops its sources (readyState 0), the Pause button goes; no console error other
+  than the forced 404.
+- **First load** (no input, 10 s): `?tier=0` at 1440 and 390: the same 15 / 16 requests as b01f0cd, +0.6 KB
+  uncompressed (511.1 / 459.3 KB); with `?alphapack=1` the same requests and bytes (the pack's chunk loads with the
+  poster, 2.5 screens before the film). WebGL at 1440: no film or pack request on either path.
+- **Encodes:** keyframes at 0 and 10 s in all four; 600 frames; the mp4s are `ftyp moov free mdat` (faststart);
+  `encode-directors.sh` end to end from the master: 494 s.
+
+## P10.5 The Safari path: how it works, its risks (not run on a real WebKit here)
+- WebKit is `isWebKit()` (AppleWebKit without Chrome / Chromium / Android in the UA: Safari on macOS, every browser on
+  iOS and iPadOS). It gets `directors-pack-sm.mp4` where the WebM choice would give the 1280 encode (phones, 1× laptops
+  up to 1440), else `directors-pack.mp4` (an iPad Pro in landscape gets the 1920 one).
+- **Untested on Safari.** Everything above ran in Chromium on a VP9 copy of the pack. Not checked here: Safari's own
+  H.264 decode of a 1920 × 2160 (level 5.1) and 1280 × 1440 frame; `texImage2D` from that video in Safari's WebGL
+  (it has worked since Safari 11; `requestVideoFrameCallback` since 15.4, else a frame loop while playing); iOS's
+  handling of a muted inline video at opacity 0 under a canvas (if iOS ever treats it as hidden and pauses it, the
+  canvas holds the poster or the last frame: the page stays whole, the film just does not move; the fix would be
+  opacity 0.01); Low Power Mode (iOS may refuse `play()`: the poster stands, as it did before); the BT.601 tag (Safari
+  should honour it; untagged, it might have guessed BT.709 and shifted the colours slightly).
+- **Fallbacks:** no WebGL → the poster (no film fetched); a failed chunk, a lost context or a film error → the poster
+  in the film's place, the film stopped and released, no Pause button.
+- **Cost on a phone:** one RGB texture upload of 1280 × 1440 per new frame (30 a second) while it plays, a single
+  triangle; nothing when paused, ended or out of view (the existing in-view and faded-in rules pause the video, and the
+  canvas is redrawn only on new frames). The canvas is at most the encode's width (1280 or 1920 device px).
+- **To check on a device:** Safari on a Mac and an iPhone, the chapter at rest: the film rises, plays once, holds;
+  Pause / Play; no dark rim at the cut-out's edge; the cap plain.
+
+## P10.6 For the client
+`docs/copy-v4.md` Round 4: the logo and the maker's flag are gone from the cap (film and still); Kunle Afolayan's card
+is kept; Safari plays a new, lighter film (3.8 MB, 1.5 MB on phones, against 15.1 MB) that we could not test on an
+Apple device here, so we ask the client to look at the chapter in Safari ("Still open" 7). Open from this round, not
+the client's: the reduced-motion deep-link shift at 1440 (P10.4, pre-existing); the judge's optional 1–2 px fleck
+fix (`art-log.md` Phase 10, left as is).

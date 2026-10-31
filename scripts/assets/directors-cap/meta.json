@@ -1,0 +1,39 @@
+{
+ "reference": "master frame 0",
+ "size": [
+  1920,
+  1080
+ ],
+ "cap_roi": [
+  150,
+  30,
+  800,
+  440
+ ],
+ "regions": {
+  "logo": {
+   "box": [
+    300,
+    100,
+    552,
+    280
+   ],
+   "grow": 9,
+   "feather": 6,
+   "core_px": 14794,
+   "mask_px": 17550
+  },
+  "flag": {
+   "box": [
+    612,
+    268,
+    668,
+    346
+   ],
+   "grow": 4,
+   "feather": 5,
+   "core_px": 887,
+   "mask_px": 1500
+  }
+ }
+}

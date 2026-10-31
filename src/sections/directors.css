@@ -49,6 +49,11 @@ html:not(.js) #directors .opener.dr-open { min-height: 100svh; }
 html:not(.js) video.dr-video { display: none; }          /* no JS: the still (noscript) stands in */
 html.js .dr-video { opacity: 0; transition: opacity 1.2s var(--ease-out); }
 html.js .dr-video.is-ready { opacity: 1; }
+/* WebKit's packed film (directors.js, gl/lib/alphapack.js): its canvas (.dr-video too) takes the film's place and the
+   video plays in the same grid cell under it, unseen but kept in the layout (iOS stops decoding a video that is not) */
+.dr-pack { display: grid; }
+.dr-pack > .dr-video { grid-area: 1 / 1; }
+.dr-pack > video.dr-video { opacity: 0 !important; }
 /* iOS (Low Power Mode) can refuse play() on a muted inline video and draw its start button over the poster: never */
 .dr-video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
 .dr-video::-webkit-media-controls { display: none !important; }
@@ -57,7 +62,7 @@ html.js .dr-video.is-ready { opacity: 1; }
 .dr-toggle {
   position: absolute; z-index: 2; right: clamp(16px, 4vw, 64px); bottom: clamp(16px, 3svh, 32px);
   font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream);
-  min-height: 32px; padding: 6px 14px; border-radius: 100px; background: rgba(11, 8, 5, 0.55);
+  min-height: 32px; min-width: 6.4em; padding: 6px 14px; text-align: center; border-radius: 100px; background: rgba(11, 8, 5, 0.55);
   box-shadow: inset 0 0 0 1px rgba(244, 237, 223, 0.36); transition: background 0.2s;
 }
 .dr-toggle:hover { background: rgba(11, 8, 5, 0.8); }
