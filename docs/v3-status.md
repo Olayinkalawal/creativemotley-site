@@ -1295,3 +1295,85 @@ channel-confirmed; Omoni Oboli TV, Isbae U, Broda Shaggi and Kunle Afolayan chan
 5. The labels still in draft: "What we run", "How a brief runs", "On the roster", "Watch", "Watch the work".
 6. WealthMotley and Creative Motley Ltd; bios (20–25 words each), if wanted.
 7. Before launch: oEmbed on all 16 roster ids and the seven cards where YouTube is reachable (Brain Jotter's first).
+
+# Phase 8: Showcase (verified 2026-10-31)
+The client (2026-10-31, `docs/copy-drafts.md` S10, with a screenshot of the poster wall) asked for the real YouTube
+thumbnails on the cards and for the poster wall to go. A builder did it, a critic reviewed it (verdict: fix), and
+this round fixed the findings and verified the whole site on a production build and on the GitHub Pages build. Client
+sheet: `qa/shots/v3p8_showcase.jpg` (git-ignored: force-add it to commit). Evidence:
+`/tmp/claude-0/-home-user-creativemotley-site/f5fb006b-f00a-5174-8cc3-2633425655d9/scratchpad/thumbs/` (`build/`
+the builder, `crit/` the critic, `final/` this round: `out/` results, `tools/` scripts, `shots/` captures).
+
+## P8.1 What a visitor sees now
+- **V Showcase:** the giant title over the umber room, "Watch the work" (DC60, draft), then one grid of 16 cards, one
+  per creator, en-GB A to Z (no editorial order: the F64 rule). Four columns from 720 px; below it a list (thumbnail
+  left, name and title beside it). A card is the video's own YouTube thumbnail (self-hosted AVIF / WebP, cropped and
+  resized only), a small play triangle and the creator's name in small caps, then the video's title. Nothing is
+  drawn over the art at rest. A mouse that moves onto a card brings in a cream play disc at the art's centre and
+  steps the other cards back; keyboard focus shows the disc and the gold ring. A click plays the video in the modal
+  (youtube-nocookie, created only then) over a near-opaque scrim; a modified click opens YouTube.
+- **Gone:** the pinned poster wall (scene, arc, poster modal, phone carousel, "07 / 07" counter and caption), the
+  poster files, and the typographic "On the roster" index (the cards are the index, so no creator is listed twice;
+  the generator still writes an "On the roster" line for a creator without a card, empty today).
+
+## P8.2 The critic's findings, and what this round did
+1. **Play disc over the creators' art (P1).** Fixed: the disc is centred and hidden at rest, shown on hover or
+   keyboard focus; a small triangle before each name says "plays" on touch screens (`showcase.css`).
+2. **Grid dimmed while a mouse reader scrolled (P2).** Fixed: hover effects count only once the mouse moves over the
+   grid (`.is-pointing`, added on a mouse `pointermove`, dropped on the next scroll; `showcase.js`). Wheel-only
+   reading with the pointer resting on cards: 0 of 16 dimmed, no disc (tier 0 and WebGL); after a move: 15 dimmed,
+   one disc; the next scroll: none.
+3. **Page showed through the modal on desktop (P2).** Fixed: the scrim is rgba(11, 8, 5, 0.96) at every width (type
+   behind it measures at most 21 / 255 on 12 / 255).
+4. **Poster mentions (P2).** Fixed in `process.html`, `process.css`, `process.js`, `index.html`, `main.js`; the
+   posters job is gone from `scripts/prep_assets.py` and "posters" from the `build-pages.mjs` skip list; dated notes
+   in `concept.md` §V, `build-contract.md` (owner C's files), `HANDOFF.md`, `README.md`. `v3-plan.md` is left as written (it records the plan of its day).
+5. **Thumbnail preparation not in the repo (P2).** Fixed: `scripts/prep_yt_thumbs.py` (maxres → sd → hq through the
+   proxy, bars, 16:9 crop, 320 / 640 / largest encode, prints the thumb record; `--check` re-derives every record
+   from what YouTube serves now; `--mosaic` for the Chapters thumbnail). It reproduces the shipped files byte for byte
+   (checked on three ids, letterboxed, sddefault and maxres), and `--check` passes for all 16 (each 640 file within
+   0.8 / 255 of a fresh crop). Named in the generator's header and "To change a video" line, and in `videos.json`.
+6. **Kunle Afolayan's dark thumbnail (P2, our call).** Kept. KAPTV's own trailer is his only film upload among the
+   channel's 15 latest (the RSS feed, 2026-10-31: the rest are events and resort promos), and the art is YouTube's
+   frame for it; we do not recompose a creator's art. For the client (P8.5).
+7. **The client's words in the page source (P3).** Paraphrased in `showcase.html`; the exact words stay in
+   `copy-drafts.md` S10 only.
+8. **Reduced-motion modal rule in the wrong file (P3).** Moved to `src/styles/modal.css`.
+9. **Modal opened on a soft image (P3).** Fixed: a mouse resting 200 ms on a card (or keyboard focus, or a press)
+   fetches and decodes the large file, and the modal then opens on it (the morph lands sharp); otherwise as before.
+
+## P8.3 Numbers (production build; cdc3dbf = before the change)
+| | cdc3dbf | now |
+|---|---|---|
+| Showcase, 1440 × 900 (screens; tier 0 in brackets) | 4.20 (2.85) | 1.70 (1.70) |
+| Showcase, 390 × 844 | 3.93 (2.38) | 2.46 (2.46) |
+| Showcase, 1280 / 1024 / 1920 / 360 / 820 × 1180 / 844 × 390 | | 1.76 / 1.73 / 1.68 / 2.54 / 1.25 / 3.19 |
+| Showcase, `?drafts=0`, 1440 / 390 | | 1.61 / 2.39 |
+| Page, desktop / phone (screens) | 30.7 / 29.9 | 28.1 / 28.4 (tier 0: 27.2 / 28.0) |
+| First load, desktop @1× / @2× / phone @2× | 0.75 / 0.89 / 0.49 MB | 0.75 / 0.89 / 0.48 MB (no GLB, no thumbnail) |
+| The 16 thumbnails, all loaded (1440 @1× / phones, tablets, 1920) | | 161 KB (320 AVIF) / 458 KB (640 AVIF) |
+| gzip: HTML / CSS | 26.8 / 25.0 KB | 25.4 / 23.8 KB |
+
+## P8.4 Checks (both builds unless noted)
+- **Fact check:** desktop and mobile 442 strings, `--drafts 0` 423 (desktop and mobile): pass; 18 draft ids.
+- **Generator:** `showcase.videos.mjs --check`: ok, 16 cards, 0 without; `--verify` (through the proxy): all 16 play
+  from the creator's own channel. `prep_yt_thumbs.py --check`: 16 ok.
+- **Walk** (production build, half-screen steps, whole page): 1440, 1280, 1024, 1920, 390, 360, 820 × 1180 and
+  844 × 390, each WebGL (SwiftShader) and tier 0, plus reduced motion and `?drafts=0` at 1440 and 390: 20 cases,
+  overflow 0, CLS 0, no console error, no failed request, no third-party request, no poster request or element,
+  cards en-GB A to Z, each card's id = its link = its image file, disc opacity 0 at rest. No thumbnail on first load;
+  reading down with the wheel, they start about 1.1 screens before the grid. Pages build: 1440, 1920, 390, 360,
+  844 × 390, tier 0 at 1440 and 390, `?drafts=0` at 1440: the same.
+- **Every card** (16 at 1440 WebGL, 1440 tier 0 and 390; 4 at 844 × 390, reduced motion and `?drafts=0`; 1440, 1440
+  tier 0 and 390 again on the Pages build): the modal's player, still, heading, creator and "Watch on YouTube" all
+  match the card; focus on Close; Esc (or Close on phones) closes and focus returns to the card; Enter from the
+  keyboard opens it; Ctrl-click opens a tab and no modal. No third-party request before the first click; after it,
+  youtube-nocookie only (and YouTube itself in the Ctrl-click tab). The Chapters thumbnail loads (200).
+- **Shipped:** no `assets/posters` in either build; the only "poster" words left in the built HTML are the Kit /
+  Method still class and the Directors film poster, and the dated paraphrase in the Showcase comment.
+
+## P8.5 For the client (short)
+1. Kunle Afolayan's card shows YouTube's own frame for the Aníkúlápó trailer, which is very dark on the page. Keep
+   it, or choose another video of his (or a custom thumbnail on KAPTV)?
+2. "Watch the work" (DC60) is the one draft left in Showcase (`copy-drafts.md`); the video titles trace as names.
+3. Brain Jotter and Broda Shaggi have only a 640-pixel thumbnail on YouTube: slightly soft on a 1920 retina screen.
