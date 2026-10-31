@@ -2,7 +2,7 @@
    Static by default (no JS, ?tier=0, reduced motion): one paper sheet with a torn top edge; the seven steps are a calm
    grid on wide screens and a list on phones (object, title, short line), then the dense grid of long lines.
    .proc-on (JS + a WebGL tier): a tall pinned run. The pin carries its own paper (.proc-bg) that covers the stage
-   while it dissolves in from the posters (the scene marker sits ~0.9 viewport into the run), then clears; the list
+   while it dissolves in from the umber room (Showcase; the scene marker sits ~0.9 viewport into the run), then clears; the list
    becomes a CSS-3D proxy of the WebGL desk and the live caption (title + short line + a seven-step marker) follows
    the active object. .is-crisp (phones): the proxy stays the object layer over the WebGL desk and shadows.
    v3 (phase 2): the run is ≈2.8 screens; the caption carries each step's long line too (title, short line, long

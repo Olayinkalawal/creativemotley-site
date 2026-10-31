@@ -67,11 +67,16 @@
 - No paper: the film is the content.
 
 ## V · Showcase (`#showcase`)
-- **Scene `posters` (three.js):** the seven posters as curved paper planes on a slow arc, warm key light, paper grain.
-  - Scroll turns the arc; the poster at centre faces you squarely.
-  - Pointer tilts it.
-  - Click or Enter opens a **poster modal**: the large poster plus its name (F64–F70).
-- **Opener:** "Chapter V · Showcase" (F63); giant "Showcase" (from F127). Caption follows the active poster: name (from F64–F70) + "01 / 07" (F72 pattern).
+- **2026-10-31: replaced by the 16-card grid (S10, `docs/copy-drafts.md`).** At the client's request the poster wall
+  below (its scene, arc, modal, phone carousel, counter and caption) is gone. The chapter is the giant "Showcase"
+  over the umber room (`plate:umber`), then "Watch the work": one card per creator (16), en-GB alphabetical, each the
+  video's own YouTube thumbnail (self-hosted; `scripts/prep_yt_thumbs.py`), the creator's name and the video's title.
+  A click plays the video in the shared modal (youtube-nocookie, created only then). Cards are written by
+  `src/partials/showcase.videos.mjs` from `docs/videos.json`. No pinned run.
+- *Before S10:* **Scene `posters` (three.js):** the seven posters as curved paper planes on a slow arc, warm key light,
+  paper grain. Scroll turned the arc; the poster at centre faced you squarely; the pointer tilted it; click or Enter
+  opened a poster modal (the large poster plus its name, F64–F70). Opener "Chapter V · Showcase" (F63), giant
+  "Showcase" (from F127); the caption followed the active poster: name + "01 / 07" (F72 pattern).
 
 ## VI · Process (`#process`)
 - **Scene `objects` (three.js) on paper:** the seven objects float as cut-outs at different depths with soft contact shadows. A pinned horizontal camera track visits each in turn; the active one turns towards you.
@@ -105,4 +110,4 @@
 - Scroll scrubs cameras and films; nothing autoplays except gentle idle drift, the results TV and the directors' blink.
 - Every chapter has a single hero moment. Paper is calm: rises, fades, hairlines drawing.
 - **Reduced motion:** no smooth scroll, no scrubbing and no particles. Each scene is a still plate and text simply appears.
-- **Low GPU or no WebGL:** each opener shows its plate as a CSS still (the reference's still-image fallback idea); 3D posters and objects become plain cards.
+- **Low GPU or no WebGL:** each opener shows its plate as a CSS still (the reference's still-image fallback idea); 3D objects become plain cards.

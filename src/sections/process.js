@@ -8,7 +8,7 @@
        as sharp as the type beside them;
      - the live caption: the active step's title + short line (F75/F76 … F93/F94) and a seven-step marker.
    The stage switches to the objects scene at a marker ~0.9 viewport into the run ([data-proc-scene]), so its
-   dissolve from the posters happens under the pin's paper, and the paper clears only once that dissolve is done.
+   dissolve from the umber room (Showcase) happens under the pin's paper, and the paper clears only once that dissolve is done.
    v3 (phase 2): the caption carries each step's long line too, and the run is ≈2.8 screens. On the way out the row
    trucks on and the caption fades as the pin leaves; the desk is a sheet (data-wipe on the scene marker) whose torn
    bottom edge scrolls off chapter VII's stage (the Kit): the objects scene paints black under the edge

@@ -17,12 +17,15 @@
 // Card art: thumb = { source, source_size, crop, widths, path, fetched }: the thumbnail YouTube serves for the id
 // (maxresdefault, else sddefault / hqdefault with the letterbox bars cropped), downloaded once at build-prep time,
 // cropped to 16:9 and resized only, never upscaled (so widths stop at the source: 640 for an sddefault), self-hosted
-// as <path>-<w>.{avif,webp}. The page makes no third-party request until a click. A thumbnail fetched again takes a new
-// path, never an old one: vercel.json serves /assets/* immutable for a year.
+// as <path>-<w>.{avif,webp}, all by python3 -I scripts/prep_yt_thumbs.py <id> (it prints the record; --check
+// compares every record with what YouTube serves now). The page makes no third-party request until a click. A
+// thumbnail fetched again takes a new path, never an old one: vercel.json serves /assets/* immutable for a year.
 // A creator with no card (no playable, checked video with a thumbnail) is named in one line under the grid: "On the
 // roster" (DC76) and the names, nothing else (the <!-- more --> block is empty while every creator has a card).
 // To change a video: edit its id in docs/videos.json, give its display title a fact, run --verify and set
-// oembed_checked, fetch its thumbnail (thumb), then run this script.
+// oembed_checked, fetch its thumbnail (python3 -I scripts/prep_yt_thumbs.py <id>, and paste the thumb record it
+// prints onto the video), then run this script. A change among the first four cards also needs a new Chapters
+// thumbnail (prep_yt_thumbs.py --mosaic, a new file name, src/ui/chrome.js).
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

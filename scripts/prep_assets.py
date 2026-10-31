@@ -2,9 +2,11 @@
 
     python3 -I scripts/prep_assets.py <source_site_dir>
 
-The source dir is a mirror of creativemotley.com (frames/, method/, work/posters/,
-objects/, photos/, results/, directors/, video/). Everything here is derived from
-the brand's own art; nothing is downloaded from third parties.
+The source dir is a mirror of creativemotley.com (frames/, method/, objects/,
+photos/, results/, directors/, video/). Everything here is derived from the
+brand's own art; nothing is downloaded from third parties. (The live site's
+work/posters/ are not used since 2026-10-31: the Showcase poster wall is gone,
+its cards carry the videos' own YouTube thumbnails, scripts/prep_yt_thumbs.py.)
 """
 import os, sys, shutil
 from multiprocessing import Pool
@@ -41,9 +43,7 @@ for f in sorted(os.listdir(os.path.join(SRC, 'method'))):
     s = os.path.join(SRC, 'method', f); b = f[:-4] + '.webp'
     jobs.append((s, os.path.join(lg, b), 1800, 70))
     jobs.append((s, os.path.join(sm, b), 1100, 66))
-# posters, objects, photos
-for f in os.listdir(os.path.join(SRC, 'work', 'posters')):
-    jobs.append((os.path.join(SRC, 'work', 'posters', f), os.path.join(mk('posters'), f.rsplit('.', 1)[0] + '.webp'), 1200, 82))
+# objects, photos
 for f in os.listdir(os.path.join(SRC, 'objects')):
     jobs.append((os.path.join(SRC, 'objects', f), os.path.join(mk('objects'), f.rsplit('.', 1)[0] + '.webp'), 700, 86))
 for f in os.listdir(os.path.join(SRC, 'photos')):

@@ -17,12 +17,12 @@ Useful query flags: `?tier=0` forces the no-WebGL fallback (still plates), and `
 - `src/gl/stage.js`: the persistent stage. Sections say which scene they show with `data-scene`. Scenes live in `src/gl/scenes/*.js` (auto-registered).
   - The hero and method films stream as frame sequences into a texture (`src/gl/lib/frameStream.js`).
   - Paintings become depth dioramas (`src/gl/lib/plate.js`), using depth maps computed locally with MiDaS (`scripts/depth.py`).
-  - Posters and process objects are real three.js geometry.
+  - Process objects are real three.js geometry. (Showcase's poster wall went on 2026-10-31: its cards carry the videos' own YouTube thumbnails, prepared by `scripts/prep_yt_thumbs.py` and written by `src/partials/showcase.videos.mjs`.)
 - `src/core/*`: Lenis smooth scroll on the GSAP ticker, cached layout, chapter and theme tracking, reveals.
 - Every visible string traces to `docs/facts.json`; the only exceptions are the interface labels in `docs/ui-strings.json`. Check with `node scripts/factcheck.mjs` while the dev server runs.
 
 ## Assets
-`public/assets` is generated from the live site's own files by `python3 -I scripts/prep_assets.py <mirror-of-creativemotley.com>`. Depth maps come from `python3 -I scripts/depth.py <midas_small.onnx> <plate> <out>`.
+`public/assets` is generated from the live site's own files by `python3 -I scripts/prep_assets.py <mirror-of-creativemotley.com>`. Depth maps come from `python3 -I scripts/depth.py <midas_small.onnx> <plate> <out>`. Showcase's card art, `public/assets/thumbs/video/`, is each video's own YouTube thumbnail, fetched once with `python3 -I scripts/prep_yt_thumbs.py <id>` (`--check` compares it with what YouTube serves now).
 
 ## Docs
 - `docs/concept.md`: chapter by chapter, with copy IDs.

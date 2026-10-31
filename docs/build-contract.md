@@ -15,7 +15,7 @@ Every builder reads this and `docs/concept.md` (what each chapter is) before wri
 | shell (director) | `index.html`, `src/main.js`, `src/core/*`, `src/ui/*`, `src/gl/stage.js`, `src/gl/boot.js`, `src/gl/lib/*`, `src/gl/scenes/film.js`, `src/gl/scenes/plates.js`, `src/styles/*`, hero + storytellers partial/section |
 | A | `src/partials/creators.html`, `src/partials/brands.html`, `src/sections/creators.{js,css}`, `src/sections/brands.{js,css}`, `src/sections/_paper.{js,css}` (shared paper components: feature block, notes fan, command cloud, photo card, dense grid; B, D and E import them read-only) |
 | B | `src/partials/{method,results,directors}.html`, `src/sections/{method,results,directors}.{js,css}`, `src/gl/scenes/method.js`, `src/gl/scenes/umber.js` |
-| C | `src/partials/showcase.html`, `src/sections/showcase.{js,css}`, `src/gl/scenes/posters.js` |
+| C | `src/partials/showcase.html`, `src/partials/showcase.videos.mjs` (writes the cards from `docs/videos.json`), `src/sections/showcase.{js,css}`, `scripts/prep_yt_thumbs.py` (the cards' thumbnails); `src/gl/scenes/posters.js` went with the poster wall on 2026-10-31 |
 | D | `src/partials/process.html`, `src/sections/process.{js,css}`, `src/gl/scenes/objects.js` |
 | E | `src/partials/apply.html`, `src/sections/apply.{js,css}` |
 
@@ -91,7 +91,7 @@ Every builder reads this and `docs/concept.md` (what each chapter is) before wri
   - Smoothness rules: no `filter` / `backdrop-filter` / blurred SVG animated per frame; transforms and opacity only; read rects once per resize (`geo()`), write styles only when they change; no canvas reallocation mid-scene.
   - Geometry modest. No per-frame allocations. Pause videos in `deactivate()`.
   - Pick the phone frame tier from the viewport.
-- **Fallbacks:** `TIER === 0` or `REDUCED` means the stage never boots. Your chapter must still read well with its CSS plate and DOM content: posters and objects as plain images, counters showing their final values.
+- **Fallbacks:** `TIER === 0` or `REDUCED` means the stage never boots. Your chapter must still read well with its CSS plate and DOM content: objects as plain images, counters showing their final values.
 
 ## Quality bar for your chapter
 1. **Desktop 1440×900 and mobile 390×844:** no overflow (`document.documentElement.scrollWidth === innerWidth`), no overlaps, no clipped type, safe margins.

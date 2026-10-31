@@ -8,7 +8,7 @@ import { initHero } from './ui/hero.js';
 import { afterFirstPaint } from './core/firstframe.js';
 
 // a deep link (/#kit): the browser lands on the anchor while the page is parsed, before the sections above it have
-// grown to their scroll lengths (the pinned runs, the showcase: ~4,800 px at 1440, which left #kit in Showcase); it lands
+// grown to their scroll lengths (the pinned runs, which left #kit in an earlier chapter); it lands
 // again after the sections' init, the fonts, the load and each layout pass, until the reader scrolls (or 6 s)
 const deep = (() => { try { return location.hash.length > 1 ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null; } catch { return null; } })();
 if (deep && 'scrollRestoration' in history) history.scrollRestoration = 'manual';
