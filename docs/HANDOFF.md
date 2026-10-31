@@ -7,7 +7,7 @@
   - II Creators: notes fan, command cloud, Media Owners.
   - III Brands: photo cards, leadership row.
   - IV Method: painted room → camera teardown.
-  - V Showcase: WebGL poster arc + modal.
+  - V Showcase: 16 video cards, each the video's own YouTube thumbnail (self-hosted), playing in the modal (2026-10-31: the poster arc is gone at the client's request; `docs/v3-status.md` Phase 8).
   - VI Process: object track, Sound teardowns, long-description grid.
   - VII Results: painting → phone teardown with the four stats.
   - VIII Directors: alpha film + names line.

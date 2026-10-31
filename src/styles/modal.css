@@ -19,4 +19,7 @@
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.4s; animation-timing-function: var(--ease-out); }
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  /* base.css gives every element a 0.01 ms transition of all its properties, so in the frame the dialog opens its
+     Close button still computed visibility: hidden (inherited, mid-transition) and focus could not move to it */
+  #modal, #modal * { transition: none !important; }
 }

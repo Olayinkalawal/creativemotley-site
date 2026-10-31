@@ -15,7 +15,7 @@ let files = 0, hits = 0;
 const walk = (d) => {
   for (const f of fs.readdirSync(d, { withFileTypes: true })) {
     const p = path.join(d, f.name);
-    if (f.isDirectory()) { if (!/frames|posters|objects|photos|plates|video|teardown/.test(f.name)) walk(p); continue; }
+    if (f.isDirectory()) { if (!/frames|objects|photos|plates|video|teardown/.test(f.name)) walk(p); continue; }
     if (!/\.(html|js|css|json)$/.test(f.name)) continue;
     const s = fs.readFileSync(p, 'utf8');
     const t = s.replace(re, (m, pre, dir) => { hits++; return `${pre}${base}${dir}/`; });

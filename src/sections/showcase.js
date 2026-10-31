@@ -4,9 +4,13 @@
      modified or middle click is left to the link: a new tab on YouTube). No pinned run, no per-frame work: the
      chapter is static in every mode, and the umber room behind it is the WebGL stage's (gl/scenes/umber.js).
    - the art is the video's own YouTube thumbnail, self-hosted (AVIF / WebP): no third-party request until a click.
-   - the modal morphs from the card's picture (View Transitions) and opens on the very file the card shows, so the
-     morph lands on a decoded image; once it is open, the still asks for the large file of the same thumbnail. The
-     youtube-nocookie iframe is created then, and removed before the modal closes. */
+   - a hover counts only once the mouse moves over the grid (.is-pointing on the list; the next scroll drops it), so a
+     reader scrolling with the pointer resting on the grid dims nothing (showcase.css).
+   - the large file of a card's thumbnail is fetched and decoded ahead of a click: when a mouse rests on the card (or
+     keyboard focus does) for 200 ms, or a press starts. The modal morphs from the card's picture (View Transitions)
+     and opens on that large file once it is decoded, else on the very file the card shows (so the morph always lands
+     on a decoded image) and asks for the large file once open. The youtube-nocookie iframe is created then, and
+     removed before the modal closes. */
 import './showcase.css';
 import { openModal } from '../ui/modal.js';
 
@@ -15,6 +19,16 @@ export function init() {
   const wv = sec?.querySelector('[data-wv]');
   if (!wv) return;
   wv.querySelectorAll('[data-wv-yt]').forEach((a) => a.setAttribute('aria-haspopup', 'dialog'));
+  const list = wv.querySelector('.wv__list');
+  list?.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' && !list.classList.contains('is-pointing')) list.classList.add('is-pointing'); }, { passive: true });
+  addEventListener('scroll', () => { if (list?.classList.contains('is-pointing')) list.classList.remove('is-pointing'); }, { passive: true });
+  let pending = null, dwell = 0;
+  const rest = (a) => { if (a === pending) return; clearTimeout(dwell); pending = a; if (a) dwell = setTimeout(() => warmUp(a), 200); };
+  wv.addEventListener('pointerover', (e) => { if (e.pointerType === 'mouse') rest(e.target.closest('[data-wv-yt]')); });
+  wv.addEventListener('pointerout', (e) => { if (pending && !pending.contains(e.relatedTarget)) rest(null); });
+  wv.addEventListener('focusin', (e) => rest(e.target.closest('[data-wv-yt]')));
+  wv.addEventListener('focusout', () => rest(null));
+  wv.addEventListener('pointerdown', (e) => warmUp(e.target.closest('[data-wv-yt]')));
   wv.addEventListener('click', (e) => {
     const a = e.target.closest('[data-wv-yt]');
     if (!a || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
@@ -50,6 +64,19 @@ function largest(img) {
   return top && !cur.endsWith(top[0]) ? top[0] : '';
 }
 
+// the large files fetched ahead of a click: card <img> → its large file's URL once decoded ('' while it loads)
+const warm = new Map();
+function warmUp(a) {
+  const img = a?.querySelector('.wv__art img');
+  if (!img || warm.has(img) || !img.complete || !img.currentSrc) return;   // (a lazy card not loaded yet: no format known)
+  const big = largest(img);
+  if (!big) return;
+  warm.set(img, '');
+  const pre = new Image();
+  pre.src = big;
+  pre.decode().then(() => warm.set(img, big), () => warm.delete(img));
+}
+
 // title: the heading (a drafted title carries its draft id); by: the creator; art: the card's <img> (the morph's source)
 function openVideoNow({ id, title, draft, by, art }) {
   const fig = document.createElement('figure');
@@ -58,7 +85,8 @@ function openVideoNow({ id, title, draft, by, art }) {
     <figcaption class="wvm__cap"><p class="wvm__by"></p><h2 class="wvm__t" id="modal-title"></h2>
       <a class="boxlink wvm__yt" target="_blank" rel="noopener" data-draft="DC62">Watch on YouTube <span class="ar">↗</span></a></figcaption>`;
   const still = fig.querySelector('.wvm__art');
-  still.src = art.currentSrc || art.src;
+  const big = largest(art), hot = !!big && warm.get(art) === big;
+  still.src = hot ? big : art.currentSrc || art.src;
   fig.querySelector('.wvm__by').textContent = by;
   const h = fig.querySelector('.wvm__t');
   h.textContent = title;
@@ -70,8 +98,7 @@ function openVideoNow({ id, title, draft, by, art }) {
     onOpen() {
       // the sharp still: the large file, swapped in once decoded (the morph back compares the src it opened with,
       // modal.js, so the swap keeps the img's src attribute and loads the file beside it)
-      const big = largest(art);
-      if (big) { const pre = new Image(); pre.src = big; pre.decode().then(() => { if (still.isConnected) still.srcset = `${big} 1x`; }, () => {}); }
+      if (big && !hot) { const pre = new Image(); pre.src = big; pre.decode().then(() => { if (still.isConnected) still.srcset = `${big} 1x`; }, () => {}); }
       frame = document.createElement('iframe');
       frame.className = 'wvm__player';
       frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&playsinline=1`;
