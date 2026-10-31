@@ -1,5 +1,6 @@
 /* The umber stage, scene "plate:umber": a dark warm room drawn by one full-screen shader (no textures).
-   It is IX · Directors' room: the set's painting (plate:directors) dissolves into it as the film's stage arrives.
+   It is V · Showcase's room (since 2026-10-31, when the poster wall and its scene went: Method's black sheet wipes off
+   onto it) and IX · Directors' room: the set's painting (plate:directors) dissolves into it as the film's stage arrives.
    - a soft warm pool of light on ink, with a little plaster in the dark;
    - slow dust motes, three depths of them (two on tier 1), brightest where they cross the pool, rising slowly
      and drifting with scroll (nearer motes travel further, so the room has depth);

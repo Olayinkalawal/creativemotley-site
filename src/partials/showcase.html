@@ -1,223 +1,44 @@
-<!-- V · SHOWCASE · scene: posters (three.js) · owner: builder C
-     One list of seven poster buttons serves every mode:
-       - static (no JS, ?tier=0, reduced motion): the title, then a calm grid on desktop, a scroll-snap row on phones,
-         captions under each;
-       - .sc-on (JS + a WebGL tier): a pinned run with the title at the top of the pin, so poster 01 rises with it (no
-         screen shows the title alone); the list becomes an exact CSS-3D proxy of the WebGL arc (same camera, same
-         positions), visible until the posters scene has drawn, then kept as invisible focus / screen-reader targets
-         over the WebGL posters.
-     The run's length is written here (--sc-run desktop, --sc-run-m below 720 px: N × dwell + the pin's own screen,
-     7 × 26 + 100 and 7 × 22 + 100), so CSS reserves it before any script runs and a deep link lands where it stays
-     (showcase.css; showcase.js reads the run's height, it never sets it). The desktop dwell stays 26 with the roster
-     below (2026-10-24): the roster went to four columns of stacked rows instead (0.38 of a screen at 1440 × 900, not
-     0.64), so the chapter keeps its poster pacing and grows by the roster alone; a 22 dwell, as on phones, would save
-     0.28 of a screen at 1440 × 900 but change a pace nobody asked to change. -->
-<section class="chapter" id="showcase" data-chapter data-theme="dark" data-scene="posters" data-plate="umber" aria-labelledby="showcase-title">
-  <div class="sc-run" data-sc-run style="--sc-run: 282svh; --sc-run-m: 254svh">
-    <div class="sc-pin" data-sc-pin>
-      <div class="sc-head col">
-        <div class="scrim">
-          <h2 class="giant" id="showcase-title" data-reveal>Showcase</h2>
-        </div>
-      </div>
-      <div class="sc-stage">
-        <div class="sc-col col">
-          <ol class="sc-list" data-sc-list>
-            <li class="sc-item" data-slug="layi-wasabi">
-              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><picture><source type="image/avif" srcset="/assets/posters/layi-wasabi-640.avif 640w, /assets/posters/layi-wasabi-960.avif 960w, /assets/posters/layi-wasabi-1200.avif 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px"><img src="/assets/posters/layi-wasabi.webp" srcset="/assets/posters/layi-wasabi-640.webp 640w, /assets/posters/layi-wasabi-960.webp 960w, /assets/posters/layi-wasabi.webp 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px" alt="Layi Wasabi — The Law" width="1200" height="1499" loading="lazy" decoding="async"></picture></button>
-              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Layi Wasabi</span><span class="sc-item__n"><b>01</b><span> / 07</span></span></p>
-            </li>
-            <li class="sc-item" data-slug="omoni-oboli-tv">
-              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><picture><source type="image/avif" srcset="/assets/posters/omoni-oboli-tv-640.avif 640w, /assets/posters/omoni-oboli-tv-960.avif 960w, /assets/posters/omoni-oboli-tv-1200.avif 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px"><img src="/assets/posters/omoni-oboli-tv.webp" srcset="/assets/posters/omoni-oboli-tv-640.webp 640w, /assets/posters/omoni-oboli-tv-960.webp 960w, /assets/posters/omoni-oboli-tv.webp 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px" alt="Omoni Oboli TV — Two exes. One wedding." width="1200" height="1876" loading="lazy" decoding="async"></picture></button>
-              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Omoni Oboli TV</span><span class="sc-item__n"><b>02</b><span> / 07</span></span></p>
-            </li>
-            <li class="sc-item" data-slug="isbae-u">
-              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><picture><source type="image/avif" srcset="/assets/posters/isbae-u-640.avif 640w, /assets/posters/isbae-u-960.avif 960w, /assets/posters/isbae-u-1200.avif 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px"><img src="/assets/posters/isbae-u.webp" srcset="/assets/posters/isbae-u-640.webp 640w, /assets/posters/isbae-u-960.webp 960w, /assets/posters/isbae-u.webp 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px" alt="Isbae U — Curiosity Made Me Ask" width="1200" height="1499" loading="lazy" decoding="async"></picture></button>
-              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Isbae U</span><span class="sc-item__n"><b>03</b><span> / 07</span></span></p>
-            </li>
-            <li class="sc-item" data-slug="broda-shaggi">
-              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><picture><source type="image/avif" srcset="/assets/posters/broda-shaggi-640.avif 640w, /assets/posters/broda-shaggi-960.avif 960w, /assets/posters/broda-shaggi-1200.avif 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px"><img src="/assets/posters/broda-shaggi.webp" srcset="/assets/posters/broda-shaggi-640.webp 640w, /assets/posters/broda-shaggi-960.webp 960w, /assets/posters/broda-shaggi.webp 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px" alt="Broda Shaggi — The Hustler" width="1200" height="1499" loading="lazy" decoding="async"></picture></button>
-              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Broda Shaggi</span><span class="sc-item__n"><b>04</b><span> / 07</span></span></p>
-            </li>
-            <li class="sc-item" data-slug="diary-of-a-naija-girl">
-              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><picture><source type="image/avif" srcset="/assets/posters/diary-of-a-naija-girl-640.avif 640w, /assets/posters/diary-of-a-naija-girl-960.avif 960w, /assets/posters/diary-of-a-naija-girl-1200.avif 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px"><img src="/assets/posters/diary-of-a-naija-girl.webp" srcset="/assets/posters/diary-of-a-naija-girl-640.webp 640w, /assets/posters/diary-of-a-naija-girl-960.webp 960w, /assets/posters/diary-of-a-naija-girl.webp 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px" alt="Diary of a Naija Girl — Dear DANG" width="1200" height="1876" loading="lazy" decoding="async"></picture></button>
-              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Diary of a Naija Girl</span><span class="sc-item__n"><b>05</b><span> / 07</span></span></p>
-            </li>
-            <li class="sc-item" data-slug="kie-kie">
-              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><picture><source type="image/avif" srcset="/assets/posters/kie-kie-640.avif 640w, /assets/posters/kie-kie-960.avif 960w, /assets/posters/kie-kie-1200.avif 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px"><img src="/assets/posters/kie-kie.webp" srcset="/assets/posters/kie-kie-640.webp 640w, /assets/posters/kie-kie-960.webp 960w, /assets/posters/kie-kie.webp 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px" alt="Kie Kie — The Crossover" width="1200" height="1499" loading="lazy" decoding="async"></picture></button>
-              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Kie Kie</span><span class="sc-item__n"><b>06</b><span> / 07</span></span></p>
-            </li>
-            <li class="sc-item" data-slug="kunle-afolayan">
-              <button class="sc-card" type="button" aria-haspopup="dialog" data-sc-card><picture><source type="image/avif" srcset="/assets/posters/kunle-afolayan-640.avif 640w, /assets/posters/kunle-afolayan-960.avif 960w, /assets/posters/kunle-afolayan-1200.avif 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px"><img src="/assets/posters/kunle-afolayan.webp" srcset="/assets/posters/kunle-afolayan-640.webp 640w, /assets/posters/kunle-afolayan-960.webp 960w, /assets/posters/kunle-afolayan.webp 1200w" sizes="(max-width: 719px) min(74vw, 320px), (max-width: 1023px) 30vw, 260px" alt="Kunle Afolayan — New Nigerian Cinema" width="1200" height="1876" loading="lazy" decoding="async"></picture></button>
-              <p class="sc-item__cap" aria-hidden="true"><span class="sc-item__nm">Kunle Afolayan</span><span class="sc-item__n"><b>07</b><span> / 07</span></span></p>
-            </li>
-          </ol>
-        </div>
-      </div>
-
-      <!-- the pinned frame: the slot the centred poster fills (CSS sets its size; WebGL and the proxy follow it) and the live caption -->
-      <div class="sc-frame col" aria-hidden="true">
-        <div class="sc-slot" data-sc-slot></div>
-        <div class="sc-cap" data-sc-cap>
-          <div class="sc-cap__rule"><span class="sc-cap__ticks"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="sc-cap__dot" data-sc-dot></span></div>
-          <div class="sc-cap__row">
-            <p class="sc-cap__names" data-sc-names><span class="is-on">Layi Wasabi</span><span>Omoni Oboli TV</span><span>Isbae U</span><span>Broda Shaggi</span><span>Diary of a Naija Girl</span><span>Kie Kie</span><span>Kunle Afolayan</span></p>
-            <p class="sc-cap__n"><b data-sc-num>01</b><span> / 07</span></p>
-          </div>
-        </div>
-      </div>
+<!-- V · SHOWCASE · scene: the umber room (plate:umber, gl/scenes/umber.js) · owner: builder C
+     2026-10-31, the client, of the pinned poster wall: "use the real youtube thumbnails on the cards and I dont we need
+     this section". So the posters, their arc, the poster modal and the typographic roster are gone: the chapter is the
+     giant title and one grid of cards, one per creator, each the creator's own YouTube thumbnail (self-hosted, no
+     request to YouTube before a click) with the creator's name and the video's title. The cards are the chapter's
+     index too, so no creator is listed twice.
+     No pinned run: the chapter is as tall as its content in every mode (?tier=0, reduced motion, no JS), so nothing is
+     reserved in CSS. Method's black sheet wipes off onto the umber room; data-umber keys the room's warm pool behind
+     the title (the umber scene's first key in document order; IX Directors' keys follow it).
+     The cards and their order (en-GB alphabetical by name: no editorial ranking of the client's creators) are written
+     by node src/partials/showcase.videos.mjs from docs/videos.json (the rules are in its header). A plain click plays
+     the video in the shared modal (src/sections/showcase.js); a modified click, or no JS, opens it on YouTube. -->
+<section class="chapter" id="showcase" data-chapter data-theme="dark" data-scene="plate:umber" data-plate="umber" data-umber="0 0.62 0.75 0.8 0.75" aria-labelledby="showcase-title">
+  <div class="sc-head col">
+    <div class="scrim">
+      <h2 class="giant" id="showcase-title" data-reveal>Showcase</h2>
     </div>
   </div>
 
-  <!-- ON THE ROSTER: every creator by name, type only (the F64 rule: no title, stat or claim beside a name), never
-       presented as complete. Rows: node src/partials/showcase.videos.mjs (the rules are in its header). -->
-  <div class="ros col" data-ros>
-    <h3 class="ros__label" id="ros-title" data-draft="DC76" data-reveal>On the roster</h3>
-    <ul class="ros__list" aria-labelledby="ros-title" data-reveal="0.06">
-            <!-- roster:start (generated by src/partials/showcase.videos.mjs from docs/videos.json: edit there, then re-run) -->
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=AlYIilRoBhQ" target="_blank" rel="noopener" data-ros-yt="AlYIilRoBhQ" data-ros-t="The Little Things in Marriage"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Abayomi Alvin</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=pb2jiuqmAms" target="_blank" rel="noopener" data-ros-yt="pb2jiuqmAms" data-ros-t="Insult Upon Injury"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Ariyiike Dimples</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=vuJBH0QyxZk" target="_blank" rel="noopener" data-ros-yt="vuJBH0QyxZk" data-ros-t="Uninvited Bride"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Biodun Stephen</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=8NM-yaMdmeg" target="_blank" rel="noopener" data-ros-yt="8NM-yaMdmeg" data-ros-t="Girls’ Hostel, episode 1: It Girl"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Bolu Essien</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=mr1Nx39P6Mo" target="_blank" rel="noopener" data-ros-yt="mr1Nx39P6Mo" data-ros-t="Ogene Boys"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Brain Jotter</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=MTZlMqXgUZA" target="_blank" rel="noopener" data-ros-yt="MTZlMqXgUZA" data-ros-t="FDI: Federal Disturbance Intelligence, episode 1"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Broda Shaggi</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=2FY9NcE2lbw" target="_blank" rel="noopener" data-ros-yt="2FY9NcE2lbw" data-ros-t="Bisola Aiyeola on intentional friendships"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Diary of a Naija Girl</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=2SgtAvc1HV8" target="_blank" rel="noopener" data-ros-yt="2SgtAvc1HV8" data-ros-t="Love and Kasala"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Emmabel TV</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=eRfM081tX0I" target="_blank" rel="noopener" data-ros-yt="eRfM081tX0I" data-ros-t="Never Far Away"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Gold Screen TV</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=nOedKYSXuPU" target="_blank" rel="noopener" data-ros-yt="nOedKYSXuPU" data-ros-t="RMD on Curiosity Made Me Ask"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Isbae U</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=fJKF3JlGsBE" target="_blank" rel="noopener" data-ros-yt="fJKF3JlGsBE" data-ros-t="Husband or Dare"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Kie Kie</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=Wx8X265MT3E" target="_blank" rel="noopener" data-ros-yt="Wx8X265MT3E" data-ros-t="Aníkúlápó: The Ghoul Awakens, official trailer"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Kunle Afolayan</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=6aheOxb7GPU" target="_blank" rel="noopener" data-ros-yt="6aheOxb7GPU" data-ros-t="The Law vs. The Machine"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Layi Wasabi</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=bx0QofHIX68" target="_blank" rel="noopener" data-ros-yt="bx0QofHIX68" data-ros-t="The Introduction"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Officer Woos</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=OQQaDqLCgKg" target="_blank" rel="noopener" data-ros-yt="OQQaDqLCgKg" data-ros-t="Love in Every Word 2: The Wedding"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Omoni Oboli TV</span></a></li>
-            <li class="ros__item"><a class="ros__row" href="https://www.youtube.com/watch?v=ScAcee_5Q4A" target="_blank" rel="noopener" data-ros-yt="ScAcee_5Q4A" data-ros-t="Love Stood Still"><span class="ros__act ros__act--watch" data-draft="DC77">Watch</span> <span class="ros__nm">Royal Arts TV</span></a></li>
-            <!-- roster:end -->
+  <div class="wv col" data-wv>
+    <h3 class="head wv__head" id="wv-title" data-draft="DC60" data-reveal><span class="dc">W</span>atch the work</h3>
+    <ul class="wv__list" aria-labelledby="wv-title" data-reveal="0.06">
+      <!-- videos:start (generated by src/partials/showcase.videos.mjs from docs/videos.json: edit there, then re-run) -->
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=AlYIilRoBhQ" target="_blank" rel="noopener" data-wv-yt="AlYIilRoBhQ"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/AlYIilRoBhQ-320.avif 320w, /assets/thumbs/video/AlYIilRoBhQ-640.avif 640w, /assets/thumbs/video/AlYIilRoBhQ-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/AlYIilRoBhQ-320.webp 320w, /assets/thumbs/video/AlYIilRoBhQ-640.webp 640w, /assets/thumbs/video/AlYIilRoBhQ-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/AlYIilRoBhQ-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Abayomi Alvin</span><span class="sr-only">, </span><span class="wv__t">The Little Things in Marriage</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=pb2jiuqmAms" target="_blank" rel="noopener" data-wv-yt="pb2jiuqmAms"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/pb2jiuqmAms-320.avif 320w, /assets/thumbs/video/pb2jiuqmAms-640.avif 640w, /assets/thumbs/video/pb2jiuqmAms-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/pb2jiuqmAms-320.webp 320w, /assets/thumbs/video/pb2jiuqmAms-640.webp 640w, /assets/thumbs/video/pb2jiuqmAms-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/pb2jiuqmAms-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Ariyiike Dimples</span><span class="sr-only">, </span><span class="wv__t">Insult Upon Injury</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=vuJBH0QyxZk" target="_blank" rel="noopener" data-wv-yt="vuJBH0QyxZk"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/vuJBH0QyxZk-320.avif 320w, /assets/thumbs/video/vuJBH0QyxZk-640.avif 640w, /assets/thumbs/video/vuJBH0QyxZk-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/vuJBH0QyxZk-320.webp 320w, /assets/thumbs/video/vuJBH0QyxZk-640.webp 640w, /assets/thumbs/video/vuJBH0QyxZk-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/vuJBH0QyxZk-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Biodun Stephen</span><span class="sr-only">, </span><span class="wv__t">Uninvited Bride</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=8NM-yaMdmeg" target="_blank" rel="noopener" data-wv-yt="8NM-yaMdmeg"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/8NM-yaMdmeg-320.avif 320w, /assets/thumbs/video/8NM-yaMdmeg-640.avif 640w, /assets/thumbs/video/8NM-yaMdmeg-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/8NM-yaMdmeg-320.webp 320w, /assets/thumbs/video/8NM-yaMdmeg-640.webp 640w, /assets/thumbs/video/8NM-yaMdmeg-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/8NM-yaMdmeg-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Bolu Essien</span><span class="sr-only">, </span><span class="wv__t">Girls’ Hostel, episode 1: It Girl</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=mr1Nx39P6Mo" target="_blank" rel="noopener" data-wv-yt="mr1Nx39P6Mo"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/mr1Nx39P6Mo-320.avif 320w, /assets/thumbs/video/mr1Nx39P6Mo-640.avif 640w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/mr1Nx39P6Mo-320.webp 320w, /assets/thumbs/video/mr1Nx39P6Mo-640.webp 640w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/mr1Nx39P6Mo-640.webp" alt="" width="640" height="360" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Brain Jotter</span><span class="sr-only">, </span><span class="wv__t">Ogene Boys</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=MTZlMqXgUZA" target="_blank" rel="noopener" data-wv-yt="MTZlMqXgUZA"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/MTZlMqXgUZA-320.avif 320w, /assets/thumbs/video/MTZlMqXgUZA-640.avif 640w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/MTZlMqXgUZA-320.webp 320w, /assets/thumbs/video/MTZlMqXgUZA-640.webp 640w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/MTZlMqXgUZA-640.webp" alt="" width="640" height="360" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Broda Shaggi</span><span class="sr-only">, </span><span class="wv__t">FDI: Federal Disturbance Intelligence, episode 1</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=2FY9NcE2lbw" target="_blank" rel="noopener" data-wv-yt="2FY9NcE2lbw"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/2FY9NcE2lbw-320.avif 320w, /assets/thumbs/video/2FY9NcE2lbw-640.avif 640w, /assets/thumbs/video/2FY9NcE2lbw-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/2FY9NcE2lbw-320.webp 320w, /assets/thumbs/video/2FY9NcE2lbw-640.webp 640w, /assets/thumbs/video/2FY9NcE2lbw-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/2FY9NcE2lbw-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Diary of a Naija Girl</span><span class="sr-only">, </span><span class="wv__t">Bisola Aiyeola on intentional friendships</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=2SgtAvc1HV8" target="_blank" rel="noopener" data-wv-yt="2SgtAvc1HV8"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/2SgtAvc1HV8-320.avif 320w, /assets/thumbs/video/2SgtAvc1HV8-640.avif 640w, /assets/thumbs/video/2SgtAvc1HV8-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/2SgtAvc1HV8-320.webp 320w, /assets/thumbs/video/2SgtAvc1HV8-640.webp 640w, /assets/thumbs/video/2SgtAvc1HV8-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/2SgtAvc1HV8-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Emmabel TV</span><span class="sr-only">, </span><span class="wv__t">Love and Kasala</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=eRfM081tX0I" target="_blank" rel="noopener" data-wv-yt="eRfM081tX0I"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/eRfM081tX0I-320.avif 320w, /assets/thumbs/video/eRfM081tX0I-640.avif 640w, /assets/thumbs/video/eRfM081tX0I-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/eRfM081tX0I-320.webp 320w, /assets/thumbs/video/eRfM081tX0I-640.webp 640w, /assets/thumbs/video/eRfM081tX0I-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/eRfM081tX0I-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Gold Screen TV</span><span class="sr-only">, </span><span class="wv__t">Never Far Away</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=nOedKYSXuPU" target="_blank" rel="noopener" data-wv-yt="nOedKYSXuPU"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/nOedKYSXuPU-320.avif 320w, /assets/thumbs/video/nOedKYSXuPU-640.avif 640w, /assets/thumbs/video/nOedKYSXuPU-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/nOedKYSXuPU-320.webp 320w, /assets/thumbs/video/nOedKYSXuPU-640.webp 640w, /assets/thumbs/video/nOedKYSXuPU-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/nOedKYSXuPU-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Isbae U</span><span class="sr-only">, </span><span class="wv__t">RMD on Curiosity Made Me Ask</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=fJKF3JlGsBE" target="_blank" rel="noopener" data-wv-yt="fJKF3JlGsBE"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/fJKF3JlGsBE-320.avif 320w, /assets/thumbs/video/fJKF3JlGsBE-640.avif 640w, /assets/thumbs/video/fJKF3JlGsBE-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/fJKF3JlGsBE-320.webp 320w, /assets/thumbs/video/fJKF3JlGsBE-640.webp 640w, /assets/thumbs/video/fJKF3JlGsBE-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/fJKF3JlGsBE-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Kie Kie</span><span class="sr-only">, </span><span class="wv__t">Husband or Dare</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=Wx8X265MT3E" target="_blank" rel="noopener" data-wv-yt="Wx8X265MT3E"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/Wx8X265MT3E-320.avif 320w, /assets/thumbs/video/Wx8X265MT3E-640.avif 640w, /assets/thumbs/video/Wx8X265MT3E-1138.avif 1138w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/Wx8X265MT3E-320.webp 320w, /assets/thumbs/video/Wx8X265MT3E-640.webp 640w, /assets/thumbs/video/Wx8X265MT3E-1138.webp 1138w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/Wx8X265MT3E-640.webp" alt="" width="1138" height="640" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Kunle Afolayan</span><span class="sr-only">, </span><span class="wv__t">Aníkúlápó: The Ghoul Awakens, official trailer</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=6aheOxb7GPU" target="_blank" rel="noopener" data-wv-yt="6aheOxb7GPU"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/6aheOxb7GPU-320.avif 320w, /assets/thumbs/video/6aheOxb7GPU-640.avif 640w, /assets/thumbs/video/6aheOxb7GPU-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/6aheOxb7GPU-320.webp 320w, /assets/thumbs/video/6aheOxb7GPU-640.webp 640w, /assets/thumbs/video/6aheOxb7GPU-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/6aheOxb7GPU-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Layi Wasabi</span><span class="sr-only">, </span><span class="wv__t">The Law vs. The Machine</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=bx0QofHIX68" target="_blank" rel="noopener" data-wv-yt="bx0QofHIX68"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/bx0QofHIX68-320.avif 320w, /assets/thumbs/video/bx0QofHIX68-640.avif 640w, /assets/thumbs/video/bx0QofHIX68-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/bx0QofHIX68-320.webp 320w, /assets/thumbs/video/bx0QofHIX68-640.webp 640w, /assets/thumbs/video/bx0QofHIX68-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/bx0QofHIX68-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Officer Woos</span><span class="sr-only">, </span><span class="wv__t">The Introduction</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=OQQaDqLCgKg" target="_blank" rel="noopener" data-wv-yt="OQQaDqLCgKg"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/OQQaDqLCgKg-320.avif 320w, /assets/thumbs/video/OQQaDqLCgKg-640.avif 640w, /assets/thumbs/video/OQQaDqLCgKg-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/OQQaDqLCgKg-320.webp 320w, /assets/thumbs/video/OQQaDqLCgKg-640.webp 640w, /assets/thumbs/video/OQQaDqLCgKg-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/OQQaDqLCgKg-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Omoni Oboli TV</span><span class="sr-only">, </span><span class="wv__t">Love in Every Word 2: The Wedding</span></span></a></li>
+      <li class="wv__item"><a class="wv__card" href="https://www.youtube.com/watch?v=ScAcee_5Q4A" target="_blank" rel="noopener" data-wv-yt="ScAcee_5Q4A"><span class="wv__art"><picture><source type="image/avif" srcset="/assets/thumbs/video/ScAcee_5Q4A-320.avif 320w, /assets/thumbs/video/ScAcee_5Q4A-640.avif 640w, /assets/thumbs/video/ScAcee_5Q4A-1280.avif 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><source type="image/webp" srcset="/assets/thumbs/video/ScAcee_5Q4A-320.webp 320w, /assets/thumbs/video/ScAcee_5Q4A-640.webp 640w, /assets/thumbs/video/ScAcee_5Q4A-1280.webp 1280w" sizes="(max-width: 719px) min(37vw, 152px), (max-width: 1023px) 22vw, 18vw"><img src="/assets/thumbs/video/ScAcee_5Q4A-640.webp" alt="" width="1280" height="720" loading="lazy" decoding="async"></picture><span class="wv__icon" aria-hidden="true"></span></span><span class="wv__txt"><span class="wv__by">Royal Arts TV</span><span class="sr-only">, </span><span class="wv__t">Love Stood Still</span></span></a></li>
+      <!-- videos:end -->
     </ul>
-  </div>
-
-  <!-- WATCH THE WORK (plan §3.8): XXL 16:9 video cards after the poster room, one per creator. The cards are generated
-       from docs/videos.json (node src/partials/showcase.videos.mjs); the ids are unverified until the client confirms.
-       No third-party request at load: the art is the creator's poster composed 16:9 (public/assets/thumbs/video); with
-       JS the YouTube thumbnail replaces it once Showcase is within about a screen, and a card whose thumbnail comes back
-       as YouTube's 120×90 placeholder (an id that does not exist) is hidden. "Play" opens the shared modal (View
-       Transitions morph from the card art); the youtube-nocookie iframe is created then, and removed on close.
-       A horizontal snap row: Previous / Next on desktop, swipe on touch. -->
-  <div class="wv" data-wv role="region" aria-roledescription="carousel" aria-labelledby="wv-title">
-    <div class="wv__head col">
-      <h3 class="head wv__title" id="wv-title" data-draft="DC60" data-reveal><span class="dc">W</span>atch the work</h3>
-      <div class="wv__nav" data-wv-nav hidden>
-        <p class="wv__n" aria-live="polite" aria-atomic="true"><b data-wv-num>01</b> / <span data-wv-total>07</span></p>
-        <button class="wv__btn" type="button" data-wv-prev aria-controls="wv-list">Previous</button>
-        <button class="wv__btn" type="button" data-wv-next aria-controls="wv-list">Next</button>
-      </div>
-    </div>
-    <div class="wv__rail">
-      <div class="wv__scroller" data-wv-scroller>
-        <ol class="wv__list" id="wv-list" data-wv-list>
-            <!-- videos:start (generated by src/partials/showcase.videos.mjs from docs/videos.json: edit there, then re-run) -->
-            <li class="wv__item" data-yt="6aheOxb7GPU" data-slug="layi-wasabi">
-              <article class="wv__card">
-                <button class="wv__play" type="button" aria-haspopup="dialog" aria-labelledby="wv-cta-1 wv-t-1" data-wv-play>
-                  <picture class="wv__art"><source type="image/avif" srcset="/assets/thumbs/video/layi-wasabi-640.avif 640w, /assets/thumbs/video/layi-wasabi-1280.avif 1280w, /assets/thumbs/video/layi-wasabi-1920.avif 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><source type="image/webp" srcset="/assets/thumbs/video/layi-wasabi-640.webp 640w, /assets/thumbs/video/layi-wasabi-1280.webp 1280w, /assets/thumbs/video/layi-wasabi-1920.webp 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><img src="/assets/thumbs/video/layi-wasabi-1280.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async"></picture>
-                  <span class="wv__icon" aria-hidden="true"></span>
-                  <span class="wv__cta" id="wv-cta-1" data-draft="DC61">Play</span>
-                </button>
-                <div class="wv__meta">
-                  <p class="wv__by">Layi Wasabi</p>
-                  <h4 class="wv__t" id="wv-t-1">The Law vs. The Machine</h4>
-                  <a class="boxlink wv__yt" href="https://www.youtube.com/watch?v=6aheOxb7GPU" target="_blank" rel="noopener" aria-describedby="wv-t-1" data-draft="DC62">Watch on YouTube <span class="ar" aria-hidden="true">→</span></a>
-                </div>
-              </article>
-            </li>
-            <li class="wv__item" data-yt="OQQaDqLCgKg" data-slug="omoni-oboli-tv">
-              <article class="wv__card">
-                <button class="wv__play" type="button" aria-haspopup="dialog" aria-labelledby="wv-cta-2 wv-t-2" data-wv-play>
-                  <picture class="wv__art"><source type="image/avif" srcset="/assets/thumbs/video/omoni-oboli-tv-640.avif 640w, /assets/thumbs/video/omoni-oboli-tv-1280.avif 1280w, /assets/thumbs/video/omoni-oboli-tv-1920.avif 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><source type="image/webp" srcset="/assets/thumbs/video/omoni-oboli-tv-640.webp 640w, /assets/thumbs/video/omoni-oboli-tv-1280.webp 1280w, /assets/thumbs/video/omoni-oboli-tv-1920.webp 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><img src="/assets/thumbs/video/omoni-oboli-tv-1280.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async"></picture>
-                  <span class="wv__icon" aria-hidden="true"></span>
-                  <span class="wv__cta" id="wv-cta-2" data-draft="DC61">Play</span>
-                </button>
-                <div class="wv__meta">
-                  <p class="wv__by">Omoni Oboli TV</p>
-                  <h4 class="wv__t" id="wv-t-2">Love in Every Word 2: The Wedding</h4>
-                  <a class="boxlink wv__yt" href="https://www.youtube.com/watch?v=OQQaDqLCgKg" target="_blank" rel="noopener" aria-describedby="wv-t-2" data-draft="DC62">Watch on YouTube <span class="ar" aria-hidden="true">→</span></a>
-                </div>
-              </article>
-            </li>
-            <li class="wv__item" data-yt="nOedKYSXuPU" data-slug="isbae-u">
-              <article class="wv__card">
-                <button class="wv__play" type="button" aria-haspopup="dialog" aria-labelledby="wv-cta-3 wv-t-3" data-wv-play>
-                  <picture class="wv__art"><source type="image/avif" srcset="/assets/thumbs/video/isbae-u-640.avif 640w, /assets/thumbs/video/isbae-u-1280.avif 1280w, /assets/thumbs/video/isbae-u-1920.avif 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><source type="image/webp" srcset="/assets/thumbs/video/isbae-u-640.webp 640w, /assets/thumbs/video/isbae-u-1280.webp 1280w, /assets/thumbs/video/isbae-u-1920.webp 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><img src="/assets/thumbs/video/isbae-u-1280.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async"></picture>
-                  <span class="wv__icon" aria-hidden="true"></span>
-                  <span class="wv__cta" id="wv-cta-3" data-draft="DC61">Play</span>
-                </button>
-                <div class="wv__meta">
-                  <p class="wv__by">Isbae U</p>
-                  <h4 class="wv__t" id="wv-t-3">RMD on Curiosity Made Me Ask</h4>
-                  <a class="boxlink wv__yt" href="https://www.youtube.com/watch?v=nOedKYSXuPU" target="_blank" rel="noopener" aria-describedby="wv-t-3" data-draft="DC62">Watch on YouTube <span class="ar" aria-hidden="true">→</span></a>
-                </div>
-              </article>
-            </li>
-            <li class="wv__item" data-yt="MTZlMqXgUZA" data-slug="broda-shaggi">
-              <article class="wv__card">
-                <button class="wv__play" type="button" aria-haspopup="dialog" aria-labelledby="wv-cta-4 wv-t-4" data-wv-play>
-                  <picture class="wv__art"><source type="image/avif" srcset="/assets/thumbs/video/broda-shaggi-640.avif 640w, /assets/thumbs/video/broda-shaggi-1280.avif 1280w, /assets/thumbs/video/broda-shaggi-1920.avif 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><source type="image/webp" srcset="/assets/thumbs/video/broda-shaggi-640.webp 640w, /assets/thumbs/video/broda-shaggi-1280.webp 1280w, /assets/thumbs/video/broda-shaggi-1920.webp 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><img src="/assets/thumbs/video/broda-shaggi-1280.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async"></picture>
-                  <span class="wv__icon" aria-hidden="true"></span>
-                  <span class="wv__cta" id="wv-cta-4" data-draft="DC61">Play</span>
-                </button>
-                <div class="wv__meta">
-                  <p class="wv__by">Broda Shaggi</p>
-                  <h4 class="wv__t" id="wv-t-4">FDI: Federal Disturbance Intelligence, episode 1</h4>
-                  <a class="boxlink wv__yt" href="https://www.youtube.com/watch?v=MTZlMqXgUZA" target="_blank" rel="noopener" aria-describedby="wv-t-4" data-draft="DC62">Watch on YouTube <span class="ar" aria-hidden="true">→</span></a>
-                </div>
-              </article>
-            </li>
-            <li class="wv__item" data-yt="2FY9NcE2lbw" data-slug="diary-of-a-naija-girl">
-              <article class="wv__card">
-                <button class="wv__play" type="button" aria-haspopup="dialog" aria-labelledby="wv-cta-5 wv-t-5" data-wv-play>
-                  <picture class="wv__art"><source type="image/avif" srcset="/assets/thumbs/video/diary-of-a-naija-girl-640.avif 640w, /assets/thumbs/video/diary-of-a-naija-girl-1280.avif 1280w, /assets/thumbs/video/diary-of-a-naija-girl-1920.avif 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><source type="image/webp" srcset="/assets/thumbs/video/diary-of-a-naija-girl-640.webp 640w, /assets/thumbs/video/diary-of-a-naija-girl-1280.webp 1280w, /assets/thumbs/video/diary-of-a-naija-girl-1920.webp 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><img src="/assets/thumbs/video/diary-of-a-naija-girl-1280.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async"></picture>
-                  <span class="wv__icon" aria-hidden="true"></span>
-                  <span class="wv__cta" id="wv-cta-5" data-draft="DC61">Play</span>
-                </button>
-                <div class="wv__meta">
-                  <p class="wv__by">Diary of a Naija Girl</p>
-                  <h4 class="wv__t" id="wv-t-5">Bisola Aiyeola on intentional friendships</h4>
-                  <a class="boxlink wv__yt" href="https://www.youtube.com/watch?v=2FY9NcE2lbw" target="_blank" rel="noopener" aria-describedby="wv-t-5" data-draft="DC62">Watch on YouTube <span class="ar" aria-hidden="true">→</span></a>
-                </div>
-              </article>
-            </li>
-            <li class="wv__item" data-yt="fJKF3JlGsBE" data-slug="kie-kie">
-              <article class="wv__card">
-                <button class="wv__play" type="button" aria-haspopup="dialog" aria-labelledby="wv-cta-6 wv-t-6" data-wv-play>
-                  <picture class="wv__art"><source type="image/avif" srcset="/assets/thumbs/video/kie-kie-640.avif 640w, /assets/thumbs/video/kie-kie-1280.avif 1280w, /assets/thumbs/video/kie-kie-1920.avif 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><source type="image/webp" srcset="/assets/thumbs/video/kie-kie-640.webp 640w, /assets/thumbs/video/kie-kie-1280.webp 1280w, /assets/thumbs/video/kie-kie-1920.webp 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><img src="/assets/thumbs/video/kie-kie-1280.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async"></picture>
-                  <span class="wv__icon" aria-hidden="true"></span>
-                  <span class="wv__cta" id="wv-cta-6" data-draft="DC61">Play</span>
-                </button>
-                <div class="wv__meta">
-                  <p class="wv__by">Kie Kie</p>
-                  <h4 class="wv__t" id="wv-t-6">Husband or Dare</h4>
-                  <a class="boxlink wv__yt" href="https://www.youtube.com/watch?v=fJKF3JlGsBE" target="_blank" rel="noopener" aria-describedby="wv-t-6" data-draft="DC62">Watch on YouTube <span class="ar" aria-hidden="true">→</span></a>
-                </div>
-              </article>
-            </li>
-            <li class="wv__item" data-yt="Wx8X265MT3E" data-slug="kunle-afolayan">
-              <article class="wv__card">
-                <button class="wv__play" type="button" aria-haspopup="dialog" aria-labelledby="wv-cta-7 wv-t-7" data-wv-play>
-                  <picture class="wv__art"><source type="image/avif" srcset="/assets/thumbs/video/kunle-afolayan-640.avif 640w, /assets/thumbs/video/kunle-afolayan-1280.avif 1280w, /assets/thumbs/video/kunle-afolayan-1920.avif 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><source type="image/webp" srcset="/assets/thumbs/video/kunle-afolayan-640.webp 640w, /assets/thumbs/video/kunle-afolayan-1280.webp 1280w, /assets/thumbs/video/kunle-afolayan-1920.webp 1920w" sizes="(max-width: 719px) 86vw, (max-width: 1023px) 78vw, min(64vw, 960px)"><img src="/assets/thumbs/video/kunle-afolayan-1280.webp" alt="" width="1920" height="1080" loading="lazy" decoding="async"></picture>
-                  <span class="wv__icon" aria-hidden="true"></span>
-                  <span class="wv__cta" id="wv-cta-7" data-draft="DC61">Play</span>
-                </button>
-                <div class="wv__meta">
-                  <p class="wv__by">Kunle Afolayan</p>
-                  <h4 class="wv__t" id="wv-t-7">Aníkúlápó: The Ghoul Awakens, official trailer</h4>
-                  <a class="boxlink wv__yt" href="https://www.youtube.com/watch?v=Wx8X265MT3E" target="_blank" rel="noopener" aria-describedby="wv-t-7" data-draft="DC62">Watch on YouTube <span class="ar" aria-hidden="true">→</span></a>
-                </div>
-              </article>
-            </li>
-            <!-- videos:end -->
-        </ol>
-      </div>
-    </div>
-    <!-- phones: the position under the row (the head's counter shows from 720 px) -->
-    <p class="wv__n wv__n--foot col" aria-live="polite" aria-atomic="true"><b data-wv-num>01</b> / <span data-wv-total>07</span></p>
+    <!-- more:start (generated by src/partials/showcase.videos.mjs: creators without a card) --><!-- more:end -->
   </div>
 </section>

@@ -1,292 +1,64 @@
-/* V · Showcase
-   Static by default (no JS, ?tier=0, reduced motion): a calm grid on desktop, a scroll-snap row on phones.
-   .sc-on (JS + a WebGL tier): a tall pinned run; the poster buttons become a CSS-3D proxy of the WebGL arc.
-   .sc-on.is-gl under html.gl-ready: WebGL draws the posters; the proxy is invisible and lets the pointer
-   through, but keeps its buttons for keyboard focus and screen readers. */
-
-/* the title: at the top of the run (static), at the top of the pin (.sc-on), the same place in both, so the switch at
-   init moves nothing on screen (a deep link to #showcase) */
-.sc-head { position: relative; z-index: 2; padding-top: calc(var(--nav-h) + clamp(8px, 2svh, 20px)); color: var(--cream); }
+/* V · Showcase: the giant title over the umber room, then one grid of video cards (src/partials/showcase.html).
+   No pinned run and nothing reserved: the chapter is as tall as its content in every mode (?tier=0, reduced motion, no
+   JS), so a deep link lands where it stays. */
+.sc-head { position: relative; z-index: 2; padding-top: calc(var(--nav-h) + clamp(28px, 7svh, 80px)); color: var(--cream); }
 .sc-head .giant { margin: 0; }
 
-/* ── static ─────────────────────────────────────────────────────────── */
-.sc-run { position: relative; padding-bottom: clamp(96px, 16vh, 180px); }
-.sc-pin { position: relative; }
-#showcase:not(.sc-on) .sc-head { padding-bottom: clamp(32px, 6vh, 64px); }
-.sc-frame { display: none; }
-.sc-list {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
-  gap: clamp(32px, 5vh, 56px) clamp(18px, 2.4vw, 32px); align-items: end;
+/* ── Watch the work: the cards ────────────────────────────────────────────────────────────────────────────────
+   From 720 px: four columns (16 cards, so no row is ever left with one), each the 16:9 thumbnail with a small cream
+   play disc at its lower left, then a hairline, the creator's name in small caps and the title in the label role.
+   Below 720 px: a list, the thumbnail left and the name and title beside it, a hairline over each row.
+   A hover (pointer devices) steps the other cards back and grows the art a little: opacity and transform only. Focus
+   takes the page's gold ring around the whole card and dims nothing. */
+.wv { position: relative; color: var(--cream); padding-block: clamp(24px, 4.4svh, 52px) clamp(96px, 16vh, 180px); }
+.wv__head { margin-bottom: clamp(18px, 3.4vh, 40px); }
+.wv__list { display: grid; grid-template-columns: minmax(0, 1fr); }
+.wv__card {
+  display: grid; grid-template-columns: min(37vw, 152px) minmax(0, 1fr); column-gap: 14px; align-items: center;
+  padding-block: 11px; border-top: 1px solid rgba(244, 237, 223, 0.2);
+  color: inherit; text-decoration: none; transition: opacity 0.35s var(--ease-out);
 }
-.sc-item { display: grid; gap: 14px; }
-.sc-card { position: relative; display: block; width: 100%; border-radius: 1px; }
-.sc-card img { width: 100%; height: auto; box-shadow: 0 26px 40px -18px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.35); transition: transform 0.5s var(--ease-out); }
-.sc-card:hover img { transform: translateY(-4px); }
-.sc-card:focus-visible { outline-offset: 6px; }
-.sc-item__cap {
-  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
-  padding-top: 10px; box-shadow: inset 0 1px 0 rgba(244, 237, 223, 0.22);
+.wv__card:focus-visible { outline-offset: 6px; }
+.wv__art {
+  position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 3px; background: #1b150e;
+  box-shadow: 0 0 0 1px rgba(244, 237, 223, 0.08);
 }
-.sc-item__nm { font: var(--f-lead); letter-spacing: var(--ls-lead); }
-.sc-item__n, .sc-cap__n {
-  font: var(--f-small); letter-spacing: var(--ls-caps); white-space: nowrap;
-  font-variant-numeric: lining-nums tabular-nums; color: var(--cream-mute);
-}
-.sc-item__n b, .sc-cap__n b { font-weight: inherit; color: var(--cream); }
-@media (max-width: 719px) {
-  .sc-list {
-    display: flex; gap: 14px; align-items: flex-end;
-    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none;
-    margin-inline: calc(-1 * var(--col-pad)); padding: 4px var(--col-pad) 8px; scroll-padding-inline: var(--col-pad);
-  }
-  .sc-list::-webkit-scrollbar { display: none; }
-  .sc-item { flex: 0 0 min(74vw, 320px); scroll-snap-align: center; }
-}
-
-/* ── the run's length, reserved before any script runs ─────────────────
-   The pinned run is N × dwell + the pin's own screen (--sc-run / --sc-run-m, written on the run in the markup). Where
-   showcase.js will run it (JS, a WebGL tier: not html.t0 / [data-tier='0'], motion allowed: the same test as
-   TIER > 0 && !REDUCED), CSS gives the run that height from the first layout, so the section never grows at init and a
-   deep link to a chapter below lands where it stays (CLS 0). Until .sc-on the static list is not painted (it would
-   jump into the arc at init); a fail-safe shows it if the script never comes. */
-@keyframes sc-failsafe { to { visibility: visible; } }
-@media (prefers-reduced-motion: no-preference) {
-  html.js:not(.t0):not([data-tier='0']) .sc-run { height: var(--sc-run, 282svh); padding: 0; }
-  html.js:not(.t0):not([data-tier='0']) #showcase:not(.sc-on) .sc-list { visibility: hidden; animation: sc-failsafe 0s linear 6s forwards; }
-}
-@media (prefers-reduced-motion: no-preference) and (max-width: 719px) {
-  html.js:not(.t0):not([data-tier='0']) .sc-run { height: var(--sc-run-m, 254svh); }
-}
-
-/* ── animated: the pinned run ───────────────────────────────────────── */
-.sc-on .sc-run { height: var(--sc-run, 282svh); padding: 0; }
-@media (max-width: 719px) { .sc-on .sc-run { height: var(--sc-run-m, 254svh); } }
-/* the pin: the title on top, the arc's frame under it. The slot's height is what the screen leaves under the title
-   (title line, the caption, the gaps), so the centred poster never reaches the title */
-.sc-on .sc-pin {
-  position: sticky; top: 0; height: 100svh; overflow: hidden;
-  display: grid; grid-template-rows: auto minmax(0, 1fr);
-  --sc-gap: clamp(16px, 3svh, 36px); --sc-bot: clamp(14px, 3svh, 32px);
-  --sc-h: max(200px, min(56svh, 700px, calc(100svh - var(--nav-h) - clamp(8px, 2svh, 20px) - var(--t-title) * var(--lh-title) - 2 * var(--sc-gap) - 48px - var(--sc-bot))));
-}
-.sc-on .sc-head { grid-row: 1; }
-.sc-on .sc-stage { position: absolute; inset: 0; }
-.sc-on .sc-col { position: static; }
-.sc-on .sc-list {
-  position: absolute; inset: 0; display: block; overflow: visible; margin: 0; padding: 0;
-  /* fade at the viewport edges (under the rail on desktop): same stops as the WebGL fade */
-  -webkit-mask-image: linear-gradient(90deg, transparent var(--l0, 0px), #000 var(--l1, 0px), #000 var(--r0, 100%), transparent var(--r1, 100%));
-  mask-image: linear-gradient(90deg, transparent var(--l0, 0px), #000 var(--l1, 0px), #000 var(--r0, 100%), transparent var(--r1, 100%));
-}
-.sc-on .sc-item { position: absolute; left: 0; top: 0; display: block; will-change: transform, opacity; }
-.sc-on .sc-item__cap { display: none; }
-.sc-on .sc-card { width: 100%; height: 100%; }
-.sc-on .sc-card img { width: 100%; height: 100%; transition: opacity 0.6s var(--ease-out); }
-.sc-on .sc-card:hover img { transform: none; }
-.sc-on .sc-card::after {
-  content: ''; position: absolute; inset: 0; pointer-events: none;
-  background: var(--ink); opacity: var(--shade, 0); transition: opacity 0.6s var(--ease-out);
-}
-.sc-on .sc-card:focus-visible { outline-offset: 10px; }
-.sc-on .sc-pin.is-hover { cursor: pointer; }
-
-/* WebGL has drawn: hide the proxy's pixels, keep its buttons (focus ring + screen readers) */
-html.gl-ready .sc-on.is-gl .sc-card { pointer-events: none; }
-html.gl-ready .sc-on.is-gl .sc-card img,
-html.gl-ready .sc-on.is-gl .sc-card::after { opacity: 0; box-shadow: none; }
-html.gl-ready .sc-on.is-gl .sc-list { -webkit-mask-image: none; mask-image: none; }
-
-/* the frame over the pin: the slot the centred poster fills, and the caption under it */
-.sc-on .sc-frame {
-  grid-row: 2; position: relative; z-index: 2; min-height: 0; pointer-events: none;
-  display: grid; align-content: center; justify-items: center; row-gap: var(--sc-gap);
-  padding-top: var(--sc-gap); padding-bottom: var(--sc-bot);
-}
-.sc-slot { height: var(--sc-h); aspect-ratio: 4 / 5; }
-/* the caption sits under the centred poster like a museum label, as wide as the slot */
-.sc-cap { width: min(100%, calc(var(--sc-h) * 0.8)); color: var(--cream); transition: opacity 0.35s var(--ease-out); }
-.sc-on.is-modal .sc-cap { opacity: 0 !important; }   /* it would show through the modal's scrim (!important: showcase.js writes its opacity inline) */
-.sc-cap__rule { position: relative; height: 1px; background: rgba(244, 237, 223, 0.24); margin-bottom: 14px; }
-.sc-cap__ticks { position: absolute; inset: 0; display: flex; justify-content: space-between; }
-.sc-cap__ticks i { width: 1px; height: 7px; margin-top: -3px; background: rgba(244, 237, 223, 0.42); }
-.sc-cap__dot {
-  position: absolute; left: -4px; top: -4px; width: 9px; height: 9px; border-radius: 50%;
-  background: var(--gold); box-shadow: 0 0 0 3px rgba(11, 8, 5, 0.55);
-}
-.sc-cap__row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
-.sc-cap__names { display: grid; min-width: 0; }
-.sc-cap__names > span {
-  grid-area: 1 / 1; font: var(--f-lead); letter-spacing: var(--ls-lead); white-space: nowrap;
-  opacity: 0; transform: translate3d(0, 0.45em, 0);
-  transition: opacity 0.45s var(--ease-out), transform 0.7s var(--ease-out);
-}
-.sc-cap__names > span.is-before { transform: translate3d(0, -0.45em, 0); }
-.sc-cap__names > span.is-on { opacity: 1; transform: none; }
-@media (max-width: 719px) {
-  .sc-on .sc-pin { --sc-h: min(50svh, calc((100vw - 96px) * 1.25)); }
-}
-
-/* ── the poster modal ───────────────────────────────────────────────── */
-.scm { display: grid; gap: clamp(18px, 3vw, 40px); align-items: end; justify-items: center; color: var(--cream); }
-.scm__art { position: relative; }
-.scm__img {
-  display: block; width: auto; height: min(calc(100svh - 150px), 1100px); max-width: 100%;
-  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.85), 0 2px 8px rgba(0, 0, 0, 0.4);
-  transition: opacity 0.25s var(--ease-out);
-}
-.scm.is-swapping .scm__img { opacity: 0.35; }
-.scm__cap { display: grid; gap: 14px; justify-self: stretch; }
-.scm__n { font: var(--f-small); letter-spacing: var(--ls-caps); color: var(--cream-mute); font-variant-numeric: lining-nums tabular-nums; }
-.scm__n b { font-weight: inherit; color: var(--cream); }
-.scm__title { display: grid; gap: 8px; }
-.scm__nm { font: var(--f-head); letter-spacing: var(--ls-head); }
-.scm__tag { font: italic var(--f-lead); letter-spacing: var(--ls-lead); color: var(--gold); }
-.scm__nav { display: flex; gap: 10px; margin-top: 6px; }
-.scm__btn {
-  font: var(--f-small); text-transform: uppercase; letter-spacing: var(--ls-caps);
-  padding: 10px 14px; border-radius: 100px; box-shadow: inset 0 0 0 1px rgba(244, 237, 223, 0.4);
-  transition: background 0.2s, opacity 0.2s;
-}
-.scm__btn:hover:not(:disabled) { background: rgba(244, 237, 223, 0.12); }
-.scm__btn:disabled { opacity: 0.32; cursor: default; }
-@media (min-width: 900px) {
-  .scm { grid-template-columns: auto minmax(220px, 300px); justify-items: start; }
-}
-@media (max-width: 899px) {
-  .scm__img { height: auto; max-height: 60svh; margin-inline: auto; }
-}
-
-/* ── Watch the work: XXL 16:9 video cards in a horizontal snap row (src/sections/showcase.js initVideos) ───────
-   The row starts at the column's text edge and runs off the right edge of the screen, so the next card always peeks
-   in. No backdrop filters, no animated shadows: a hover moves the art by transform only. */
-.wv {
-  --wv-x: var(--col-pad);                                  /* the column's text edge */
-  --wv-w: min(86vw, 520px);                                /* one card */
-  --wv-gap: 14px;
-  position: relative; color: var(--cream);
-  padding-block: clamp(56px, 9vh, 112px) clamp(96px, 16vh, 180px);
-}
-@media (min-width: 720px) { .wv { --wv-w: min(78vw, 860px); --wv-gap: clamp(18px, 2vw, 32px); } }
-@media (min-width: 1024px) {
-  .wv { --wv-x: calc(var(--rail-w) + clamp(24px, 4.4vw, 72px)); --wv-w: min(calc((100vw - var(--wv-x)) * 0.8), 1080px); }
-}
-.wv__head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: clamp(24px, 4.4vh, 48px); }
-.wv__title { max-width: 12em; }
-.wv__nav { display: none; align-items: center; gap: 10px; flex: none; margin-left: auto; }   /* (right-aligned even without the drafted title) */
-@media (min-width: 720px) { .wv__nav:not([hidden]) { display: flex; } }
-.wv__n {
-  margin-right: 8px; font: var(--f-small); letter-spacing: var(--ls-caps); color: var(--cream-mute);
-  font-variant-numeric: lining-nums tabular-nums; white-space: nowrap;
-}
-.wv__n b { font-weight: inherit; color: var(--cream); }
-/* phones: the position under the row (the head's counter is hidden there with the buttons) */
-.wv__n--foot { margin: clamp(10px, 2vh, 16px) 0 0; }
-@media (min-width: 720px) { .wv__n--foot { display: none; } }
-.wv__btn {
-  font: var(--f-small); text-transform: uppercase; letter-spacing: var(--ls-caps);
-  min-height: 40px; padding: 10px 16px; border-radius: 100px; box-shadow: inset 0 0 0 1px rgba(244, 237, 223, 0.4);
-  transition: background 0.2s, opacity 0.2s;
-}
-.wv__btn:hover:not(:disabled) { background: rgba(244, 237, 223, 0.12); }
-.wv__btn:disabled { opacity: 0.32; cursor: default; }
-
-.wv__scroller {
-  overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory; scroll-padding-inline: var(--wv-x);
-  scrollbar-width: none;
-}
-.wv__scroller::-webkit-scrollbar { display: none; }
-.wv__list { display: flex; gap: var(--wv-gap); width: max-content; padding: 8px var(--col-pad) 12px var(--wv-x); }
-@media (min-width: 1024px) {
-  /* the row stays out of the rail's column: the scroller starts at the rail's edge (a card that has scrolled past
-     fades out there instead of sliding under the rail's names and numerals) */
-  .wv__scroller {
-    margin-left: var(--rail-w); scroll-padding-inline: clamp(24px, 4.4vw, 72px);
-    -webkit-mask-image: linear-gradient(90deg, transparent calc(clamp(24px, 4.4vw, 72px) * 0.3), #000 clamp(24px, 4.4vw, 72px));
-    mask-image: linear-gradient(90deg, transparent calc(clamp(24px, 4.4vw, 72px) * 0.3), #000 clamp(24px, 4.4vw, 72px));
-  }
-  .wv__list { padding-left: clamp(24px, 4.4vw, 72px); }
-}
-.wv__item { flex: 0 0 var(--wv-w); width: var(--wv-w); scroll-snap-align: start; }
-.wv__item[hidden] { display: none; }
-.wv__card { display: grid; gap: clamp(14px, 2.2vh, 22px); }
-
-.wv__play {
-  position: relative; display: block; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 4px;
-  background: #1b150e; text-align: left;
-  box-shadow: 0 0 0 1px rgba(244, 237, 223, 0.08), 0 30px 60px -30px rgba(0, 0, 0, 0.8);
-}
-.wv__art, .wv__art img { display: block; width: 100%; height: 100%; }
+.wv__art picture, .wv__art img { display: block; width: 100%; height: 100%; }
 .wv__art img { object-fit: cover; transition: transform 0.9s var(--ease-out); }
-.wv__play:hover .wv__art img { transform: scale(1.025); }
-.wv__play:focus-visible { outline-offset: 5px; }
-/* the play mark: a cream disc with a triangle (pure CSS), and the "Play" label beside it, lower left */
+/* the play mark: a cream disc with a triangle (pure CSS) */
 .wv__icon {
-  position: absolute; left: clamp(16px, 2.4vw, 32px); bottom: clamp(16px, 2.4vw, 32px);
-  width: clamp(48px, 5.4vw, 72px); aspect-ratio: 1; border-radius: 50%;
-  background: var(--cream); box-shadow: 0 10px 30px -8px rgba(0, 0, 0, 0.6);
-  transition: transform 0.5s var(--ease-out);
+  position: absolute; left: 7px; bottom: 7px; width: 26px; aspect-ratio: 1; border-radius: 50%;
+  background: var(--cream); box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.6); transition: transform 0.5s var(--ease-out);
 }
 .wv__icon::before {
   content: ''; position: absolute; left: 50%; top: 50%; translate: -36% -50%;
   border-style: solid; border-width: 0.5em 0 0.5em 0.84em; border-color: transparent transparent transparent var(--ink);
-  font-size: clamp(14px, 1.5vw, 20px);
+  font-size: 9px;
 }
-.wv__play:hover .wv__icon { transform: scale(1.06); }
-.wv__cta {
-  position: absolute; bottom: clamp(16px, 2.4vw, 32px); left: calc(clamp(16px, 2.4vw, 32px) + clamp(48px, 5.4vw, 72px) + 14px);
-  height: clamp(48px, 5.4vw, 72px); display: flex; align-items: center;
-  font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream);
-  text-shadow: 0 1px 2px rgba(11, 8, 5, 0.6), 0 0 18px rgba(11, 8, 5, 0.6);
-}
-@media (max-width: 719px) {   /* phones: the disc alone; the label stays in the button's name */
-  .wv { padding-bottom: clamp(64px, 10vh, 96px); }
-  .wv__cta { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-}
-.wv__meta { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px 24px; align-items: end; padding-right: 4px; }
+.wv__txt { display: grid; gap: 5px; align-content: center; min-width: 0; }
 .wv__by { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream-mute); }
-.wv__t { font: var(--f-dek); letter-spacing: var(--ls-dek); text-wrap: balance; max-width: 20em; }
-.wv__yt { justify-self: start; margin-top: 4px; }
+.wv__t { font: var(--f-label); letter-spacing: var(--ls-label); text-wrap: balance; }
 @media (min-width: 720px) {
-  .wv__meta { grid-template-columns: minmax(0, 1fr) auto; }
-  .wv__by { grid-column: 1; }
-  .wv__t { grid-column: 1; }
-  .wv__yt { grid-column: 2; grid-row: 1 / span 2; align-self: end; margin: 0 0 6px; }
+  .wv__list { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(26px, 4.2vh, 44px) clamp(16px, 2vw, 32px); }
+  .wv__card { grid-template-columns: minmax(0, 1fr); row-gap: 12px; align-items: start; padding: 0; border-top: 0; }
+  .wv__txt { align-content: start; padding-top: 10px; border-top: 1px solid rgba(244, 237, 223, 0.2); }
+  .wv__icon { left: clamp(8px, 1vw, 14px); bottom: clamp(8px, 1vw, 14px); width: clamp(28px, 2.6vw, 40px); }
+  .wv__icon::before { font-size: clamp(9px, 0.9vw, 13px); }
 }
+@media (hover: hover) {
+  .wv__list:has(.wv__card:hover) .wv__card:not(:hover) { opacity: 0.5; }
+  .wv__card:hover .wv__art img { transform: scale(1.03); }
+  .wv__card:hover .wv__icon { transform: scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) { .wv__card, .wv__art img, .wv__icon { transition: none; } }
 
-/* ── On the roster: the creator index between the poster run and the video row (rows generated from docs/videos.json
-   by src/partials/showcase.videos.mjs). Type only: each row is the name in the lead serif with its action under it in
-   small caps; columns that read down (CSS columns: the alphabetical order runs down the first, then the next), a
-   hairline over each row (a border, so it survives forced colours). Phones: two columns. From 600 px: up to four,
-   each at least as wide as the longest name on one line ("Diary of a Naija Girl" measures 6.27 × the lead size with
-   its tracking: 6.3). So four from about 1100 px and on a landscape phone (844 × 390; the gap is 2vw so it keeps
-   four), three at 1024, on tablets and on a small landscape phone. The action comes first in the markup, so a row is
-   announced "Watch <name>", and shows second (order). ────────────────────────────────────────────────────────── */
-.ros { position: relative; color: var(--cream); padding-top: clamp(24px, 4vh, 48px); }
-.ros__label { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream-mute); margin-bottom: clamp(10px, 1.8vh, 18px); }
-.ros__list { columns: 2; column-gap: 16px; }
-@media (min-width: 600px) { .ros__list { columns: 4 calc(var(--t-lead) * 6.3); column-gap: clamp(16px, 2vw, 48px); } }
-.ros__item { break-inside: avoid; border-top: 1px solid rgba(244, 237, 223, 0.2); }
-/* every row keeps the action's line, so the columns stay level when a row has no action (or ?drafts=0 hides it) */
-.ros__row {
-  display: grid; align-content: start; gap: 3px; padding: 8px 0 10px;
-  min-height: calc(var(--t-lead) * var(--lh-lead) + var(--t-small) * var(--lh-small) + 21px);
-  color: inherit; text-decoration: none; transition: opacity 0.35s var(--ease-out);
-}
-.ros__nm { font: var(--f-lead); letter-spacing: var(--ls-lead); min-width: 0; transition: transform 0.5s var(--ease-out); }
-.ros__act { order: 1; font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream-mute); white-space: nowrap; transition: color 0.25s; }
-.ros__act--watch::before {   /* the play mark: a small triangle (pure CSS, as on the cards) */
-  content: ''; display: inline-block; margin-right: 0.6em; vertical-align: -0.05em;
-  border-style: solid; border-width: 0.42em 0 0.42em 0.7em; border-color: transparent transparent transparent currentColor;
-}
-a.ros__row:hover .ros__act, a.ros__row:focus-visible .ros__act { color: var(--cream); }
-@media (hover: hover) {   /* the row under the pointer comes forward, the others step back */
-  .ros__list:has(a.ros__row:hover) .ros__row:not(:hover) { opacity: 0.45; }
-  a.ros__row:hover .ros__nm { transform: translateX(6px); }
-}
-@media (prefers-reduced-motion: reduce) { .ros__row, .ros__nm { transition: none; } a.ros__row:hover .ros__nm { transform: none; } }
+/* creators without a card (none today; src/partials/showcase.videos.mjs): "On the roster" and the names, one line */
+.wv__more { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin-top: clamp(26px, 4.2vh, 44px); padding-top: 10px; border-top: 1px solid rgba(244, 237, 223, 0.2); }
+.wv__more-l { font: var(--f-small); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--cream-mute); }
+.wv__names { display: flex; flex-wrap: wrap; gap: 4px 0; font: var(--f-lead); letter-spacing: var(--ls-lead); }
+.wv__names li:not(:last-child)::after { content: ','; margin-right: 0.3em; }
 
-/* ── the video modal (src/ui/modal.js; the shared modal's own rules are in src/styles/modal.css) ─────────────── */
+/* ── the video modal (src/sections/showcase.js; the shared modal's own rules are in src/styles/modal.css) ────── */
 .wvm { display: grid; gap: clamp(14px, 2.4vh, 24px); width: min(1100px, calc(100vw - 32px), calc((100svh - 200px) * 16 / 9)); color: var(--cream); }
 .wvm__frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 4px; background: #000;
   box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(244, 237, 223, 0.08); }
@@ -308,10 +80,6 @@ a.ros__row:hover .ros__act, a.ros__row:focus-visible .ros__act { color: var(--cr
    bar steps away while a modal is open (its Close sat over the faint nav pill and menu button) ───────────────── */
 @media (max-width: 719px) { #modal .modal__scrim { background: rgba(11, 8, 5, 0.97); } }
 html.modal-open .nav { visibility: hidden; }
-
-/* ── touch targets (coarse pointers): at least 44 px tall ───────────────────────────────────────────────────── */
-@media (pointer: coarse) {
-  .scm__btn { min-height: 44px; }
-  .wv__yt { position: relative; }
-  .wv__yt::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 44px; translate: 0 -50%; }
-}
+/* reduced motion: base.css gives every element a 0.01 ms transition of all its properties, so in the frame the dialog
+   opens its Close button still computed visibility: hidden (inherited, mid-transition) and focus could not move to it */
+@media (prefers-reduced-motion: reduce) { #modal, #modal * { transition: none !important; } }

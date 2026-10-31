@@ -1,5 +1,5 @@
 {
-  "note": "Track C research (plan §5 Showcase 'watch the work', §9). One or two public YouTube videos per showcased creator, for the XXL video cards (thumbnail first, player in a modal only on click). Researched 2026-10-19. Showcase rule (F64 note): the site attaches no stats, results or client wording to any creator; 'why' is for the builder and the client, never for the page.",
+  "note": "Track C research (plan §5 Showcase 'watch the work', §9). One or two public YouTube videos per showcased creator, for the Showcase video cards (the video's own thumbnail, self-hosted; player in a modal only on click). Researched 2026-10-19. Showcase rule (F64 note): the site attaches no stats, results or client wording to any creator; 'why' is for the builder and the client, never for the page.",
   "verification": {
     "method": "search-index title match only",
     "oembed": "RUN 2026-10-31 (node src/partials/showcase.videos.mjs --verify, through the session proxy): all 16 videos on the page play from the creator's own channel. Replaced: Kie Kie (embedding off), Kunle Afolayan (third-party uploads), Abayomi Alvin (video removed).",
@@ -10,7 +10,7 @@
       "unverified": "The id was found, but neither the uploader nor the content could be tied to the creator. Do not ship it until checked."
     },
     "how_to_verify": "Where youtube.com is reachable: for id in $(node -e \"const v=require('./docs/videos.json');console.log(v.creators.flatMap(c=>c.videos.map(x=>x.id)).join(' '))\"); do curl -s \"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=$id&format=json\" | node -e \"let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{try{const j=JSON.parse(s);console.log('$id',j.author_name,'|',j.title)}catch{console.log('$id','NOT FOUND')}})\"; done  (check author_name against 'channel' below).",
-    "thumbnails": "i.ytimg.com is blocked here, so no thumbnail was fetched or checked. Card faces could use the site's own posters (public/assets/posters/<slug>.webp) until real thumbnails are fetched at build time somewhere unblocked.",
+    "thumbnails": "FETCHED 2026-10-31 through the session proxy, once, at build-prep time: for each card video, the thumbnail YouTube serves for its id (https://i.ytimg.com/vi/<id>/maxresdefault.jpg; where that is missing, sddefault.jpg, then hqdefault.jpg), recorded on the video as \"thumb\": source (the URL used), source_size, crop ([x, y, w, h] in the source: 16:9, letterbox bars cut only where rows are flat black on both edges), widths (never above the crop: Brain Jotter and Broda Shaggi have no maxresdefault and stop at 640, Kunle Afolayan at 1138), path (self-hosted as public<path>-<w>.{avif,webp}) and fetched. The art is the creator's own thumbnail, cropped and resized only; the maxres, sd and hq versions of each match, and each title matches its thumbnail (contact sheet, 2026-10-31). The page requests nothing from YouTube until a card is clicked. A thumbnail fetched again takes a new path (vercel.json serves /assets/* immutable).",
     "confidence": {
       "note": "Round 2 (2026-10-24, the nine creators the client added): the research track rated each channel and video on its own three-step scale; each video carries it as \"confidence\" beside the \"verification\" level it maps to (confirmed -> channel-confirmed, probable -> channel-probable, unknown -> unverified). Full evidence: the research files (roster/research/channels.json, channels.md, in the session scratchpad), summarised per item below.",
       "confirmed": "A direct source ties the id (or the channel) to the creator, and an independent source agrees.",
@@ -34,8 +34,7 @@
   "creators": [
     {
       "creator": "Layi Wasabi",
-      "fact": "F64",
-      "poster": "public/assets/posters/layi-wasabi.webp",
+      "fact": "F150",
       "videos": [
         {
           "id": "6aheOxb7GPU",
@@ -51,7 +50,27 @@
           "evidence": "Search index lists the watch URL with this title; a channel listing for UCJWrb-dnwFY0GTAeA2gKHPg titled 'Layi Wasabi' (seen in search results via an Invidious mirror, not fetched) shows it alongside his 'Court in Session' sketches.",
           "confidence": "confirmed",
           "oembed_uploader": "Layi Wasabi (@layiwasabi)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/6aheOxb7GPU/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/6aheOxb7GPU",
+            "fetched": "2026-10-31"
+          }
         },
         {
           "id": "gc_CdEdEVrQ",
@@ -71,8 +90,7 @@
     },
     {
       "creator": "Omoni Oboli TV",
-      "fact": "F65",
-      "poster": "public/assets/posters/omoni-oboli-tv.webp",
+      "fact": "F151",
       "videos": [
         {
           "id": "OQQaDqLCgKg",
@@ -91,7 +109,27 @@
           ],
           "confidence": "confirmed",
           "oembed_uploader": "Omoni Oboli TV (@OmoniOboliTv)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/OQQaDqLCgKg/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/OQQaDqLCgKg",
+            "fetched": "2026-10-31"
+          }
         },
         {
           "id": "H9qoC981BAU",
@@ -115,8 +153,7 @@
     },
     {
       "creator": "Isbae U",
-      "fact": "F66",
-      "poster": "public/assets/posters/isbae-u.webp",
+      "fact": "F152",
       "videos": [
         {
           "id": "nOedKYSXuPU",
@@ -135,7 +172,27 @@
           ],
           "confidence": "confirmed",
           "oembed_uploader": "Isbae U (@Isbae_u)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/nOedKYSXuPU/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/nOedKYSXuPU",
+            "fetched": "2026-10-31"
+          }
         },
         {
           "id": "U-xB3IOipac",
@@ -157,8 +214,7 @@
     },
     {
       "creator": "Broda Shaggi",
-      "fact": "F67",
-      "poster": "public/assets/posters/broda-shaggi.webp",
+      "fact": "F153",
       "videos": [
         {
           "id": "MTZlMqXgUZA",
@@ -171,7 +227,26 @@
           "evidence": "Search index title and description (Jide Kosoko, Officer Woos, Small Stout); 'Brodashaggi' in the title.",
           "confidence": "confirmed",
           "oembed_uploader": "official BRODA SHAGGI (@BrodaShaggi)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/MTZlMqXgUZA/sddefault.jpg",
+            "source_size": [
+              640,
+              480
+            ],
+            "crop": [
+              0,
+              60,
+              640,
+              360
+            ],
+            "widths": [
+              320,
+              640
+            ],
+            "path": "/assets/thumbs/video/MTZlMqXgUZA",
+            "fetched": "2026-10-31"
+          }
         },
         {
           "id": "HcZDHLW7cKA",
@@ -192,8 +267,7 @@
     },
     {
       "creator": "Diary of a Naija Girl",
-      "fact": "F68",
-      "poster": "public/assets/posters/diary-of-a-naija-girl.webp",
+      "fact": "F154",
       "videos": [
         {
           "id": "2FY9NcE2lbw",
@@ -211,7 +285,27 @@
           ],
           "confidence": "confirmed",
           "oembed_uploader": "Diary of A Naija Girl (@diaryofanaijagirl)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/2FY9NcE2lbw/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/2FY9NcE2lbw",
+            "fetched": "2026-10-31"
+          }
         },
         {
           "id": "7OBeFS70vpg",
@@ -231,8 +325,7 @@
     },
     {
       "creator": "Kie Kie",
-      "fact": "F69",
-      "poster": "public/assets/posters/kie-kie.webp",
+      "fact": "F155",
       "videos": [
         {
           "id": "fJKF3JlGsBE",
@@ -249,7 +342,27 @@
           },
           "confidence": "confirmed",
           "oembed_uploader": "KieKieTV (@KieKieTV)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/fJKF3JlGsBE/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/fJKF3JlGsBE",
+            "fetched": "2026-10-31"
+          }
         }
       ],
       "alternates": [
@@ -295,8 +408,7 @@
     },
     {
       "creator": "Kunle Afolayan",
-      "fact": "F70",
-      "poster": "public/assets/posters/kunle-afolayan.webp",
+      "fact": "F156",
       "videos": [
         {
           "id": "Wx8X265MT3E",
@@ -313,7 +425,27 @@
           },
           "confidence": "confirmed",
           "oembed_uploader": "KAPTV (@kapteevee)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/Wx8X265MT3E/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              71,
+              40,
+              1138,
+              640
+            ],
+            "widths": [
+              320,
+              640,
+              1138
+            ],
+            "path": "/assets/thumbs/video/Wx8X265MT3E",
+            "fetched": "2026-10-31"
+          }
         }
       ],
       "flags": [
@@ -355,7 +487,6 @@
     {
       "creator": "Emmabel TV",
       "fact": "F139",
-      "poster": null,
       "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"emmabel\"). Display spelling: Channel title 'Emmabel TV'; handle and socials use 'EmmabelTV247' / 'Emmabel TV 247'. Not 'Emmanuel TV' (an unrelated religious channel).",
       "makes": "Nollywood feature films",
       "channel_url": "https://www.youtube.com/@EmmabelTV247",
@@ -392,7 +523,27 @@
             "https://www.nollywoodtimes.com/2025/10/movie-review-love-and-kasala-charm.html"
           ],
           "oembed_uploader": "Emmabel TV (@EmmabelTV247)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/2SgtAvc1HV8/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/2SgtAvc1HV8",
+            "fetched": "2026-10-31"
+          }
         }
       ],
       "flags": [
@@ -402,7 +553,6 @@
     {
       "creator": "Royal Arts TV",
       "fact": "F140",
-      "poster": null,
       "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"royal arts\"). Display spelling: As on the channel and the earlier site. Run by filmmaker Emem Isong (Royal Arts Academy); she also has a separate 'Emem Isong TV' channel, which is not this one.",
       "makes": "Nollywood feature films",
       "channel_url": "https://www.youtube.com/@RoyalArtsTV",
@@ -437,7 +587,27 @@
           ],
           "why_not_confirmed": "The FilmFlux tie is by title only, and a different film with the same title exists on another channel (lYakflVWQD8, 'Love Stood Still (FREDRICK LEONARD NANCY ISIME)'): do not use that one. The earlier site's labels are not always exact (see existing_seven_check.earlier_site_labels), so the client's embed alone is not proof.",
           "oembed_uploader": "Royal Arts TV (@RoyalArtsTV)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/ScAcee_5Q4A/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/ScAcee_5Q4A",
+            "fetched": "2026-10-31"
+          }
         }
       ],
       "alternates": [
@@ -452,7 +622,6 @@
     {
       "creator": "Biodun Stephen",
       "fact": "F141",
-      "poster": null,
       "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"biodun stephen\"). Display spelling: Filmmaker (writer, director, producer); she uses she/her per Wikipedia. Channel title is styled 'BIODUNSTEPHEN TV' / 'BiodunStephenTV'. Use the person's name, as with 'Kunle Afolayan'.",
       "makes": "Nollywood feature films",
       "channel_url": "https://www.youtube.com/@BIODUNSTEPHENTV",
@@ -490,7 +659,27 @@
             "The uploaded title contains a typo ('Blessibg'); show the short title only."
           ],
           "oembed_uploader": "BIODUNSTEPHEN TV (@BIODUNSTEPHENTV)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/vuJBH0QyxZk/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/vuJBH0QyxZk",
+            "fetched": "2026-10-31"
+          }
         }
       ],
       "alternates": [
@@ -505,7 +694,6 @@
     {
       "creator": "Bolu Essien",
       "fact": "F142",
-      "poster": null,
       "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"bolu essien\"). Display spelling: Actor, writer and producer (Becoming Abi on Netflix, Girls' Hostel on YouTube). Channel title 'Bolu Essien TV'; press also writes 'BoluEssienTV'. Not the unrelated channel 'bolu' (UCqjDZc5rzUa45PatbORRMfQ).",
       "makes": "Drama and comedy web series",
       "channel_url": "https://www.youtube.com/@BoluEssien",
@@ -539,14 +727,33 @@
             "https://odunews.com/2026/04/bolu-essien-writes-produces-and-stars-in-girls-hostel-drama/"
           ],
           "oembed_uploader": "Bolu Essien TV (@BoluEssien)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/8NM-yaMdmeg/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/8NM-yaMdmeg",
+            "fetched": "2026-10-31"
+          }
         }
       ]
     },
     {
       "creator": "Ariyiike Dimples",
       "fact": "F143",
-      "poster": null,
       "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"ariyike dimples\"). Display spelling: The client wrote 'ariyike dimples'; her own spelling (X @Ariyiikedimples, channel 'AriyiikeDimples', video titles 'ARIYIIKE DIMPLES') has a double i. Wikipedia files her as 'Ariyike Owolagba'. Recommend 'Ariyiike Dimples' and ask the client to confirm.",
       "makes": "Drama series and dating talk",
       "channel_url": "https://www.youtube.com/@RiskyStudiosTV",
@@ -576,7 +783,27 @@
             "The same id came up in a search scoped to the @RiskyStudiosTV channel, beside its other episodes (BRIDEZILLA _ovA7HcYCCs, PRENUP 5EqS1qgDDXw, DATING IN LAGOS EPISODE 7 P_cajZEOfgQ)"
           ],
           "oembed_uploader": "AriyiikeDimples (@RiskyStudiosTV)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/pb2jiuqmAms/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/pb2jiuqmAms",
+            "fetched": "2026-10-31"
+          }
         }
       ],
       "alternates": [
@@ -595,7 +822,6 @@
     {
       "creator": "Officer Woos",
       "fact": "F144",
-      "poster": null,
       "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"officer woos\"). Display spelling: Stage name of Jubril Oladapo Gbadamosi. Channel title 'OFFICER WOOS'. A second channel, 'OFFICER WOOS TV' (@woosentertainment), is not the main one.",
       "makes": "Comedy skits",
       "channel_url": "https://www.youtube.com/@OFFICERWOOS",
@@ -625,7 +851,27 @@
             "Title format matches his uploads, e.g. 'ASEWO BUSINESS- (Officer Woos new comedy)' qBcvBN8fTQ4, 'ASEWO BUSINESS 6 (Officer Woos new comedy)' D9BFZGI1OXY"
           ],
           "oembed_uploader": "OFFICER WOOS (@OFFICERWOOS)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/bx0QofHIX68/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/bx0QofHIX68",
+            "fetched": "2026-10-31"
+          }
         }
       ],
       "alternates": [
@@ -645,7 +891,6 @@
     {
       "creator": "Brain Jotter",
       "fact": "F145",
-      "poster": null,
       "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"brainjotter\"). Display spelling: The client wrote 'brainjotter'. Wikipedia and his main channel use 'Brain Jotter' (two words); some uploads write 'Brainjotter'. Stage name of Chukwuebuka Emmanuel Amuzie. Recommend 'Brain Jotter'.",
       "makes": "Comedy skits",
       "channel_url": "https://www.youtube.com/@BrainJotterComedian",
@@ -679,7 +924,26 @@
           ],
           "note": "Probable: the title names him and the series is his, but no source names the uploading channel (a movie channel, not @BrainJotterComedian, may have uploaded it). Check with oEmbed before launch.",
           "oembed_uploader": "Brain Jotter (@BrainJotterComedian)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/mr1Nx39P6Mo/sddefault.jpg",
+            "source_size": [
+              640,
+              480
+            ],
+            "crop": [
+              0,
+              60,
+              640,
+              360
+            ],
+            "widths": [
+              320,
+              640
+            ],
+            "path": "/assets/thumbs/video/mr1Nx39P6Mo",
+            "fetched": "2026-10-31"
+          }
         }
       ],
       "alternates": [
@@ -720,7 +984,6 @@
     {
       "creator": "Gold Screen TV",
       "fact": "F146",
-      "poster": null,
       "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"goldscreen TV\"). Display spelling: The client wrote 'goldscreen TV'. The YouTube channel title is 'Gold Screen TV' (handle @GoldScreenTV-NG); IMDb and its TikTok (@goldscreentv) write 'Goldscreen TV'. Recommend 'Gold Screen TV' as on the channel, or 'Goldscreen TV' if the client prefers; never 'Golden Screen' (a different channel, /c/goldenscreenmoviestv).",
       "makes": "Nollywood films and series",
       "channel_url": "https://www.youtube.com/@GoldScreenTV-NG",
@@ -753,7 +1016,27 @@
             "https://www.zikoko.com/pop/best-nollywood-movies-on-youtube-december-2025/ (lists it as on YouTube)"
           ],
           "oembed_uploader": "Gold Screen TV (@GoldScreenTV-NG)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/eRfM081tX0I/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/eRfM081tX0I",
+            "fetched": "2026-10-31"
+          }
         }
       ],
       "alternates": [
@@ -769,7 +1052,6 @@
     {
       "creator": "Abayomi Alvin",
       "fact": "F147",
-      "poster": null,
       "source": "client message 2026-10-24 (Olayinka Lawal, the site's owner): named as one of Creative Motley's creators (\"abayomi alvin\"). Display spelling: Actor and producer. Channel title 'AbayomiAlvin Tv' (he calls it 'Abayomi Alvin TV'). Use the person's name.",
       "makes": "Nollywood feature films",
       "channel_url": "https://www.youtube.com/@AbayomiAlvinTv",
@@ -798,7 +1080,27 @@
           },
           "confidence": "confirmed",
           "oembed_uploader": "AbayomiAlvin Tv (@AbayomiAlvinTv)",
-          "oembed_checked": "2026-10-31"
+          "oembed_checked": "2026-10-31",
+          "thumb": {
+            "source": "https://i.ytimg.com/vi/AlYIilRoBhQ/maxresdefault.jpg",
+            "source_size": [
+              1280,
+              720
+            ],
+            "crop": [
+              0,
+              0,
+              1280,
+              720
+            ],
+            "widths": [
+              320,
+              640,
+              1280
+            ],
+            "path": "/assets/thumbs/video/AlYIilRoBhQ",
+            "fetched": "2026-10-31"
+          }
         }
       ],
       "alternates": [
@@ -836,7 +1138,7 @@
     }
   ],
   "roster": {
-    "note": "On the roster (src/partials/showcase.html, between the poster run and Watch the work; rows written by src/partials/showcase.videos.mjs). Every creator in this file, en-GB alphabetical, each with a name fact. A row's action: 'Watch' (plays in the shared modal; a plain YouTube link without JS) with a poster creator's card video, else the first video whose verification is in 'playable' and whose title has a fact; else 'Channel ↗' (channel_url, when channel_verification is in 'channel_ok'); else the name alone. Unknown ids and channels are never linked. A row shows the name and its action only: no title, stat or claim (F64 rule); the title is the modal's heading. The client names these as Creative Motley's creators (2026-10-24, 'it includes more'), and Results says 70+ channels managed (F100), so the list is never presented as complete.",
+    "note": "Since 2026-10-31 the roster is the cards: the client removed the poster wall (\"use the real youtube thumbnails on the cards and I dont we need this section\"), so every creator in this file has a card (src/partials/showcase.html, written by src/partials/showcase.videos.mjs), en-GB alphabetical by name, and the typographic 'On the roster' index (which listed every creator a second time, each row playing the card's video) is gone. A creator gets a card with its first video whose verification is in 'playable', whose title has a fact, that oEmbed has checked (oembed_checked) and that has a thumb record; a creator with none is named in one line under the grid, 'On the roster' (DC76) and the names (empty today). Unknown ids are never linked. A card shows the name, the video's display title and its own thumbnail, nothing else: no stat or claim (F64 rule). The client names these as Creative Motley's creators (2026-10-24, 'it includes more'), and Results says 70+ channels managed (F100), so the list is never presented as complete. channel_ok is kept for the generator's history; no channel link is written today.",
     "order": "alpha",
     "playable": [
       "channel-confirmed",
