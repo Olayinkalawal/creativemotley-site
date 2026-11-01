@@ -427,7 +427,7 @@ crops are cut from those full-resolution files at the same uv (`scripts/crops.py
 # 3D camera live (2026-10-20)
 Method's camera is the real-time 3D camera (`src/gl/scenes/camera3d.js` on the module `src/gl/lib/camera3d.js`, the v7
 snapshot of `.lab/cam3d`; the photoreal frame sets are out of the build). Two rounds: the integration (snapshot
-`d2dad37`), then a fix round on two critics' reviews (desktop 1440/1280/1024/1920; phone 390/360, tablet 820; tier 0 and
+`d5bc09a`), then a fix round on two critics' reviews (desktop 1440/1280/1024/1920; phone 390/360, tablet 820; tier 0 and
 reduced motion everywhere). The module and its API are unchanged: the site's art direction goes through `create()`
 options and the exported `KEYS`, so the lab's final GLB and module drop in at the same paths.
 
@@ -569,7 +569,7 @@ The Kit's four devices (console, microphone, headphones, phone) are real-time 3D
 `python3 -I .lab/kit3d/kit_apply.py --check` passed on today's `src/`, so the wiring went in by the script; then the
 Kit got the camera's behaviours, sharing the camera's code rather than copying it (K.2). Method is unchanged.
 
-## K.1 Numbers: photoreal Kit (HEAD 154e73b's build) → real-time Kit
+## K.1 Numbers: photoreal Kit (HEAD 1f64b23's build) → real-time Kit
 `scripts/perf.mjs` on production builds, SwiftShader WebGL, the same machine back to back (load average 2–3). Bytes
 are exact; frame rates are relative only.
 
@@ -836,7 +836,7 @@ for every real-time device). Production builds served locally (`scripts/perf.mjs
 `/tmp/claude-0/-home-user-creativemotley-site/f5fb006b-f00a-5174-8cc3-2633425655d9/scratchpad/p4v/` (perf runs in
 `perf/` and `perf2/`, hero captures in `hero/`, drag runs in `drag/`, axe in `axe/`, keyboard in `kb2/`).
 
-## P4.1 Numbers: 3D Kit live (L.1, e04c7ba) → now
+## P4.1 Numbers: 3D Kit live (L.1, f578866) → now
 | | 3D Kit live | **Now** | Target |
 |---|---|---|---|
 | First load, desktop @1× / @2× · phone @2× | 0.68 / 0.78 · 0.51 MB | **0.75 / 0.89 · 0.49 MB** (29 / 29 / 26 req); no GLB before the first input | ≤ 1.5 · ≤ 1.0 MB |
@@ -975,7 +975,7 @@ frame rates are claimed). Evidence: `/tmp/claude-0/-home-user-creativemotley-sit
 (perf runs in `perf/`, `perf_phone3d/`, `perf_smooth/`; walks in `walk/`; drag and zoom in `dz/`; the homepage push in
 `hero/`; the viewer in `viewer/`); the tracks' own before/after frames under `scratchpad/p5/{cam,p5-cam,kitA,p5-kitA,kitB,p5-kitB}`.
 
-## P5.1 Numbers: phase 4 (ac776e6) → now
+## P5.1 Numbers: phase 4 (3eb5b44) → now
 | | Phase 4 | **Now** | Target |
 |---|---|---|---|
 | First load, desktop @1× / @2× · phone @2× | 0.75 / 0.89 · 0.49 MB | **0.75 / 0.89 · 0.49 MB** (29 / 29 / 26 req); no GLB before the first input (every `.glb.gz` in the scroll phase) | ≤ 1.5 · ≤ 1.0 MB |
@@ -1013,7 +1013,7 @@ model 259,592 → 260,153 (+0.2%). The lab GLBs are byte-identical to `public/`,
   the hero, 14.5 → 4.2% at the hold; board 2.1 → 2.1%.
 - **Headphones, KIT-A.** Grained leather, a real driver (pleated film, copper coil, vented basket, a satin dust cap),
   neutral caps, clean band ends and yokes; the one cap screw that crossed the bronze ring now clears it at every key. The
-  exploded still matches the live device at the hold within 0.6 px (`kit.html`, commit 6cd6c45; it was 6.6% smaller).
+  exploded still matches the live device at the hold within 0.6 px (`kit.html`, commit d4ef02b; it was 6.6% smaller).
 - **Microphone, KIT-B.** Darker internals (median 123 → 110, grille 164 → 125), the yoke turned 65° so its black strap
   faces the view (choreography change, for the director's sign-off), a legible CM inlay, a transformer with leads; the
   magnet face is a 1.0 mm dome with 10-bit normals (no facets at 3x) at roughness 0.27, so it stays lit when the hold is
@@ -1252,11 +1252,11 @@ channel-confirmed; Omoni Oboli TV, Isbae U, Broda Shaggi and Kunle Afolayan chan
 6. **Found here: a race in `showcase.js`.** On the desktop path, Esc during the poster modal's opening morph, then a
    card or a row pressed within about 100 ms: the video never opened, and a TypeError was thrown (the skipped opening
    morph drops `#modal.vt` before the closing morph has run, so the wait let the video in, and the closing morph then
-   shut it). The baseline (6e0e270) did not fail this way. `closing()` now also waits while the dialog still holds
+   shut it). The baseline (7f6ed86) did not fail this way. `closing()` now also waits while the dialog still holds
    content; the race passes at 0, 50, 100, 200 and 450 ms, Esc settled or mid-morph, rows and cards, desktop and tier 0.
 
-## P7.4 Numbers (production build; 6e0e270 = copy v4, before the roster)
-| | 6e0e270 | builder | now |
+## P7.4 Numbers (production build; 7f6ed86 = copy v4, before the roster)
+| | 7f6ed86 | builder | now |
 |---|---|---|---|
 | Showcase, 1440 × 900 (scripts/perf.mjs lengths; tier 0 in brackets) | 3.82 (2.47) | 4.18 | 4.20 (2.85) |
 | Showcase, 390 × 844 | 3.25 (1.70) | 3.93 | 3.93 (2.38) |
@@ -1342,8 +1342,8 @@ the builder, `crit/` the critic, `final/` this round: `out/` results, `tools/` s
 9. **Modal opened on a soft image (P3).** Fixed: a mouse resting 200 ms on a card (or keyboard focus, or a press)
    fetches and decodes the large file, and the modal then opens on it (the morph lands sharp); otherwise as before.
 
-## P8.3 Numbers (production build; cdc3dbf = before the change)
-| | cdc3dbf | now |
+## P8.3 Numbers (production build; ce9f1d1 = before the change)
+| | ce9f1d1 | now |
 |---|---|---|
 | Showcase, 1440 × 900 (screens; tier 0 in brackets) | 4.20 (2.85) | 1.70 (1.70) |
 | Showcase, 390 × 844 | 3.93 (2.38) | 2.46 (2.46) |
@@ -1418,17 +1418,17 @@ Evidence: `/tmp/claude-0/-home-user-creativemotley-site/f5fb006b-f00a-5174-8cc3-
   F136, DC62 and DC78 updated; F133 records the film's deletion. `docs/copy-drafts.md` S11 and `docs/copy-v4.md`
   Round 3 tell the client.
 - **The hero film is deleted** at the client's request (P4.6 item 7): `public/assets/frames/hero/` (1,140 webp) and
-  `public/assets/video/film/` (4 mp4), about 92 MB, and `scripts/encode-film.sh` (dce12ff). Its frames job is gone
+  `public/assets/video/film/` (4 mp4), about 92 MB, and `scripts/encode-film.sh` (removed from the repo history). Its frames job is gone
   from `scripts/prep_assets.py`, so a re-run cannot write them back, and the comments in `gl/lib/codecStream.js` and
   `gl/lib/video.js` no longer point at the missing script. The Pages copy is now 62 MB.
 - **Repo notes:** README, the docs (concept, build-contract, HANDOFF, teardown-v2, v3-plan, this file, art-log), the
-  code comments and the scripts no longer name or describe the reference; the reference study is deleted (22fe19d)
+  code comments and the scripts no longer name or describe the reference; the reference study is deleted (removed from the repo history)
   and nothing links to it. A case-insensitive `git grep` of the tracked text files for the reference's names, its
-  product's name, its assistant, the old title and the capture folder returns nothing. The branch name and the commit
-  history are unchanged.
+  product's name, its assistant, the old title and the capture folder returns nothing. The commit history was later
+  rewritten without this material and the branch renamed site-rebuild.
 
-## P9.3 Numbers (code-only production builds, 6ba4b26 → now; KB = 1000 bytes)
-| | 6ba4b26 | now |
+## P9.3 Numbers (code-only production builds, 90cf08c → now; KB = 1000 bytes)
+| | 90cf08c | now |
 |---|---|---|
 | index.html, raw / gzip | 105.2 / 25.1 KB | 80.4 / 14.7 KB |
 | CSS, raw / gzip | 109,097 / 23,265 B | 109,010 / 23,236 B |
@@ -1526,7 +1526,7 @@ the retoucher, `knx-judge1/` the judge, `knx-wire/` this round: `out/` results a
 | Safari, phones | the same 15.1 MB file | **`directors-pack-sm.mp4`** 1280x1440, High 4.0, **1,516,201 B** (≤ 1.6 MB) |
 | `directors-poster.webp` (1600x900 RGBA) | 153,096 B (logo) | **149,090 B** |
 | Fidelity to the clean master, over umber (20 frames; mean / worst frame) | | WebM 1920: 1.77 / 2.69 levels, PSNR 38.1 / 34.0 dB; pack 1920: 1.75 / 2.02, 38.0 / 36.6 dB; WebM 1280: 2.59 / 3.36, 34.6 / 32.2; pack 1280: 2.59 / 2.81, 34.6 / 33.9 |
-| First load (gzip, Vite build, b01f0cd → now) | HTML 14,676 / CSS 23,128 / entry JS 28,362 B | 14,704 / 23,151 / 28,368 B (+57 B: the two pack sources, three CSS rules, the path choice); the same requests |
+| First load (gzip, Vite build, c7ebc73 → now) | HTML 14,676 / CSS 23,128 / entry JS 28,362 B | 14,704 / 23,151 / 28,368 B (+57 B: the two pack sources, three CSS rules, the path choice); the same requests |
 | Lazy JS | | `alphapack` chunk 2,441 B raw, **1,364 B gzip** (budget +1.5 KB); loaded only on the packed path, with the poster |
 
 ## P10.4 Checks (GitHub Pages build under `/creativemotley-site/`; Chromium 1194, SwiftShader WebGL)
@@ -1562,14 +1562,14 @@ the page by the test server only; the shader, the canvas, the layout and the log
   stays (two captures 1.5 s apart identical), the button says Play, and Play starts it again from 0.
 - **Reduced motion** (1440, 390, both paths): no film request, no Pause button; 390: the still pair, both crops from
   `directors-poster.webp?v=2` (1600 px), clean; 1440: the poster in the film's place. CLS at 390: 0. At 1440 a
-  reduced-motion deep link to `#directors` shifts (CLS 0.47–1.46 from run to run) on b01f0cd too (same test on a build
+  reduced-motion deep link to `#directors` shifts (CLS 0.47–1.46 from run to run) on c7ebc73 too (same test on a build
   of it): not from this change, and open (below).
 - **Tier 0** (`?tier=0`, 1440 and 390): the WebM plays as before (the same CLS 0.0021 at the 1440 deep link as on
-  b01f0cd); with `?alphapack=1&tier=0` (WebKit without WebGL) the poster stands, nothing is fetched, no Pause button.
+  c7ebc73); with `?alphapack=1&tier=0` (WebKit without WebGL) the poster stands, nothing is fetched, no Pause button.
 - **Fallbacks** (1440, packed path): a lost WebGL context while playing, and a 404 on the film: the poster comes back
   in the canvas, the film pauses and drops its sources (readyState 0), the Pause button goes; no console error other
   than the forced 404.
-- **First load** (no input, 10 s): `?tier=0` at 1440 and 390: the same 15 / 16 requests as b01f0cd, +0.6 KB
+- **First load** (no input, 10 s): `?tier=0` at 1440 and 390: the same 15 / 16 requests as c7ebc73, +0.6 KB
   uncompressed (511.1 / 459.3 KB); with `?alphapack=1` the same requests and bytes (the pack's chunk loads with the
   poster, 2.5 screens before the film). WebGL at 1440: no film or pack request on either path.
 - **Encodes:** keyframes at 0 and 10 s in all four; 600 frames; the mp4s are `ftyp moov free mdat` (faststart);
